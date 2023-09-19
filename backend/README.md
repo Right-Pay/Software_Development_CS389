@@ -35,7 +35,7 @@ Start the server (ExpressJS)
 #### Get Test
 
 ```http
-  GET /api/test/${id}
+  GET /api/test/${test_key}
 ```
 
 | Parameter  | Type     | Description  |
