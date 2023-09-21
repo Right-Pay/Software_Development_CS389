@@ -9,6 +9,8 @@ const port = process.env.PORT;
 app.listen(port, () => {
     // tslint:disable-next-line:no-console
     console.log("Server is listening on port 3000");
+    // tslint:disable-next-line:no-console
+    console.log("Running on http://localhost:3000");
 });
 
 app.get("/api/test", (req: Request, res: Response) => {
