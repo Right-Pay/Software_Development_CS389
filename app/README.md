@@ -68,6 +68,19 @@ You've successfully run and modified your React Native App. :partying_face:
 
 If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
 
+- If you can not launch the android emulator, run this:
+
+```
+npx react-native doctor
+```
+
+- If there are any issues with the android sdk, edit your config file for the emulator of your choice to use host graphics:
+```
+C:/Users/<user>/.android/AVD/<your emulator name>.avd/config.init
+
+gpu.mode=host
+```
+
 # Learn More
 
 To learn more about React Native, take a look at the following resources:

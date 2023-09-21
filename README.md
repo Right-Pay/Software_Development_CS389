@@ -24,9 +24,6 @@ Install the backend:
 Install the frontend:
 
 ```bash
-  cd ../app-expo
-  npm i
-
   cd ../app
   npm i
 ```
@@ -70,11 +67,17 @@ Start the server (ExpressJS)
 Install dependencies for the app
 
 ```bash
-  cd ..\app-expo\
+  cd ../app
   npm install
+  npm run start
 ```
 
-Start the app (press w for web, a for android, and i for iOS [iOS only works on macOS])
+Follow the README in the app directory to install Android Studio and start your emulator.
+[React Native - Environment Setup](https://reactnative.dev/docs/environment-setup)
+
+**Restart all terminals after updating path variables**
+
+Start the app (a for android, and i for iOS [iOS only works on macOS])
 
 ```bash
   npm run start
@@ -82,10 +85,22 @@ Start the app (press w for web, a for android, and i for iOS [iOS only works on 
 
 If we switch to not using expo:
 
-```bash
-  cd ../app
-  npm install
-  npm run start
+
+# Troubleshooting
+
+If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+
+- If you can not launch the android emulator, run this:
+
+```
+npx react-native doctor
+```
+
+- If there are any issues with the android sdk, edit your config file for the emulator of your choice to use host graphics:
+```
+C:/Users/<user>/.android/AVD/<your emulator name>.avd/config.init
+
+gpu.mode=host
 ```
 
 ## Authors
