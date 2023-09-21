@@ -14,6 +14,16 @@ Created by Tyler Besnoff, Lucas Lecler, and Xander Hughes (TLX)
 
 ## Installation
 
+### Requirements
+
+- NVM
+- Node v16
+- Android Studio
+- Android SDK0
+- [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup)
+  - Skip creating a new application, that has been done already in the app directory
+  - You only have to run ``` npm run start ``` thentype a, you don't have to run ``` npm run android ```
+
 Install the backend:
 
 ```bash
