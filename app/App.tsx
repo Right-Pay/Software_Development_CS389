@@ -28,6 +28,8 @@ import {
 import {fetchWithError} from './src/helpers/fetch';
 import {HttpResponse} from './src/helpers/HttpResponse';
 
+require('dotenv').config();
+
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
