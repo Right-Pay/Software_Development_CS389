@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -25,8 +25,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { fetchWithError } from './src/helpers/fetch';
-import { HttpResponse } from './src/helpers/HttpResponse';
+import {fetchWithError} from './src/helpers/fetch';
+import {HttpResponse} from './src/helpers/HttpResponse';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -58,7 +58,6 @@ function Section({children, title}: SectionProps): JSX.Element {
   );
 }
 function App(): JSX.Element {
-
   const isDarkMode = useColorScheme() === 'dark';
 
   // This next group is for displaying how the test fetch works
@@ -72,7 +71,7 @@ function App(): JSX.Element {
   useEffect(() => {
     fetchTestFunc();
   }, []);
-  
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -93,11 +92,11 @@ function App(): JSX.Element {
           }}>
           {/* This is the fetch test */}
           <Section title="Fetch Test">
-            <Text style={styles.sectionDescription}>  
+            <Text style={styles.sectionDescription}>
               Response Data: {fetchTest.data}
             </Text>
           </Section>
-          
+
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
