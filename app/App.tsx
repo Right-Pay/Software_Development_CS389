@@ -4,6 +4,7 @@
  *
  * @format
  */
+import 'react-native-dotenv';
 
 import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
@@ -27,8 +28,6 @@ import {
 
 import {fetchWithError} from './src/helpers/fetch';
 import {HttpResponse} from './src/helpers/HttpResponse';
-
-require('dotenv').config();
 
 type SectionProps = PropsWithChildren<{
   title: string;

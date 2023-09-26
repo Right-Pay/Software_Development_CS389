@@ -1,4 +1,9 @@
 {
   "name": "RightPay",
-  "displayName": "RightPay"
+  "displayName": "RightPay",
+  "expo": {
+      "experiments": {
+        "tsconfigPaths": true
+      }
+    }
 }
