@@ -1,6 +1,6 @@
 # Templates for Frontend and Backend
 
-## Fetch
+## Fetch for Frontend and Backend
 
 ```
 import Config from 'react-native-config';
@@ -21,4 +21,33 @@ const fetchAddObjectHere = async (url: String) => {
 
   return result;
 };
+```
+
+## How to Use Fetch
+
+```
+import React, {useEffect, useState} from 'react';
+import fetchAddObjectHere from './api'; // create a file called api to use the fetch function
+
+interface DATAOBJECT {
+  // define the structure of your data object here
+}
+
+const MyComponent = () => {
+  const [data, setData] = useState<DATAOBJECT>({} as DATAOBJECT);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetchAddObjectHere('URLHERE');
+      const data: DATAOBJECT = await res.json();
+      setData(data);
+    };
+
+    fetchData();
+  }, []);
+
+  return <>{JSON.stringify(data)}</>;
+};
+
+export default MyComponent;
 ```

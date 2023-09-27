@@ -6,7 +6,7 @@
  */
 import 'react-native-dotenv';
 
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -27,8 +27,6 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import 'react-native-config';
-
-import fetchAddObjectHere from './src/helpers/fetch';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -66,18 +64,6 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const [data, setData] = useState('');
-
-  const f = async () => {
-    await fetchAddObjectHere('test').then(res => setData(res));
-  };
-
-  useEffect(() => {
-    f();
-  }, []);
-
-  console.log(data);
-
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -92,7 +78,6 @@ function App(): JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Test">{data}</Section>
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
