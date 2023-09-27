@@ -3,17 +3,21 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --reset-cache",
     "ios": "react-native run-ios",
     "lint": "eslint .",
-    "start": "react-native start",
-    "test": "jest"
+    "start": "react-native start --reset-cache",
+    "test": "jest",
+    "start:development": "SET ENVFILE = '.env.development' && react-native start --reset-cache",
+    "start:staging": "$env.ENVFILE=.env.staging; react-native start --reset-cache",
+    "start:production": "$env.ENVFILE=.env.production; react-native start --reset-cache"
   },
   "dependencies": {
     "os": "^0.1.2",
     "path": "^0.12.7",
     "react": "18.2.0",
-    "react-native": "0.72.4"
+    "react-native": "0.72.4",
+    "react-native-config": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -27,7 +31,6 @@
     "@types/react-test-renderer": "^18.0.0",
     "@types/uuid": "^9.0.4",
     "babel-jest": "^29.2.1",
-    "dotenv": "^16.3.1",
     "eslint": "^8.19.0",
     "jest": "^29.2.1",
     "metro-react-native-babel-preset": "0.76.8",

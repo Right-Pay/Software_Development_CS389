@@ -28,6 +28,7 @@ import {
 
 import {fetchWithError} from './src/helpers/fetch';
 import {HttpResponse} from './src/helpers/HttpResponse';
+import 'react-native-config';
 
 type SectionProps = PropsWithChildren<{
   title: string;

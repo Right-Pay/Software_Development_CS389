@@ -81,6 +81,38 @@ C:/Users/<user>/.android/AVD/<your emulator name>.avd/config.init
 gpu.mode=host
 ```
 
+- Some commands to try
+
+When the app fails on Task: app:installDebug
+```
+cd android
+./gradlew clean
+cd ..
+npm cache clean --force
+```
+
+```
+npx react-native start --reset-cache
+```
+
+When the install hangs on install app-debug.apk do this:
+```
+adb kill-server
+adb start-server
+```
+
+When
+```
+Gradle could not start your build.
+> Cannot create service of type BuildSessionActionExecutor using method LauncherServices$ToolingBuildSessionScopeServices.createActionExecutor() as there is a problem with parameter #21 of type FileSystemWatchingInformation.
+```
+Do this
+```
+WMIC PROCESS where "Name like 'java%' AND CommandLine like '%GradleDaemon%'" Call Terminate
+```
+
+- You can also wipe the emulator
+
 # Learn More
 
 To learn more about React Native, take a look at the following resources:
