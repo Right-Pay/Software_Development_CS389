@@ -9,8 +9,8 @@
     "start": "react-native start --reset-cache",
     "test": "jest",
     "start:development": "SET ENVFILE = '.env.development' && react-native start --reset-cache",
-    "start:staging": "$env.ENVFILE=.env.staging; react-native start --reset-cache",
-    "start:production": "$env.ENVFILE=.env.production; react-native start --reset-cache"
+    "start:staging": "SET ENVFILE = '.env.staging' && react-native start --reset-cache",
+    "start:production": "SET ENVFILE = '.env.production' && react-native start --reset-cache"
   },
   "dependencies": {
     "os": "^0.1.2",
