@@ -10,15 +10,18 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
+import AuthContext from '../../../Context/authContext';
+import {AuthContextType} from '../../../types/AuthContextType';
 
 type HomeScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeNavigationRoutesType, 'HomeScreen'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
-  PropsWithChildren<any>;
+  PropsWithChildren;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const {userProfile} = React.useContext(Context) as AppContext;
+  const {signOut} = React.useContext(AuthContext) as AuthContextType;
 
   return (
     <View style={styles.homeScreenView}>
@@ -30,10 +33,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           navigation.navigate('ProfileStack', {screen: 'ProfileScreen'})
         }
       />
-      <Button
-        title="Logout"
-        onPress={() => navigation.navigate('WelcomeScreen')}
-      />
+      <Button title="Logout" onPress={() => signOut()} />
     </View>
   );
 };

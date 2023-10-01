@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
 import AuthContext from './authContext';
@@ -25,17 +25,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     },
   ]);
 
-  const [userProfile, setUserProfile] = React.useState<Profile>({
-    id: 1,
-    name: 'John Doe',
-    email: 'johndoe@gmail.com',
-    phone: '1234567890',
-    address: '1234 Main St',
-    city: 'Anytown',
-    state: 'CA',
-    zip: '12345',
-    subscribed: true,
-  });
+  const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
 
   const addNewCreditCard = (creditCard: CreditCard) => {
     const newCard: CreditCard = {
@@ -58,17 +48,42 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [isSignout, setIsSignout] = React.useState<boolean>(false);
   const [userToken, setUserToken] = React.useState<string | null>('');
 
-  setTimeout(() => {
+  const signIn = (email: string, password: string) => {
+    // replace with sign in function
     setIsLoading(false);
     setUserToken('asdf');
     setIsLoggedIn(true);
-  }, 1000);
-
-  const signIn = (email: string, password: string) => {
+    setUserProfile({
+      id: 1,
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      phone: '1234567890',
+      address: '1234 Main St',
+      city: 'Anytown',
+      state: 'CA',
+      zip: '12345',
+      subscribed: true,
+    });
     return email + password;
   };
 
+  useEffect(() => {
+    // simulate loading
+    setTimeout(() => {
+      signIn('johndoe@gmail.com', 'password');
+    }, 2000);
+  }, []);
+
   const signOut = () => {
+    // replace with sign out function
+    setIsLoading(true);
+    // simulate loading
+    setTimeout(() => {
+      setUserToken(null);
+      setIsLoggedIn(false);
+      setIsLoading(false);
+      setUserProfile({} as Profile);
+    }, 2000);
     return;
   };
 

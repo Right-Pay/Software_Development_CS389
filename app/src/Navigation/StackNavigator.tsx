@@ -2,7 +2,6 @@ import React, {PropsWithChildren} from 'react';
 import HomeScreen from '../Components/Screens/Home/Home';
 import ProfileScreen from '../Components/Screens/Profile/Profile';
 import CompanyScreen from '../Components/Screens/Company/Company';
-import WelcomeScreen from '../Components/Screens/Welcome/Welcome';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {
   HomeNavigationRoutesType,
@@ -69,11 +68,6 @@ const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
         name="HomeScreen"
         component={HomeScreen}
         options={{title: 'Home Screen'}}
-      />
-      <HomeStack.Screen
-        name="WelcomeScreen"
-        component={WelcomeScreen}
-        options={{title: 'Welcome Screen'}}
       />
     </HomeStack.Navigator>
   );
