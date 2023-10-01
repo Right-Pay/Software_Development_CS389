@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, StyleSheet, Text, Button} from 'react-native';
-import Context from '../../Context/context';
-import type {AppContext} from '../../types/AppContextType';
+import Context from '../../../Context/context';
+import type {AppContext} from '../../../types/AppContextType';
 import type {PropsWithChildren} from 'react';
 import type {
   ProfileNavigationRoutesType,
   NavigationRoutesType,
-} from '../../types/NavigationRoutesType';
+} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';

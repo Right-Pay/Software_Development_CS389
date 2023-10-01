@@ -1,30 +1,31 @@
 import React from 'react';
 import {View, StyleSheet, Text, Button} from 'react-native';
 import type {PropsWithChildren} from 'react';
-import type {WelcomeNavigationRoutesType} from '../../types/NavigationRoutesType';
+import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-type SignUpScreenProps = NativeStackScreenProps<
+type LogInScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
-  'Register'
+  'Login'
 > &
   PropsWithChildren;
 
-const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
+const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   return (
-    <View style={styles.signUpScreenView}>
-      <Text style={styles.title}>Sign Up for RightPay</Text>
-      <Text style={styles.text}>Email</Text>
+    <View style={styles.logInScreenView}>
+      <Text style={styles.title}>Log In to RightPay</Text>
       <Text style={styles.text}>Username</Text>
       <Text style={styles.text}>Password</Text>
-      <Text style={styles.text}>Repeat Password</Text>
-      <Button title="Log In" onPress={() => navigation.navigate('Login')} />
+      <Button
+        title="Forgot Password"
+        onPress={() => navigation.navigate('ForgotPassword')}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  signUpScreenView: {
+  logInScreenView: {
     flex: 1,
     alignItems: 'center',
   },
@@ -39,4 +40,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpScreen;
+export default LogInScreen;

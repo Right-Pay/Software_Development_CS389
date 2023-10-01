@@ -19,6 +19,7 @@ export type NavigationRoutesType = {
 
 export type HomeNavigationRoutesType = {
   HomeScreen: undefined;
+  WelcomeScreen: undefined;
   // ie: Profile: { userId: string };
   // for more info: https://reactnavigation.org/docs/typescript/
 };

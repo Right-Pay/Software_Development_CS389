@@ -4,7 +4,7 @@ import type {PropsWithChildren} from 'react';
 import type {
   LocationNavigationRoutesType,
   NavigationRoutesType,
-} from '../../types/NavigationRoutesType';
+} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';

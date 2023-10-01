@@ -1,7 +1,8 @@
 import React, {PropsWithChildren} from 'react';
-import HomeScreen from '../Components/Screens/Home';
-import ProfileScreen from '../Components/Screens/Profile';
-import CompanyScreen from '../Components/Screens/Company';
+import HomeScreen from '../Components/Screens/Home/Home';
+import ProfileScreen from '../Components/Screens/Profile/Profile';
+import CompanyScreen from '../Components/Screens/Company/Company';
+import WelcomeScreen from '../Components/Screens/Welcome/Welcome';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {
   HomeNavigationRoutesType,
@@ -11,9 +12,9 @@ import type {
   LocationNavigationRoutesType,
   NavigationRoutesType,
 } from '../types/NavigationRoutesType';
-import SearchScreen from '../Components/Screens/Search';
-import LocationScreen from '../Components/Screens/Location';
-import ProfileSettings from '../Components/Screens/ProfileSettings';
+import SearchScreen from '../Components/Screens/Search/Search';
+import LocationScreen from '../Components/Screens/Location/Location';
+import ProfileSettings from '../Components/Screens/Profile/ProfileSettings';
 import {
   getFocusedRouteNameFromRoute,
   RouteProp,
@@ -22,7 +23,7 @@ import type {
   BottomTabNavigationProp,
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
-import LocationSettings from '../Components/Screens/LocationSettings';
+import LocationSettings from '../Components/Screens/Location/LocationSettings';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
@@ -68,6 +69,11 @@ const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
         name="HomeScreen"
         component={HomeScreen}
         options={{title: 'Home Screen'}}
+      />
+      <HomeStack.Screen
+        name="WelcomeScreen"
+        component={WelcomeScreen}
+        options={{title: 'Welcome Screen'}}
       />
     </HomeStack.Navigator>
   );

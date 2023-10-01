@@ -1,27 +1,24 @@
 import React from 'react';
-import {View, StyleSheet, Text, Button} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {
-  LocationNavigationRoutesType,
+  SearchNavigationRoutesType,
   NavigationRoutesType,
-} from '../../types/NavigationRoutesType';
+} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 
-type LocationSettingsProps = CompositeScreenProps<
-  NativeStackScreenProps<LocationNavigationRoutesType, 'LocationSettings'>,
+type SearchScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<SearchNavigationRoutesType, 'SearchScreen'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;
 
-const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
+const SearchScreen: React.FC<SearchScreenProps> = () => {
   return (
     <View style={styles.center}>
-      <Text>This is the location setttings</Text>
-      <Text>You will be able to turn off and on your location here.</Text>
-
-      <Button title="Go Back" onPress={() => navigation.goBack()} />
+      <Text>This is the search screen</Text>
     </View>
   );
 };
@@ -35,4 +32,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LocationSettings;
+export default SearchScreen;

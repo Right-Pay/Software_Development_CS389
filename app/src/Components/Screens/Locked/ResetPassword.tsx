@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, Button} from 'react-native';
 import type {PropsWithChildren} from 'react';
-import type {WelcomeNavigationRoutesType} from '../../types/NavigationRoutesType';
+import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type ResetPasswordScreenProps = NativeStackScreenProps<
