@@ -5,6 +5,8 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 
+import android.os.Bundle;
+
 public class MainActivity extends ReactActivity {
 
   /**
@@ -28,5 +30,16 @@ public class MainActivity extends ReactActivity {
         getMainComponentName(),
         // If you opted-in for the New Architecture, we enable the Fabric Renderer.
         DefaultNewArchitectureEntryPoint.getFabricEnabled());
+  }
+
+  /**
+   * This change comes from
+   * https://reactnavigation.org/docs/getting-started/#installing-dependencies-into-a-bare-react-native-project
+   * and is required for react-navigation to work properly.
+   *
+   */
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(null);
   }
 }
