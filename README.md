@@ -38,6 +38,14 @@ Install the frontend:
   npm i
 ```
 
+If on macos:
+
+```bash
+cd ios
+pod install
+cd ..
+```
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file

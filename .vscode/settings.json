@@ -1,7 +1,9 @@
 {
-    "workbench.colorCustomizations": {
-        "activityBar.background": "#4E1254",
-        "titleBar.activeBackground": "#6D1A75",
-        "titleBar.activeForeground": "#FEFCFE"
-    }
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#4E1254",
+    "titleBar.activeBackground": "#6D1A75",
+    "titleBar.activeForeground": "#FEFCFE"
+  },
+  "editor.tabSize": 2,
+  "eslint.workingDirectories": [{ "mode": "auto" }]
 }
