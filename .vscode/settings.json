@@ -4,5 +4,6 @@
     "titleBar.activeBackground": "#6D1A75",
     "titleBar.activeForeground": "#FEFCFE"
   },
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "eslint.workingDirectories": [{ "mode": "auto" }]
 }
