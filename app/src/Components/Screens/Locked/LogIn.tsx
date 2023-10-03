@@ -5,6 +5,7 @@ import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesT
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AuthContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
+import {Input} from '../../../../@/components/ui/input';
 
 type LogInScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -14,11 +15,11 @@ type LogInScreenProps = NativeStackScreenProps<
 
 const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   const {signIn} = React.useContext(AuthContext) as AuthContextType;
-
   return (
     <View style={styles.logInScreenView}>
       <Text style={styles.title}>Log In to RightPay</Text>
       <Text style={styles.text}>Username</Text>
+      <Input />
       <Text style={styles.text}>Password</Text>
       <Button
         title="Log In"
