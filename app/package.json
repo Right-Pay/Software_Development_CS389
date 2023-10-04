@@ -19,7 +19,6 @@
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/native-stack": "^6.9.14",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
     "nativewind": "^2.0.11",
     "os": "^0.1.2",
     "path": "^0.12.7",
@@ -31,7 +30,6 @@
     "react-native-screens": "^3.25.0",
     "react-native-vector-icons": "^10.0.0",
     "react-navigation-tabs": "^2.11.2",
-    "shadcn-ui": "0.4.1",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7"
   },
