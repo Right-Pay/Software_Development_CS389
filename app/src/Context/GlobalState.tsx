@@ -4,7 +4,7 @@ import Context from './context';
 import AuthContext from './authContext';
 import {CreditCard} from '../types/CreditCardType';
 import {Profile} from '../types/ProfileType';
-import { PermissionsAndroid } from 'react-native';
+import {PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
@@ -107,44 +107,40 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           buttonPositive: 'OK',
         },
       );
-      console.log('granted', granted);
       if (granted === 'granted') {
-        console.log('You can use Geolocation');
         return true;
       } else {
-        console.log('You cannot use Geolocation');
         return false;
       }
     } catch (err) {
       return false;
     }
   };
-  
+
   const getLocation = () => {
     const result = requestLocationPermission();
     result.then(res => {
-      console.log('res is:', res);
       if (res) {
         Geolocation.getCurrentPosition(
           position => {
-            console.log(position);
             setLocation(position);
+            console.log(position);
           },
           error => {
             // See error code charts below.
-            console.log(error.code, error.message);
             setLocation(false);
+            console.log(error.code, error.message);
           },
           {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
       }
     });
-    console.log(location);
   };
 
   useEffect(() => {
     getLocation();
-  },[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AuthContext.Provider
