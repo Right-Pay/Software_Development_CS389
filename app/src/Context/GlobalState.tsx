@@ -57,10 +57,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       setSignInError('Invalid Password');
     } else {
       await accountAuthFunctions
-        .checkCredentialsInSystem(/*email*/)
+        .checkCredentialsInSystem(email, password)
         .then((result: any) => {
+          console.log(result);
           setIsLoading(false);
-          if (result !== undefined) {
+          if (typeof result !== 'number') {
             setUserToken('asdf');
             setIsLoggedIn(true);
             setUserProfile(result as Profile);
@@ -70,7 +71,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
             setIsLoggedIn(false);
             setUserProfile({} as Profile);
             setSignInError(
-              result === 1 ? 'Incorrect Password' : 'Username not found',
+              result === 1 ? 'Username not found' : 'Incorrect Password',
             );
           }
         });

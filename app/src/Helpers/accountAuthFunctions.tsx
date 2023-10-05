@@ -1,7 +1,7 @@
 import {Profile} from '../types/ProfileType';
 //import Config from 'react-native-config';
 
-const fetchUserProfile = async (/*url: String*/) => {
+const fetchUserProfile = async (/*username: String*/) => {
   //const baseURL = Config.REACT_APP_API_URL;
 
   const response = {
@@ -35,17 +35,50 @@ const fetchUserProfile = async (/*url: String*/) => {
   return result;
 };
 
-async function checkCredentialsInSystem(): Promise<Profile | false> {
-  /*username: string,*/
+const fetchPassword = async (/*userId: Number*/) => {
+  //const baseURL = Config.REACT_APP_API_URL;
+
+  const response = {
+    json: {
+      //Need to change this with an api call
+      password: '123aA!',
+    },
+  } as any;
+  /*await fetch(`${baseURL}${url}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });*/
+
+  // Manipulate result to return
+  const result = response.json.password; /*await response.json().then(data => {
+    return data as Profile;
+  });*/
+
+  return result;
+};
+
+async function checkCredentialsInSystem(
+  username: string,
+  enteredPassword: string,
+): Promise<Profile | number> {
   const userProfile = await fetchUserProfile(/*`fakeurl/${username}`*/).then(
     response => {
       return response as Profile;
     },
   ); //Need to call api here eventually
 
-  const userId = userProfile.id;
-  if (userId === -1) {
-    return false;
+  const password = await fetchPassword(/*userProfile.id*/).then(response => {
+    return response as string;
+  });
+
+  if (username === userProfile.email) {
+    return 1;
+  }
+  if (password !== enteredPassword) {
+    return 2;
   }
   return userProfile;
 }
