@@ -1,8 +1,6 @@
 export interface Location {
-    coords: {
-        latitude: number;
-        longitude: number;
-        accuracy: number;
-        altitude: number;
-    };
+  accuracy: number;
+  altitude: number;
+  latitude: number;
+  longitude: number;
 }

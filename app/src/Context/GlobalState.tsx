@@ -6,7 +6,7 @@ import {CreditCard} from '../types/CreditCardType';
 import {Profile} from '../types/ProfileType';
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import { Location } from '../types/Location';
+import {Location} from '../types/Location';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([
@@ -94,7 +94,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return email + password;
   };
 
-  const [location, setLocation] = useState({} as any);
+  const [location, setLocation] = useState<Location>({} as Location);
 
   const requestLocationPermission = async () => {
     try {
@@ -124,12 +124,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       if (res) {
         Geolocation.getCurrentPosition(
           position => {
-            setLocation(position as Location);
-            console.log(position as Location);
+            setLocation(position.coords as Location);
           },
           error => {
             // See error code charts below.
-            setLocation(false);
+            setLocation({} as Location);
             console.log(error.code, error.message);
           },
           {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
@@ -140,6 +139,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   useEffect(() => {
     getLocation();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
