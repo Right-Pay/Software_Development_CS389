@@ -4,7 +4,7 @@ import Context from './context';
 import AuthContext from './authContext';
 import {CreditCard} from '../types/CreditCardType';
 import {Profile} from '../types/ProfileType';
-//import accountAuthFunctions from '../Helpers/accountAuthFunctions';
+import accountAuthFunctions from '../Helpers/accountAuthFunctions';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([
