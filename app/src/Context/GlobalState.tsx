@@ -124,14 +124,20 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       if (res) {
         Geolocation.getCurrentPosition(
           position => {
-            setLocation(position.coords as Location);
+            const coords = position.coords;
+            setLocation({
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              altitude: coords.altitude,
+              accuracy: coords.accuracy,
+            } as Location);
           },
           error => {
             // See error code charts below.
             setLocation({} as Location);
             console.log(error.code, error.message);
           },
-          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 1},
         );
       }
     });
