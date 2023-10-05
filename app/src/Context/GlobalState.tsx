@@ -4,7 +4,7 @@ import Context from './context';
 import AuthContext from './authContext';
 import {CreditCard} from '../types/CreditCardType';
 import {Profile} from '../types/ProfileType';
-import accountAuthFunctions from '../Helpers/accountAuthFunctions';
+//import accountAuthFunctions from '../Helpers/accountAuthFunctions';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([
@@ -57,24 +57,13 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       setSignInError('Invalid Password');
     } else {
       await accountAuthFunctions
-        .checkCredentialsInSystem(email, password)
+        .checkCredentialsInSystem(/*email*/)
         .then((result: any) => {
           setIsLoading(false);
-          if (typeof result === 'object') {
+          if (result !== undefined) {
             setUserToken('asdf');
             setIsLoggedIn(true);
-            setUserProfile({
-              //Need to change this with an api call
-              id: result.id,
-              name: result.name,
-              email: result.email,
-              phone: '1234567890',
-              address: '1234 Main St',
-              city: 'Anytown',
-              state: 'CA',
-              zip: '12345',
-              subscribed: true,
-            } as Profile);
+            setUserProfile(result as Profile);
             setSignInError(null);
           } else {
             setUserToken(null);
@@ -111,25 +100,27 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   const signUp = async (email: string, password: string) => {
     let signedUp = false;
-    await accountAuthFunctions.checkNoUserAlreadyCreated(email).then(result => {
-      if (result) {
-        setSignInError('Username already exists');
-      } else if (!accountAuthFunctions.checkValidUsername(email)) {
-        setSignInError('Invalid Username');
-      } else if (!accountAuthFunctions.checkValidPassword(password)) {
-        setSignInError('Invalid Password');
-      } else {
-        //create a new user
-        createNewUser(/*email, password*/).then(r => {
-          if (r) {
-            signIn(email, password);
-          } else {
-            setSignInError('Error creating user');
-          }
-        });
-        signedUp = true;
-      }
-    });
+    await accountAuthFunctions
+      .checkNoUserAlreadyCreated(/*email*/)
+      .then(result => {
+        if (result) {
+          setSignInError('Username already exists');
+        } else if (!accountAuthFunctions.checkValidUsername(email)) {
+          setSignInError('Invalid Username');
+        } else if (!accountAuthFunctions.checkValidPassword(password)) {
+          setSignInError('Invalid Password');
+        } else {
+          //create a new user
+          createNewUser(/*email, password*/).then(r => {
+            if (r) {
+              signIn(email, password);
+            } else {
+              setSignInError('Error creating user');
+            }
+          });
+          signedUp = true;
+        }
+      });
     setIsLoading(false);
     return signedUp;
   };

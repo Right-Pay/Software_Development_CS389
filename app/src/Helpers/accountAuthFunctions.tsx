@@ -1,58 +1,53 @@
 import {Profile} from '../types/ProfileType';
+//import Config from 'react-native-config';
 
-async function getUsernameId(username: string): Promise<number> {
-  const foundUsername = username.length > 0 ? 1 : -1; //Need a api call here eventually
-  return foundUsername;
-}
+const fetchUserProfile = async (/*url: String*/) => {
+  //const baseURL = Config.REACT_APP_API_URL;
 
-async function checkPasswordInSystem(
-  usernameId: number,
-  password: string,
-): Promise<boolean> {
-  const foundPassword = usernameId === 1 && password.length !== 0; //Need a api call here eventually using userid
-
-  return foundPassword;
-}
-
-async function checkUsernameInSystem(
-  username: string,
-): Promise<Number | boolean> {
-  return await getUsernameId(username).then(result => {
-    if (result) {
-      return result;
-    } else {
-      return false;
-    }
-  });
-}
-
-async function checkCredentialsInSystem(
-  username: string,
-  password: string,
-): Promise<Profile | Number> {
-  const userId = await checkUsernameInSystem(username).then(result => {
-    if (typeof result === 'number') {
-      return result;
-    } else {
-      return -1;
-    }
-  });
-  if (userId === -1) {
-    return 2;
-  }
-  const foundPassword = await checkPasswordInSystem(userId, password).then(
-    result => {
-      return result;
+  const response = {
+    json: {
+      //Need to change this with an api call
+      id: 1,
+      name: 'John Doe',
+      email: 'JohnDoe@gmail.com',
+      phone: '1234567890',
+      address: '1234 Main St',
+      city: 'Anytown',
+      state: 'CA',
+      zip: '12345',
+      subscribed: true,
+    } as Profile,
+  } as any;
+  /*await fetch(`${baseURL}${url}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
     },
-  );
-  if (foundPassword === false) {
-    return 1;
+  });*/
+
+  // Manipulate result to return
+  const result =
+    response.json as Profile; /*await response.json().then(data => {
+    return data as Profile;
+  });*/
+
+  return result;
+};
+
+async function checkCredentialsInSystem(): Promise<Profile | false> {
+  /*username: string,*/
+  const userProfile = await fetchUserProfile(/*`fakeurl/${username}`*/).then(
+    response => {
+      return response as Profile;
+    },
+  ); //Need to call api here eventually
+
+  const userId = userProfile.id;
+  if (userId === -1) {
+    return false;
   }
-  return {
-    id: userId,
-    name: 'John Doe',
-    email: username,
-  } as Profile;
+  return userProfile;
 }
 
 function checkValidPassword(password: string): boolean {
@@ -66,14 +61,13 @@ function checkValidUsername(username: string): boolean {
   return username.length > 0 && usernameRegex.test(username);
 }
 
-async function checkNoUserAlreadyCreated(username: string): Promise<boolean> {
-  let usernameId = -1;
-  await getUsernameId(username).then(result => {
-    if (result) {
-      usernameId = result;
-    }
-  });
-  return usernameId === -1;
+async function checkNoUserAlreadyCreated(/*username: string*/): Promise<boolean> {
+  const userProfile = await fetchUserProfile(/*`fakeurl/${username}`*/).then(
+    response => {
+      return response as Profile;
+    },
+  );
+  return userProfile !== undefined;
 }
 
 const accountAuthFunctions = {
