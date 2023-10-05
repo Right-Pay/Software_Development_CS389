@@ -7,4 +7,5 @@ export interface AppContext {
   removeCreditCard: (_creditCard: CreditCard) => void;
   userProfile: Profile;
   setUserProfile: (_profile: Profile) => void;
+  location:any;
 }
