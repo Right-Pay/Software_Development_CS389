@@ -59,7 +59,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       await accountAuthFunctions
         .checkCredentialsInSystem(email, password)
         .then((result: any) => {
-          console.log(result);
           setIsLoading(false);
           if (typeof result !== 'number') {
             setUserToken('asdf');
@@ -82,7 +81,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   useEffect(() => {
     // simulate loading
     setTimeout(() => {
-      signIn('johndoe@gmail.com', '123aA!');
+      signIn('johndoe@gmail.com', '123456789aA!');
     }, 2000);
   }, []);
 

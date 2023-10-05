@@ -41,7 +41,7 @@ const fetchPassword = async (/*userId: Number*/) => {
   const response = {
     json: {
       //Need to change this with an api call
-      password: '123aA!',
+      password: '123456789aA!',
     },
   } as any;
   /*await fetch(`${baseURL}${url}`, {
@@ -85,7 +85,7 @@ async function checkCredentialsInSystem(
 
 function checkValidPassword(password: string): boolean {
   const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,12}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/;
   return password.length > 0 && passwordRegex.test(password);
 }
 
@@ -100,7 +100,9 @@ async function checkNoUserAlreadyCreated(/*username: string*/): Promise<boolean>
       return response as Profile;
     },
   );
-  return userProfile !== undefined;
+  userProfile;
+  return false;
+  //userProfile !== undefined;
 }
 
 const accountAuthFunctions = {
