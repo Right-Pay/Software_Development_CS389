@@ -6,6 +6,7 @@ import {CreditCard} from '../types/CreditCardType';
 import {Profile} from '../types/ProfileType';
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import { Location } from '../types/Location';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([
@@ -123,8 +124,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       if (res) {
         Geolocation.getCurrentPosition(
           position => {
-            setLocation(position);
-            console.log(position);
+            setLocation(position as Location);
+            console.log(position as Location);
           },
           error => {
             // See error code charts below.
