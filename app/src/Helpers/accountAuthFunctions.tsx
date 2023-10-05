@@ -12,10 +12,10 @@ async function checkPasswordInSystem(
   return foundPassword;
 }
 
-export async function checkUsernameInSystem(
+async function checkUsernameInSystem(
   username: string,
   password: string,
-): Promise<boolean> {
+): Promise<number> {
   let usernameId = -1;
   await getUsernameId(username).then(result => {
     if (result) {
@@ -27,22 +27,26 @@ export async function checkUsernameInSystem(
       return result;
     },
   );
+  if (foundPassword === false) {
+    return 1;
+  }
   const foundUsername = usernameId !== -1;
-  return foundUsername && foundPassword === true;
+  if (foundUsername === false) {
+    return 2;
+  }
+  return 0;
 }
 
-export function checkValidPassword(password: string): boolean {
+function checkValidPassword(password: string): boolean {
   return password.length > 0;
 }
 
-export function checkValidUsername(username: string): boolean {
+function checkValidUsername(username: string): boolean {
   const usernameRegex = /^[a-zA-Z0-9]+$/;
   return username.length > 0 && usernameRegex.test(username);
 }
 
-export async function checkNoUserAlreadyCreated(
-  username: string,
-): Promise<boolean> {
+async function checkNoUserAlreadyCreated(username: string): Promise<boolean> {
   let usernameId = -1;
   await getUsernameId(username).then(result => {
     if (result) {
@@ -51,3 +55,12 @@ export async function checkNoUserAlreadyCreated(
   });
   return usernameId === -1;
 }
+
+const accountAuthFunctions = {
+  checkUsernameInSystem,
+  checkValidPassword,
+  checkValidUsername,
+  checkNoUserAlreadyCreated,
+};
+
+export default accountAuthFunctions;

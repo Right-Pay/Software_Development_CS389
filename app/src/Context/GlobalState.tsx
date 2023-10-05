@@ -4,6 +4,7 @@ import Context from './context';
 import AuthContext from './authContext';
 import {CreditCard} from '../types/CreditCardType';
 import {Profile} from '../types/ProfileType';
+import accountAuthFunctions from '../Helpers/accountAuthFunctions';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([
@@ -48,23 +49,33 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [isSignout, setIsSignout] = React.useState<boolean>(false);
   const [userToken, setUserToken] = React.useState<string | null>('');
 
-  const signIn = (email: string, password: string) => {
+  const signIn = async (email: string, password: string) => {
     // replace with sign in function
-    setIsLoading(false);
-    setUserToken('asdf');
-    setIsLoggedIn(true);
-    setUserProfile({
-      id: 1,
-      name: 'John Doe',
-      email: 'johndoe@gmail.com',
-      phone: '1234567890',
-      address: '1234 Main St',
-      city: 'Anytown',
-      state: 'CA',
-      zip: '12345',
-      subscribed: true,
-    });
-    return email + password;
+    await accountAuthFunctions
+      .checkUsernameInSystem(email, password)
+      .then((result: any) => {
+        setIsLoading(false);
+        if (result === 0) {
+          setUserToken('asdf');
+          setIsLoggedIn(true);
+          setUserProfile({
+            id: 1,
+            name: 'John Doe',
+            email: 'johndoe@gmail.com',
+            phone: '1234567890',
+            address: '1234 Main St',
+            city: 'Anytown',
+            state: 'CA',
+            zip: '12345',
+            subscribed: true,
+          } as Profile);
+        } else {
+          setUserToken(null);
+          setIsLoggedIn(false);
+          setUserProfile({} as Profile);
+          return result === 1 ? 'Incorrect Password' : 'Username not found';
+        }
+      });
   };
 
   useEffect(() => {
@@ -87,7 +98,13 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return;
   };
 
-  const signUp = (email: string, password: string) => {
+  const signUp = async (email: string, password: string) => {
+    await accountAuthFunctions.checkNoUserAlreadyCreated(email).then(result => {
+      if (result) {
+        //nav to sign in screen or something
+      }
+    });
+
     return email + password;
   };
 
