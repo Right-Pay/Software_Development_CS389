@@ -1,3 +1,5 @@
+import {Profile} from '../types/ProfileType';
+
 async function getUsernameId(username: string): Promise<number> {
   const foundUsername = username.length > 0 ? 1 : -1; //Need a api call here eventually
   return foundUsername;
@@ -14,15 +16,31 @@ async function checkPasswordInSystem(
 
 async function checkUsernameInSystem(
   username: string,
-  password: string,
-): Promise<number> {
-  let usernameId = -1;
-  await getUsernameId(username).then(result => {
+): Promise<Number | boolean> {
+  return await getUsernameId(username).then(result => {
     if (result) {
-      usernameId = result;
+      return result;
+    } else {
+      return false;
     }
   });
-  const foundPassword = await checkPasswordInSystem(usernameId, password).then(
+}
+
+async function checkCredentialsInSystem(
+  username: string,
+  password: string,
+): Promise<Profile | Number> {
+  const userId = await checkUsernameInSystem(username).then(result => {
+    if (typeof result === 'number') {
+      return result;
+    } else {
+      return -1;
+    }
+  });
+  if (userId === -1) {
+    return 2;
+  }
+  const foundPassword = await checkPasswordInSystem(userId, password).then(
     result => {
       return result;
     },
@@ -30,19 +48,21 @@ async function checkUsernameInSystem(
   if (foundPassword === false) {
     return 1;
   }
-  const foundUsername = usernameId !== -1;
-  if (foundUsername === false) {
-    return 2;
-  }
-  return 0;
+  return {
+    id: userId,
+    name: 'John Doe',
+    email: username,
+  } as Profile;
 }
 
 function checkValidPassword(password: string): boolean {
-  return password.length > 0;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,12}$/;
+  return password.length > 0 && passwordRegex.test(password);
 }
 
 function checkValidUsername(username: string): boolean {
-  const usernameRegex = /^[a-zA-Z0-9]+$/;
+  const usernameRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   return username.length > 0 && usernameRegex.test(username);
 }
 
@@ -57,7 +77,7 @@ async function checkNoUserAlreadyCreated(username: string): Promise<boolean> {
 }
 
 const accountAuthFunctions = {
-  checkUsernameInSystem,
+  checkCredentialsInSystem,
   checkValidPassword,
   checkValidUsername,
   checkNoUserAlreadyCreated,

@@ -48,40 +48,51 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [isSignout, setIsSignout] = React.useState<boolean>(false);
   const [userToken, setUserToken] = React.useState<string | null>('');
+  const [signInError, setSignInError] = React.useState<string | null>(null);
 
   const signIn = async (email: string, password: string) => {
-    // replace with sign in function
-    await accountAuthFunctions
-      .checkUsernameInSystem(email, password)
-      .then((result: any) => {
-        setIsLoading(false);
-        if (result === 0) {
-          setUserToken('asdf');
-          setIsLoggedIn(true);
-          setUserProfile({
-            id: 1,
-            name: 'John Doe',
-            email: 'johndoe@gmail.com',
-            phone: '1234567890',
-            address: '1234 Main St',
-            city: 'Anytown',
-            state: 'CA',
-            zip: '12345',
-            subscribed: true,
-          } as Profile);
-        } else {
-          setUserToken(null);
-          setIsLoggedIn(false);
-          setUserProfile({} as Profile);
-          return result === 1 ? 'Incorrect Password' : 'Username not found';
-        }
-      });
+    if (!accountAuthFunctions.checkValidUsername(email)) {
+      setSignInError('Invalid Username');
+    } else if (!accountAuthFunctions.checkValidPassword(password)) {
+      setSignInError('Invalid Password');
+    } else {
+      await accountAuthFunctions
+        .checkCredentialsInSystem(email, password)
+        .then((result: any) => {
+          setIsLoading(false);
+          if (typeof result === 'object') {
+            setUserToken('asdf');
+            setIsLoggedIn(true);
+            setUserProfile({
+              //Need to change this with an api call
+              id: result.id,
+              name: result.name,
+              email: result.email,
+              phone: '1234567890',
+              address: '1234 Main St',
+              city: 'Anytown',
+              state: 'CA',
+              zip: '12345',
+              subscribed: true,
+            } as Profile);
+            setSignInError(null);
+          } else {
+            setUserToken(null);
+            setIsLoggedIn(false);
+            setUserProfile({} as Profile);
+            setSignInError(
+              result === 1 ? 'Incorrect Password' : 'Username not found',
+            );
+          }
+        });
+    }
+    setIsLoading(false);
   };
 
   useEffect(() => {
     // simulate loading
     setTimeout(() => {
-      signIn('johndoe@gmail.com', 'password');
+      signIn('johndoe@gmail.com', '123aA!');
     }, 2000);
   }, []);
 
@@ -99,13 +110,33 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const signUp = async (email: string, password: string) => {
+    let signedUp = false;
     await accountAuthFunctions.checkNoUserAlreadyCreated(email).then(result => {
       if (result) {
-        //nav to sign in screen or something
+        setSignInError('Username already exists');
+      } else if (!accountAuthFunctions.checkValidUsername(email)) {
+        setSignInError('Invalid Username');
+      } else if (!accountAuthFunctions.checkValidPassword(password)) {
+        setSignInError('Invalid Password');
+      } else {
+        //create a new user
+        createNewUser(/*email, password*/).then(r => {
+          if (r) {
+            signIn(email, password);
+          } else {
+            setSignInError('Error creating user');
+          }
+        });
+        signedUp = true;
       }
     });
+    setIsLoading(false);
+    return signedUp;
+  };
 
-    return email + password;
+  const createNewUser = async (/*email: string, password: string*/) => {
+    //do things
+    return true;
   };
 
   return (
@@ -122,6 +153,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         signIn,
         signOut,
         signUp,
+        signInError,
       }}>
       <Context.Provider
         value={{

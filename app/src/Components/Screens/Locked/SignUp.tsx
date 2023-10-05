@@ -1,8 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Text, Button} from 'react-native';
+import {View, StyleSheet, Text, Button, TextInput} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {styled} from 'nativewind';
+import AuthContext from '../../../Context/authContext';
+import {AuthContextType} from '../../../types/AuthContextType';
 
 type SignUpScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -10,15 +13,54 @@ type SignUpScreenProps = NativeStackScreenProps<
 > &
   PropsWithChildren;
 
+const StylizedInput = styled(TextInput);
+
 const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
+  const {signUp} = React.useContext(AuthContext) as AuthContextType;
+  const [username, setUsername] = React.useState<string>('');
+  const [password, setPassword] = React.useState<string>('');
+  const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
+  const [signedUp, setSignedUp] = React.useState<boolean>(false);
+  const {signInError} = React.useContext(AuthContext) as AuthContextType;
   return (
     <View style={styles.signUpScreenView}>
       <Text style={styles.title}>Sign Up for RightPay</Text>
-      <Text style={styles.text}>Email</Text>
-      <Text style={styles.text}>Username</Text>
-      <Text style={styles.text}>Password</Text>
-      <Text style={styles.text}>Repeat Password</Text>
-      <Button title="Log In" onPress={() => navigation.navigate('Login')} />
+      <StylizedInput
+        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        placeholder="Email"
+        onChange={event => setUsername(event.nativeEvent.text)}
+      />
+      <StylizedInput
+        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        placeholder="Password"
+        secureTextEntry={true}
+        onChange={event => setPassword(event.nativeEvent.text)}
+      />
+      <StylizedInput
+        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        placeholder="Repeat Password"
+        secureTextEntry={true}
+        onChange={event => setRepeatedPassword(event.nativeEvent.text)}
+      />
+      <Text style={styles.text}>
+        {repeatedPassword !== password && 'Passwords do not match'}
+      </Text>
+      <Text style={styles.text}>
+        {signedUp && 'You have successfully signed up\nRedirecting to login'}
+      </Text>
+      <Text style={styles.text}>
+        {typeof signInError === 'string' && signInError + ''}
+      </Text>
+      <Button
+        title="Sign Up"
+        onPress={() =>
+          signUp(username, password)
+            .then(response => setSignedUp(response))
+            .finally(() =>
+              setTimeout(() => signedUp && navigation.navigate('Login'), 2000),
+            )
+        }
+      />
     </View>
   );
 };
