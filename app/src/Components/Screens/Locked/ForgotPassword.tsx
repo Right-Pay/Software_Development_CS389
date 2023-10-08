@@ -20,12 +20,12 @@ const StylizedInput = styled(TextInput);
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {setSignInError, signInError} = React.useContext(
+  const {addSignInError, clearSignInErrors} = React.useContext(
     AuthContext,
   ) as AuthContextType;
   const [email, setEmail] = React.useState<string>('');
   useEffect(() => {
-    setSignInError([]);
+    clearSignInErrors();
   }, []);
 
   return (
@@ -44,7 +44,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           if (accountAuthFunctions.checkValidEmail(email)) {
             navigation.navigate('VerifyEmail');
           } else {
-            signInError.push('Invalid Email');
+            addSignInError.push('Invalid Email');
           }
         }}
       />
