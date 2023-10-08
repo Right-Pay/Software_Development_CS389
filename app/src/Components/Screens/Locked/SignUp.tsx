@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, Text, Button, TextInput} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
@@ -17,18 +17,23 @@ const StylizedInput = styled(TextInput);
 
 const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const {signUp} = React.useContext(AuthContext) as AuthContextType;
-  const [username, setUsername] = React.useState<string>('');
+  const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
-  const {signInError} = React.useContext(AuthContext) as AuthContextType;
+  const {signInError, setSignInError} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
+  useEffect(() => {
+    setSignInError(null);
+  }, []);
   return (
     <View style={styles.signUpScreenView}>
       <Text style={styles.title}>Sign Up for RightPay</Text>
       <StylizedInput
         className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         placeholder="Email"
-        onChange={event => setUsername(event.nativeEvent.text)}
+        onChange={event => setEmail(event.nativeEvent.text)}
       />
       <StylizedInput
         className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -54,7 +59,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
       <Button
         title="Sign Up"
         onPress={() =>
-          signUp(username, password)
+          signUp(email, password)
             .then(response => setSignedUp(response))
             .finally(() =>
               setTimeout(() => signedUp && navigation.navigate('Login'), 2000),

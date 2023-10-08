@@ -6,46 +6,50 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthContextType} from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
 import {styled} from 'nativewind';
-import accountAuthFunctions from '../../../Helpers/accountAuthFunctions';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
-  'ForgotPassword'
+  'VerifyEmail'
 > &
   PropsWithChildren;
 
 const StylizedInput = styled(TextInput);
 
-const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
+const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
   const {setSignInError, signInError} = React.useContext(
     AuthContext,
   ) as AuthContextType;
-  const [email, setEmail] = React.useState<string>('');
+  const [code, setCode] = React.useState<string>('');
   useEffect(() => {
     setSignInError(null);
   }, []);
+  const verifyCode = () => {
+    //will need to make this an api call at some point
+    console.log('code: ' + code);
+    return true;
+  };
 
   return (
-    <View style={styles.forgotPasswordScreenView}>
-      <Text style={styles.titleTop}>Forgot your Password for RightPay?</Text>
+    <View style={styles.VerifyEmailScreen}>
+      <Text style={styles.titleTop}>Enter Code Sent to Your Email</Text>
       <StylizedInput
         className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-        placeholder="Email Address"
+        placeholder="Code"
         style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
-        onChange={event => setEmail(event.nativeEvent.text)}
+        onChange={event => setCode(event.nativeEvent.text)}
       />
       <Button
         title="Reset Password"
-        onPress={() => {
-          if (accountAuthFunctions.checkValidEmail(email)) {
-            navigation.navigate('VerifyEmail');
-          } else {
-            setSignInError('Invalid Email');
-          }
-        }}
+        onPress={() =>
+          verifyCode()
+            ? navigation.navigate('ResetPassword')
+            : setSignInError(
+                'The code is not right\nEither your email is not correct or you entered an invalid code',
+              )
+        }
       />
       <Text style={styles.text}>
         {typeof signInError === 'string' && signInError + ''}
@@ -54,12 +58,16 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   );
 };
 const styles = StyleSheet.create({
-  forgotPasswordScreenView: {
+  VerifyEmailScreen: {
     flex: 1,
     alignItems: 'center',
   },
   titleTop: {
     marginTop: 100,
+    fontSize: 30,
+  },
+  titleBottom: {
+    marginBottom: 10,
     fontSize: 30,
   },
   credentialsText: {
@@ -72,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForgotPasswordScreen;
+export default VerifyEmailScreen;

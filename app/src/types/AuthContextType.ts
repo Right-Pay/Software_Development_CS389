@@ -11,4 +11,5 @@ export interface AuthContextType {
   signOut: () => void;
   signUp: (_email: string, _password: string) => Promise<boolean>;
   signInError: string | null;
+  setSignInError: (_signInError: string | null) => void;
 }

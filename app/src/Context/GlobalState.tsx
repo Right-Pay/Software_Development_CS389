@@ -51,16 +51,16 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [signInError, setSignInError] = React.useState<string | null>(null);
 
   const signIn = async (email: string, password: string) => {
-    if (!accountAuthFunctions.checkValidUsername(email)) {
-      setSignInError('Invalid Username');
+    if (!accountAuthFunctions.checkValidEmail(email)) {
+      setSignInError('Invalid Email');
     } else if (!accountAuthFunctions.checkValidPassword(password)) {
       setSignInError('Invalid Password');
     } else {
       await accountAuthFunctions
-        .checkCredentialsInSystem(email, password)
+        .signInAuth(email /*email, password*/) //email is temp for not till backend is done
         .then((result: any) => {
           setIsLoading(false);
-          if (typeof result !== 'number') {
+          if (typeof result !== 'string') {
             setUserToken('asdf');
             setIsLoggedIn(true);
             setUserProfile(result as Profile);
@@ -69,9 +69,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
             setUserToken(null);
             setIsLoggedIn(false);
             setUserProfile({} as Profile);
-            setSignInError(
-              result === 1 ? 'Username not found' : 'Incorrect Password',
-            );
+            setSignInError(result);
           }
         });
     }
@@ -98,36 +96,45 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return;
   };
 
-  const signUp = async (email: string, password: string) => {
-    let signedUp = false;
-    await accountAuthFunctions
-      .checkNoUserAlreadyCreated(/*email*/)
-      .then(result => {
-        if (result) {
-          setSignInError('Username already exists');
-        } else if (!accountAuthFunctions.checkValidUsername(email)) {
-          setSignInError('Invalid Username');
-        } else if (!accountAuthFunctions.checkValidPassword(password)) {
-          setSignInError('Invalid Password');
-        } else {
-          //create a new user
-          createNewUser(/*email, password*/).then(r => {
-            if (r) {
-              signIn(email, password);
-            } else {
-              setSignInError('Error creating user');
-            }
-          });
-          signedUp = true;
-        }
-      });
-    setIsLoading(false);
-    return signedUp;
-  };
-
   const createNewUser = async (/*email: string, password: string*/) => {
     //do things
     return true;
+  };
+
+  const signUp = async (email: string, password: string) => {
+    const canSignUp = accountAuthFunctions.checkNoUserAlreadyCreated(
+      'notfound@a.com' /*email*/,
+    );
+    console.log(canSignUp);
+    switch (canSignUp) {
+      case true:
+        if (!accountAuthFunctions.checkValidEmail(email)) {
+          setSignInError('Invalid Email');
+          setIsLoading(false);
+          return false;
+        }
+        if (!accountAuthFunctions.checkValidPassword(password)) {
+          setSignInError('Invalid Password');
+          setIsLoading(false);
+          return false;
+        }
+        createNewUser(/*email, password*/).then(r => {
+          if (r) {
+            signIn(email, password);
+          } else {
+            setSignInError('Error creating user');
+          }
+        });
+        return true;
+      case false:
+        setSignInError('Email Already Exists');
+        setIsLoading(false);
+        return false;
+      default:
+        setSignInError('Invalid Email');
+        setIsLoading(false);
+        return false;
+    }
   };
 
   return (
@@ -145,6 +152,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         signOut,
         signUp,
         signInError,
+        setSignInError,
       }}>
       <Context.Provider
         value={{

@@ -6,6 +6,7 @@ import ResetPasswordScreen from '../Components/Screens/Locked/ResetPassword';
 import SignUpScreen from '../Components/Screens/Locked/SignUp';
 import SplashScreen from '../Components/SplashScreen';
 import WelcomeScreen from '../Components/Screens/Welcome/Welcome';
+import VerifyEmailScreen from '../Components/Screens/Locked/VerifyEmail';
 import AuthContext from '../Context/authContext';
 import {AuthContextType} from '../types/AuthContextType';
 import {WelcomeNavigationRoutesType} from '../types/NavigationRoutesType';
@@ -33,6 +34,7 @@ const WelcomeNavigator: React.FC<PropsWithChildren> = () => {
         name="ResetPassword"
         component={ResetPasswordScreen}
       />
+      <WelcomeStack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
     </WelcomeStack.Navigator>
   );
 };
