@@ -48,13 +48,21 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [isSignout, setIsSignout] = React.useState<boolean>(false);
   const [userToken, setUserToken] = React.useState<string | null>('');
-  const [signInError, setSignInError] = React.useState<string | null>(null);
+  const [signInError, setSignInError] = React.useState<string[]>([]);
+
+  const addSignInError = (error: string) => {
+    setSignInError(prevErrors => Array.from(new Set([...prevErrors, error])));
+  };
+
+  const clearSignInErrors = () => {
+    setSignInError([]);
+  };
 
   const signIn = async (email: string, password: string) => {
     if (!accountAuthFunctions.checkValidEmail(email)) {
-      setSignInError('Invalid Email');
+      signInError.push('Invalid Email');
     } else if (!accountAuthFunctions.checkValidPassword(password)) {
-      setSignInError('Invalid Password');
+      signInError.push('Invalid Password');
     } else {
       await accountAuthFunctions
         .signInAuth(email /*email, password*/) //email is temp for not till backend is done
@@ -64,12 +72,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
             setUserToken('asdf');
             setIsLoggedIn(true);
             setUserProfile(result as Profile);
-            setSignInError(null);
+            setSignInError([]);
           } else {
             setUserToken(null);
             setIsLoggedIn(false);
             setUserProfile({} as Profile);
-            setSignInError(result);
+            signInError.push(result);
           }
         });
     }
@@ -109,12 +117,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     switch (canSignUp) {
       case true:
         if (!accountAuthFunctions.checkValidEmail(email)) {
-          setSignInError('Invalid Email');
+          signInError.push('Invalid Email');
           setIsLoading(false);
           return false;
         }
         if (!accountAuthFunctions.checkValidPassword(password)) {
-          setSignInError('Invalid Password');
+          signInError.push('Invalid Password');
           setIsLoading(false);
           return false;
         }
@@ -122,16 +130,16 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           if (r) {
             signIn(email, password);
           } else {
-            setSignInError('Error creating user');
+            signInError.push('Error creating user');
           }
         });
         return true;
       case false:
-        setSignInError('Email Already Exists');
+        signInError.push('Email Already Exists');
         setIsLoading(false);
         return false;
       default:
-        setSignInError('Invalid Email');
+        signInError.push('Invalid Email');
         setIsLoading(false);
         return false;
     }
@@ -152,7 +160,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         signOut,
         signUp,
         signInError,
-        setSignInError,
+        addSignInError,
+        clearSignInErrors,
       }}>
       <Context.Provider
         value={{

@@ -6,6 +6,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {styled} from 'nativewind';
 import AuthContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
+import SignInError from '../../../Helpers/SignInError';
 
 type SignUpScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -21,11 +22,9 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
-  const {signInError, setSignInError} = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
+  const {clearSignInErrors} = React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
-    setSignInError(null);
+    clearSignInErrors();
   }, []);
   return (
     <View style={styles.signUpScreenView}>
@@ -50,11 +49,9 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
       <Text style={styles.text}>
         {repeatedPassword !== password && 'Passwords do not match'}
       </Text>
+      {SignInError()}
       <Text style={styles.text}>
         {signedUp && 'You have successfully signed up\nRedirecting to login'}
-      </Text>
-      <Text style={styles.text}>
-        {typeof signInError === 'string' && signInError + ''}
       </Text>
       <Button
         title="Sign Up"

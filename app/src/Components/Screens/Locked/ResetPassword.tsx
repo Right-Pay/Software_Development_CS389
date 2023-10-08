@@ -7,6 +7,7 @@ import {AuthContextType} from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
 import { styled } from 'nativewind';
 import accountAuthFunctions from '../../../Helpers/accountAuthFunctions';
+import SignInError from '../../../Helpers/SignInError';
 
 type ResetPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -19,13 +20,12 @@ const StylizedInput = styled(TextInput);
 const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {setSignInError, signInError} = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
+  const {clearSignInErrors, addSignInError} = React.useContext(AuthContext) as AuthContextType;
+
   const [password, setPassword] = React.useState<string>('');
   const [confirmPassword, setConfirmPassword] = React.useState<string>('');
   useEffect(() => {
-    setSignInError(null);
+    clearSignInErrors();
   }, []);
   return (
     <View style={styles.resetPasswordScreenView}>
@@ -44,18 +44,16 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
         placeholderTextColor="#AFAEAE"
         onChange={event => setConfirmPassword(event.nativeEvent.text)}
       />
+      {SignInError()}
       <Button
         title="Reset"
         onPress={() => {
           password === confirmPassword &&
           accountAuthFunctions.checkValidPassword(password)
             ? navigation.navigate('Login')
-            : setSignInError('Passwords Do Not Match');
+            : addSignInError('Passwords Do Not Match');
         }}
       />
-      <Text style={styles.text}>
-        {typeof signInError === 'string' && signInError + ''}
-      </Text>
     </View>
   );
 };

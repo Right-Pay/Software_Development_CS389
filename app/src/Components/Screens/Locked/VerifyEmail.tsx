@@ -6,6 +6,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthContextType} from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
 import {styled} from 'nativewind';
+import SignInError from '../../../Helpers/SignInError';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -18,12 +19,12 @@ const StylizedInput = styled(TextInput);
 const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {setSignInError, signInError} = React.useContext(
+  const {addSignInError, clearSignInErrors} = React.useContext(
     AuthContext,
   ) as AuthContextType;
   const [code, setCode] = React.useState<string>('');
   useEffect(() => {
-    setSignInError(null);
+    clearSignInErrors();
   }, []);
   const verifyCode = () => {
     //will need to make this an api call at some point
@@ -41,19 +42,17 @@ const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
         placeholderTextColor="#AFAEAE"
         onChange={event => setCode(event.nativeEvent.text)}
       />
+      {SignInError()}
       <Button
         title="Reset Password"
         onPress={() =>
           verifyCode()
             ? navigation.navigate('ResetPassword')
-            : setSignInError(
+            : addSignInError(
                 'The code is not right\nEither your email is not correct or you entered an invalid code',
               )
         }
       />
-      <Text style={styles.text}>
-        {typeof signInError === 'string' && signInError + ''}
-      </Text>
     </View>
   );
 };

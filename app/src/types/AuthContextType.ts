@@ -10,6 +10,7 @@ export interface AuthContextType {
   signIn: (_email: string, _password: string) => void;
   signOut: () => void;
   signUp: (_email: string, _password: string) => Promise<boolean>;
-  signInError: string | null;
-  setSignInError: (_signInError: string | null) => void;
+  signInError: string[];
+  clearSignInErrors: () => void;
+  addSignInError: (_signInError: string) => void;
 }

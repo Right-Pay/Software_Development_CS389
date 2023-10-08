@@ -7,6 +7,7 @@ import {AuthContextType} from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
 import {styled} from 'nativewind';
 import accountAuthFunctions from '../../../Helpers/accountAuthFunctions';
+import SignInError from '../../../Helpers/SignInError';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -24,7 +25,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   ) as AuthContextType;
   const [email, setEmail] = React.useState<string>('');
   useEffect(() => {
-    setSignInError(null);
+    setSignInError([]);
   }, []);
 
   return (
@@ -43,13 +44,11 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           if (accountAuthFunctions.checkValidEmail(email)) {
             navigation.navigate('VerifyEmail');
           } else {
-            setSignInError('Invalid Email');
+            signInError.push('Invalid Email');
           }
         }}
       />
-      <Text style={styles.text}>
-        {typeof signInError === 'string' && signInError + ''}
-      </Text>
+      {SignInError()}
     </View>
   );
 };
