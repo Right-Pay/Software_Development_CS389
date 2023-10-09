@@ -31,7 +31,8 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
   }, []);
   return (
     <View style={styles.resetPasswordScreenView}>
-      <Text style={styles.title}>Reset your Password for RightPay</Text>
+      <Text style={styles.titleTop}>Reset your Password for</Text>
+      <Text style={styles.titleBottom}>RightPay</Text>
       <StylizedInput
         className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         placeholder="New Password"
@@ -73,19 +74,24 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  title: {
-    marginTop: 20,
-    marginLeft: 20,
+  titleTop: {
+    marginTop: 100,
     fontSize: 30,
   },
-  text: {
-    padding: 10,
-    fontSize: 20,
+  titleBottom: {
+    marginTop: 0,
+    marginLeft: 20,
+    fontSize: 30,
   },
   credentialsText: {
     padding: 10,
     fontSize: 20,
     color: 'black',
+  },
+  text: {
+    color: 'black',
+    padding: 10,
+    fontSize: 20,
   },
 });
 

@@ -30,7 +30,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
   return (
     <View style={styles.forgotPasswordScreenView}>
-      <Text style={styles.titleTop}>Forgot your Password for RightPay?</Text>
+      <Text style={styles.titleTop}>Forgot your Password for</Text>
+      <Text style={styles.titleBottom}>RightPay?</Text>
       <StylizedInput
         className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         placeholder="Email Address"
@@ -59,6 +60,11 @@ const styles = StyleSheet.create({
   },
   titleTop: {
     marginTop: 100,
+    fontSize: 30,
+  },
+  titleBottom: {
+    marginTop: 0,
+    marginLeft: 20,
     fontSize: 30,
   },
   credentialsText: {
