@@ -1,6 +1,6 @@
 import Config from 'react-native-config';
 
-const fetchSearching = async (url: String) => {
+const fetchCreditCards = async (url: String) => {
   const baseURL = Config.REACT_APP_API_URL;
 
   const response = await fetch(`${baseURL}${url}`, {
@@ -18,7 +18,7 @@ const fetchSearching = async (url: String) => {
 };
 
 const SearchApi = {
-  fetchSearching,
+  fetchCreditCards,
 };
 
 export default SearchApi;

@@ -17,8 +17,8 @@ const fetch__fetching__ = async (url: String) => {
   return result;
 };
 
-const __name__Api = {
+const __screen__Api = {
   fetch__fetching__,
 };
 
-export default __name__Api;
+export default __screen__Api;
