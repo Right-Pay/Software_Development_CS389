@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
-import AuthContext from './authContext';
 import {CreditCard} from '../types/CreditCardType';
-import {Profile} from '../types/ProfileType';
-import accountAuthFunctions from '../Helpers/accountAuthFunctions';
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {Location} from '../types/Location';
@@ -29,7 +26,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     },
   ]);
 
-  const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [location, setLocation] = useState<Location>({} as Location);
 
   const addNewCreditCard = (creditCard: CreditCard) => {
     const newCard: CreditCard = {
@@ -46,112 +44,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const removeCreditCard = (creditCard: CreditCard) => {
     setCreditCards(creditCards.splice(creditCard.id, 1));
   };
-
-  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [isSignout, setIsSignout] = React.useState<boolean>(false);
-  const [userToken, setUserToken] = React.useState<string | null>('');
-  const [signInError, setSignInError] = React.useState<string[]>([]);
-
-  const addSignInError = (error: string) => {
-    setSignInError(prevErrors => Array.from(new Set([...prevErrors, error])));
-  };
-
-  const clearSignInErrors = () => {
-    setSignInError([]);
-  };
-
-  const removeSignInError = (error: string) => {
-    setSignInError(prevErrors => prevErrors.filter(value => value !== error));
-  };
-
-  const signIn = async (email: string, password: string) => {
-    if (!accountAuthFunctions.checkValidEmail(email)) {
-      addSignInError('1');
-    } else if (!accountAuthFunctions.checkValidPassword(password)) {
-      addSignInError('2');
-    } else {
-      await accountAuthFunctions
-        .signInAuth(email /*email, password*/) //email is temp for not till backend is done
-        .then((result: any) => {
-          setIsLoading(false);
-          if (typeof result === 'string') {
-            setUserToken(null);
-            setIsLoggedIn(false);
-            setUserProfile({} as Profile);
-            addSignInError(result);
-          } else {
-            setUserToken('asdf');
-            setIsLoggedIn(true);
-            setUserProfile(result as Profile);
-            clearSignInErrors();
-          }
-        });
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    // simulate loading
-    setTimeout(() => {
-      signIn('johndoe@gmail.com', '123456789aA!');
-    }, 2000);
-  }, []);
-
-  const signOut = () => {
-    // replace with sign out function
-    setIsLoading(true);
-    // simulate loading
-    setTimeout(() => {
-      setUserToken(null);
-      setIsLoggedIn(false);
-      setIsLoading(false);
-      setUserProfile({} as Profile);
-    }, 2000);
-    return;
-  };
-
-  const createNewUser = async (/*email: string, password: string*/) => {
-    //do things
-    return true;
-  };
-
-  const signUp = async (email: string, password: string) => {
-    const canSignUp = accountAuthFunctions.checkNoUserAlreadyCreated(
-      'notfound@a.com' /*email*/,
-    );
-    switch (canSignUp) {
-      case true:
-        if (!accountAuthFunctions.checkValidEmail(email)) {
-          addSignInError('1');
-          setIsLoading(false);
-          return false;
-        }
-        if (!accountAuthFunctions.checkValidPassword(password)) {
-          addSignInError('2');
-          setIsLoading(false);
-          return false;
-        }
-        createNewUser(/*email, password*/).then(r => {
-          if (r) {
-            signIn(email, password);
-          } else {
-            addSignInError('5');
-          }
-        });
-        return true;
-      case false:
-        addSignInError('4');
-        setIsLoading(false);
-        return false;
-      default:
-        addSignInError('1');
-        setIsLoading(false);
-        return false;
-    }
-  };
-
-  const [location, setLocation] = useState<Location>({} as Location);
 
   const requestLocationPermission = async () => {
     try {
@@ -202,41 +94,20 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   useEffect(() => {
     getLocation();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <AuthContext.Provider
+    <Context.Provider
       value={{
-        isLoggedIn,
-        setIsLoggedIn,
+        creditCards,
+        addNewCreditCard,
+        removeCreditCard,
+        location,
         isLoading,
         setIsLoading,
-        isSignout,
-        setIsSignout,
-        userToken,
-        setUserToken,
-        signIn,
-        signOut,
-        signUp,
-        signInError,
-        addSignInError,
-        clearSignInErrors,
-        removeSignInError,
       }}>
-      <Context.Provider
-        value={{
-          creditCards,
-          addNewCreditCard,
-          removeCreditCard,
-          userProfile,
-          setUserProfile,
-          location,
-        }}>
-        {children}
-      </Context.Provider>
-    </AuthContext.Provider>
+      {children}
+    </Context.Provider>
   );
 };
 

@@ -1,6 +1,6 @@
+import {Profile} from './ProfileType';
+
 export interface AuthContextType {
-  isLoggedIn: boolean;
-  setIsLoggedIn: (_isLoggedIn: boolean) => void;
   isLoading: boolean;
   setIsLoading: (_isLoading: boolean) => void;
   isSignout: boolean;
@@ -14,4 +14,8 @@ export interface AuthContextType {
   clearSignInErrors: () => void;
   addSignInError: (_signInError: string) => void;
   removeSignInError: (_signInError: string) => void;
+  userProfile: Profile; //change this eventually
+  setUserProfile: (_userProfile: Profile) => void;
+  checkValidEmail: (_email: string) => boolean;
+  checkValidPassword: (_password: string) => boolean;
 }

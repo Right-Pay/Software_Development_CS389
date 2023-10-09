@@ -40,18 +40,14 @@ const WelcomeNavigator: React.FC<PropsWithChildren> = () => {
 };
 
 const MainNavigator: React.FC<PropsWithChildren> = () => {
-  const {isLoading, userToken, isLoggedIn} = React.useContext(
+  const {isLoading, userToken} = React.useContext(
     AuthContext,
   ) as AuthContextType;
 
   if (isLoading) {
     return <SplashScreen />;
   }
-  return userToken && isLoggedIn ? (
-    <BottomTabNavigator />
-  ) : (
-    <WelcomeNavigator />
-  );
+  return userToken ? <BottomTabNavigator /> : <WelcomeNavigator />;
 };
 
 export default MainNavigator;

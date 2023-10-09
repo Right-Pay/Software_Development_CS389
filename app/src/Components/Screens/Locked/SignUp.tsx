@@ -34,7 +34,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
     if (repeatedPassword.length === 0) {
       removeSignInError('3');
     }
-  }, [repeatedPassword]);
+  }, []);
   return (
     <View style={styles.signUpScreenView}>
       <Text style={styles.title}>Sign Up for RightPay</Text>

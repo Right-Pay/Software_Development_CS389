@@ -6,7 +6,6 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthContextType} from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
 import {styled} from 'nativewind';
-import accountAuthFunctions from '../../../Helpers/accountAuthFunctions';
 import SignInError from '../../../Helpers/SignInError';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
@@ -20,7 +19,7 @@ const StylizedInput = styled(TextInput);
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {addSignInError, clearSignInErrors} = React.useContext(
+  const {addSignInError, clearSignInErrors, checkValidEmail} = React.useContext(
     AuthContext,
   ) as AuthContextType;
   const [email, setEmail] = React.useState<string>('');
@@ -42,7 +41,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
       <Button
         title="Reset Password"
         onPress={() => {
-          if (accountAuthFunctions.checkValidEmail(email)) {
+          if (checkValidEmail(email)) {
             navigation.navigate('VerifyEmail');
           } else {
             addSignInError('1');
