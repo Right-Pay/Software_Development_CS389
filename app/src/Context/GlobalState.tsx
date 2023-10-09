@@ -72,16 +72,16 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         .signInAuth(email /*email, password*/) //email is temp for not till backend is done
         .then((result: any) => {
           setIsLoading(false);
-          if (typeof result !== 'string') {
-            setUserToken('asdf');
-            setIsLoggedIn(true);
-            setUserProfile(result as Profile);
-            setSignInError([]);
-          } else {
+          if (typeof result === 'string') {
             setUserToken(null);
             setIsLoggedIn(false);
             setUserProfile({} as Profile);
             addSignInError(result);
+          } else {
+            setUserToken('asdf');
+            setIsLoggedIn(true);
+            setUserProfile(result as Profile);
+            clearSignInErrors();
           }
         });
     }
