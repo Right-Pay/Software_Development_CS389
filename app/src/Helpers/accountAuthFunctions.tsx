@@ -6,12 +6,12 @@ const postUserCredentials = async (url: String) => {
   // const baseURL = Config.REACT_APP_API_URL;
   const response = {
     data:
-      url === 'profile@a.com' || url === 'notfound@a.com'
+      url === 'johndoe@gmail.com' || url === 'notfound@a.com'
         ? ({
             //Need to change this with an api call
             id: 1,
             name: 'John Doe',
-            email: 'JohnDoe@gmail.com',
+            email: 'johndoe@gmail.com',
             phone: '1234567890',
             address: '1234 Main St',
             city: 'Anytown',
@@ -19,14 +19,14 @@ const postUserCredentials = async (url: String) => {
             zip: '12345',
             subscribed: true,
           } as Profile)
-        : 'Incorrect Password',
-    status: url === 'profile@a.com' || url === 'notfound@a.com' ? 200 : 404,
+        : '1',
+    status: url === 'johndoe@gmail.com' || url === 'notfound@a.com' ? 200 : 404,
     error:
-      url === 'profile@a.com' || url === 'notfound@a.com'
+      url === 'johndoe@gmail.com' || url === 'notfound@a.com'
         ? null
         : ({
             status: 404,
-            message: 'Incorrect Password',
+            message: '1',
           } as HttpError),
   }; /*await fetch(`${baseURL}${url}`, {
     method: 'POST',
@@ -84,7 +84,6 @@ function checkNoUserAlreadyCreated(email: string): boolean {
     return result;
   };
   return false;*/
-  console.log(foundUserProfile);
   return foundUserProfile;
 }
 

@@ -33,7 +33,10 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         placeholder="Email Address"
         style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
-        onChange={event => setEmail(event.nativeEvent.text)}
+        onChange={event => {
+          setEmail(event.nativeEvent.text);
+          clearSignInErrors();
+        }}
       />
       <StylizedInput
         className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -41,7 +44,10 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         secureTextEntry={true}
         style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
-        onChange={event => setPassword(event.nativeEvent.text)}
+        onChange={event => {
+          setPassword(event.nativeEvent.text);
+          clearSignInErrors();
+        }}
       />
       <Text
         className="flex h-9 w-1/2 py-1 text-sm transition-colors file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"

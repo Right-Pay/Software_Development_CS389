@@ -58,11 +58,15 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     setSignInError([]);
   };
 
+  const removeSignInError = (error: string) => {
+    setSignInError(prevErrors => prevErrors.filter(value => value !== error));
+  };
+
   const signIn = async (email: string, password: string) => {
     if (!accountAuthFunctions.checkValidEmail(email)) {
-      signInError.push('Invalid Email');
+      addSignInError('1');
     } else if (!accountAuthFunctions.checkValidPassword(password)) {
-      signInError.push('Invalid Password');
+      addSignInError('2');
     } else {
       await accountAuthFunctions
         .signInAuth(email /*email, password*/) //email is temp for not till backend is done
@@ -77,7 +81,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
             setUserToken(null);
             setIsLoggedIn(false);
             setUserProfile({} as Profile);
-            signInError.push(result);
+            addSignInError(result);
           }
         });
     }
@@ -113,16 +117,15 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     const canSignUp = accountAuthFunctions.checkNoUserAlreadyCreated(
       'notfound@a.com' /*email*/,
     );
-    console.log(canSignUp);
     switch (canSignUp) {
       case true:
         if (!accountAuthFunctions.checkValidEmail(email)) {
-          signInError.push('Invalid Email');
+          addSignInError('1');
           setIsLoading(false);
           return false;
         }
         if (!accountAuthFunctions.checkValidPassword(password)) {
-          signInError.push('Invalid Password');
+          addSignInError('2');
           setIsLoading(false);
           return false;
         }
@@ -130,16 +133,16 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           if (r) {
             signIn(email, password);
           } else {
-            signInError.push('Error creating user');
+            addSignInError('5');
           }
         });
         return true;
       case false:
-        signInError.push('Email Already Exists');
+        addSignInError('4');
         setIsLoading(false);
         return false;
       default:
-        signInError.push('Invalid Email');
+        addSignInError('1');
         setIsLoading(false);
         return false;
     }
@@ -162,6 +165,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         signInError,
         addSignInError,
         clearSignInErrors,
+        removeSignInError,
       }}>
       <Context.Provider
         value={{

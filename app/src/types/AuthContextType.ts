@@ -13,4 +13,5 @@ export interface AuthContextType {
   signInError: string[];
   clearSignInErrors: () => void;
   addSignInError: (_signInError: string) => void;
+  removeSignInError: (_signInError: string) => void;
 }

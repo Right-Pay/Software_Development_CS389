@@ -44,7 +44,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           if (accountAuthFunctions.checkValidEmail(email)) {
             navigation.navigate('VerifyEmail');
           } else {
-            addSignInError.push('Invalid Email');
+            addSignInError('1');
           }
         }}
       />

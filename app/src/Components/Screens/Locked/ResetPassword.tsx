@@ -5,7 +5,7 @@ import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesT
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthContextType} from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
-import { styled } from 'nativewind';
+import {styled} from 'nativewind';
 import accountAuthFunctions from '../../../Helpers/accountAuthFunctions';
 import SignInError from '../../../Helpers/SignInError';
 
@@ -20,7 +20,9 @@ const StylizedInput = styled(TextInput);
 const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {clearSignInErrors, addSignInError} = React.useContext(AuthContext) as AuthContextType;
+  const {clearSignInErrors, addSignInError} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
 
   const [password, setPassword] = React.useState<string>('');
   const [confirmPassword, setConfirmPassword] = React.useState<string>('');
@@ -35,14 +37,22 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
         placeholder="New Password"
         style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
-        onChange={event => setPassword(event.nativeEvent.text)}
+        secureTextEntry={true}
+        onChange={event => {
+          setPassword(event.nativeEvent.text);
+          clearSignInErrors();
+        }}
       />
       <StylizedInput
         className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         placeholder="Confirm Password"
         style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
-        onChange={event => setConfirmPassword(event.nativeEvent.text)}
+        secureTextEntry={true}
+        onChange={event => {
+          setConfirmPassword(event.nativeEvent.text);
+          clearSignInErrors();
+        }}
       />
       {SignInError()}
       <Button
@@ -51,7 +61,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
           password === confirmPassword &&
           accountAuthFunctions.checkValidPassword(password)
             ? navigation.navigate('Login')
-            : addSignInError('Passwords Do Not Match');
+            : addSignInError('3');
         }}
       />
     </View>

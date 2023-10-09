@@ -48,9 +48,7 @@ const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
         onPress={() =>
           verifyCode()
             ? navigation.navigate('ResetPassword')
-            : addSignInError(
-                'The code is not right\nEither your email is not correct or you entered an invalid code',
-              )
+            : addSignInError('6')
         }
       />
     </View>

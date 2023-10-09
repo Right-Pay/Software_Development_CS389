@@ -22,10 +22,19 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
-  const {clearSignInErrors} = React.useContext(AuthContext) as AuthContextType;
+  const {clearSignInErrors, addSignInError, removeSignInError} =
+    React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearSignInErrors();
   }, []);
+  useEffect(() => {
+    if (repeatedPassword !== password) {
+      addSignInError('3');
+    }
+    if (repeatedPassword.length === 0) {
+      removeSignInError('3');
+    }
+  }, [repeatedPassword]);
   return (
     <View style={styles.signUpScreenView}>
       <Text style={styles.title}>Sign Up for RightPay</Text>
@@ -46,10 +55,8 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         secureTextEntry={true}
         onChange={event => setRepeatedPassword(event.nativeEvent.text)}
       />
-      <Text style={styles.text}>
-        {repeatedPassword !== password && 'Passwords do not match'}
-      </Text>
       {SignInError()}
+      {}
       <Text style={styles.text}>
         {signedUp && 'You have successfully signed up\nRedirecting to login'}
       </Text>
