@@ -1,4 +1,5 @@
 import {CreditCard} from './CreditCardType';
+import { Location } from './Location';
 import {Profile} from './ProfileType';
 
 export interface AppContext {
@@ -7,4 +8,5 @@ export interface AppContext {
   removeCreditCard: (_creditCard: CreditCard) => void;
   userProfile: Profile;
   setUserProfile: (_profile: Profile) => void;
+  location:Location;
 }

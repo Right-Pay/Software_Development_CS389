@@ -1,10 +1,13 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
 import AuthContext from './authContext';
 import {CreditCard} from '../types/CreditCardType';
 import {Profile} from '../types/ProfileType';
 import accountAuthFunctions from '../Helpers/accountAuthFunctions';
+import {PermissionsAndroid} from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import {Location} from '../types/Location';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([
@@ -148,6 +151,61 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     }
   };
 
+  const [location, setLocation] = useState<Location>({} as Location);
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Geolocation Permission',
+          message: 'Can we access your location?',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === 'granted') {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      return false;
+    }
+  };
+
+  const getLocation = () => {
+    const result = requestLocationPermission();
+    result.then(res => {
+      if (res) {
+        Geolocation.getCurrentPosition(
+          position => {
+            const coords = position.coords;
+            setLocation({
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              altitude: coords.altitude,
+              accuracy: coords.accuracy,
+            } as Location);
+          },
+          error => {
+            // See error code charts below.
+            setLocation({} as Location);
+            console.log(error.code, error.message);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 1},
+        );
+      }
+    });
+  };
+
+  useEffect(() => {
+    getLocation();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -174,6 +232,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           removeCreditCard,
           userProfile,
           setUserProfile,
+          location,
         }}>
         {children}
       </Context.Provider>
