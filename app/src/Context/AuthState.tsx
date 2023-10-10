@@ -5,6 +5,7 @@ import {Profile} from '../types/ProfileType';
 import {HttpError, HttpResponse} from '../types/HttpResponse';
 import GlobalState from './GlobalState';
 import AuthErrorComponent from '../Helpers/AuthErrorComponent';
+import ConstsType from '../Helpers/Consts';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -108,24 +109,15 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     // const baseURL = Config.REACT_APP_API_URL;
     const response = {
       data:
-        url === 'johndoe@gmail.com' || url === 'notfound@a.com'
-          ? ({
-              //Need to change this with an api call
-              id: 1,
-              name: 'John Doe',
-              email: 'johndoe@gmail.com',
-              phone: '1234567890',
-              address: '1234 Main St',
-              city: 'Anytown',
-              state: 'CA',
-              zip: '12345',
-              subscribed: true,
-            } as Profile)
+        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
+          ? ConstsType.dummyProfile
           : 'invalidPassword',
       status:
-        url === 'johndoe@gmail.com' || url === 'notfound@a.com' ? 200 : 404,
+        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
+          ? 200
+          : 404,
       error:
-        url === 'johndoe@gmail.com' || url === 'notfound@a.com'
+        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
           ? null
           : ({
               status: 404,
@@ -198,7 +190,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     // simulate loading
     setIsLoading(true);
     setTimeout(() => {
-      signIn('johndoe@gmail.com', '123456789aA!');
+      signIn(ConstsType.dummyProfile.email, '123456789aA!');
       setIsLoading(false);
     }, 2000);
   }, []);
