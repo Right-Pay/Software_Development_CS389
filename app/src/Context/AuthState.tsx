@@ -3,16 +3,15 @@ import type {PropsWithChildren} from 'react';
 import AuthContext from './authContext';
 import {Profile} from '../types/ProfileType';
 import {HttpError, HttpResponse} from '../types/HttpResponse';
-import {AuthContextType} from '../types/AuthContextType';
 import GlobalState from './GlobalState';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
-  const {isLoading, setIsLoading, userToken, setUserToken} = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
   const [signInError, setSignInError] = React.useState<string[]>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isSignout, setIsSignout] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
+  const [userToken, setUserToken] = React.useState<string | null>(null);
+  const [signedUp, setSignedUp] = React.useState<boolean>(false);
 
   const addSignInError = (error: string) => {
     setSignInError(prevErrors => Array.from(new Set([...prevErrors, error])));
@@ -66,37 +65,42 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return true;
   };
 
-  const signUp = async (email: string, password: string) => {
-    const canSignUp = checkNoUserAlreadyCreated('notfound@a.com' /*email*/);
-    switch (canSignUp) {
-      case true:
-        if (!checkValidEmail(email)) {
-          addSignInError('1');
-          setIsLoading(false);
-          return false;
-        }
-        if (!checkValidPassword(password)) {
-          addSignInError('2');
-          setIsLoading(false);
-          return false;
-        }
-        createNewUser(/*email, password*/).then(r => {
-          if (r) {
-            signIn(email, password);
-          } else {
-            addSignInError('5');
-          }
-        });
-        return true;
-      case false:
-        addSignInError('4');
-        setIsLoading(false);
-        return false;
-      default:
-        addSignInError('1');
-        setIsLoading(false);
-        return false;
+  const signUp = async (
+    email: string,
+    password: string,
+    repeatedPassword: string,
+  ) => {
+    clearSignInErrors();
+    setSignedUp(false);
+
+    const canSignUp = checkNoUserAlreadyCreated(email);
+
+    if (!canSignUp) {
+      addSignInError('4');
+      setIsLoading(false);
+      return;
     }
+
+    setIsLoading(true);
+
+    if (!checkValidEmail(email)) {
+      addSignInError('1');
+    } else if (!checkValidPassword(password)) {
+      addSignInError('2');
+    } else if (!checkEqualPasswords(password, repeatedPassword)) {
+      addSignInError('3');
+    } else {
+      const newUserCreated = await createNewUser(/*email, password*/);
+
+      if (newUserCreated) {
+        signIn(email, password);
+        setSignedUp(true);
+      } else {
+        addSignInError('5');
+      }
+    }
+
+    setIsLoading(false);
   };
 
   const postUserCredentials = async (url: String) => {
@@ -163,6 +167,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
 
   function checkValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    console.log(emailRegex.test(email) + ' ' + email);
     return email.length > 0 && emailRegex.test(email);
   }
 
@@ -185,10 +190,16 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return foundUserProfile;
   }
 
+  function checkEqualPasswords(password: string, repeatedPassword: string) {
+    return password === repeatedPassword && checkValidPassword(password);
+  }
+
   useEffect(() => {
     // simulate loading
+    setIsLoading(true);
     setTimeout(() => {
       signIn('johndoe@gmail.com', '123456789aA!');
+      setIsLoading(false);
     }, 2000);
   }, []);
 
@@ -196,22 +207,24 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     <AuthContext.Provider
       value={{
         isLoading,
-        setIsLoading,
-        isSignout,
-        setIsSignout,
+        userProfile,
         userToken,
+        isSignout,
+        signInError,
+        signedUp,
+        setIsLoading,
+        setIsSignout,
         setUserToken,
         signIn,
         signOut,
         signUp,
-        signInError,
         clearSignInErrors,
         addSignInError,
         removeSignInError,
-        userProfile,
         setUserProfile,
         checkValidEmail,
         checkValidPassword,
+        checkEqualPasswords,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>

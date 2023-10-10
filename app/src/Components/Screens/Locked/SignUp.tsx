@@ -17,23 +17,14 @@ type SignUpScreenProps = NativeStackScreenProps<
 const StylizedInput = styled(TextInput);
 
 const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
-  const {signUp} = React.useContext(AuthContext) as AuthContextType;
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
-  const [signedUp, setSignedUp] = React.useState<boolean>(false);
-  const {clearSignInErrors, addSignInError, removeSignInError} =
-    React.useContext(AuthContext) as AuthContextType;
+  const {signUp, clearSignInErrors, signedUp} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
   useEffect(() => {
     clearSignInErrors();
-  }, []);
-  useEffect(() => {
-    if (repeatedPassword !== password) {
-      addSignInError('3');
-    }
-    if (repeatedPassword.length === 0) {
-      removeSignInError('3');
-    }
   }, []);
   return (
     <View style={styles.signUpScreenView}>
@@ -56,19 +47,18 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         onChange={event => setRepeatedPassword(event.nativeEvent.text)}
       />
       {SignInError()}
-      {}
       <Text style={styles.text}>
         {signedUp && 'You have successfully signed up\nRedirecting to login'}
       </Text>
       <Button
         title="Sign Up"
-        onPress={() =>
-          signUp(email, password)
-            .then(response => setSignedUp(response))
-            .finally(() =>
-              setTimeout(() => signedUp && navigation.navigate('Login'), 2000),
-            )
-        }
+        onPress={async () => {
+          await signUp(email, password, repeatedPassword);
+          if (signedUp) {
+            console.log('signed up');
+            navigation.navigate('Login');
+          }
+        }}
       />
     </View>
   );

@@ -19,7 +19,7 @@ const StylizedInput = styled(TextInput);
 const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {clearSignInErrors, addSignInError, checkValidPassword} =
+  const {clearSignInErrors, addSignInError, checkEqualPasswords} =
     React.useContext(AuthContext) as AuthContextType;
 
   const [password, setPassword] = React.useState<string>('');
@@ -39,7 +39,6 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
         secureTextEntry={true}
         onChange={event => {
           setPassword(event.nativeEvent.text);
-          clearSignInErrors();
         }}
       />
       <StylizedInput
@@ -50,14 +49,14 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
         secureTextEntry={true}
         onChange={event => {
           setConfirmPassword(event.nativeEvent.text);
-          clearSignInErrors();
         }}
       />
       {SignInError()}
       <Button
         title="Reset"
         onPress={() => {
-          password === confirmPassword && checkValidPassword(password)
+          clearSignInErrors();
+          checkEqualPasswords(password, confirmPassword)
             ? navigation.navigate('Login')
             : addSignInError('3');
         }}

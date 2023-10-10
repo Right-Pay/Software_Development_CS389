@@ -38,6 +38,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         placeholderTextColor="#AFAEAE"
         onChange={event => setEmail(event.nativeEvent.text)}
       />
+      {SignInError()}
       <Button
         title="Reset Password"
         onPress={() => {
@@ -48,7 +49,6 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           }
         }}
       />
-      {SignInError()}
     </View>
   );
 };

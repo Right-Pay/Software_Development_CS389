@@ -24,8 +24,9 @@ const StyledText = styled(Text);
 const StyledTouch = styled(TouchableOpacity);
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
-  const {userProfile} = React.useContext(Context) as AppContext;
-  const {signOut} = React.useContext(AuthContext) as AuthContextType;
+  const {signOut, userProfile} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
 
   return (
     <View style={styles.homeScreenView}>
