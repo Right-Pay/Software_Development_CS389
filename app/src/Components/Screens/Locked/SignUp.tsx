@@ -19,9 +19,8 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
-  const {signUp, clearAuthErrors, signedUp, AuthError} = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
+  const {signUp, clearAuthErrors, signedUp, AuthErrorComponent} =
+    React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
   }, []);
@@ -45,7 +44,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         secureTextEntry={true}
         onChange={event => setRepeatedPassword(event.nativeEvent.text)}
       />
-      {AuthError && <AuthError />}
+      {AuthErrorComponent && <AuthErrorComponent />}
       <Text style={styles.text}>
         {signedUp && 'You have successfully signed up\nRedirecting to login'}
       </Text>
@@ -54,7 +53,6 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         onPress={async () => {
           await signUp(email, password, repeatedPassword);
           if (signedUp) {
-            console.log('signed up');
             navigation.navigate('Login');
           }
         }}

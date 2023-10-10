@@ -18,7 +18,7 @@ const StylizedInput = styled(TextInput);
 const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {addAuthError, clearAuthErrors, AuthError} = React.useContext(
+  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     AuthContext,
   ) as AuthContextType;
   const [code, setCode] = React.useState<string>('');
@@ -41,13 +41,13 @@ const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
         placeholderTextColor="#AFAEAE"
         onChange={event => setCode(event.nativeEvent.text)}
       />
-      {AuthError && <AuthError />}
+      {AuthErrorComponent && <AuthErrorComponent />}
       <Button
         title="Reset Password"
         onPress={() =>
           verifyCode()
             ? navigation.navigate('ResetPassword')
-            : addAuthError('6')
+            : addAuthError('invalidCode')
         }
       />
     </View>

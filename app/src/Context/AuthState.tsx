@@ -4,10 +4,10 @@ import AuthContext from './authContext';
 import {Profile} from '../types/ProfileType';
 import {HttpError, HttpResponse} from '../types/HttpResponse';
 import GlobalState from './GlobalState';
-import AuthError from '../Helpers/AuthError';
+import AuthErrorComponent from '../Helpers/AuthErrorComponent';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
-  const [signInError, setAuthError] = React.useState<string[]>([]);
+  const [authError, setAuthError] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isSignout, setIsSignout] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
@@ -28,9 +28,9 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
 
   const signIn = async (email: string, password: string) => {
     if (!checkValidEmail(email)) {
-      addAuthError('1');
+      addAuthError('invalidEmail');
     } else if (!checkValidPassword(password)) {
-      addAuthError('2');
+      addAuthError('invalidPassword');
     } else {
       await signInAuth(email /*email, password*/) //email is temp for not till backend is done
         .then((result: any) => {
@@ -77,7 +77,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     const canSignUp = checkNoUserAlreadyCreated(email);
 
     if (!canSignUp) {
-      addAuthError('4');
+      addAuthError('userAlreadyExists');
       setIsLoading(false);
       return;
     }
@@ -85,11 +85,11 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setIsLoading(true);
 
     if (!checkValidEmail(email)) {
-      addAuthError('1');
+      addAuthError('invalidEmail');
     } else if (!checkValidPassword(password)) {
-      addAuthError('2');
+      addAuthError('invalidPassword');
     } else if (!checkEqualPasswords(password, repeatedPassword)) {
-      addAuthError('3');
+      addAuthError('passwordsDoNotMatch');
     } else {
       const newUserCreated = await createNewUser(/*email, password*/);
 
@@ -97,7 +97,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         signIn(email, password);
         setSignedUp(true);
       } else {
-        addAuthError('5');
+        addAuthError('errorCreatingUser');
       }
     }
 
@@ -121,7 +121,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
               zip: '12345',
               subscribed: true,
             } as Profile)
-          : '1',
+          : 'invalidPassword',
       status:
         url === 'johndoe@gmail.com' || url === 'notfound@a.com' ? 200 : 404,
       error:
@@ -129,7 +129,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           ? null
           : ({
               status: 404,
-              message: '1',
+              message: 'invalidPassword',
             } as HttpError),
     }; /*await fetch(`${baseURL}${url}`, {
       method: 'POST',
@@ -163,6 +163,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   function checkValidPassword(password: string): boolean {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/;
+      console.log(password);
     return password.length > 0 && passwordRegex.test(password);
   }
 
@@ -210,7 +211,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         userProfile,
         userToken,
         isSignout,
-        signInError,
+        authError,
         signedUp,
         setIsLoading,
         setIsSignout,
@@ -225,7 +226,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkValidEmail,
         checkValidPassword,
         checkEqualPasswords,
-        AuthError,
+        AuthErrorComponent,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>

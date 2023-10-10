@@ -16,7 +16,7 @@ type LogInScreenProps = NativeStackScreenProps<
 const StylizedInput = styled(TextInput);
 
 const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
-  const {clearAuthErrors, AuthError, signIn} = React.useContext(
+  const {clearAuthErrors, AuthErrorComponent, signIn} = React.useContext(
     AuthContext,
   ) as AuthContextType;
   useEffect(() => {
@@ -53,7 +53,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         onPress={() => navigation.navigate('ForgotPassword')}>
         Forgot Password?
       </Text>
-      {AuthError && <AuthError />}
+      {AuthErrorComponent && <AuthErrorComponent />}
       <Button
         title="Log In"
         onPress={() => {

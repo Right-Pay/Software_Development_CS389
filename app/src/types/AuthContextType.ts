@@ -3,11 +3,11 @@ import {Profile} from './ProfileType';
 
 export interface AuthContextType {
   isLoading: boolean;
-  signInError: string[];
   isSignout: boolean;
   userToken: string | null;
   userProfile: Profile; //change this eventually
   signedUp: boolean;
+  authError: string[];
   setIsLoading: (_isLoading: boolean) => void;
   setIsSignout: (_isSignout: boolean) => void;
   setUserToken: (_userToken: string | null) => void;
@@ -25,5 +25,5 @@ export interface AuthContextType {
   checkValidEmail: (_email: string) => boolean;
   checkValidPassword: (_password: string) => boolean;
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
-  AuthError: FC | null;
+  AuthErrorComponent: FC | null;
 }
