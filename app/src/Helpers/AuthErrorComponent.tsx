@@ -2,11 +2,11 @@ import React from 'react';
 import {AuthContextType} from '../types/AuthContextType';
 import AuthContext from '../Context/authContext';
 import {StyleSheet, Text} from 'react-native';
-import {AuthErrorMessages} from './Consts';
+import ConstsType from './Consts';
 
 const AuthErrorComponent = () => {
   const {authError} = React.useContext(AuthContext) as AuthContextType; // Use the useContext hook directly with types
-  const ErrorMessages = AuthErrorMessages;
+  const ErrorMessages = ConstsType.authErrorMessages;
 
   // Check if signInError exists and is not empty
   if (!authError || authError.length === 0) {

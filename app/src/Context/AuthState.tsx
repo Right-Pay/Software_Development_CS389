@@ -163,7 +163,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   function checkValidPassword(password: string): boolean {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/;
-      console.log(password);
     return password.length > 0 && passwordRegex.test(password);
   }
 

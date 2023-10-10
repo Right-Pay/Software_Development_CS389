@@ -1,6 +1,6 @@
-import {AuthErrorMessagesType} from '../types/ConstsType';
+import ConstsType from '../types/ConstsType';
 
-export const AuthErrorMessages: AuthErrorMessagesType = {
+const AuthErrorMessages = {
   invalidEmail: 'Invalid Email',
   invalidPassword: 'Invalid Password',
   passwordsDoNotMatch: 'Passwords Do Not Match',
@@ -10,8 +10,8 @@ export const AuthErrorMessages: AuthErrorMessagesType = {
     'The code is not right\nEither your email is not correct or you entered an invalid code',
 };
 
-const Consts = {
-  AuthErrorMessages,
+const Consts: ConstsType = {
+  authErrorMessages: AuthErrorMessages,
 };
 
 export default Consts;
