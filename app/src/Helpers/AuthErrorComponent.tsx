@@ -1,12 +1,15 @@
 import React from 'react';
 import {AuthContextType} from '../types/AuthContextType';
 import AuthContext from '../Context/authContext';
-import {StyleSheet, Text} from 'react-native';
+import {Text} from 'react-native';
 import ConstsType from './Consts';
+import {styled} from 'nativewind';
 
 const AuthErrorComponent = () => {
   const {authError} = React.useContext(AuthContext) as AuthContextType; // Use the useContext hook directly with types
   const ErrorMessages = ConstsType.authErrorMessages;
+
+  const StylizedText = styled(Text);
 
   // Check if signInError exists and is not empty
   if (!authError || authError.length === 0) {
@@ -16,18 +19,12 @@ const AuthErrorComponent = () => {
   return (
     <>
       {authError.map((error, index) => (
-        <Text style={styles.text} key={index}>
+        <StylizedText className="text-black" key={index}>
           {ErrorMessages[error]}
-        </Text>
+        </StylizedText>
       ))}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    color: 'black',
-  },
-});
 
 export default AuthErrorComponent;

@@ -14,41 +14,50 @@ type SignUpScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const StylizedInput = styled(TextInput);
+const StylizedText = styled(Text);
+const StylizedTouch = styled(Button);
+const StylizedView = styled(View);
 
 const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
+  const headingClassName = 'text-3xl font-bold';
+  const inputClassName =
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-md border bg-transparent shadow-sm transition-colors';
+
   const {signUp, clearAuthErrors, signedUp, AuthErrorComponent} =
     React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
   }, []);
   return (
-    <View style={styles.signUpScreenView}>
-      <Text style={styles.title}>Sign Up for RightPay</Text>
+    <StylizedView className="flex-1 items-center">
+      <StylizedText className={`${headingClassName} mt-20`}>
+        Sign Up for RightPay
+      </StylizedText>
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Email"
         onChange={event => setEmail(event.nativeEvent.text)}
       />
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Password"
         secureTextEntry={true}
         onChange={event => setPassword(event.nativeEvent.text)}
       />
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Repeat Password"
         secureTextEntry={true}
         onChange={event => setRepeatedPassword(event.nativeEvent.text)}
       />
       {AuthErrorComponent && <AuthErrorComponent />}
-      <Text style={styles.text}>
+      <StylizedText className={headingClassName}>
         {signedUp && 'You have successfully signed up\nRedirecting to login'}
-      </Text>
-      <Button
+      </StylizedText>
+      <StylizedTouch
         title="Sign Up"
         onPress={async () => {
           await signUp(email, password, repeatedPassword);
@@ -57,24 +66,8 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
           }
         }}
       />
-    </View>
+    </StylizedView>
   );
 };
-
-const styles = StyleSheet.create({
-  signUpScreenView: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  title: {
-    marginTop: 20,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  text: {
-    padding: 10,
-    fontSize: 20,
-  },
-});
 
 export default SignUpScreen;

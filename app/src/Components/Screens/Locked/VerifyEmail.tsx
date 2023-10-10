@@ -14,6 +14,9 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const StylizedInput = styled(TextInput);
+const StylizedText = styled(Text);
+const StylizedTouch = styled(Button);
+const StylizedView = styled(View);
 
 const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
@@ -31,18 +34,23 @@ const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
     return true;
   };
 
+  const headingClassName = 'text-3xl font-bold';
+  const inputClassName =
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-md border bg-transparent shadow-sm transition-colors';
+
   return (
-    <View style={styles.VerifyEmailScreen}>
-      <Text style={styles.titleTop}>Enter Code Sent to Your Email</Text>
+    <StylizedView className="flex-1 items-center">
+      <StylizedText className={`${headingClassName} mt-20`}>
+        Enter Code Sent to Your Email
+      </StylizedText>
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Code"
-        style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
         onChange={event => setCode(event.nativeEvent.text)}
       />
       {AuthErrorComponent && <AuthErrorComponent />}
-      <Button
+      <StylizedTouch
         title="Reset Password"
         onPress={() =>
           verifyCode()
@@ -50,30 +58,8 @@ const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
             : addAuthError('invalidCode')
         }
       />
-    </View>
+    </StylizedView>
   );
 };
-const styles = StyleSheet.create({
-  VerifyEmailScreen: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  titleTop: {
-    marginTop: 100,
-    fontSize: 30,
-  },
-  titleBottom: {
-    marginBottom: 10,
-    fontSize: 30,
-  },
-  credentialsText: {
-    padding: 10,
-    fontSize: 20,
-    color: 'black',
-  },
-  text: {
-    color: 'black',
-  },
-});
 
 export default VerifyEmailScreen;

@@ -14,6 +14,9 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const StylizedInput = styled(TextInput);
+const StylizedText = styled(Text);
+const StylizedTouch = styled(Button);
+const StylizedView = styled(View);
 
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
@@ -25,53 +28,35 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
     clearAuthErrors();
   }, []);
 
+  const headingClassName = 'text-3xl font-bold';
+  const inputClassName =
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-md border bg-transparent shadow-sm transition-colors';
+
   return (
-    <View style={styles.forgotPasswordScreenView}>
-      <Text style={styles.titleTop}>Forgot your Password for</Text>
-      <Text style={styles.titleBottom}>RightPay?</Text>
+    <StylizedView className="flex-1 items-center">
+      <StylizedText className={`${headingClassName} mt-20`}>
+        Forgot your Password for
+      </StylizedText>
+      <StylizedText className={headingClassName}>RightPay?</StylizedText>
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Email Address"
-        style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
         onChange={event => setEmail(event.nativeEvent.text)}
       />
       {AuthErrorComponent && <AuthErrorComponent />}
-      <Button
+      <StylizedTouch
         title="Reset Password"
         onPress={() => {
           if (checkValidEmail(email)) {
             navigation.navigate('VerifyEmail');
           } else {
-            addAuthError('passwordsDoNotMatch');
+            addAuthError('invalidEmail');
           }
         }}
       />
-    </View>
+    </StylizedView>
   );
 };
-const styles = StyleSheet.create({
-  forgotPasswordScreenView: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  titleTop: {
-    marginTop: 100,
-    fontSize: 30,
-  },
-  titleBottom: {
-    marginTop: 0,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  credentialsText: {
-    padding: 10,
-    fontSize: 20,
-    color: 'black',
-  },
-  text: {
-    color: 'black',
-  },
-});
 
 export default ForgotPasswordScreen;

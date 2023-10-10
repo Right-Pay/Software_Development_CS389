@@ -14,6 +14,9 @@ type LogInScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const StylizedInput = styled(TextInput);
+const StylizedText = styled(Text);
+const StylizedTouch = styled(Button);
+const StylizedView = styled(View);
 
 const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   const {clearAuthErrors, AuthErrorComponent, signIn} = React.useContext(
@@ -24,77 +27,44 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   }, []);
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
+  const headingClassName = 'text-3xl font-bold';
+  const inputClassName =
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-md border bg-transparent shadow-sm transition-colors';
+
   return (
-    <View style={styles.logInScreenView}>
-      <Text style={styles.titleTop}>Log In to Your</Text>
-      <Text style={styles.titleBottom}>RightPay Account</Text>
+    <StylizedView className="flex-1 items-center">
+      <StylizedText className={`${headingClassName} mt-20`}>
+        Log In to Your
+      </StylizedText>
+      <StylizedText className={headingClassName}>RightPay Account</StylizedText>
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Email Address"
-        style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
-        onChange={event => {
-          setEmail(event.nativeEvent.text);
-        }}
+        onChange={event => setEmail(event.nativeEvent.text)}
       />
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Password"
-        secureTextEntry={true}
-        style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
-        onChange={event => {
-          setPassword(event.nativeEvent.text);
-        }}
+        secureTextEntry={true}
+        onChange={event => setPassword(event.nativeEvent.text)}
       />
-      <Text
-        className="flex h-9 w-1/2 py-1 text-sm transition-colors file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-        style={styles.forgotPassword}
+      <StylizedText
+        className="flex pb-1 text-sm"
         onPress={() => navigation.navigate('ForgotPassword')}>
         Forgot Password?
-      </Text>
+      </StylizedText>
       {AuthErrorComponent && <AuthErrorComponent />}
-      <Button
+      <StylizedTouch
         title="Log In"
         onPress={() => {
           clearAuthErrors();
           signIn(email, password);
         }}
       />
-    </View>
+    </StylizedView>
   );
 };
-
-const styles = StyleSheet.create({
-  logInScreenView: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  titleTop: {
-    marginTop: 100,
-    fontSize: 30,
-  },
-  titleBottom: {
-    marginTop: 0,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  credentialsText: {
-    padding: 10,
-    fontSize: 20,
-    color: 'black',
-  },
-  text: {
-    color: 'black',
-  },
-  passwordContainer: {
-    flexDirection: 'column', // Align children horizontally
-    alignItems: 'center', // Center items vertically
-  },
-  forgotPassword: {
-    color: 'grey',
-    marginLeft: 10, // Add marginLeft for spacing
-  },
-});
 
 export default LogInScreen;

@@ -14,6 +14,9 @@ type ResetPasswordScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const StylizedInput = styled(TextInput);
+const StylizedText = styled(Text);
+const StylizedTouch = styled(Button);
+const StylizedView = styled(View);
 
 const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
   navigation,
@@ -27,17 +30,22 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
 
   const [password, setPassword] = React.useState<string>('');
   const [confirmPassword, setConfirmPassword] = React.useState<string>('');
+  const headingClassName = 'text-3xl font-bold';
+  const inputClassName =
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-md border bg-transparent shadow-sm transition-colors';
+
   useEffect(() => {
     clearAuthErrors();
   }, []);
   return (
-    <View style={styles.resetPasswordScreenView}>
-      <Text style={styles.titleTop}>Reset your Password for</Text>
-      <Text style={styles.titleBottom}>RightPay</Text>
+    <StylizedView className="flex-1 items-center">
+      <StylizedText className={`${headingClassName} mt-20`}>
+        Reset your Password for
+      </StylizedText>
+      <StylizedText className={headingClassName}>RightPay</StylizedText>
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="New Password"
-        style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
         secureTextEntry={true}
         onChange={event => {
@@ -45,9 +53,8 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
         }}
       />
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Confirm Password"
-        style={styles.credentialsText}
         placeholderTextColor="#AFAEAE"
         secureTextEntry={true}
         onChange={event => {
@@ -55,43 +62,17 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
         }}
       />
       {AuthErrorComponent && <AuthErrorComponent />}
-      <Button
+      <StylizedTouch
         title="Reset"
         onPress={() => {
           clearAuthErrors();
           checkEqualPasswords(password, confirmPassword)
             ? navigation.navigate('Login')
-            : addAuthError('3');
+            : addAuthError('passwordsDoNotMatch');
         }}
       />
-    </View>
+    </StylizedView>
   );
 };
-
-const styles = StyleSheet.create({
-  resetPasswordScreenView: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  titleTop: {
-    marginTop: 100,
-    fontSize: 30,
-  },
-  titleBottom: {
-    marginTop: 0,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  credentialsText: {
-    padding: 10,
-    fontSize: 20,
-    color: 'black',
-  },
-  text: {
-    color: 'black',
-    padding: 10,
-    fontSize: 20,
-  },
-});
 
 export default ResetPasswordScreen;
