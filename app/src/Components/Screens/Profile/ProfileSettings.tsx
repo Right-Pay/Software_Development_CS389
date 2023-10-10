@@ -1,7 +1,5 @@
 import React from 'react';
 import {View, StyleSheet, Text, Button} from 'react-native';
-import Context from '../../../Context/context';
-import type {AppContext} from '../../../types/AppContextType';
 import type {PropsWithChildren} from 'react';
 import type {
   ProfileNavigationRoutesType,
@@ -10,6 +8,8 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
+import type {AuthContextType} from '../../../types/AuthContextType';
+import AuthContext from '../../../Context/authContext';
 
 type ProfileSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileSettings'>,
@@ -18,13 +18,16 @@ type ProfileSettingsProps = CompositeScreenProps<
   PropsWithChildren;
 
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
-  const {userProfile} = React.useContext(Context) as AppContext;
+  const {userProfile} = React.useContext(AuthContext) as AuthContextType;
 
   return (
     <View style={styles.homeScreenView}>
       <Text style={styles.title}>Profile Screen</Text>
       <Text style={styles.textPadding}>
         Hello, you will soon be able to edit theese!
+      </Text>
+      <Text style={styles.text}>
+        Username: {userProfile.email.split('@')[0]}
       </Text>
       <Text style={styles.text}>Email: {userProfile.email}</Text>
       <Text style={styles.text}>Phone: {userProfile.phone}</Text>

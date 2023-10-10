@@ -6,7 +6,6 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AuthContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import {styled} from 'nativewind';
-import SignInError from '../../../Helpers/SignInError';
 
 type LogInScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -17,10 +16,11 @@ type LogInScreenProps = NativeStackScreenProps<
 const StylizedInput = styled(TextInput);
 
 const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
-  const {signIn} = React.useContext(AuthContext) as AuthContextType;
-  const {clearSignInErrors} = React.useContext(AuthContext) as AuthContextType;
+  const {clearAuthErrors, AuthError, signIn} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
   useEffect(() => {
-    clearSignInErrors();
+    clearAuthErrors();
   }, []);
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
@@ -35,7 +35,6 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         placeholderTextColor="#AFAEAE"
         onChange={event => {
           setEmail(event.nativeEvent.text);
-          clearSignInErrors();
         }}
       />
       <StylizedInput
@@ -46,7 +45,6 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         placeholderTextColor="#AFAEAE"
         onChange={event => {
           setPassword(event.nativeEvent.text);
-          clearSignInErrors();
         }}
       />
       <Text
@@ -55,8 +53,14 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         onPress={() => navigation.navigate('ForgotPassword')}>
         Forgot Password?
       </Text>
-      {SignInError()}
-      <Button title="Log In" onPress={() => signIn(email, password)} />
+      {AuthError && <AuthError />}
+      <Button
+        title="Log In"
+        onPress={() => {
+          clearAuthErrors();
+          signIn(email, password);
+        }}
+      />
     </View>
   );
 };

@@ -1,3 +1,4 @@
+import {FC} from 'react';
 import {Profile} from './ProfileType';
 
 export interface AuthContextType {
@@ -17,11 +18,12 @@ export interface AuthContextType {
     _password: string,
     _repeatedPassword: string,
   ) => void;
-  clearSignInErrors: () => void;
-  addSignInError: (_signInError: string) => void;
-  removeSignInError: (_signInError: string) => void;
+  clearAuthErrors: () => void;
+  addAuthError: (_signInError: string) => void;
+  removeAuthError: (_signInError: string) => void;
   setUserProfile: (_userProfile: Profile) => void;
   checkValidEmail: (_email: string) => boolean;
   checkValidPassword: (_password: string) => boolean;
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
+  AuthError: FC | null;
 }

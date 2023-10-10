@@ -3,11 +3,11 @@ import {AuthContextType} from '../types/AuthContextType';
 import AuthContext from '../Context/authContext';
 import {StyleSheet, Text} from 'react-native';
 
-const SignInError = () => {
+const AuthError = () => {
   const {signInError} = React.useContext(AuthContext) as AuthContextType; // Use the useContext hook directly with types
   const signInErrorMessages = new Map<string, string>([
-    ['1', 'Incorrect Email'],
-    ['2', 'Incorrect Password'],
+    ['1', 'Invalid Email'],
+    ['2', 'Invalid Password'],
     ['3', 'Passwords Do Not Match'],
     ['4', 'Email Already Exists'],
     ['5', 'Error Creating User'],
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInError;
+export default AuthError;

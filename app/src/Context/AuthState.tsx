@@ -4,32 +4,33 @@ import AuthContext from './authContext';
 import {Profile} from '../types/ProfileType';
 import {HttpError, HttpResponse} from '../types/HttpResponse';
 import GlobalState from './GlobalState';
+import AuthError from '../Helpers/AuthError';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
-  const [signInError, setSignInError] = React.useState<string[]>([]);
+  const [signInError, setAuthError] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isSignout, setIsSignout] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
   const [userToken, setUserToken] = React.useState<string | null>(null);
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
 
-  const addSignInError = (error: string) => {
-    setSignInError(prevErrors => Array.from(new Set([...prevErrors, error])));
+  const addAuthError = (error: string) => {
+    setAuthError(prevErrors => Array.from(new Set([...prevErrors, error])));
   };
 
-  const clearSignInErrors = () => {
-    setSignInError([]);
+  const clearAuthErrors = () => {
+    setAuthError([]);
   };
 
-  const removeSignInError = (error: string) => {
-    setSignInError(prevErrors => prevErrors.filter(value => value !== error));
+  const removeAuthError = (error: string) => {
+    setAuthError(prevErrors => prevErrors.filter(value => value !== error));
   };
 
   const signIn = async (email: string, password: string) => {
     if (!checkValidEmail(email)) {
-      addSignInError('1');
+      addAuthError('1');
     } else if (!checkValidPassword(password)) {
-      addSignInError('2');
+      addAuthError('2');
     } else {
       await signInAuth(email /*email, password*/) //email is temp for not till backend is done
         .then((result: any) => {
@@ -37,11 +38,11 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           if (typeof result === 'string') {
             setUserToken(null);
             setUserProfile({} as Profile);
-            addSignInError(result);
+            addAuthError(result);
           } else {
             setUserToken('asdf');
             setUserProfile(result as Profile);
-            clearSignInErrors();
+            clearAuthErrors();
           }
         });
     }
@@ -70,13 +71,13 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     password: string,
     repeatedPassword: string,
   ) => {
-    clearSignInErrors();
+    clearAuthErrors();
     setSignedUp(false);
 
     const canSignUp = checkNoUserAlreadyCreated(email);
 
     if (!canSignUp) {
-      addSignInError('4');
+      addAuthError('4');
       setIsLoading(false);
       return;
     }
@@ -84,11 +85,11 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setIsLoading(true);
 
     if (!checkValidEmail(email)) {
-      addSignInError('1');
+      addAuthError('1');
     } else if (!checkValidPassword(password)) {
-      addSignInError('2');
+      addAuthError('2');
     } else if (!checkEqualPasswords(password, repeatedPassword)) {
-      addSignInError('3');
+      addAuthError('3');
     } else {
       const newUserCreated = await createNewUser(/*email, password*/);
 
@@ -96,7 +97,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         signIn(email, password);
         setSignedUp(true);
       } else {
-        addSignInError('5');
+        addAuthError('5');
       }
     }
 
@@ -167,7 +168,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
 
   function checkValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    console.log(emailRegex.test(email) + ' ' + email);
     return email.length > 0 && emailRegex.test(email);
   }
 
@@ -218,13 +218,14 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         signIn,
         signOut,
         signUp,
-        clearSignInErrors,
-        addSignInError,
-        removeSignInError,
+        clearAuthErrors,
+        addAuthError,
+        removeAuthError,
         setUserProfile,
         checkValidEmail,
         checkValidPassword,
         checkEqualPasswords,
+        AuthError,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>
