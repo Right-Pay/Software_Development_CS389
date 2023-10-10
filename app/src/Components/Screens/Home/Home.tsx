@@ -1,7 +1,5 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import Context from '../../../Context/context';
-import type {AppContext} from '../../../types/AppContextType';
 import type {PropsWithChildren} from 'react';
 import type {
   HomeNavigationRoutesType,
