@@ -9,7 +9,7 @@ generateTemplateFiles([
     },
     stringReplacers: [
       {
-        question: 'What screen is this component for?',
+        question: 'What screen / folder name is this component for?',
         slot: '__screen__',
       },
       {
@@ -46,7 +46,21 @@ generateTemplateFiles([
     entry: {
       folderPath: './tools/templates/screen',
     },
-    stringReplacers: ['__name__'],
+    stringReplacers: [
+      {
+        question: 'What is the name of this screen?',
+        slot: '__screen__',
+      },
+      {
+        question: 'What is the name of the folder for this screen?',
+        slot: '__folder__',
+      },
+      {
+        question:
+          'What is the name of the component for this screen? \n (If there is no component, leave blank and delete later)',
+        slot: '__component__',
+      },
+    ],
     defaultCase: '(pascalCase)',
     dynamicReplacers: [
       {
@@ -65,7 +79,7 @@ generateTemplateFiles([
       {slot: '*/', slotValue: ''},
     ],
     output: {
-      path: './src/Components/Screens/__name__(pascalCase)',
+      path: './src/Components/Screens/__folder__(pascalCase)',
       pathAndFileNameDefaultCase: '(pascalCase)',
     },
     onComplete: results => {

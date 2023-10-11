@@ -1,5 +1,4 @@
 import React from 'react';
-import {View, Text} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {
   SearchNavigationRoutesType,
@@ -9,6 +8,8 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {styled} from 'nativewind';
+import {View} from 'react-native';
+import SearchText from './SearchText';
 
 type SearchScreenProps = CompositeScreenProps<
   NativeStackScreenProps<SearchNavigationRoutesType, 'SearchScreen'>,
@@ -17,14 +18,15 @@ type SearchScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const StylizedView = styled(View);
-const StylizedText = styled(Text);
 
-const SearchUi: React.FC<SearchScreenProps> = () => {
+const SearchScreen: React.FC<SearchScreenProps> = ({navigation}) => {
   return (
-    <StylizedView className="flex-1 justify-center items-center text-center">
-      <StylizedText>This is the SearchUi component</StylizedText>
-    </StylizedView>
+    <>
+      <StylizedView>
+        <SearchText navigation={navigation} />
+      </StylizedView>
+    </>
   );
 };
 
-export default SearchUi;
+export default SearchScreen;
