@@ -20,6 +20,7 @@ type HomeScreenProps = CompositeScreenProps<
 
 const StyledText = styled(Text);
 const StyledTouch = styled(TouchableOpacity);
+const StylizedView = styled(View);
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const {signOut, userProfile} = React.useContext(
@@ -27,7 +28,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   ) as AuthContextType;
 
   return (
-    <View style={styles.homeScreenView}>
+    <StylizedView style={styles.homeScreenView}>
       <StyledText className="mt-8 text-3xl">Home Screen</StyledText>
       <StyledText className="py-8 text-xl">Hello {userProfile.name}</StyledText>
       <StyledTouch
@@ -44,32 +45,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         onPress={() => signOut()}>
         <StyledText className="font-medium text-gray-600">Logout</StyledText>
       </StyledTouch>
-    </View>
+    </StylizedView>
   );
 };
-
-const styles = StyleSheet.create({
-  homeScreenView: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  rowcontainer: {
-    flex: 1,
-    flexDirection: 'column',
-    marginLeft: 20,
-    marginRight: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-  },
-  title: {
-    marginTop: 20,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  text: {
-    padding: 10,
-    fontSize: 20,
-  },
-});
 
 export default HomeScreen;
