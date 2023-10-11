@@ -28,7 +28,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   ) as AuthContextType;
 
   return (
-    <StylizedView style={styles.homeScreenView}>
+    <StylizedView className="flex items-center">
       <StyledText className="mt-8 text-3xl">Home Screen</StyledText>
       <StyledText className="py-8 text-xl">Hello {userProfile.name}</StyledText>
       <StyledTouch
