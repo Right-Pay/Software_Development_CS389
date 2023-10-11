@@ -52,8 +52,8 @@ generateTemplateFiles([
         slot: '__screen__',
       },
       {
-        question: 'What is the name of the folder for this screen?',
-        slot: '__folder__',
+        question: 'What is the name of the stack for this screen?',
+        slot: '__stack__',
       },
       {
         question:
