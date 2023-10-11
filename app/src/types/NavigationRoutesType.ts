@@ -34,6 +34,7 @@ export type CompanyNavigationRoutesType = {
 
 export type SearchNavigationRoutesType = {
   SearchScreen: undefined;
+  SearchSettingsScreen: undefined;
 };
 
 export type LocationNavigationRoutesType = {

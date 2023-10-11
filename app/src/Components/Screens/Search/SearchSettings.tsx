@@ -11,15 +11,17 @@ import {styled} from 'nativewind';
 import {View} from 'react-native';
 import SearchText from './SearchText';
 
-type SearchScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<SearchNavigationRoutesType, 'SearchScreen'>,
+type SearchSettingsScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<SearchNavigationRoutesType, 'SearchSettingsScreen'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;
 
 const StylizedView = styled(View);
 
-const SearchScreen: React.FC<SearchScreenProps> = ({navigation}) => {
+const SearchSettingsScreen: React.FC<SearchSettingsScreenProps> = ({
+  navigation,
+}) => {
   return (
     <>
       <StylizedView>
@@ -29,4 +31,4 @@ const SearchScreen: React.FC<SearchScreenProps> = ({navigation}) => {
   );
 };
 
-export default SearchScreen;
+export default SearchSettingsScreen;

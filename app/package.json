@@ -10,7 +10,8 @@
     "test": "jest",
     "start:development": "SET ENVFILE = '.env.development' && react-native start --reset-cache",
     "start:staging": "SET ENVFILE = '.env.staging' && react-native start --reset-cache",
-    "start:production": "SET ENVFILE = '.env.production' && react-native start --reset-cache"
+    "start:production": "SET ENVFILE = '.env.production' && react-native start --reset-cache",
+    "generate": "node ./tools/generate.js"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.0",
@@ -19,6 +20,7 @@
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/native-stack": "^6.9.14",
     "class-variance-authority": "^0.7.0",
+    "generate-template-files": "^3.2.1",
     "nativewind": "^2.0.11",
     "os": "^0.1.2",
     "path": "^0.12.7",
