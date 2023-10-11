@@ -58,14 +58,14 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         {signedUp && 'You have successfully signed up\nRedirecting to login'}
       </StylizedText>
       <StylizedTouch
-        title="Sign Up"
         onPress={async () => {
           await signUp(email, password, repeatedPassword);
           if (signedUp) {
             navigation.navigate('Login');
           }
-        }}
-      />
+        }}>
+        <StylizedText>SignUp</StylizedText>
+      </StylizedTouch>
     </StylizedView>
   );
 };
