@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -15,7 +15,7 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
 
 const StylizedInput = styled(TextInput);
 const StylizedText = styled(Text);
-const StylizedTouch = styled(Button);
+const StylizedTouch = styled(TouchableOpacity);
 const StylizedView = styled(View);
 
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
