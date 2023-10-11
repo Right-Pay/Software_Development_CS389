@@ -79,7 +79,7 @@ generateTemplateFiles([
       {slot: '*/', slotValue: ''},
     ],
     output: {
-      path: './src/Components/Screens/__folder__(pascalCase)',
+      path: './src/Components/Screens/__stack__(pascalCase)',
       pathAndFileNameDefaultCase: '(pascalCase)',
     },
     onComplete: results => {

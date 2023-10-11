@@ -1,9 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {PropsWithChildren} from 'react';
-import ForgotPasswordScreen from '../Components/Screens/Locked/ForgotPassword';
-import LogInScreen from '../Components/Screens/Locked/LogIn';
-import ResetPasswordScreen from '../Components/Screens/Locked/ResetPassword';
-import SignUpScreen from '../Components/Screens/Locked/SignUp';
+import ForgotPasswordScreen from '../Components/Screens/Welcome/ForgotPassword';
+import LogInScreen from '../Components/Screens/Welcome/LogIn';
+import ResetPasswordScreen from '../Components/Screens/Welcome/ResetPassword';
+import SignUpScreen from '../Components/Screens/Welcome/SignUp';
 import SplashScreen from '../Components/SplashScreen';
 import WelcomeScreen from '../Components/Screens/Welcome/Welcome';
 import AuthContext from '../Context/authContext';
