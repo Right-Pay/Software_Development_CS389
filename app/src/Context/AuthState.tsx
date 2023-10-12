@@ -197,12 +197,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   function checkEqualPasswords(password: string, repeatedPassword: string) {
-    const test = password === repeatedPassword && checkValidPassword(password);
-    if (!test) {
-      addAuthError('passwordsDoNotMatch');
-      return false;
-    }
-    return true;
+    return password === repeatedPassword && checkValidPassword(password);
   }
 
   function verifyCode(code: string) {
