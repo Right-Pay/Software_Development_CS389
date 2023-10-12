@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {View, Text, TextInput, Pressable} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -15,13 +15,13 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
 
 const StylizedInput = styled(TextInput);
 const StylizedText = styled(Text);
-const StylizedTouch = styled(TouchableOpacity);
+const StylizedPress = styled(Pressable);
 const StylizedView = styled(View);
 
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {addAuthError, clearAuthErrors, checkValidEmail, AuthErrorComponent} =
+  const {clearAuthErrors, checkValidEmail, AuthErrorComponent} =
     React.useContext(AuthContext) as AuthContextType;
   const [email, setEmail] = React.useState<string>('');
   useEffect(() => {
@@ -45,16 +45,13 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         onChange={event => setEmail(event.nativeEvent.text)}
       />
       {AuthErrorComponent && <AuthErrorComponent />}
-      <StylizedTouch
-        title="Reset Password"
-        onPress={() => {
-          if (checkValidEmail(email)) {
-            navigation.navigate('VerifyEmail');
-          } else {
-            addAuthError('invalidEmail');
-          }
-        }}
-      />
+      <StylizedPress
+        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors"
+        onPress={() =>
+          checkValidEmail(email) && navigation.navigate('VerifyEmail')
+        }>
+        <StylizedText className="text-xl">Reset Password</StylizedText>
+      </StylizedPress>
     </StylizedView>
   );
 };

@@ -19,7 +19,7 @@ const AuthErrorComponent = () => {
   return (
     <>
       {authError.map((error, index) => (
-        <StylizedText className="text-black" key={index}>
+        <StylizedText className="text-black text-center mb-0" key={index}>
           {ErrorMessages[error]}
         </StylizedText>
       ))}

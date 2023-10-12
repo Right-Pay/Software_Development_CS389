@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Text, Button} from 'react-native';
+import {View, StyleSheet, Text, Pressable} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {styled} from 'nativewind';
 
 type WelcomeScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -10,30 +11,28 @@ type WelcomeScreenProps = NativeStackScreenProps<
 > &
   PropsWithChildren;
 
+const StylizedText = styled(Text);
+const StylizedPress = styled(Pressable);
+const StylizedView = styled(View);
+
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({navigation}) => {
   return (
-    <View style={styles.welcomeScreenView}>
-      <Text style={styles.title}>Welcome to RightPay</Text>
-      <Button title="Log In" onPress={() => navigation.navigate('Login')} />
-      <Button title="Sign Up" onPress={() => navigation.navigate('Register')} />
-    </View>
+    <StylizedView className="flex items-center">
+      <StylizedText className="mt-20 text-3xl">
+        Welcome to RightPay
+      </StylizedText>
+      <StylizedPress
+        onPress={() => navigation.navigate('Login')}
+        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors">
+        <StylizedText className="text-xl">Log In</StylizedText>
+      </StylizedPress>
+      <StylizedPress
+        onPress={() => navigation.navigate('Register')}
+        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors">
+        <StylizedText className="text-xl">Sign Up</StylizedText>
+      </StylizedPress>
+    </StylizedView>
   );
 };
-
-const styles = StyleSheet.create({
-  welcomeScreenView: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  title: {
-    marginTop: 20,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  text: {
-    padding: 10,
-    fontSize: 20,
-  },
-});
 
 export default WelcomeScreen;

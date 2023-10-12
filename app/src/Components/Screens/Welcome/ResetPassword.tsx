@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {View, Text, Pressable, TextInput} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -15,7 +15,7 @@ type ResetPasswordScreenProps = NativeStackScreenProps<
 
 const StylizedInput = styled(TextInput);
 const StylizedText = styled(Text);
-const StylizedTouch = styled(TouchableOpacity);
+const StylizedPress = styled(Pressable);
 const StylizedView = styled(View);
 
 const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
@@ -62,15 +62,15 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
         }}
       />
       {AuthErrorComponent && <AuthErrorComponent />}
-      <StylizedTouch
-        title="Reset"
+      <StylizedPress
+        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors"
         onPress={() => {
           clearAuthErrors();
-          checkEqualPasswords(password, confirmPassword)
-            ? navigation.navigate('Login')
-            : addAuthError('passwordsDoNotMatch');
-        }}
-      />
+          checkEqualPasswords(password, confirmPassword) &&
+            navigation.navigate('Login');
+        }}>
+        <StylizedText className="text-xl">Reset</StylizedText>
+      </StylizedPress>
     </StylizedView>
   );
 };

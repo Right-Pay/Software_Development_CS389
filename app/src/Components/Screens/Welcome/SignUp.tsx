@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {View, Text, Pressable, TextInput} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -15,7 +15,7 @@ type SignUpScreenProps = NativeStackScreenProps<
 
 const StylizedInput = styled(TextInput);
 const StylizedText = styled(Text);
-const StylizedTouch = styled(TouchableOpacity);
+const StylizedPress = styled(Pressable);
 const StylizedView = styled(View);
 
 const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
@@ -54,18 +54,17 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         onChange={event => setRepeatedPassword(event.nativeEvent.text)}
       />
       {AuthErrorComponent && <AuthErrorComponent />}
+      <StylizedPress
+        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors"
+        onPress={async () => {
+          await signUp(email, password, repeatedPassword);
+          signedUp && navigation.navigate('Login');
+        }}>
+        <StylizedText className="text-xl">Sign Up</StylizedText>
+      </StylizedPress>
       <StylizedText className={headingClassName}>
         {signedUp && 'You have successfully signed up\nRedirecting to login'}
       </StylizedText>
-      <StylizedTouch
-        onPress={async () => {
-          await signUp(email, password, repeatedPassword);
-          if (signedUp) {
-            navigation.navigate('Login');
-          }
-        }}>
-        <StylizedText>SignUp</StylizedText>
-      </StylizedTouch>
     </StylizedView>
   );
 };

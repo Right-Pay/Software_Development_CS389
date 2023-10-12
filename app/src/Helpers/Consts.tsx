@@ -7,7 +7,7 @@ const AuthErrorMessages = {
   userAlreadyExists: 'User Already Exists',
   errorCreatingUser: 'Error Creating User',
   invalidCode:
-    'The code is not right\nEither your email is not correct or you entered an invalid code',
+    'The code is not correct\nEither your email is not correct or you entered an invalid code',
 };
 
 const dummyProfile = {

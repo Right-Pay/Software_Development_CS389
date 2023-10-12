@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
+import {View, Text, TextInput, Pressable} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -15,24 +15,19 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
 
 const StylizedInput = styled(TextInput);
 const StylizedText = styled(Text);
-const StylizedTouch = styled(Button);
+const StylizedPress = styled(Pressable);
 const StylizedView = styled(View);
 
 const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
+  const {clearAuthErrors, AuthErrorComponent, verifyCode} = React.useContext(
     AuthContext,
   ) as AuthContextType;
   const [code, setCode] = React.useState<string>('');
   useEffect(() => {
     clearAuthErrors();
   }, []);
-  const verifyCode = () => {
-    //will need to make this an api call at some point
-    console.log('code: ' + code);
-    return true;
-  };
 
   const headingClassName = 'text-3xl font-bold';
   const inputClassName =
@@ -50,14 +45,14 @@ const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
         onChange={event => setCode(event.nativeEvent.text)}
       />
       {AuthErrorComponent && <AuthErrorComponent />}
-      <StylizedTouch
-        title="Reset Password"
-        onPress={() =>
-          verifyCode()
-            ? navigation.navigate('ResetPassword')
-            : addAuthError('invalidCode')
-        }
-      />
+      <StylizedPress
+        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors"
+        onPress={() => {
+          clearAuthErrors();
+          verifyCode(code) && navigation.navigate('ResetPassword');
+        }}>
+        <StylizedText className="text-xl">Reset Password</StylizedText>
+      </StylizedPress>
     </StylizedView>
   );
 };

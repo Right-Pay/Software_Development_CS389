@@ -155,12 +155,22 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   function checkValidPassword(password: string): boolean {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/;
-    return password.length > 0 && passwordRegex.test(password);
+    const test = password.length > 0 && passwordRegex.test(password);
+    if (!test) {
+      addAuthError('invalidPassword');
+      return false;
+    }
+    return test;
   }
 
   function checkValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return email.length > 0 && emailRegex.test(email);
+    const test = email.length > 0 && emailRegex.test(email);
+    if (!test) {
+      addAuthError('invalidEmail');
+      return false;
+    }
+    return test;
   }
 
   function checkNoUserAlreadyCreated(email: string): boolean {
@@ -179,11 +189,31 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       return result;
     };
     return false;*/
+    if (foundUserProfile) {
+      addAuthError('userAlreadyExists');
+      return false;
+    }
     return foundUserProfile;
   }
 
   function checkEqualPasswords(password: string, repeatedPassword: string) {
-    return password === repeatedPassword && checkValidPassword(password);
+    const test = password === repeatedPassword && checkValidPassword(password);
+    if (!test) {
+      addAuthError('passwordsDoNotMatch');
+      return false;
+    }
+    return true;
+  }
+
+  function verifyCode(code: string) {
+    //will need to make this an api call at some point
+    const test = code?.length > 0;
+    if (!test) {
+      addAuthError('invalidCode');
+      return false;
+    }
+    console.log('code: ' + code);
+    return true;
   }
 
   useEffect(() => {
@@ -217,6 +247,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkValidEmail,
         checkValidPassword,
         checkEqualPasswords,
+        verifyCode,
         AuthErrorComponent,
       }}>
       <GlobalState>{children}</GlobalState>

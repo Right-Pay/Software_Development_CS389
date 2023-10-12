@@ -25,5 +25,6 @@ export interface AuthContextType {
   checkValidEmail: (_email: string) => boolean;
   checkValidPassword: (_password: string) => boolean;
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
+  verifyCode: (_code: string) => boolean;
   AuthErrorComponent: FC | null;
 }
