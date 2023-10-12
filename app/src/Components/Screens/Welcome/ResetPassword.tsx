@@ -21,12 +21,8 @@ const StylizedView = styled(View);
 const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {
-    clearAuthErrors,
-    addAuthError,
-    checkEqualPasswords,
-    AuthErrorComponent,
-  } = React.useContext(AuthContext) as AuthContextType;
+  const {clearAuthErrors, checkEqualPasswords, AuthErrorComponent} =
+    React.useContext(AuthContext) as AuthContextType;
 
   const [password, setPassword] = React.useState<string>('');
   const [confirmPassword, setConfirmPassword] = React.useState<string>('');
