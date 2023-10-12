@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, StyleSheet, Text, Button, TextInput} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, Pressable, TextInput} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -14,48 +14,58 @@ type LogInScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const StylizedInput = styled(TextInput);
+const StylizedText = styled(Text);
+const StylizedPress = styled(Pressable);
+const StylizedView = styled(View);
 
 const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
-  const {signIn} = React.useContext(AuthContext) as AuthContextType;
+  const {clearAuthErrors, AuthErrorComponent, signIn} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
+  useEffect(() => {
+    clearAuthErrors();
+  }, []);
+  const [email, setEmail] = React.useState<string>('');
+  const [password, setPassword] = React.useState<string>('');
+  const headingClassName = 'text-3xl font-bold';
+  const inputClassName =
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-md border bg-transparent shadow-sm transition-colors';
+
   return (
-    <View style={styles.logInScreenView}>
-      <Text style={styles.title}>Log In to RightPay</Text>
-      <Text style={styles.text}>Username</Text>
+    <StylizedView className="flex-1 items-center">
+      <StylizedText className={`${headingClassName} mt-20`}>
+        Log In to Your
+      </StylizedText>
+      <StylizedText className={headingClassName}>RightPay Account</StylizedText>
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-        placeholder="Username"
+        className={inputClassName}
+        placeholder="Email Address"
+        placeholderTextColor="#AFAEAE"
+        onChange={event => setEmail(event.nativeEvent.text)}
       />
-      <Text style={styles.text}>Password</Text>
       <StylizedInput
-        className="flex h-9 w-1/2 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className={inputClassName}
         placeholder="Password"
+        placeholderTextColor="#AFAEAE"
+        secureTextEntry={true}
+        onChange={event => setPassword(event.nativeEvent.text)}
       />
-      <Button
-        title="Log In"
-        onPress={() => signIn('johndoe@gmail.com', 'password')}
-      />
-      <Button
-        title="Forgot Password"
-        onPress={() => navigation.navigate('ForgotPassword')}
-      />
-    </View>
+      <StylizedPress
+        className="flex pb-1"
+        onPress={() => navigation.navigate('ForgotPassword')}>
+        <StylizedText className="text-sm">Forgot Password?</StylizedText>
+      </StylizedPress>
+      {AuthErrorComponent && <AuthErrorComponent />}
+      <StylizedPress
+        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors"
+        onPress={() => {
+          clearAuthErrors();
+          signIn(email, password);
+        }}>
+        <StylizedText className="text-xl">Log In</StylizedText>
+      </StylizedPress>
+    </StylizedView>
   );
 };
-
-const styles = StyleSheet.create({
-  logInScreenView: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  title: {
-    marginTop: 20,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  text: {
-    padding: 10,
-    fontSize: 20,
-  },
-});
 
 export default LogInScreen;
