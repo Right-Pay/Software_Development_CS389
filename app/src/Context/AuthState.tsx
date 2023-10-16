@@ -6,6 +6,7 @@ import {HttpError, HttpResponse} from '../types/HttpResponse';
 import GlobalState from './GlobalState';
 import AuthErrorComponent from '../Helpers/AuthErrorComponent';
 import ConstsType from '../Helpers/Consts';
+import Auth0Params from './Auth0Params.json';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -33,19 +34,16 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     } else if (!checkValidPassword(password)) {
       addAuthError('invalidPassword');
     } else {
-      await signInAuth(email /*email, password*/) //email is temp for not till backend is done
-        .then((result: any) => {
-          setIsLoading(false);
-          if (typeof result === 'string') {
-            setUserToken(null);
-            setUserProfile({} as Profile);
-            addAuthError(result);
-          } else {
-            setUserToken('asdf');
-            setUserProfile(result as Profile);
-            clearAuthErrors();
-          }
+      await signInAuth(email, password);
+      if (userToken !== null) {
+        postUserCredentials().then(r => {
+          const res = r as HttpResponse;
+          const status = res.status;
+          return status >= 200 && status < 300
+            ? setUserProfile(res.data as Profile)
+            : (res.error?.message as string); //Data will stand for profile if found and error message if status not correct
         });
+      }
     }
     setIsLoading(false);
   };
@@ -105,8 +103,9 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setIsLoading(false);
   };
 
-  const postUserCredentials = async (url: String) => {
-    // const baseURL = Config.REACT_APP_API_URL;
+  const postUserCredentials = async () => {
+    const baseURL = ''; //Config.REACT_APP_API_URL;
+    const url = `${baseURL} /user/login?${userToken}`;
     const response = {
       data:
         url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
@@ -136,20 +135,35 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return result;
   };
 
-  async function signInAuth( //update this
-    tempURL: string /*email: string,password: string,*/,
-  ): Promise<Profile | string> {
-    const fetchedUserProfile = await postUserCredentials(
-      tempURL /*endpointtosendpasswordandemail*/,
-    ).then(r => {
-      const res = r as HttpResponse;
-      const status = res.status;
-      return status >= 200 && status < 300
-        ? (res.data as Profile)
-        : (res.error?.message as string); //Data will stand for profile if found and error message if status not correct
-    });
+  async function signInAuth(email: string, password: string) {
+    const bodyParams = {
+      client_id: Auth0Params.clientId,
+      grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
+      username: email,
+      password: password,
+      realm: Auth0Params.realm,
+      audience: Auth0Params.apiAudience,
+      scope: Auth0Params.scope,
+    };
 
-    return fetchedUserProfile;
+    await fetch(`https://${Auth0Params.domain}/oauth/token`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyParams),
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log('responseJson', responseJson);
+        if (responseJson.error) {
+          return responseJson.error_description;
+        }
+        const {access_token} = responseJson;
+        setUserToken(access_token);
+        console.log('access_token: ', access_token);
+      });
   }
 
   function checkValidPassword(password: string): boolean {

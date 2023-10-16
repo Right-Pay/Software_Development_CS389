@@ -1,0 +1,9 @@
+{
+  "domain": "dev-6uux541sywon80js.us.auth0.com",
+  "clientId": "QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45",
+  "callbackUrl": "http://localhost:3000",
+  "realm": "myDB",
+  "apiUrl": "http://localhost:3001",
+  "apiAudience": "https://digitalapi",
+  "scope": "openid email update:email update:password"
+}
