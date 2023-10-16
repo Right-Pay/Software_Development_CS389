@@ -1,12 +1,14 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express, { Express } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import helmet from "helmet";
 import ErrorHandlers from './middleware/errorHandling';
+import { languageMiddleware } from './middleware/i18nMiddleware';
 import UserRouter from './routes/userRoutes';
 import DefaultRotuer from './routes/defaultRoutes';
 
-dotenv.config();
 
 const app: Express = express();
 
@@ -16,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
+app.use(languageMiddleware);
 
 // Routes
 

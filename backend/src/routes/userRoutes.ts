@@ -1,32 +1,26 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import checkJwt from '../middleware/authenticationMiddleware';
 import { IJsonResponse } from '../types/jsonResponse';
+import UserController from '../controllers/UserController';
 
 const router = Router();
 
 // Get User by ID
-router.get("/", checkJwt, (req: Request, res: Response) => {
-  const auth = req.auth;
-  const token = auth?.token; // The raw JWT token
-  const response: IJsonResponse = {
-    message: "TLX API - User by ID " + auth?.payload.sub,
-    success: true,
-    data: auth
-  };
-  res.json(response);
+router.get("/", checkJwt, async (req: Request, res: Response) => {
+  try {
+    const user = await UserController.getUser(req, res);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', sucess: false });
+  }
 });
 
 // Register User
-router.post("/", checkJwt, (req: Request, res: Response) => {
-  const auth = req.auth;
-  const token = auth?.token; // The raw JWT token
-  const data = req.body;
-  const response: IJsonResponse = {
-    message: "TLX API - Register User " + data.username + " " + auth?.payload.sub,
-    success: true,
-    data: auth
-  };
-  res.json(response);
+router.post("/", checkJwt, async (req: Request, res: Response) => {
+  try {
+    const user = await UserController.createUser(req, res);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', sucess: false });
+  }
 });
 
 // Update User
@@ -43,16 +37,12 @@ router.put("/", checkJwt, (req: Request, res: Response) => {
 });
 
 // Delete User
-router.delete("/", checkJwt, (req: Request, res: Response) => {
-  const auth = req.auth;
-  const token = auth?.token; // The raw JWT token
-  const data = req.body;
-  const response: IJsonResponse = {
-    message: "TLX API - Delete User " + data.username + " " + auth?.payload.sub,
-    success: true,
-    data: auth
-  };
-  res.json(response);
+router.delete("/", checkJwt, async (req: Request, res: Response) => {
+  try {
+    const sucess = await UserController.deleteUser(req, res);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', sucess: false });
+  }
 });
 
 export default router;

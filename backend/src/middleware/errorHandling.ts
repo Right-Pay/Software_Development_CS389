@@ -1,11 +1,17 @@
 import { ErrorRequestHandler } from "express";
+import i18n from "../config/i18n";
+import {changeLanguage} from "./i18nMiddleware";
+
 
 const authorizationErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    if (err.name === 'UnauthorizedError') {
-        res.status(401).send({ error: 'Unathorized', message: err.message, success: false });
-    } else {
-        next(err);
-    }
+  changeLanguage(req.headers['x-preferred-language'] as string);
+  if (err.name === 'UnauthorizedError') {
+    // string to lowercase
+    err.message = 'error.' + err.message.toLowerCase();
+    res.status(401).send({ message: i18n.t(err.message) || i18n.t('error.default'), success: false });
+  } else {
+      next(err);
+  }
 };
 
 const logErrors: ErrorRequestHandler = (err, req, res, next) => {
@@ -14,8 +20,11 @@ const logErrors: ErrorRequestHandler = (err, req, res, next) => {
 }
 
 const clientErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  changeLanguage(req.headers['x-preferred-language'] as string);
   if (req.xhr) {
-    res.status(500).send({ error: 'Something failed!', message: err.message, success: false })
+    // string to lowercase
+    err.message = 'error.' + err.message.toLowerCase();
+    res.status(500).send({ message: i18n.t(err.message) || i18n.t('error.default'), success: false })
   } else {
     next(err)
   }
