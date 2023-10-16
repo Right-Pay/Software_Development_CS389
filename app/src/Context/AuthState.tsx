@@ -41,12 +41,66 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           const status = res.status;
           return status >= 200 && status < 300
             ? setUserProfile(res.data as Profile)
-            : (res.error?.message as string); //Data will stand for profile if found and error message if status not correct
+            : addAuthError(res.error?.message as string); //Data will stand for profile if found and error message if status not correct
         });
       }
     }
     setIsLoading(false);
   };
+
+  const postUserCredentials = async () => {
+    const baseURL = ''; //Config.REACT_APP_API_URL;
+    const url = `${baseURL} /user/login?${userToken}`; //send to actual api
+    const response = {
+      data:
+        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
+          ? ConstsType.dummyProfile
+          : 'invalidPassword',
+      status:
+        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
+          ? 200
+          : 404,
+      error:
+        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
+          ? null
+          : ({
+              status: 404,
+              message: 'invalidPassword',
+            } as HttpError),
+    };
+    const result = response;
+    return result;
+  };
+
+  async function signInAuth(email: string, password: string) {
+    const bodyParams = {
+      client_id: Auth0Params.clientId,
+      grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
+      username: email,
+      password: password,
+      realm: Auth0Params.realm,
+      audience: Auth0Params.apiAudience,
+      scope: Auth0Params.scope,
+    };
+
+    await fetch(`https://${Auth0Params.domain}/oauth/token`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyParams),
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        if (responseJson.error) {
+          return responseJson.error_description;
+        }
+        const {access_token} = responseJson;
+        setUserToken(access_token);
+        console.log('access_token: ', access_token);
+      });
+  }
 
   const signOut = () => {
     // replace with sign out function
@@ -58,11 +112,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       setUserProfile({} as Profile);
     }, 2000);
     return;
-  };
-
-  const createNewUser = async (/*email: string, password: string*/) => {
-    //do things
-    return true;
   };
 
   const signUp = async (
@@ -103,68 +152,10 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setIsLoading(false);
   };
 
-  const postUserCredentials = async () => {
-    const baseURL = ''; //Config.REACT_APP_API_URL;
-    const url = `${baseURL} /user/login?${userToken}`;
-    const response = {
-      data:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? ConstsType.dummyProfile
-          : 'invalidPassword',
-      status:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? 200
-          : 404,
-      error:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? null
-          : ({
-              status: 404,
-              message: 'invalidPassword',
-            } as HttpError),
-    }; /*await fetch(`${baseURL}${url}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });*/
-    // Manipulate result to return
-    const result = response;
-    //await response.json();
-    return result;
+  const createNewUser = async (/*email: string, password: string*/) => {
+    //do things reach to auth0
+    return true;
   };
-
-  async function signInAuth(email: string, password: string) {
-    const bodyParams = {
-      client_id: Auth0Params.clientId,
-      grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
-      username: email,
-      password: password,
-      realm: Auth0Params.realm,
-      audience: Auth0Params.apiAudience,
-      scope: Auth0Params.scope,
-    };
-
-    await fetch(`https://${Auth0Params.domain}/oauth/token`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bodyParams),
-    })
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log('responseJson', responseJson);
-        if (responseJson.error) {
-          return responseJson.error_description;
-        }
-        const {access_token} = responseJson;
-        setUserToken(access_token);
-        console.log('access_token: ', access_token);
-      });
-  }
 
   function checkValidPassword(password: string): boolean {
     const passwordRegex =
@@ -187,7 +178,8 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return test;
   }
 
-  function checkNoUserAlreadyCreated(email: string): boolean {
+  function checkNoUserAlreadyCreated(email: string): boolean {  
+    //This will have to react out to auth0 not sure how yet
     const foundUserProfile =
       email === 'notfound@a.com' ? true : false; /*async (url: String) => {
       const baseURL = Config.REACT_APP_API_URL;
