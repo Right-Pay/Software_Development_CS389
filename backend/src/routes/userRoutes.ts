@@ -6,18 +6,12 @@ import UserController from '../controllers/UserController';
 const router = Router();
 
 // Get User by ID
-router.get("/", checkJwt, async (req: Request, res: Response) => {
-  try {
-    const user = await UserController.getUser(req, res);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', sucess: false });
-  }
-});
+router.get("/", checkJwt, async (req: Request, res: Response) => await UserController.getUser(req, res))
 
 // Register User
 router.post("/", checkJwt, async (req: Request, res: Response) => {
   try {
-    const user = await UserController.createUser(req, res);
+    await UserController.createUser(req, res);
   } catch (error) {
     res.status(500).json({ message: 'Server error', sucess: false });
   }
