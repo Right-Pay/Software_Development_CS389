@@ -1,7 +1,7 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
-  SearchNavigationRoutesType,
+  __stack__NavigationRoutesType,
   NavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -9,24 +9,24 @@ import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {styled} from 'nativewind';
 import {View} from 'react-native';
-import SearchText from './SearchText';
+import __componentName__ from './__componentName__';
 
-type SearchScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<SearchNavigationRoutesType, 'SearchScreen'>,
+type __screen__ScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<__stack__NavigationRoutesType, '__screen__Screen'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;
 
 const StylizedView = styled(View);
 
-const SearchScreen: React.FC<SearchScreenProps> = ({navigation}) => {
+const __screen__Screen: React.FC<__screen__ScreenProps> = ({navigation}) => {
   return (
     <>
       <StylizedView>
-        <SearchText navigation={navigation} />
+        <__componentName__ navigation={navigation} />
       </StylizedView>
     </>
   );
 };
 
-export default SearchScreen;
+export default __screen__Screen;
