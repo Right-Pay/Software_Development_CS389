@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --reset-cache",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start --reset-cache",
@@ -11,7 +11,6 @@
     "start:development": "SET ENVFILE = '.env.development' && react-native start --reset-cache",
     "start:staging": "SET ENVFILE = '.env.staging' && react-native start --reset-cache",
     "start:production": "SET ENVFILE = '.env.production' && react-native start --reset-cache",
-    "android:staging": "SET ENVFILE = '.env.staging' && react-native run-android",
     "generate": "node ./tools/generate.js"
   },
   "dependencies": {
