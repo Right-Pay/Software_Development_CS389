@@ -15,6 +15,7 @@ export interface AuthContextType {
   signOut: () => void;
   signUp: (
     _email: string,
+    _username: string,
     _password: string,
     _repeatedPassword: string,
   ) => void;

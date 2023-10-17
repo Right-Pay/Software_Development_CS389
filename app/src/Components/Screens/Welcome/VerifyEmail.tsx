@@ -29,30 +29,33 @@ const VerifyEmailScreen: React.FC<ForgotPasswordScreenProps> = ({
     clearAuthErrors();
   }, []);
 
-  const headingClassName = 'text-3xl font-bold';
+  const headingClassName =
+    'mt-20 text-3xl text-center font-bold text-green-500';
   const inputClassName =
-    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-md border bg-transparent shadow-sm transition-colors';
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border border-green-500 bg-transparent shadow-sm transition-colors';
 
   return (
     <StylizedView className="flex-1 items-center">
       <StylizedText className={`${headingClassName} mt-20`}>
         Enter Code Sent to Your Email
       </StylizedText>
-      <StylizedInput
-        className={inputClassName}
-        placeholder="Code"
-        placeholderTextColor="#AFAEAE"
-        onChange={event => setCode(event.nativeEvent.text)}
-      />
-      {AuthErrorComponent && <AuthErrorComponent />}
-      <StylizedPress
-        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors"
-        onPress={() => {
-          clearAuthErrors();
-          verifyCode(code) && navigation.navigate('ResetPassword');
-        }}>
-        <StylizedText className="text-xl">Reset Password</StylizedText>
-      </StylizedPress>
+      <StylizedView className="flex items-center justify-center h-full w-full">
+        <StylizedInput
+          className={inputClassName}
+          placeholder="Code"
+          placeholderTextColor="#AFAEAE"
+          onChange={event => setCode(event.nativeEvent.text)}
+        />
+        {AuthErrorComponent && <AuthErrorComponent />}
+        <StylizedPress
+          className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors"
+          onPress={() => {
+            clearAuthErrors();
+            verifyCode(code) && navigation.navigate('ResetPassword');
+          }}>
+          <StylizedText className="text-xl">Reset Password</StylizedText>
+        </StylizedPress>
+      </StylizedView>
     </StylizedView>
   );
 };
