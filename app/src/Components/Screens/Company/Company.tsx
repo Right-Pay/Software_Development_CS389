@@ -13,14 +13,9 @@ type CompanyScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const CompanyScreen: React.FC<CompanyScreenProps> = () => {
-  const {location} = React.useContext(Context) as AppContext;
-  const long = location?.longitude;
-  const lat = location?.latitude;
   return (
     <View style={styles.center}>
       <Text>This is the company screen... what this for????</Text>
-      <Text>{'long: ' + long}</Text>
-      <Text>{'lat: ' + lat}</Text>
     </View>
   );
 };
