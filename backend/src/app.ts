@@ -22,8 +22,8 @@ app.use(languageMiddleware);
 
 // Routes
 
-app.use('/', DefaultRotuer);
-app.use('/users', UserRouter);
+app.use('/api', DefaultRotuer);
+app.use('/api/users', UserRouter);
 
 
 // Needs to be last

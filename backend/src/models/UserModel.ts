@@ -22,7 +22,7 @@ export class UserModel {
       return result.rows[0];
     } catch (err: any) {
       console.log('DB Error', err);
-      const userFriendlyError = i18n.t(err.message) || i18n.t('error.default');
+      const userFriendlyError = i18n.t([err.message, 'error.default']);
       throw new Error(userFriendlyError);
     }
   }
@@ -41,7 +41,7 @@ export class UserModel {
       }
     } catch (err: any) {
       console.log('DB Error', err);
-      const userFriendlyError = i18n.t(err.message) || i18n.t('error.default');
+      const userFriendlyError = i18n.t([err.message, 'error.default']);
       throw new Error(userFriendlyError);
     }
   }
@@ -60,7 +60,7 @@ export class UserModel {
       return result.rows.length > 0;
     } catch (err: any) {
       console.log('DB Error', err);
-      const userFriendlyError = i18n.t(err.message) || i18n.t('error.default');
+      const userFriendlyError = i18n.t([err.message, 'error.default']);
       throw new Error(userFriendlyError);
     }
   }

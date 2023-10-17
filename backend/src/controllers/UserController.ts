@@ -52,6 +52,12 @@ class UserController {
     }
     userData.auth_id = req.auth?.payload.sub;
     userData.auth_token = req.auth?.token;
+    if (!userData.username || !userData.email) {
+      response.success = false;
+      response.message = i18n.t('error.missingFields');
+      res.status(400).json(response);
+      return;
+    }
     try {
       const newUser = await UserModel.create(userData);
       response.data = newUser;

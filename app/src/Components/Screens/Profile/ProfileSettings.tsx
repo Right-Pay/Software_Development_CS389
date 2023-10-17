@@ -26,9 +26,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
       <Text style={styles.textPadding}>
         Hello, you will soon be able to edit theese!
       </Text>
-      <Text style={styles.text}>
-        Username: {userProfile.email.split('@')[0]}
-      </Text>
+      <Text style={styles.text}>Username: {userProfile.username}</Text>
       <Text style={styles.text}>Email: {userProfile.email}</Text>
       <Text style={styles.text}>Phone: {userProfile.phone}</Text>
       <Text style={styles.text}>Address: {userProfile.address}</Text>
