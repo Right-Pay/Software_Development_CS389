@@ -30,7 +30,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   return (
     <StylizedView className="flex items-center">
       <StyledText className="mt-8 text-3xl">Home Screen</StyledText>
-      <StyledText className="py-8 text-xl">Hello {userProfile.name}</StyledText>
+      <StyledText className="py-8 text-xl">
+        Hello {userProfile.username}
+      </StyledText>
       <StyledTouch
         className="text-3xl p-2 border-2 border-gray-600 rounded-xl"
         onPress={() =>

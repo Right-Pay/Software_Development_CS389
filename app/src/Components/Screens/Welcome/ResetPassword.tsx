@@ -26,47 +26,49 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
 
   const [password, setPassword] = React.useState<string>('');
   const [confirmPassword, setConfirmPassword] = React.useState<string>('');
-  const headingClassName = 'text-3xl font-bold';
+  const headingClassName =
+    'mt-20 text-3xl text-center font-bold text-green-500';
   const inputClassName =
-    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-md border bg-transparent shadow-sm transition-colors';
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border border-green-500 bg-transparent shadow-sm transition-colors';
 
   useEffect(() => {
     clearAuthErrors();
   }, []);
   return (
     <StylizedView className="flex-1 items-center">
-      <StylizedText className={`${headingClassName} mt-20`}>
-        Reset your Password for
+      <StylizedText className={headingClassName}>
+        Reset your Password for RightPay
       </StylizedText>
-      <StylizedText className={headingClassName}>RightPay</StylizedText>
-      <StylizedInput
-        className={inputClassName}
-        placeholder="New Password"
-        placeholderTextColor="#AFAEAE"
-        secureTextEntry={true}
-        onChange={event => {
-          setPassword(event.nativeEvent.text);
-        }}
-      />
-      <StylizedInput
-        className={inputClassName}
-        placeholder="Confirm Password"
-        placeholderTextColor="#AFAEAE"
-        secureTextEntry={true}
-        onChange={event => {
-          setConfirmPassword(event.nativeEvent.text);
-        }}
-      />
-      {AuthErrorComponent && <AuthErrorComponent />}
-      <StylizedPress
-        className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl border-2 bg-green-500 shadow-sm transition-colors"
-        onPress={() => {
-          clearAuthErrors();
-          checkEqualPasswords(password, confirmPassword) &&
-            navigation.navigate('Login');
-        }}>
-        <StylizedText className="text-xl">Reset</StylizedText>
-      </StylizedPress>
+      <StylizedView className="flex items-center justify-center h-full w-full">
+        <StylizedInput
+          className={inputClassName}
+          placeholder="New Password"
+          placeholderTextColor="#AFAEAE"
+          secureTextEntry={true}
+          onChange={event => {
+            setPassword(event.nativeEvent.text);
+          }}
+        />
+        <StylizedInput
+          className={inputClassName}
+          placeholder="Confirm Password"
+          placeholderTextColor="#AFAEAE"
+          secureTextEntry={true}
+          onChange={event => {
+            setConfirmPassword(event.nativeEvent.text);
+          }}
+        />
+        {AuthErrorComponent && <AuthErrorComponent />}
+        <StylizedPress
+          className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors"
+          onPress={() => {
+            clearAuthErrors();
+            checkEqualPasswords(password, confirmPassword) &&
+              navigation.navigate('Login');
+          }}>
+          <StylizedText className="text-xl">Reset</StylizedText>
+        </StylizedPress>
+      </StylizedView>
     </StylizedView>
   );
 };

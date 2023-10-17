@@ -1,0 +1,10 @@
+{
+  "error": {
+    "userNotFound": "User does not exist!",
+    "userFound": "User already exists!",
+    "userNotCreated": "User could not be created!",
+    "default": "An unexpected error occurred. Please try again or contact support.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "missingFields": "Please fill in all required fields."
+  }
+}
