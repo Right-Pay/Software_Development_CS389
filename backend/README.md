@@ -24,7 +24,7 @@ Run the following commands to start on server:
 and then
 
 ```bash
-  [forever start ~/forever/development.json](https://classes.pace.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=221645&grpid=390223&isprv=0&bp=0&ou=379797)
+  forever start ~/forever/development.json
 ```
 
 to stop the process:
