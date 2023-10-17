@@ -75,26 +75,19 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     var myHeaders = new Headers();
     myHeaders.append('content', 'application/x-www-form-urlencoded');
     myHeaders.append('Access-Control-Request-Headers', '*');
-    myHeaders.append(
-      'Cookie',
-      'did=s%3Av0%3A34a30bc0-6c78-11ee-9f1e-93263744f826.w15qQyNaTmSWKY9EB%2FM6zfLaY8cmp9C%2B8m7%2BgArArjY; did_compat=s%3Av0%3A34a30bc0-6c78-11ee-9f1e-93263744f826.w15qQyNaTmSWKY9EB%2FM6zfLaY8cmp9C%2B8m7%2BgArArjY',
-    );
 
     var formdata = new FormData();
-    formdata.append('grant_type', 'authorization_code');
-    formdata.append('username', email);
-    formdata.append('password', password);
+    formdata.append('grant_type', 'password');
+    formdata.append('username', 'tibesnoff@gmail.com');
+    formdata.append('password', '1009296123aA!');
     formdata.append('client_id', 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45');
-    formdata.append(
-      'audience',
-      'https://dev-6uux541sywon80js.us.auth0.com/api/v2/',
-    );
+    formdata.append('scope', 'openid name email nickname');
+    formdata.append('audience', 'http://localhost:3001/');
 
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: formdata,
-      redirect: 'follow',
     };
 
     fetch(
