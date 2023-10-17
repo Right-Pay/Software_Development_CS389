@@ -28,21 +28,23 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const signIn = async (email: string, password: string) => {
+    setUserToken(null);
     if (!checkValidEmail(email)) {
       addAuthError('invalidEmail');
     } else if (!checkValidPassword(password)) {
       addAuthError('invalidPassword');
     } else {
-      await signInAuth(email, password);
-      if (userToken !== null) {
-        postUserCredentials().then(r => {
-          const res = r as HttpResponse;
-          const status = res.status;
-          return status >= 200 && status < 300
-            ? setUserProfile(res.data as Profile)
-            : addAuthError(res.error?.message as string); //Data will stand for profile if found and error message if status not correct
-        });
-      }
+      await signInAuth(email, password).then(() => {
+        if (userToken !== undefined) {
+          postUserCredentials().then(r => {
+            const res = r as HttpResponse;
+            const status = res.status;
+            return status >= 200 && status < 300
+              ? setUserProfile(res.data as Profile)
+              : addAuthError(res.error?.message as string); //Data will stand for profile if found and error message if status not correct
+          });
+        }
+      });
     }
     setIsLoading(false);
   };
@@ -73,21 +75,21 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
 
   async function signInAuth(email: string, password: string) {
     var myHeaders = new Headers();
-    myHeaders.append('content', 'application/x-www-form-urlencoded');
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
     myHeaders.append('Access-Control-Request-Headers', '*');
 
-    var formdata = new FormData();
-    formdata.append('grant_type', 'password');
-    formdata.append('username', 'tibesnoff@gmail.com');
-    formdata.append('password', '1009296123aA!');
-    formdata.append('client_id', 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45');
-    formdata.append('scope', 'openid name email nickname');
-    formdata.append('audience', 'http://localhost:3001/');
+    var body = new URLSearchParams();
+    body.append('grant_type', 'password');
+    body.append('username', email);
+    body.append('password', password);
+    body.append('client_id', 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45');
+    body.append('scope', 'openid name email nickname');
+    body.append('audience', 'http://localhost:3001/');
 
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
-      body: formdata,
+      body: body.toString(),
     };
 
     fetch(
@@ -95,8 +97,12 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       requestOptions,
     )
       .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+      .then(result => setUserToken(JSON.parse(result).access_token))
+      .catch(error =>
+        /*addAuthError(error.message + 'error')*/ console.log(
+          error.message + 'error',
+        ),
+      );
   }
 
   const signOut = () => {
