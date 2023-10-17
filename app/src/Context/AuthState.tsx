@@ -2,10 +2,11 @@ import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import AuthContext from './authContext';
 import {Profile} from '../types/ProfileType';
-import {HttpError, HttpResponse} from '../types/HttpResponse';
+import {HttpResponse} from '../types/HttpResponse';
 import GlobalState from './GlobalState';
 import AuthErrorComponent from '../Helpers/AuthErrorComponent';
 import ConstsType from '../Helpers/Consts';
+import Config from 'react-native-config';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -14,6 +15,10 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
   const [userToken, setUserToken] = React.useState<string | null>(null);
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
+  const [lang, setLang] = React.useState<string>('en');
+  const testToken = 'Bearer ' + Config.REACT_APP_API_KEY;
+  const baseURL = Config.REACT_APP_API_URL;
+  const ErrorMessages = ConstsType.authErrorMessages;
 
   const addAuthError = (error: string) => {
     setAuthError(prevErrors => Array.from(new Set([...prevErrors, error])));
@@ -29,23 +34,29 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
 
   const signIn = async (email: string, password: string) => {
     if (!checkValidEmail(email)) {
-      addAuthError('invalidEmail');
+      addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
-      addAuthError('invalidPassword');
+      addAuthError(ErrorMessages.invalidPassword);
     } else {
-      await signInAuth(email /*email, password*/) //email is temp for not till backend is done
-        .then((result: any) => {
-          setIsLoading(false);
-          if (typeof result === 'string') {
-            setUserToken(null);
-            setUserProfile({} as Profile);
-            addAuthError(result);
-          } else {
-            setUserToken('asdf');
-            setUserProfile(result as Profile);
-            clearAuthErrors();
-          }
-        });
+      //! sign in using auth0
+      console.log('attempting auth0 login: ' + email, password);
+      //! get authToken from auth0 and set it to user token
+      const auth0Token = testToken; //! replace with auth0 token from auth0js
+      console.log('auth0 token: ' + auth0Token);
+      //! get User Profile from backend using auth0 token
+      await getUser(auth0Token).then(result => {
+        let res = result as HttpResponse;
+        setIsLoading(false);
+        if (res.success) {
+          setUserToken(res.data.auth_token);
+          setUserProfile(res.data as Profile);
+          clearAuthErrors();
+        } else {
+          setUserToken(null);
+          setUserProfile({} as Profile);
+          addAuthError(res.message as string);
+        }
+      });
     }
     setIsLoading(false);
   };
@@ -62,102 +73,129 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return;
   };
 
-  const createNewUser = async (/*email: string, password: string*/) => {
+  const createNewAuth0User = async (email: string, password: string) => {
     //do things
-    return true;
+    console.log('attempting auth0 signup: ' + email, password);
+    const auth0Token = testToken; //! replace with auth0 token from auth0js
+
+    //! return auth0 token if valid, if not return false or error message auth0 gives us
+    if (!auth0Token) {
+      return false;
+    }
+    return testToken;
   };
 
   const signUp = async (
     email: string,
+    username: string,
     password: string,
     repeatedPassword: string,
+    phone?: string,
   ) => {
     clearAuthErrors();
     setSignedUp(false);
 
-    const canSignUp = checkNoUserAlreadyCreated(email);
-
-    if (!canSignUp) {
-      addAuthError('userAlreadyExists');
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
+    //! api does this on the backend, no need to do this on the front end
+    //! both our backend and the auth0 backend will check for this and return errors
+    // const canSignUp = checkNoUserAlreadyCreated(email);
+    // if (!canSignUp) {
+    //   addAuthError('userAlreadyExists');
+    //   setIsLoading(false);
+    //   return;
+    // }
 
     if (!checkValidEmail(email)) {
-      addAuthError('invalidEmail');
+      addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
-      addAuthError('invalidPassword');
+      addAuthError(ErrorMessages.invalidPassword);
     } else if (!checkEqualPasswords(password, repeatedPassword)) {
-      addAuthError('passwordsDoNotMatch');
+      addAuthError(ErrorMessages.passwordsDoNotMatch);
     } else {
-      const newUserCreated = await createNewUser(/*email, password*/);
-
-      if (newUserCreated) {
-        signIn(email, password);
-        setSignedUp(true);
+      //! Create new user using Auth0, get Auth0 token
+      const newAuth0UserCreated = await createNewAuth0User(email, password);
+      //! Create new user using our backend, use Auth0 token
+      if (newAuth0UserCreated) {
+        await createNewUser(email, username, newAuth0UserCreated, phone).then(
+          result => {
+            let res = result as HttpResponse;
+            setIsLoading(false);
+            if (res.success) {
+              setUserToken(res.data.auth_token);
+              setUserProfile(res.data as Profile);
+              clearAuthErrors();
+            } else {
+              console.log('error: ' + res.message);
+              setUserToken(null);
+              setUserProfile({} as Profile);
+              addAuthError(res.message as string);
+            }
+          },
+        );
       } else {
-        addAuthError('errorCreatingUser');
+        addAuthError(ErrorMessages.errorCreatingUser);
       }
     }
-
-    setIsLoading(false);
   };
 
-  const postUserCredentials = async (url: String) => {
-    // const baseURL = Config.REACT_APP_API_URL;
-    const response = {
-      data:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? ConstsType.dummyProfile
-          : 'invalidPassword',
-      status:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? 200
-          : 404,
-      error:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? null
-          : ({
-              status: 404,
-              message: 'invalidPassword',
-            } as HttpError),
-    }; /*await fetch(`${baseURL}${url}`, {
-      method: 'POST',
+  const getUser = async (auth0Token: string) => {
+    let result = {};
+
+    await fetch(`${baseURL}users`, {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        authorization: auth0Token,
+        'X-Preferred-Language': lang,
       },
-    });*/
-    // Manipulate result to return
-    const result = response;
-    //await response.json();
+    })
+      .then(async res => (result = await res.json()))
+      .catch(() => {
+        result = {
+          success: false,
+          message: ErrorMessages.errorGettingUser,
+        };
+      });
+
     return result;
   };
 
-  async function signInAuth( //update this
-    tempURL: string /*email: string,password: string,*/,
-  ): Promise<Profile | string> {
-    const fetchedUserProfile = await postUserCredentials(
-      tempURL /*endpointtosendpasswordandemail*/,
-    ).then(r => {
-      const res = r as HttpResponse;
-      const status = res.status;
-      return status >= 200 && status < 300
-        ? (res.data as Profile)
-        : (res.error?.message as string); //Data will stand for profile if found and error message if status not correct
-    });
+  const createNewUser = async (
+    email: string,
+    username: string,
+    auth0Token: string,
+    phone?: string,
+  ) => {
+    let result = {};
 
-    return fetchedUserProfile;
-  }
+    await fetch(`${baseURL}users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Ensure this is set
+        authorization: auth0Token,
+        'X-Preferred-Language': lang,
+      },
+      body: JSON.stringify({
+        email: email,
+        username: username,
+        phone: phone,
+      }),
+    })
+      .then(async res => (result = await res.json()))
+      .catch(() => {
+        result = {
+          success: false,
+          message: ErrorMessages.errorCreatingUser,
+        };
+      });
+    console.log('result: ' + JSON.stringify(result));
+    return result;
+  };
 
   function checkValidPassword(password: string): boolean {
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#-])[A-Za-z\d@$!%*?&#-]{12,}$/;
     const test = password.length > 0 && passwordRegex.test(password);
     if (!test) {
-      addAuthError('invalidPassword');
+      addAuthError(ErrorMessages.invalidPassword);
       return false;
     }
     return test;
@@ -167,33 +205,10 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const test = email.length > 0 && emailRegex.test(email);
     if (!test) {
-      addAuthError('invalidEmail');
+      addAuthError(ErrorMessages.invalidEmail);
       return false;
     }
     return test;
-  }
-
-  function checkNoUserAlreadyCreated(email: string): boolean {
-    const foundUserProfile =
-      email === 'notfound@a.com' ? true : false; /*async (url: String) => {
-      const baseURL = Config.REACT_APP_API_URL;
-      const response = await fetch(`${baseURL}${url}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      });
-      // Manipulate result to return
-      const result = await response.json().exists;
-      return result;
-    };
-    return false;*/
-    if (foundUserProfile) {
-      addAuthError('userAlreadyExists');
-      return false;
-    }
-    return foundUserProfile;
   }
 
   function checkEqualPasswords(password: string, repeatedPassword: string) {
@@ -204,7 +219,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     //will need to make this an api call at some point
     const test = code?.length > 0;
     if (!test) {
-      addAuthError('invalidCode');
+      addAuthError(ErrorMessages.invalidCode);
       return false;
     }
     console.log('code: ' + code);
@@ -212,12 +227,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   useEffect(() => {
-    // simulate loading
-    setIsLoading(true);
-    setTimeout(() => {
-      signIn(ConstsType.dummyProfile.email, '123456789aA!');
-      setIsLoading(false);
-    }, 2000);
+    setLang('en');
   }, []);
 
   return (
