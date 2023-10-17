@@ -224,7 +224,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     // simulate loading
     setIsLoading(true);
     setTimeout(() => {
-      signIn(ConstsType.dummyProfile.email, '123456789aA!');
+      signIn(ConstsType.dummyProfile.email, 'yUTZ9J-=xc|<!');
       setIsLoading(false);
     }, 2000);
   }, []);
