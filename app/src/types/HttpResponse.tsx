@@ -5,6 +5,6 @@ export interface HttpError {
 
 export interface HttpResponse {
   data: any;
-  status: number;
-  error: HttpError | null;
+  success: boolean;
+  message: string;
 }

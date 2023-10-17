@@ -2,12 +2,10 @@ import React from 'react';
 import {AuthContextType} from '../types/AuthContextType';
 import AuthContext from '../Context/authContext';
 import {Text} from 'react-native';
-import ConstsType from './Consts';
 import {styled} from 'nativewind';
 
 const AuthErrorComponent = () => {
   const {authError} = React.useContext(AuthContext) as AuthContextType; // Use the useContext hook directly with types
-  const ErrorMessages = ConstsType.authErrorMessages;
 
   const StylizedText = styled(Text);
 
@@ -20,7 +18,7 @@ const AuthErrorComponent = () => {
     <>
       {authError.map((error, index) => (
         <StylizedText className="text-black text-center mb-0" key={index}>
-          {ErrorMessages[error]}
+          {error}
         </StylizedText>
       ))}
     </>
