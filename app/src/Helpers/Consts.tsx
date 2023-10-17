@@ -14,7 +14,7 @@ const dummyProfile = {
   //Need to change this with an api call
   id: 1,
   name: 'John Doe',
-  email: 'johndoe@gmail.com',
+  email: 'tibesnoff@gmail.com',
   phone: '1234567890',
   address: '1234 Main St',
   city: 'Anytown',

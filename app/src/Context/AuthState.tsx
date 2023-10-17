@@ -6,7 +6,6 @@ import {HttpError, HttpResponse} from '../types/HttpResponse';
 import GlobalState from './GlobalState';
 import AuthErrorComponent from '../Helpers/AuthErrorComponent';
 import ConstsType from '../Helpers/Consts';
-import Auth0Params from './Auth0Params.json';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -73,33 +72,38 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   async function signInAuth(email: string, password: string) {
-    const bodyParams = {
-      client_id: Auth0Params.clientId,
-      grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
-      username: email,
-      password: password,
-      realm: Auth0Params.realm,
-      audience: Auth0Params.apiAudience,
-      scope: Auth0Params.scope,
+    var myHeaders = new Headers();
+    myHeaders.append('content', 'application/x-www-form-urlencoded');
+    myHeaders.append('Access-Control-Request-Headers', '*');
+    myHeaders.append(
+      'Cookie',
+      'did=s%3Av0%3A34a30bc0-6c78-11ee-9f1e-93263744f826.w15qQyNaTmSWKY9EB%2FM6zfLaY8cmp9C%2B8m7%2BgArArjY; did_compat=s%3Av0%3A34a30bc0-6c78-11ee-9f1e-93263744f826.w15qQyNaTmSWKY9EB%2FM6zfLaY8cmp9C%2B8m7%2BgArArjY',
+    );
+
+    var formdata = new FormData();
+    formdata.append('grant_type', 'authorization_code');
+    formdata.append('username', email);
+    formdata.append('password', password);
+    formdata.append('client_id', 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45');
+    formdata.append(
+      'audience',
+      'https://dev-6uux541sywon80js.us.auth0.com/api/v2/',
+    );
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
     };
 
-    await fetch(`https://${Auth0Params.domain}/oauth/token`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bodyParams),
-    })
-      .then(response => response.json())
-      .then(responseJson => {
-        if (responseJson.error) {
-          return responseJson.error_description;
-        }
-        const {access_token} = responseJson;
-        setUserToken(access_token);
-        console.log('access_token: ', access_token);
-      });
+    fetch(
+      'https://dev-6uux541sywon80js.us.auth0.com/oauth/token',
+      requestOptions,
+    )
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
   }
 
   const signOut = () => {
@@ -178,7 +182,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return test;
   }
 
-  function checkNoUserAlreadyCreated(email: string): boolean {  
+  function checkNoUserAlreadyCreated(email: string): boolean {
     //This will have to react out to auth0 not sure how yet
     const foundUserProfile =
       email === 'notfound@a.com' ? true : false; /*async (url: String) => {
