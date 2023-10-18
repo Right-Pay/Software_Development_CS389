@@ -179,7 +179,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const createNewAuth0User = async (email: string, password: string) => {
     //do things
     console.log('attempting auth0 signup: ' + email, password);
-
     var requestOptions = {
       method: 'POST',
       headers: new Headers({
@@ -251,6 +250,40 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return;
   };
 
+  const resetPassword = async (email: string) => {
+    resetVariables();
+    if (!checkValidEmail(email)) {
+      addAuthError(ErrorMessages.invalidEmail);
+    } else {
+      var requestOptions = {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'Access-Control-Request-Headers': '*',
+        }),
+        body: JSON.stringify({
+          client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
+          email: email,
+          connection: 'Username-Password-Authentication',
+        }),
+      };
+      return await fetch(
+        'https://dev-6uux541sywon80js.us.auth0.com/dbconnections/change_password',
+        requestOptions,
+      )
+        .then(response => response.text())
+        .then(result => {
+          addAuthError(ErrorMessages.sentRestEmail);
+          return result;
+        })
+        .catch(error => {
+          addAuthError(ErrorMessages.errorChangingPassword);
+          console.log(error);
+          false;
+        });
+    }
+  };
+
   function checkValidPassword(password: string): boolean {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#-])[A-Za-z\d@$!%*?&#-]{12,}$/;
@@ -303,6 +336,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         signIn,
         signOut,
         signUp,
+        resetPassword,
         clearAuthErrors,
         addAuthError,
         removeAuthError,
@@ -312,6 +346,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkEqualPasswords,
         verifyCode,
         AuthErrorComponent,
+        resetVariables,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>

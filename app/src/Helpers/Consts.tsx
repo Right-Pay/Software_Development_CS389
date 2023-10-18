@@ -11,6 +11,8 @@ const AuthErrorMessages = {
     'Too Many Attempts\nCheck Your Email for Further Instructions',
   invalidCode:
     'The code is not correct\nEither your email is not correct or you entered an invalid code',
+  errorChangingPassword: 'Error Changing Password',
+  sentRestEmail: 'Check Your Email for Further Instructions',
 };
 
 const dummyProfile = {
