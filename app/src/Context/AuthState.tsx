@@ -15,9 +15,9 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [isSignedIn, setIsSignedIn] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
   const [userToken, setUserToken] = React.useState<string | null>(null);
+  const [auth0Token, setAuth0Token] = React.useState<string | null>(null);
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<string>('en');
-  const testToken = 'Bearer ' + Config.REACT_APP_API_KEY;
   const baseURL = Config.REACT_APP_API_URL;
   const ErrorMessages = ConstsType.authErrorMessages;
 
@@ -35,7 +35,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
 
   const signIn = async (email: string, password: string) => {
     clearAuthErrors();
-    setUserToken(null);
+
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
@@ -46,14 +46,17 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       if (authorized) {
         console.log('getting user');
         setIsLoading(true);
-        await getUser().then(res => {
-          console.log(res);
-          const profile = res as any;
-          if (profile.success) {
-            console.log('profile: ' + JSON.stringify(profile));
-            setIsSignedIn(true);
+        await getUser().then(result => {
+          let res = result as HttpResponse;
+          setIsLoading(false);
+          if (res.success) {
+            setUserToken(res.data.auth_token);
+            setUserProfile(res.data as Profile);
+            clearAuthErrors();
           } else {
-            console.log('profile is null');
+            setUserToken(null);
+            setUserProfile({} as Profile);
+            addAuthError(res.message as string);
           }
         });
       }
@@ -100,7 +103,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
               resolve(false);
             });
           case undefined:
-            setUserToken(result.access_token);
+            setAuth0Token(result.access_token);
             return new Promise<boolean>(resolve => {
               resolve(true);
             });
@@ -125,7 +128,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     await fetch(`${baseURL}users`, {
       method: 'GET',
       headers: {
-        authorization: userToken as string,
+        authorization: auth0Token as string,
         'X-Preferred-Language': lang,
       },
     })
@@ -170,12 +173,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       const newAuth0UserCreated = await createNewAuth0User(email, password);
       //! Create new user using our backend, use Auth0 token
       if (newAuth0UserCreated) {
-        await createNewDatabaseUser(
-          email,
-          username,
-          newAuth0UserCreated,
-          phone,
-        ).then(result => {
+        await createNewDatabaseUser(email, username, phone).then(result => {
           let res = result as HttpResponse;
           setIsLoading(false);
           if (res.success) {
@@ -198,19 +196,33 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const createNewAuth0User = async (email: string, password: string) => {
     //do things
     console.log('attempting auth0 signup: ' + email, password);
-    const auth0Token = testToken; //! replace with auth0 token from auth0js
+    let result = {};
 
     //! return auth0 token if valid, if not return false or error message auth0 gives us
     if (!auth0Token) {
       return false;
     }
-    return testToken;
+    await fetch(`${baseURL}users`, {
+      method: 'GET',
+      headers: {
+        authorization: 'Bearer ' + auth0Token,
+        'X-Preferred-Language': lang,
+      },
+    })
+      .then(async res => (result = await res.json()))
+      .catch(() => {
+        result = {
+          success: false,
+          message: ErrorMessages.errorGettingUser,
+        };
+      });
+
+    return result;
   };
 
   const createNewDatabaseUser = async (
     email: string,
     username: string,
-    auth0Token: string,
     phone?: string,
   ) => {
     let result = {};
@@ -219,7 +231,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Ensure this is set
-        authorization: auth0Token,
+        authorization: auth0Token as string,
         'X-Preferred-Language': lang,
       },
       body: JSON.stringify({
@@ -292,7 +304,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setIsSignedIn(false);
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    });
     setLang('en');
   }, []);
 
