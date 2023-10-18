@@ -21,6 +21,16 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const baseURL = Config.REACT_APP_API_URL;
   const ErrorMessages = ConstsType.authErrorMessages;
 
+  const resetVariables = () => {
+    setIsSignout(false);
+    setIsSignedIn(false);
+    setSignedUp(false);
+    setUserToken(null);
+    setAuth0Token(null);
+    setUserProfile({} as Profile);
+    clearAuthErrors();
+  };
+
   const addAuthError = (error: string) => {
     setAuthError(prevErrors => Array.from(new Set([...prevErrors, error])));
   };
@@ -34,19 +44,16 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    clearAuthErrors();
-
+    resetVariables();
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
     } else {
       const authorized = await signInAuth(email, password);
-      console.log('authorized: ' + authorized);
-      if (authorized) {
-        console.log('getting user');
+      if ((authorized as boolean) !== false) {
         setIsLoading(true);
-        await getUser().then(result => {
+        await getUser(authorized as string).then(result => {
           let res = result as HttpResponse;
           setIsLoading(false);
           if (res.success) {
@@ -64,10 +71,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setIsLoading(false);
   };
 
-  const signInAuth = async (
-    email: string,
-    password: string,
-  ): Promise<boolean> => {
+  const signInAuth = async (email: string, password: string) => {
     var requestOptions = {
       method: 'POST',
       headers: new Headers({
@@ -90,45 +94,34 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     )
       .then(response => response.json())
       .then(result => {
-        console.log(result);
         switch (result.error) {
           case 'invalid_grant':
             addAuthError(ErrorMessages.userNotFound);
-            return new Promise<boolean>(resolve => {
-              resolve(false);
-            });
+            return false;
           case 'too_many_attempts':
             addAuthError(ErrorMessages.tooManyAttepts);
-            return new Promise<boolean>(resolve => {
-              resolve(false);
-            });
+            return false;
           case undefined:
             setAuth0Token(result.access_token);
-            return new Promise<boolean>(resolve => {
-              resolve(true);
-            });
+            return result.access_token;
           default:
             addAuthError(ErrorMessages.userNotFound);
-            return new Promise<boolean>(resolve => {
-              resolve(false);
-            });
+            return false;
         }
       })
       .catch(() => {
         addAuthError(ErrorMessages.userNotFound);
-        return new Promise<boolean>(resolve => {
-          resolve(false);
-        });
+        false;
       });
   };
 
-  const getUser = async () => {
+  const getUser = async (token: string) => {
     let result = {};
 
     await fetch(`${baseURL}users`, {
       method: 'GET',
       headers: {
-        authorization: auth0Token as string,
+        authorization: `bearer: ${token as string}`,
         'X-Preferred-Language': lang,
       },
     })
@@ -150,8 +143,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     repeatedPassword: string,
     phone?: string,
   ) => {
-    clearAuthErrors();
-    setSignedUp(false);
+    resetVariables();
 
     //! api does this on the backend, no need to do this on the front end
     //! both our backend and the auth0 backend will check for this and return errors
@@ -255,9 +247,8 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setIsLoading(true);
     // simulate loading
     setTimeout(() => {
-      setUserToken(null);
+      resetVariables();
       setIsLoading(false);
-      setUserProfile({} as Profile);
     }, 2000);
     return;
   };

@@ -24,6 +24,7 @@ const dummyProfile = {
   state: 'CA',
   zip: '12345',
   subscribed: true,
+  //password: 'JohnDoe1234!',
 };
 
 const Consts: ConstsType = {
