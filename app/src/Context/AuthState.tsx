@@ -15,7 +15,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [userToken, setUserToken] = React.useState<string | null>(null);
   const [lang, setLang] = React.useState<string>('en');
   const baseURL = Config.REACT_APP_API_URL;
-  const auth0URL = Config.REACT_APP_AUTH0_URL;
+  const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
   const auth0ClientId = Config.REACT_APP_AUTH0_CLIENT_ID;
   const auth0Audience = Config.REACT_APP_AUTH0_AUDIENCE;
   const ErrorMessages = ConstsType.authErrorMessages;
@@ -279,7 +279,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   useEffect(() => {
-    setLang('en');
+    setLang('es');
   }, []);
 
   return (
