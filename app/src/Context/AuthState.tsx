@@ -11,22 +11,17 @@ import Config from 'react-native-config';
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [isSignout, setIsSignout] = React.useState<boolean>(false);
-  const [isSignedIn, setIsSignedIn] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
   const [userToken, setUserToken] = React.useState<string | null>(null);
-  const [auth0Token, setAuth0Token] = React.useState<string | null>(null);
-  const [signedUp, setSignedUp] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<string>('en');
   const baseURL = Config.REACT_APP_API_URL;
+  const auth0URL = Config.REACT_APP_AUTH0_URL;
+  const auth0ClientId = Config.REACT_APP_AUTH0_CLIENT_ID;
+  const auth0Audience = Config.REACT_APP_AUTH0_AUDIENCE;
   const ErrorMessages = ConstsType.authErrorMessages;
 
   const resetVariables = () => {
-    setIsSignout(false);
-    setIsSignedIn(false);
-    setSignedUp(false);
     setUserToken(null);
-    setAuth0Token(null);
     setUserProfile({} as Profile);
     clearAuthErrors();
   };
@@ -51,7 +46,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       addAuthError(ErrorMessages.invalidPassword);
     } else {
       const authorized = await signInAuth(email, password);
-      if ((authorized as boolean) !== false) {
+      if (authorized) {
         setIsLoading(true);
         await getUser(authorized as string).then(result => {
           let res = result as HttpResponse;
@@ -82,16 +77,12 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         grant_type: 'password',
         username: email,
         password: password,
-        client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
-        scope: 'openid name email nickname',
-        audience: 'http://localhost:3001/',
+        client_id: auth0ClientId,
+        audience: auth0Audience,
       }).toString(),
     };
 
-    return await fetch(
-      'https://dev-6uux541sywon80js.us.auth0.com/oauth/token',
-      requestOptions,
-    )
+    return await fetch(`${auth0URL}/oauth/token`, requestOptions)
       .then(response => response.json())
       .then(result => {
         switch (result.error) {
@@ -102,7 +93,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             addAuthError(ErrorMessages.tooManyAttepts);
             return false;
           case undefined:
-            setAuth0Token(result.access_token);
             return result.access_token;
           default:
             addAuthError(ErrorMessages.userNotFound);
@@ -121,7 +111,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     await fetch(`${baseURL}users`, {
       method: 'GET',
       headers: {
-        authorization: `bearer: ${token as string}`,
+        authorization: `Bearer ${token as string}`,
         'X-Preferred-Language': lang,
       },
     })
@@ -145,15 +135,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   ) => {
     resetVariables();
 
-    //! api does this on the backend, no need to do this on the front end
-    //! both our backend and the auth0 backend will check for this and return errors
-    // const canSignUp = checkNoUserAlreadyCreated(email);
-    // if (!canSignUp) {
-    //   addAuthError('userAlreadyExists');
-    //   setIsLoading(false);
-    //   return;
-    // }
-
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
@@ -162,10 +143,17 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       addAuthError(ErrorMessages.passwordsDoNotMatch);
     } else {
       //! Create new user using Auth0, get Auth0 token
-      const newAuth0UserCreated = await createNewAuth0User(email, password);
+      // const newAuth0UserCreated = await createNewAuth0User(email, password);
+      //! For now we don't have creating the user setup with Auth0 so we must do it from the dashboard, thus:
+      const newAuth0UserCreated = await signInAuth(email, password);
       //! Create new user using our backend, use Auth0 token
       if (newAuth0UserCreated) {
-        await createNewDatabaseUser(email, username, phone).then(result => {
+        await createNewDatabaseUser(
+          newAuth0UserCreated,
+          email,
+          username,
+          phone,
+        ).then(result => {
           let res = result as HttpResponse;
           setIsLoading(false);
           if (res.success) {
@@ -173,7 +161,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             setUserProfile(res.data as Profile);
             clearAuthErrors();
           } else {
-            console.log('error: ' + res.message);
             setUserToken(null);
             setUserProfile({} as Profile);
             addAuthError(res.message as string);
@@ -185,19 +172,20 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const createNewAuth0User = async (email: string, password: string) => {
     //do things
     console.log('attempting auth0 signup: ' + email, password);
     let result = {};
 
     //! return auth0 token if valid, if not return false or error message auth0 gives us
-    if (!auth0Token) {
+    if (!userToken) {
       return false;
     }
     await fetch(`${baseURL}users`, {
       method: 'GET',
       headers: {
-        authorization: 'Bearer ' + auth0Token,
+        authorization: 'Bearer ' + userToken,
         'X-Preferred-Language': lang,
       },
     })
@@ -213,6 +201,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const createNewDatabaseUser = async (
+    token: string,
     email: string,
     username: string,
     phone?: string,
@@ -223,7 +212,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Ensure this is set
-        authorization: auth0Token as string,
+        authorization: `Bearer ${token as string}`,
         'X-Preferred-Language': lang,
       },
       body: JSON.stringify({
@@ -290,12 +279,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   useEffect(() => {
-    // simulate loading
-    setIsLoading(true);
-    setIsSignedIn(false);
-    setTimeout(() => {
-      setIsLoading(false);
-    });
     setLang('en');
   }, []);
 
@@ -305,12 +288,8 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         isLoading,
         userProfile,
         userToken,
-        isSignout,
-        isSignedIn,
         authError,
-        signedUp,
         setIsLoading,
-        setIsSignout,
         setUserToken,
         signIn,
         signOut,
