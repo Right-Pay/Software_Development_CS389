@@ -62,7 +62,6 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         <StylizedPress
           className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors"
           onPress={() => {
-            clearAuthErrors();
             signIn(email, password);
           }}>
           <StylizedText className="text-xl">Log In</StylizedText>

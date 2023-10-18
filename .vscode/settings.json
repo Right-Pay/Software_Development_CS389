@@ -5,5 +5,10 @@
     "titleBar.activeForeground": "#FEFCFE"
   },
   "editor.tabSize": 2,
-  "eslint.workingDirectories": [{ "mode": "auto" }]
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

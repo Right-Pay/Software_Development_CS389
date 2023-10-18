@@ -11,14 +11,20 @@ import Config from 'react-native-config';
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [isSignout, setIsSignout] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
   const [userToken, setUserToken] = React.useState<string | null>(null);
-  const [signedUp, setSignedUp] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<string>('en');
-  const testToken = 'Bearer ' + Config.REACT_APP_API_KEY;
   const baseURL = Config.REACT_APP_API_URL;
+  const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
+  const auth0ClientId = Config.REACT_APP_AUTH0_CLIENT_ID;
+  const auth0Audience = Config.REACT_APP_AUTH0_AUDIENCE;
   const ErrorMessages = ConstsType.authErrorMessages;
+
+  const resetVariables = () => {
+    setUserToken(null);
+    setUserProfile({} as Profile);
+    clearAuthErrors();
+  };
 
   const addAuthError = (error: string) => {
     setAuthError(prevErrors => Array.from(new Set([...prevErrors, error])));
@@ -33,117 +39,78 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const signIn = async (email: string, password: string) => {
+    resetVariables();
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
     } else {
-      //! sign in using auth0
-      console.log('attempting auth0 login: ' + email, password);
-      //! get authToken from auth0 and set it to user token
-      const auth0Token = testToken; //! replace with auth0 token from auth0js
-      console.log('auth0 token: ' + auth0Token);
-      //! get User Profile from backend using auth0 token
-      await getUser(auth0Token).then(result => {
-        let res = result as HttpResponse;
-        setIsLoading(false);
-        if (res.success) {
-          setUserToken(res.data.auth_token);
-          setUserProfile(res.data as Profile);
-          clearAuthErrors();
-        } else {
-          setUserToken(null);
-          setUserProfile({} as Profile);
-          addAuthError(res.message as string);
-        }
-      });
+      const authorized = await signInAuth(email, password);
+      if (authorized) {
+        setIsLoading(true);
+        await getUser(authorized as string).then(result => {
+          let res = result as HttpResponse;
+          setIsLoading(false);
+          if (res.success) {
+            setUserToken(res.data.auth_token);
+            setUserProfile(res.data as Profile);
+            clearAuthErrors();
+          } else {
+            setUserToken(null);
+            setUserProfile({} as Profile);
+            addAuthError(res.message as string);
+          }
+        });
+      }
     }
     setIsLoading(false);
   };
 
-  const signOut = () => {
-    // replace with sign out function
-    setIsLoading(true);
-    // simulate loading
-    setTimeout(() => {
-      setUserToken(null);
-      setIsLoading(false);
-      setUserProfile({} as Profile);
-    }, 2000);
-    return;
+  const signInAuth = async (email: string, password: string) => {
+    var requestOptions = {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }),
+      body: new URLSearchParams({
+        grant_type: 'password',
+        username: email,
+        password: password,
+        client_id: auth0ClientId,
+        audience: auth0Audience,
+      }).toString(),
+    };
+
+    return await fetch(`${auth0URL}/oauth/token`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        switch (result.error) {
+          case 'invalid_grant':
+            addAuthError(ErrorMessages.userNotFound);
+            return false;
+          case 'too_many_attempts':
+            addAuthError(ErrorMessages.tooManyAttepts);
+            return false;
+          case undefined:
+            return result.access_token;
+          default:
+            addAuthError(ErrorMessages.userNotFound);
+            return false;
+        }
+      })
+      .catch(() => {
+        addAuthError(ErrorMessages.userNotFound);
+        false;
+      });
   };
 
-  const createNewAuth0User = async (email: string, password: string) => {
-    //do things
-    console.log('attempting auth0 signup: ' + email, password);
-    const auth0Token = testToken; //! replace with auth0 token from auth0js
-
-    //! return auth0 token if valid, if not return false or error message auth0 gives us
-    if (!auth0Token) {
-      return false;
-    }
-    return testToken;
-  };
-
-  const signUp = async (
-    email: string,
-    username: string,
-    password: string,
-    repeatedPassword: string,
-    phone?: string,
-  ) => {
-    clearAuthErrors();
-    setSignedUp(false);
-
-    //! api does this on the backend, no need to do this on the front end
-    //! both our backend and the auth0 backend will check for this and return errors
-    // const canSignUp = checkNoUserAlreadyCreated(email);
-    // if (!canSignUp) {
-    //   addAuthError('userAlreadyExists');
-    //   setIsLoading(false);
-    //   return;
-    // }
-
-    if (!checkValidEmail(email)) {
-      addAuthError(ErrorMessages.invalidEmail);
-    } else if (!checkValidPassword(password)) {
-      addAuthError(ErrorMessages.invalidPassword);
-    } else if (!checkEqualPasswords(password, repeatedPassword)) {
-      addAuthError(ErrorMessages.passwordsDoNotMatch);
-    } else {
-      //! Create new user using Auth0, get Auth0 token
-      const newAuth0UserCreated = await createNewAuth0User(email, password);
-      //! Create new user using our backend, use Auth0 token
-      if (newAuth0UserCreated) {
-        await createNewUser(email, username, newAuth0UserCreated, phone).then(
-          result => {
-            let res = result as HttpResponse;
-            setIsLoading(false);
-            if (res.success) {
-              setUserToken(res.data.auth_token);
-              setUserProfile(res.data as Profile);
-              clearAuthErrors();
-            } else {
-              console.log('error: ' + res.message);
-              setUserToken(null);
-              setUserProfile({} as Profile);
-              addAuthError(res.message as string);
-            }
-          },
-        );
-      } else {
-        addAuthError(ErrorMessages.errorCreatingUser);
-      }
-    }
-  };
-
-  const getUser = async (auth0Token: string) => {
+  const getUser = async (token: string) => {
     let result = {};
 
     await fetch(`${baseURL}users`, {
       method: 'GET',
       headers: {
-        authorization: auth0Token,
+        authorization: `Bearer ${token as string}`,
         'X-Preferred-Language': lang,
       },
     })
@@ -158,10 +125,91 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return result;
   };
 
-  const createNewUser = async (
+  const signUp = async (
     email: string,
     username: string,
-    auth0Token: string,
+    password: string,
+    repeatedPassword: string,
+    phone?: string,
+  ) => {
+    resetVariables();
+
+    if (!checkValidEmail(email)) {
+      addAuthError(ErrorMessages.invalidEmail);
+    } else if (!checkValidPassword(password)) {
+      addAuthError(ErrorMessages.invalidPassword);
+    } else if (!checkEqualPasswords(password, repeatedPassword)) {
+      addAuthError(ErrorMessages.passwordsDoNotMatch);
+    } else {
+      //! Create new user using Auth0, get Auth0 token
+      const newAuth0UserCreated = await createNewAuth0User(
+        email,
+        password,
+      ).then(async () => {
+        return await signInAuth(email, password);
+      });
+      //! For now we don't have creating the user setup with Auth0 so we must do it from the dashboard, thus:
+      //! Create new user using our backend, use Auth0 token
+      if (newAuth0UserCreated) {
+        await createNewDatabaseUser(
+          newAuth0UserCreated,
+          email,
+          username,
+          phone,
+        ).then(result => {
+          let res = result as HttpResponse;
+          setIsLoading(false);
+          if (res.success) {
+            setUserToken(res.data.auth_token);
+            setUserProfile(res.data as Profile);
+            clearAuthErrors();
+          } else {
+            setUserToken(null);
+            setUserProfile({} as Profile);
+            addAuthError(res.message as string);
+          }
+        });
+      } else {
+        addAuthError(ErrorMessages.errorCreatingUser);
+      }
+    }
+  };
+
+  const createNewAuth0User = async (email: string, password: string) => {
+    //do things
+    console.log('attempting auth0 signup: ' + email, password);
+    var requestOptions = {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({
+        client_id: auth0ClientId,
+        email: email,
+        password: password,
+        name: email,
+        connection: 'Username-Password-Authentication',
+      }),
+    };
+
+    return await fetch(
+      'https://dev-6uux541sywon80js.us.auth0.com/dbconnections/signup',
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(result => {
+        return result;
+      })
+      .catch(() => {
+        addAuthError(ErrorMessages.errorCreatingUser);
+        false;
+      });
+  };
+
+  const createNewDatabaseUser = async (
+    token: string,
+    email: string,
+    username: string,
     phone?: string,
   ) => {
     let result = {};
@@ -170,7 +218,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Ensure this is set
-        authorization: auth0Token,
+        authorization: `Bearer ${token as string}`,
         'X-Preferred-Language': lang,
       },
       body: JSON.stringify({
@@ -186,8 +234,52 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           message: ErrorMessages.errorCreatingUser,
         };
       });
-    console.log('result: ' + JSON.stringify(result));
     return result;
+  };
+
+  const signOut = () => {
+    // replace with sign out function
+    setIsLoading(true);
+    // simulate loading
+    setTimeout(() => {
+      resetVariables();
+      setIsLoading(false);
+    }, 2000);
+    return;
+  };
+
+  const resetPassword = async (email: string) => {
+    resetVariables();
+    if (!checkValidEmail(email)) {
+      addAuthError(ErrorMessages.invalidEmail);
+    } else {
+      var requestOptions = {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'Access-Control-Request-Headers': '*',
+        }),
+        body: JSON.stringify({
+          client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
+          email: email,
+          connection: 'Username-Password-Authentication',
+        }),
+      };
+      return await fetch(
+        'https://dev-6uux541sywon80js.us.auth0.com/dbconnections/change_password',
+        requestOptions,
+      )
+        .then(response => response.text())
+        .then(result => {
+          addAuthError(ErrorMessages.sentRestEmail);
+          return result;
+        })
+        .catch(error => {
+          addAuthError(ErrorMessages.errorChangingPassword);
+          console.log(error);
+          false;
+        });
+    }
   };
 
   function checkValidPassword(password: string): boolean {
@@ -227,7 +319,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   useEffect(() => {
-    setLang('en');
+    setLang('es');
   }, []);
 
   return (
@@ -236,15 +328,13 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         isLoading,
         userProfile,
         userToken,
-        isSignout,
         authError,
-        signedUp,
         setIsLoading,
-        setIsSignout,
         setUserToken,
         signIn,
         signOut,
         signUp,
+        resetPassword,
         clearAuthErrors,
         addAuthError,
         removeAuthError,
@@ -254,6 +344,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkEqualPasswords,
         verifyCode,
         AuthErrorComponent,
+        resetVariables,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>
