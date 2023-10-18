@@ -16,6 +16,7 @@ export interface AuthContextType {
     _password: string,
     _repeatedPassword: string,
   ) => void;
+  resetPassword: (_email: string) => void;
   clearAuthErrors: () => void;
   addAuthError: (_signInError: string) => void;
   removeAuthError: (_signInError: string) => void;
@@ -25,4 +26,5 @@ export interface AuthContextType {
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
   verifyCode: (_code: string) => boolean;
   AuthErrorComponent: FC | null;
+  resetVariables: () => void;
 }

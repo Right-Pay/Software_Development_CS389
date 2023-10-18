@@ -21,7 +21,7 @@ const StylizedView = styled(View);
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {clearAuthErrors, checkValidEmail, AuthErrorComponent} =
+  const {clearAuthErrors, resetPassword, AuthErrorComponent, resetVariables} =
     React.useContext(AuthContext) as AuthContextType;
   const [email, setEmail] = React.useState<string>('');
   useEffect(() => {
@@ -48,9 +48,13 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         {AuthErrorComponent && <AuthErrorComponent />}
         <StylizedPress
           className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors"
-          onPress={() =>
-            checkValidEmail(email) && navigation.navigate('VerifyEmail')
-          }>
+          onPress={() => {
+            resetPassword(email);
+            setTimeout(() => {
+              resetVariables();
+              navigation.navigate('Login');
+            }, 3000);
+          }}>
           <StylizedText className="text-xl">Reset Password</StylizedText>
         </StylizedPress>
       </StylizedView>
