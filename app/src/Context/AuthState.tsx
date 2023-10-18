@@ -83,7 +83,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         username: email,
         password: password,
         client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
-        scope: 'openid name email nickname',
         audience: 'http://localhost:3001/',
       }).toString(),
     };
@@ -145,15 +144,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   ) => {
     resetVariables();
 
-    //! api does this on the backend, no need to do this on the front end
-    //! both our backend and the auth0 backend will check for this and return errors
-    // const canSignUp = checkNoUserAlreadyCreated(email);
-    // if (!canSignUp) {
-    //   addAuthError('userAlreadyExists');
-    //   setIsLoading(false);
-    //   return;
-    // }
-
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
@@ -197,7 +187,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     await fetch(`${baseURL}users`, {
       method: 'GET',
       headers: {
-        authorization: 'Bearer ' + auth0Token,
+        authorization: 'Bearer' + auth0Token,
         'X-Preferred-Language': lang,
       },
     })
