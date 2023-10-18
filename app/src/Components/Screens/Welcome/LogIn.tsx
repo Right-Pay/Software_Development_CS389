@@ -19,8 +19,9 @@ const StylizedPress = styled(Pressable);
 const StylizedView = styled(View);
 
 const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
-  const {clearAuthErrors, AuthErrorComponent, signIn, userToken} =
-    React.useContext(AuthContext) as AuthContextType;
+  const {clearAuthErrors, AuthErrorComponent, signIn} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
   }, []);
@@ -54,7 +55,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
           className="flex pb-1"
           onPress={() => navigation.navigate('ForgotPassword')}>
           <StylizedText className="text-sm text-black">
-            Forgot Password? {userToken}
+            Forgot Password?
           </StylizedText>
         </StylizedPress>
         {AuthErrorComponent && <AuthErrorComponent />}

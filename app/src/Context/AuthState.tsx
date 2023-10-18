@@ -71,7 +71,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Access-Control-Request-Headers': '*',
       }),
       body: new URLSearchParams({
         grant_type: 'password',
@@ -184,10 +183,9 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Access-Control-Request-Headers': '*',
       }),
       body: JSON.stringify({
-        client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
+        client_id: auth0ClientId,
         email: email,
         password: password,
         name: email,
