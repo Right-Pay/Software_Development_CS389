@@ -16,7 +16,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [userToken, setUserToken] = React.useState<string | null>(null);
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<string>('en');
-  const testToken = 'Bearer ' + Config.REACT_APP_API_KEY;
+  const testToken = Config.REACT_APP_API_KEY;
   const baseURL = Config.REACT_APP_API_URL;
   const ErrorMessages = ConstsType.authErrorMessages;
 
@@ -33,74 +33,61 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    setUserToken(null);
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
     } else {
-      await signInAuth(email, password).then(() => {
-        if (userToken !== undefined) {
-          postUserCredentials().then(r => console.log(r));
-        }
-      });
+      //! sign in using auth0
+      console.log('attempting auth0 login: ' + email, password);
+      let token = await signInAuth(email, password);
+      //! get User Profile from backend using auth0 token
+      if (token) {
+        await getUser(token).then(result => {
+          let res = result as HttpResponse;
+          setIsLoading(false);
+          if (res.success) {
+            setUserToken(res.data.auth_token);
+            setUserProfile(res.data as Profile);
+            clearAuthErrors();
+          } else {
+            setUserToken(null);
+            setUserProfile({} as Profile);
+            addAuthError(res.message as string);
+          }
+        });
+      } else {
+        addAuthError(ErrorMessages.errorSigningIn);
+      }
     }
     setIsLoading(false);
   };
 
-  const postUserCredentials = async () => {
-    const url = `${baseURL} /user/login?${userToken}`; //send to actual api
-    const response = {
-      data:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? ConstsType.dummyProfile
-          : 'invalidPassword',
-      status:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? 200
-          : 404,
-      error:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? null
-          : {
-              status: 404,
-              message: 'invalidPassword',
-            },
-    };
-    const result = response;
-    return result;
-  };
-
   async function signInAuth(email: string, password: string) {
-    var myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-    myHeaders.append('Access-Control-Request-Headers', '*');
+    let token: string = '';
 
-    var body = new URLSearchParams();
-    body.append('grant_type', 'password');
-    body.append('username', email);
-    body.append('password', password);
-    body.append('client_id', 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45');
-    body.append('scope', 'openid name email nickname');
-    body.append('audience', 'http://localhost:3001/');
+    console.log(email, password);
 
-    var requestOptions = {
+    await fetch('https://dev-6uux541sywon80js.us.auth0.com/oauth/token', {
       method: 'POST',
-      headers: myHeaders,
-      body: body.toString(),
-    };
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded', // Ensure this is set
+      },
+      body: new URLSearchParams({
+        grant_type: 'password',
+        client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
+        username: 'tibesnoff@gmail.com',
+        password: '1009296123aA!',
+      }).toString(),
+    })
+      .then(async res => {
+        console.log(res);
+        const json = await res.json();
+        token = json.access_token;
+      })
+      .catch(error => console.log('error', error));
 
-    fetch(
-      'https://dev-6uux541sywon80js.us.auth0.com/oauth/token',
-      requestOptions,
-    )
-      .then(response => response.text())
-      .then(result => setUserToken(JSON.parse(result).access_token))
-      .catch(error =>
-        /*addAuthError(error.message + 'error')*/ console.log(
-          error.message + 'error',
-        ),
-      );
+    return token;
   }
 
   const signOut = () => {
@@ -185,7 +172,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     await fetch(`${baseURL}users`, {
       method: 'GET',
       headers: {
-        authorization: auth0Token,
+        authorization: 'Bearer ' + auth0Token,
         'X-Preferred-Language': lang,
       },
     })
@@ -269,12 +256,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   useEffect(() => {
-    // simulate loading
-    setIsLoading(true);
-    setTimeout(() => {
-      signIn(ConstsType.dummyProfile.email, 'yUTZ9J-=xc|<!');
-      setIsLoading(false);
-    }, 2000);
     setLang('en');
   }, []);
 
