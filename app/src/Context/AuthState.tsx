@@ -143,9 +143,13 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       addAuthError(ErrorMessages.passwordsDoNotMatch);
     } else {
       //! Create new user using Auth0, get Auth0 token
-      // const newAuth0UserCreated = await createNewAuth0User(email, password);
+      const newAuth0UserCreated = await createNewAuth0User(
+        email,
+        password,
+      ).then(async () => {
+        return await signInAuth(email, password);
+      });
       //! For now we don't have creating the user setup with Auth0 so we must do it from the dashboard, thus:
-      const newAuth0UserCreated = await signInAuth(email, password);
       //! Create new user using our backend, use Auth0 token
       if (newAuth0UserCreated) {
         await createNewDatabaseUser(
@@ -172,32 +176,37 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const createNewAuth0User = async (email: string, password: string) => {
     //do things
     console.log('attempting auth0 signup: ' + email, password);
-    let result = {};
 
-    //! return auth0 token if valid, if not return false or error message auth0 gives us
-    if (!userToken) {
-      return false;
-    }
-    await fetch(`${baseURL}users`, {
-      method: 'GET',
-      headers: {
-        authorization: 'Bearer ' + userToken,
-        'X-Preferred-Language': lang,
-      },
-    })
-      .then(async res => (result = await res.json()))
+    var requestOptions = {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Access-Control-Request-Headers': '*',
+      }),
+      body: JSON.stringify({
+        client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
+        email: email,
+        password: password,
+        name: email,
+        connection: 'Username-Password-Authentication',
+      }),
+    };
+
+    return await fetch(
+      'https://dev-6uux541sywon80js.us.auth0.com/dbconnections/signup',
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(result => {
+        return result;
+      })
       .catch(() => {
-        result = {
-          success: false,
-          message: ErrorMessages.errorGettingUser,
-        };
+        addAuthError(ErrorMessages.errorCreatingUser);
+        false;
       });
-
-    return result;
   };
 
   const createNewDatabaseUser = async (
