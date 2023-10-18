@@ -12,6 +12,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isSignout, setIsSignout] = React.useState<boolean>(false);
+  const [isSignedIn, setIsSignedIn] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
   const [userToken, setUserToken] = React.useState<string | null>(null);
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
@@ -33,98 +34,110 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const signIn = async (email: string, password: string) => {
+    clearAuthErrors();
     setUserToken(null);
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
     } else {
-      await signInAuth(email, password).then(() => {
-        if (userToken !== undefined) {
-          postUserCredentials().then(r => console.log(r));
-        }
-      });
+      const authorized = await signInAuth(email, password);
+      console.log('authorized: ' + authorized);
+      if (authorized) {
+        console.log('getting user');
+        setIsLoading(true);
+        await getUser().then(res => {
+          console.log(res);
+          const profile = res as any;
+          if (profile.success) {
+            console.log('profile: ' + JSON.stringify(profile));
+            setIsSignedIn(true);
+          } else {
+            console.log('profile is null');
+          }
+        });
+      }
     }
     setIsLoading(false);
   };
 
-  const postUserCredentials = async () => {
-    const url = `${baseURL} /user/login?${userToken}`; //send to actual api
-    const response = {
-      data:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? ConstsType.dummyProfile
-          : 'invalidPassword',
-      status:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? 200
-          : 404,
-      error:
-        url === ConstsType.dummyProfile.email || url === 'notfound@a.com'
-          ? null
-          : {
-              status: 404,
-              message: 'invalidPassword',
-            },
-    };
-    const result = response;
-    return result;
-  };
-
-  async function signInAuth(email: string, password: string) {
-    var myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-    myHeaders.append('Access-Control-Request-Headers', '*');
-
-    var body = new URLSearchParams();
-    body.append('grant_type', 'password');
-    body.append('username', email);
-    body.append('password', password);
-    body.append('client_id', 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45');
-    body.append('scope', 'openid name email nickname');
-    body.append('audience', 'http://localhost:3001/');
-
+  const signInAuth = async (
+    email: string,
+    password: string,
+  ): Promise<boolean> => {
     var requestOptions = {
       method: 'POST',
-      headers: myHeaders,
-      body: body.toString(),
+      headers: new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Access-Control-Request-Headers': '*',
+      }),
+      body: new URLSearchParams({
+        grant_type: 'password',
+        username: email,
+        password: password,
+        client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
+        scope: 'openid name email nickname',
+        audience: 'http://localhost:3001/',
+      }).toString(),
     };
 
-    fetch(
+    return await fetch(
       'https://dev-6uux541sywon80js.us.auth0.com/oauth/token',
       requestOptions,
     )
-      .then(response => response.text())
-      .then(result => setUserToken(JSON.parse(result).access_token))
-      .catch(error =>
-        /*addAuthError(error.message + 'error')*/ console.log(
-          error.message + 'error',
-        ),
-      );
-  }
-
-  const signOut = () => {
-    // replace with sign out function
-    setIsLoading(true);
-    // simulate loading
-    setTimeout(() => {
-      setUserToken(null);
-      setIsLoading(false);
-      setUserProfile({} as Profile);
-    }, 2000);
-    return;
+      .then(response => response.json())
+      .then(result => {
+        console.log(result);
+        switch (result.error) {
+          case 'invalid_grant':
+            addAuthError(ErrorMessages.userNotFound);
+            return new Promise<boolean>(resolve => {
+              resolve(false);
+            });
+          case 'too_many_attempts':
+            addAuthError(ErrorMessages.tooManyAttepts);
+            return new Promise<boolean>(resolve => {
+              resolve(false);
+            });
+          case undefined:
+            setUserToken(result.access_token);
+            return new Promise<boolean>(resolve => {
+              resolve(true);
+            });
+          default:
+            addAuthError(ErrorMessages.userNotFound);
+            return new Promise<boolean>(resolve => {
+              resolve(false);
+            });
+        }
+      })
+      .catch(() => {
+        addAuthError(ErrorMessages.userNotFound);
+        return new Promise<boolean>(resolve => {
+          resolve(false);
+        });
+      });
   };
 
-  const createNewAuth0User = async (email: string, password: string) => {
-    //do things
-    console.log('attempting auth0 signup: ' + email, password);
-    const auth0Token = testToken; //! replace with auth0 token from auth0js
+  const getUser = async () => {
+    let result = {};
 
-    //! return auth0 token if valid, if not return false or error message auth0 gives us
-    if (!auth0Token) {
-      return false;
-    }
-    return testToken;
+    await fetch(`${baseURL}users`, {
+      method: 'GET',
+      headers: {
+        authorization: userToken as string,
+        'X-Preferred-Language': lang,
+      },
+    })
+      .then(async res => (result = await res.json()))
+      .catch(() => {
+        result = {
+          success: false,
+          message: ErrorMessages.errorGettingUser,
+        };
+      });
+
+    return result;
   };
 
   const signUp = async (
@@ -157,50 +170,44 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       const newAuth0UserCreated = await createNewAuth0User(email, password);
       //! Create new user using our backend, use Auth0 token
       if (newAuth0UserCreated) {
-        await createNewUser(email, username, newAuth0UserCreated, phone).then(
-          result => {
-            let res = result as HttpResponse;
-            setIsLoading(false);
-            if (res.success) {
-              setUserToken(res.data.auth_token);
-              setUserProfile(res.data as Profile);
-              clearAuthErrors();
-            } else {
-              console.log('error: ' + res.message);
-              setUserToken(null);
-              setUserProfile({} as Profile);
-              addAuthError(res.message as string);
-            }
-          },
-        );
+        await createNewDatabaseUser(
+          email,
+          username,
+          newAuth0UserCreated,
+          phone,
+        ).then(result => {
+          let res = result as HttpResponse;
+          setIsLoading(false);
+          if (res.success) {
+            setUserToken(res.data.auth_token);
+            setUserProfile(res.data as Profile);
+            clearAuthErrors();
+          } else {
+            console.log('error: ' + res.message);
+            setUserToken(null);
+            setUserProfile({} as Profile);
+            addAuthError(res.message as string);
+          }
+        });
       } else {
         addAuthError(ErrorMessages.errorCreatingUser);
       }
     }
   };
 
-  const getUser = async (auth0Token: string) => {
-    let result = {};
+  const createNewAuth0User = async (email: string, password: string) => {
+    //do things
+    console.log('attempting auth0 signup: ' + email, password);
+    const auth0Token = testToken; //! replace with auth0 token from auth0js
 
-    await fetch(`${baseURL}users`, {
-      method: 'GET',
-      headers: {
-        authorization: auth0Token,
-        'X-Preferred-Language': lang,
-      },
-    })
-      .then(async res => (result = await res.json()))
-      .catch(() => {
-        result = {
-          success: false,
-          message: ErrorMessages.errorGettingUser,
-        };
-      });
-
-    return result;
+    //! return auth0 token if valid, if not return false or error message auth0 gives us
+    if (!auth0Token) {
+      return false;
+    }
+    return testToken;
   };
 
-  const createNewUser = async (
+  const createNewDatabaseUser = async (
     email: string,
     username: string,
     auth0Token: string,
@@ -228,8 +235,19 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           message: ErrorMessages.errorCreatingUser,
         };
       });
-    console.log('result: ' + JSON.stringify(result));
     return result;
+  };
+
+  const signOut = () => {
+    // replace with sign out function
+    setIsLoading(true);
+    // simulate loading
+    setTimeout(() => {
+      setUserToken(null);
+      setIsLoading(false);
+      setUserProfile({} as Profile);
+    }, 2000);
+    return;
   };
 
   function checkValidPassword(password: string): boolean {
@@ -271,8 +289,8 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   useEffect(() => {
     // simulate loading
     setIsLoading(true);
+    setIsSignedIn(false);
     setTimeout(() => {
-      signIn(ConstsType.dummyProfile.email, 'yUTZ9J-=xc|<!');
       setIsLoading(false);
     }, 2000);
     setLang('en');
@@ -285,6 +303,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         userProfile,
         userToken,
         isSignout,
+        isSignedIn,
         authError,
         signedUp,
         setIsLoading,

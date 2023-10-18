@@ -4,6 +4,7 @@ import {Profile} from './ProfileType';
 export interface AuthContextType {
   isLoading: boolean;
   isSignout: boolean;
+  isSignedIn: boolean;
   userToken: string | null;
   userProfile: Profile; //change this eventually
   signedUp: boolean;
