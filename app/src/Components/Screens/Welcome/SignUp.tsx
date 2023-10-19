@@ -59,13 +59,12 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         <AuthButton
           onPress={async () => {
             await signUp(email, username, password, repeatedPassword);
-            userToken !== null && navigation.navigate('Login');
+            userToken && navigation.navigate('Login');
           }}>
           <ButtonText>Sign Up</ButtonText>
         </AuthButton>
         <Title>
-          {userToken !== null &&
-            'You have successfully signed up\nRedirecting to login'}
+          {userToken && 'You have successfully signed up\nRedirecting to login'}
         </Title>
       </WrapperView>
     </WrapperView>
