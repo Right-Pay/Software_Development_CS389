@@ -1,5 +1,4 @@
 import React from 'react';
-import {View, StyleSheet, FlatList, Text, Button} from 'react-native';
 import Context from '../../../Context/context';
 import type {AppContext} from '../../../types/AppContextType';
 import type {PropsWithChildren} from 'react';
@@ -10,6 +9,15 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
+import {
+  ButtonText,
+  MainButton,
+  ProfileList,
+  ProfileView,
+  Subtitle,
+  Title,
+  WrapperView,
+} from '../../../Helpers/StylizedComponents';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,
@@ -21,56 +29,32 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
   const {creditCards} = React.useContext(Context) as AppContext;
 
   return (
-    <View style={styles.homeScreenView}>
-      <Text style={styles.title}>Profile Screen</Text>
-      <FlatList
+    <WrapperView>
+      <Title>Profile Screen</Title>
+      <ProfileList
         data={creditCards}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item, index}) => {
           return (
-            <View style={styles.rowcontainer}>
-              <Text style={styles.text}>Credit Card {index}:</Text>
-              <Text style={styles.text}>Card Number: {item.cardNumber}</Text>
-              <Text style={styles.text}>Card Type: {item.cardType}</Text>
-            </View>
+            <ProfileView>
+              <Subtitle>Credit Card {index}:</Subtitle>
+              <Subtitle>Card Number: {item.cardNumber}</Subtitle>
+              <Subtitle>Card Type: {item.cardType}</Subtitle>
+            </ProfileView>
           );
         }}
       />
-      <Button
-        title="Go Home"
-        onPress={() => navigation.navigate('HomeStack', {screen: 'HomeScreen'})}
-      />
-      <Button
-        title="Settings"
-        onPress={() => navigation.navigate('ProfileSettings')}
-      />
-    </View>
+      <MainButton
+        onPress={() =>
+          navigation.navigate('HomeStack', {screen: 'HomeScreen'})
+        }>
+        <Subtitle>Go Home</Subtitle>
+      </MainButton>
+      <MainButton onPress={() => navigation.navigate('ProfileSettings')}>
+        <ButtonText>Settings</ButtonText>
+      </MainButton>
+    </WrapperView>
   );
 };
-
-const styles = StyleSheet.create({
-  homeScreenView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowcontainer: {
-    flex: 1,
-    flexDirection: 'column',
-    marginLeft: 20,
-    marginRight: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-  },
-  title: {
-    marginTop: 20,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  text: {
-    padding: 10,
-    fontSize: 20,
-  },
-});
 
 export default ProfileScreen;

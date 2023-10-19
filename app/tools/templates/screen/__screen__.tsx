@@ -7,9 +7,8 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
-import {styled} from 'nativewind';
-import {View} from 'react-native';
 import __componentName__ from './__componentName__';
+import {WrapperView} from '../../../src/Helpers/StylizedComponents';
 
 type __screen__ScreenProps = CompositeScreenProps<
   NativeStackScreenProps<__stack__NavigationRoutesType, '__screen__Screen'>,
@@ -17,14 +16,12 @@ type __screen__ScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const StylizedView = styled(View);
-
 const __screen__Screen: React.FC<__screen__ScreenProps> = ({navigation}) => {
   return (
     <>
-      <StylizedView>
+      <WrapperView>
         <__componentName__ navigation={navigation} />
-      </StylizedView>
+      </WrapperView>
     </>
   );
 };
