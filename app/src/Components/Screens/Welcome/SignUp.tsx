@@ -24,7 +24,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
 
-  const {signUp, clearAuthErrors, signedUp, AuthErrorComponent} =
+  const {signUp, clearAuthErrors, userToken, AuthErrorComponent} =
     React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
@@ -35,19 +35,23 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
       <WrapperView className="justify-center h-full w-full">
         <AuthInputBox
           placeholder="Email"
+          placeholderTextColor={'black'}
           onChange={event => setEmail(event.nativeEvent.text)}
         />
         <AuthInputBox
           placeholder="Username"
+          placeholderTextColor={'black'}
           onChange={event => setUsername(event.nativeEvent.text)}
         />
         <AuthInputBox
           placeholder="Password"
+          placeholderTextColor={'black'}
           secureTextEntry={true}
           onChange={event => setPassword(event.nativeEvent.text)}
         />
         <AuthInputBox
           placeholder="Repeat Password"
+          placeholderTextColor={'black'}
           secureTextEntry={true}
           onChange={event => setRepeatedPassword(event.nativeEvent.text)}
         />
@@ -55,12 +59,13 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         <AuthButton
           onPress={async () => {
             await signUp(email, username, password, repeatedPassword);
-            signedUp && navigation.navigate('Login');
+            userToken !== null && navigation.navigate('Login');
           }}>
           <ButtonText>Sign Up</ButtonText>
         </AuthButton>
         <Title>
-          {signedUp && 'You have successfully signed up\nRedirecting to login'}
+          {userToken !== null &&
+            'You have successfully signed up\nRedirecting to login'}
         </Title>
       </WrapperView>
     </WrapperView>

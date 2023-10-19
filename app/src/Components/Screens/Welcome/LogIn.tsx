@@ -36,10 +36,12 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
       <WrapperView className="justify-center h-full w-full">
         <AuthInputBox
           placeholder="Email Address"
+          placeholderTextColor={'black'}
           onChange={event => setEmail(event.nativeEvent.text)}
         />
         <AuthInputBox
           placeholder="Password"
+          placeholderTextColor={'black'}
           secureTextEntry={true}
           onChange={event => setPassword(event.nativeEvent.text)}
         />
