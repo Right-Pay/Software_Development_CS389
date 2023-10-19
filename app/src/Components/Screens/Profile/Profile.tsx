@@ -48,7 +48,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
         onPress={() =>
           navigation.navigate('HomeStack', {screen: 'HomeScreen'})
         }>
-        <Subtitle>Go Home</Subtitle>
+        <ButtonText>Go Home</ButtonText>
       </MainButton>
       <MainButton onPress={() => navigation.navigate('ProfileSettings')}>
         <ButtonText>Settings</ButtonText>

@@ -10,6 +10,7 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import type {AuthContextType} from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
 import {
+  ButtonText,
   MainButton,
   Subtitle,
   Title,
@@ -37,11 +38,11 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
       <Subtitle>State: {userProfile.state}</Subtitle>
       <Subtitle>Zip: {userProfile.zip}</Subtitle>
       <MainButton>
-        <Subtitle>Edit Credit Cards</Subtitle>
+        <ButtonText>Edit Credit Cards</ButtonText>
       </MainButton>
 
       <MainButton onPress={() => navigation.goBack()}>
-        <Subtitle>Go Back</Subtitle>
+        <ButtonText>Go Back</ButtonText>
       </MainButton>
     </WrapperView>
   );

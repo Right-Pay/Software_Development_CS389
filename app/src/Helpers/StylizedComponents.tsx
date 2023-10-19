@@ -30,7 +30,7 @@ export const AuthInputBox = styled(TextInput, {
 
 export const MainButton = styled(
   Pressable,
-  'text-3xl p-2 border-2 border-gray-600 rounded-xl',
+  'text-3xl p-2 border-2 border-gray-600 rounded-xl m-2',
 );
 
 export const ButtonText = styled(Text, 'text-xl');
