@@ -15,6 +15,7 @@ const dummyProfile = {
   id: 1,
   name: 'John Doe',
   email: 'johndoe@gmail.com',
+  username: 'johndoe',
   phone: '1234567890',
   address: '1234 Main St',
   city: 'Anytown',

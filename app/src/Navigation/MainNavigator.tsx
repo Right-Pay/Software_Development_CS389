@@ -11,6 +11,8 @@ import AuthContext from '../Context/authContext';
 import {AuthContextType} from '../types/AuthContextType';
 import {WelcomeNavigationRoutesType} from '../types/NavigationRoutesType';
 import BottomTabNavigator from './TabNavigator';
+import Config from 'react-native-config';
+import Consts from '../Helpers/Consts';
 
 const WelcomeStack = createNativeStackNavigator<WelcomeNavigationRoutesType>();
 
@@ -40,10 +42,14 @@ const WelcomeNavigator: React.FC<PropsWithChildren> = () => {
 };
 
 const MainNavigator: React.FC<PropsWithChildren> = () => {
-  const {isLoading, userToken} = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
-
+  const apiBypass = Config.REACT_APP_API_BYPASS;
+  const {isLoading, setIsLoading, userToken, setUserToken, setUserProfile} =
+    React.useContext(AuthContext) as AuthContextType;
+  if (apiBypass) {
+    setIsLoading(false);
+    setUserToken('testToken');
+    setUserProfile(Consts.dummyProfile);
+  }
   if (isLoading) {
     return <SplashScreen />;
   }
