@@ -5,9 +5,14 @@ const AuthErrorMessages = {
   invalidPassword: 'Invalid Password',
   passwordsDoNotMatch: 'Passwords Do Not Match',
   userAlreadyExists: 'User Already Exists',
+  userNotFound: 'User Not Found\nEither Email or Password is Incorrect',
   errorCreatingUser: 'Error Creating User',
+  tooManyAttepts:
+    'Too Many Attempts\nCheck Your Email for Further Instructions',
   invalidCode:
     'The code is not correct\nEither your email is not correct or you entered an invalid code',
+  errorChangingPassword: 'Error Changing Password',
+  sentRestEmail: 'Check Your Email for Further Instructions',
 };
 
 const dummyProfile = {
@@ -22,6 +27,7 @@ const dummyProfile = {
   state: 'CA',
   zip: '12345',
   subscribed: true,
+  //password: 'JohnDoe1234!',
 };
 
 const Consts: ConstsType = {

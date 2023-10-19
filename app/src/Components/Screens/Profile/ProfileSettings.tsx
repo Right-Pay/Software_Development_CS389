@@ -24,7 +24,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
     <View style={styles.homeScreenView}>
       <Text style={styles.title}>Profile Screen</Text>
       <Text style={styles.textPadding}>
-        Hello, you will soon be able to edit theese!
+        Hello, you will soon be able to edit these!
       </Text>
       <Text style={styles.text}>Username: {userProfile.username}</Text>
       <Text style={styles.text}>Email: {userProfile.email}</Text>
