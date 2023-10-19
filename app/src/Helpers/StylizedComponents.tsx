@@ -11,8 +11,6 @@ export const Title = styled(
 
 export const Subtitle = styled(Text, 'text-xl text-center text-green-500');
 
-export const ButtonText = styled(Text, 'text-xl');
-
 export const FinePrint = styled(Text, 'text-sm text-black');
 
 export const FinePrintButton = styled(Pressable, 'flex pb-1');
@@ -31,6 +29,8 @@ export const MainButton = styled(
   Pressable,
   'text-3xl p-2 border-2 border-gray-600 rounded-xl',
 );
+
+export const ButtonText = styled(Text, 'text-xl');
 
 export const GoogleMapsView = styled(
   MapView,
