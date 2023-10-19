@@ -20,10 +20,13 @@ export const AuthButton = styled(
   'flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors',
 );
 
-export const AuthInputBox = styled(
-  TextInput,
-  'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border border-green-500 bg-transparent shadow-sm transition-colors',
-);
+export const AuthInputBox = styled(TextInput, {
+  props: {
+    className:
+      'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border border-green-500 bg-transparent shadow-sm transition-colors',
+    placeholderTextColor: 'color',
+  },
+});
 
 export const MainButton = styled(
   Pressable,

@@ -34,7 +34,6 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
       <WrapperView className="justify-center h-full w-full">
         <AuthInputBox
           placeholder="Email Address"
-          placeholderTextColor="#AFAEAE"
           onChange={event => setEmail(event.nativeEvent.text)}
         />
         {AuthErrorComponent && <AuthErrorComponent />}
@@ -46,7 +45,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
               navigation.navigate('Login');
             }, 3000);
           }}>
-          <ButtonText className="text-xl">Reset Password</ButtonText>
+          <ButtonText>Reset Password</ButtonText>
         </AuthButton>
       </WrapperView>
     </WrapperView>

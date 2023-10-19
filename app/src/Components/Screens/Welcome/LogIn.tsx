@@ -36,26 +36,22 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
       <WrapperView className="justify-center h-full w-full">
         <AuthInputBox
           placeholder="Email Address"
-          placeholderTextColor="#AFAEAE"
           onChange={event => setEmail(event.nativeEvent.text)}
         />
         <AuthInputBox
           placeholder="Password"
-          placeholderTextColor="#AFAEAE"
           secureTextEntry={true}
           onChange={event => setPassword(event.nativeEvent.text)}
         />
-        <FinePrintButton
-          className="flex pb-1"
-          onPress={() => navigation.navigate('ForgotPassword')}>
-          <FinePrint className="text-sm text-black">Forgot Password?</FinePrint>
+        <FinePrintButton onPress={() => navigation.navigate('ForgotPassword')}>
+          <FinePrint>Forgot Password?</FinePrint>
         </FinePrintButton>
         {AuthErrorComponent && <AuthErrorComponent />}
         <AuthButton
           onPress={() => {
             signIn(email, password);
           }}>
-          <ButtonText className="text-xl">Log In</ButtonText>
+          <ButtonText>Log In</ButtonText>
         </AuthButton>
       </WrapperView>
     </WrapperView>

@@ -20,15 +20,11 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({navigation}) => {
     <WrapperView>
       <Title>Welcome to RightPay</Title>
       <WrapperView className="justify-center h-full w-full">
-        <AuthButton
-          onPress={() => navigation.navigate('Login')}
-          className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors">
-          <ButtonText className="text-xl">Log In</ButtonText>
+        <AuthButton onPress={() => navigation.navigate('Login')}>
+          <ButtonText>Log In</ButtonText>
         </AuthButton>
-        <AuthButton
-          onPress={() => navigation.navigate('Register')}
-          className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors">
-          <ButtonText className="text-xl">Sign Up</ButtonText>
+        <AuthButton onPress={() => navigation.navigate('Register')}>
+          <ButtonText>Sign Up</ButtonText>
         </AuthButton>
       </WrapperView>
     </WrapperView>
