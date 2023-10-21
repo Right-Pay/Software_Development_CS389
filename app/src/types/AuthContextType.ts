@@ -6,8 +6,11 @@ export interface AuthContextType {
   userToken: string | null;
   userProfile: Profile; //change this eventually
   authError: string[];
+  AuthErrorComponent: FC | null;
   setIsLoading: (_isLoading: boolean) => void;
   setUserToken: (_userToken: string | null) => void;
+  setRefreshToken: (_refreshToken: string | null) => void;
+  refreshAuth0Token: () => void;
   signIn: (_email: string, _password: string) => void;
   signOut: () => void;
   signUp: (
@@ -24,7 +27,10 @@ export interface AuthContextType {
   checkValidEmail: (_email: string) => boolean;
   checkValidPassword: (_password: string) => boolean;
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
-  verifyCode: (_code: string) => boolean;
-  AuthErrorComponent: FC | null;
   resetVariables: () => void;
+}
+
+export interface tokenType {
+  refresh_token: string;
+  access_token: string;
 }
