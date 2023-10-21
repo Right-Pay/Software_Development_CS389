@@ -29,7 +29,6 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   }, []);
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
-
   return (
     <WrapperView>
       <Title>Log In to Your RightPay Account</Title>

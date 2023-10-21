@@ -11,6 +11,7 @@ import {WelcomeNavigationRoutesType} from '../types/NavigationRoutesType';
 import BottomTabNavigator from './TabNavigator';
 import Config from 'react-native-config';
 import Consts from '../Helpers/Consts';
+import authContext from '../Context/authContext';
 
 const WelcomeStack = createNativeStackNavigator<WelcomeNavigationRoutesType>();
 
@@ -36,6 +37,7 @@ const WelcomeNavigator: React.FC<PropsWithChildren> = () => {
 
 const MainNavigator: React.FC<PropsWithChildren> = () => {
   const apiBypass = Config.REACT_APP_API_BYPASS;
+  
   const {isLoading, setIsLoading, userToken, setUserToken, setUserProfile} =
     React.useContext(AuthContext) as AuthContextType;
   if (apiBypass === true) {
