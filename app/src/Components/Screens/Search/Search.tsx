@@ -7,9 +7,8 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
-import {styled} from 'nativewind';
-import {View} from 'react-native';
 import SearchText from './SearchText';
+import {WrapperView} from '../../../Helpers/StylizedComponents';
 
 type SearchScreenProps = CompositeScreenProps<
   NativeStackScreenProps<SearchNavigationRoutesType, 'SearchScreen'>,
@@ -17,14 +16,12 @@ type SearchScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const StylizedView = styled(View);
-
 const SearchScreen: React.FC<SearchScreenProps> = ({navigation}) => {
   return (
     <>
-      <StylizedView>
+      <WrapperView>
         <SearchText navigation={navigation} />
-      </StylizedView>
+      </WrapperView>
     </>
   );
 };

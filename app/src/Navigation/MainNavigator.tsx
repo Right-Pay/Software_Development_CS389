@@ -40,11 +40,7 @@ const MainNavigator: React.FC<PropsWithChildren> = () => {
   
   const {isLoading, setIsLoading, userToken, setUserToken, setUserProfile} =
     React.useContext(AuthContext) as AuthContextType;
-    console.log("hey")
-    console.log(apiBypass)
-    console.log(userToken)
-    if (apiBypass===true) {
-      console.log("hello")
+  if (apiBypass === true) {
     setIsLoading(false);
     setUserToken('testToken');
     setUserProfile(Consts.dummyProfile);
