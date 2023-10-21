@@ -202,6 +202,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       ).then(async () => {
         return await signInAuth(email, password);
       })) as tokenType;
+
       if (access_token) {
         await createNewDatabaseUser(access_token, email, username, phone).then(
           result => {
@@ -214,6 +215,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             } else {
               setUserToken(null);
               setUserProfile({} as Profile);
+              console.log(res.message);
               addAuthError(res.message as string);
             }
           },

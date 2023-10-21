@@ -28,7 +28,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const inputClassName =
     'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border border-green-500 bg-transparent shadow-sm transition-colors';
 
-  const {signUp, clearAuthErrors, signedUp, AuthErrorComponent} =
+  const {signUp, clearAuthErrors, AuthErrorComponent, userToken} =
     React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
@@ -70,12 +70,12 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
           className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors"
           onPress={async () => {
             await signUp(email, username, password, repeatedPassword);
-            signedUp && navigation.navigate('Login');
+            userToken && navigation.navigate('Login');
           }}>
           <StylizedText className="text-xl">Sign Up</StylizedText>
         </StylizedPress>
         <StylizedText className={headingClassName}>
-          {signedUp && 'You have successfully signed up\nRedirecting to login'}
+          {userToken && 'You have successfully signed up\nRedirecting to login'}
         </StylizedText>
       </StylizedView>
     </StylizedView>
