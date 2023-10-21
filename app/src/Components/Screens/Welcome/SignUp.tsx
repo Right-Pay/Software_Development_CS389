@@ -7,6 +7,8 @@ import {AuthContextType} from '../../../types/AuthContextType';
 import {
   AuthButton,
   AuthInputBox,
+  Logo,
+  LogoContainer,
   MainButtonText,
   Title,
   WrapperView,
@@ -32,41 +34,44 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title>Sign Up for RightPay</Title>
-      <WrapperView className="justify-center h-full w-full">
-        <AuthInputBox
-          placeholder="Email"
-          placeholderTextColor={'black'}
-          onChange={event => setEmail(event.nativeEvent.text)}
+      <LogoContainer>
+        <Logo
+          source={require('../../../Assets/RightPay-logo-light-transparent.png')}
         />
-        <AuthInputBox
-          placeholder="Username"
-          placeholderTextColor={'black'}
-          onChange={event => setUsername(event.nativeEvent.text)}
-        />
-        <AuthInputBox
-          placeholder="Password"
-          placeholderTextColor={'black'}
-          secureTextEntry={true}
-          onChange={event => setPassword(event.nativeEvent.text)}
-        />
-        <AuthInputBox
-          placeholder="Repeat Password"
-          placeholderTextColor={'black'}
-          secureTextEntry={true}
-          onChange={event => setRepeatedPassword(event.nativeEvent.text)}
-        />
-        {AuthErrorComponent && <AuthErrorComponent />}
-        <AuthButton
-          onPress={async () => {
-            await signUp(email, username, password, repeatedPassword);
-            userToken && navigation.navigate('Login');
-          }}>
-          <MainButtonText>Sign Up</MainButtonText>
-        </AuthButton>
-        <Title>
-          {userToken && 'You have successfully signed up\nRedirecting to login'}
-        </Title>
-      </WrapperView>
+      </LogoContainer>
+      <AuthInputBox
+        placeholder="Email"
+        placeholderTextColor={'black'}
+        onChange={event => setEmail(event.nativeEvent.text)}
+      />
+      <AuthInputBox
+        placeholder="Username"
+        placeholderTextColor={'black'}
+        onChange={event => setUsername(event.nativeEvent.text)}
+      />
+      <AuthInputBox
+        placeholder="Password"
+        placeholderTextColor={'black'}
+        secureTextEntry={true}
+        onChange={event => setPassword(event.nativeEvent.text)}
+      />
+      <AuthInputBox
+        placeholder="Repeat Password"
+        placeholderTextColor={'black'}
+        secureTextEntry={true}
+        onChange={event => setRepeatedPassword(event.nativeEvent.text)}
+      />
+      {AuthErrorComponent && <AuthErrorComponent />}
+      <AuthButton
+        onPress={async () => {
+          await signUp(email, username, password, repeatedPassword);
+          userToken && navigation.navigate('Login');
+        }}>
+        <MainButtonText>Sign Up</MainButtonText>
+      </AuthButton>
+      <Title>
+        {userToken && 'You have successfully signed up\nRedirecting to login'}
+      </Title>
     </WrapperView>
   );
 };

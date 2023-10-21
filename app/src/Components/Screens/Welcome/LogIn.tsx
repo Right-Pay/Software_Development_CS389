@@ -12,6 +12,8 @@ import {
   FinePrint,
   FinePrintButton,
   AuthButton,
+  LogoContainer,
+  Logo,
 } from '../../../Helpers/StylizedComponents';
 
 type LogInScreenProps = NativeStackScreenProps<
@@ -32,29 +34,32 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title>Log In to Your RightPay Account</Title>
-      <WrapperView className="justify-center h-full w-full">
-        <AuthInputBox
-          placeholder="Email Address"
-          placeholderTextColor={'black'}
-          onChange={event => setEmail(event.nativeEvent.text)}
+      <LogoContainer>
+        <Logo
+          source={require('../../../Assets/RightPay-logo-light-transparent.png')}
         />
-        <AuthInputBox
-          placeholder="Password"
-          placeholderTextColor={'black'}
-          secureTextEntry={true}
-          onChange={event => setPassword(event.nativeEvent.text)}
-        />
-        <FinePrintButton onPress={() => navigation.navigate('ForgotPassword')}>
-          <FinePrint>Forgot Password?</FinePrint>
-        </FinePrintButton>
-        {AuthErrorComponent && <AuthErrorComponent />}
-        <AuthButton
-          onPress={() => {
-            signIn(email, password);
-          }}>
-          <MainButtonText>Log In</MainButtonText>
-        </AuthButton>
-      </WrapperView>
+      </LogoContainer>
+      <AuthInputBox
+        placeholder="Email Address"
+        placeholderTextColor={'black'}
+        onChange={event => setEmail(event.nativeEvent.text)}
+      />
+      <AuthInputBox
+        placeholder="Password"
+        placeholderTextColor={'black'}
+        secureTextEntry={true}
+        onChange={event => setPassword(event.nativeEvent.text)}
+      />
+      <FinePrintButton onPress={() => navigation.navigate('ForgotPassword')}>
+        <FinePrint>Forgot Password?</FinePrint>
+      </FinePrintButton>
+      {AuthErrorComponent && <AuthErrorComponent />}
+      <AuthButton
+        onPress={() => {
+          signIn(email, password);
+        }}>
+        <MainButtonText>Log In</MainButtonText>
+      </AuthButton>
     </WrapperView>
   );
 };

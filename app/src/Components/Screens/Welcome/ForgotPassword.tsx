@@ -7,6 +7,8 @@ import AuthContext from '../../../Context/authContext';
 import {
   AuthButton,
   AuthInputBox,
+  Logo,
+  LogoContainer,
   MainButtonText,
   Title,
   WrapperView,
@@ -31,24 +33,27 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   return (
     <WrapperView>
       <Title>Forgot your Password for RightPay?</Title>
-      <WrapperView className="justify-center h-full w-full">
-        <AuthInputBox
-          placeholder="Email Address"
-          placeholderTextColor={'black'}
-          onChange={event => setEmail(event.nativeEvent.text)}
+      <LogoContainer>
+        <Logo
+          source={require('../../../Assets/RightPay-logo-light-transparent.png')}
         />
-        {AuthErrorComponent && <AuthErrorComponent />}
-        <AuthButton
-          onPress={() => {
-            resetPassword(email);
-            setTimeout(() => {
-              resetVariables();
-              navigation.navigate('Login');
-            }, 3000);
-          }}>
-          <MainButtonText>Reset Password</MainButtonText>
-        </AuthButton>
-      </WrapperView>
+      </LogoContainer>
+      <AuthInputBox
+        placeholder="Email Address"
+        placeholderTextColor={'black'}
+        onChange={event => setEmail(event.nativeEvent.text)}
+      />
+      {AuthErrorComponent && <AuthErrorComponent />}
+      <AuthButton
+        onPress={() => {
+          resetPassword(email);
+          setTimeout(() => {
+            resetVariables();
+            navigation.navigate('Login');
+          }, 3000);
+        }}>
+        <MainButtonText>Reset Password</MainButtonText>
+      </AuthButton>
     </WrapperView>
   );
 };
