@@ -28,12 +28,12 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const headingClassName =
-    'mt-20 text-3xl text-center font-bold text-green-500';
+    'mt-20 text-3xl text-center font-bold text-dark-green';
   const inputClassName =
-    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border border-green-500 bg-transparent shadow-sm transition-colors';
+    'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border border-dark-green bg-light-green shadow-sm transition-colors';
 
   return (
-    <StylizedView className="flex-1 items-center">
+    <StylizedView className="flex-1 items-center bg-light-green">
       <StylizedText className={headingClassName}>
         Log In to Your RightPay Account
       </StylizedText>
@@ -60,11 +60,11 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         </StylizedPress>
         {AuthErrorComponent && <AuthErrorComponent />}
         <StylizedPress
-          className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-green-500 shadow-sm transition-colors"
+          className="flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-dark-green shadow-sm transition-colors"
           onPress={() => {
             signIn(email, password);
           }}>
-          <StylizedText className="text-xl">Log In</StylizedText>
+          <StylizedText className="text-xl text-white">Log In</StylizedText>
         </StylizedPress>
       </StylizedView>
     </StylizedView>
