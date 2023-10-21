@@ -42,6 +42,10 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const refreshAuth0Token = async () => {
+    if (!refreshToken) {
+      addAuthError(ErrorMessages.invalidToken);
+      return false;
+    }
     var requestOptions = {
       method: 'POST',
       headers: new Headers({
@@ -91,13 +95,12 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         password,
       )) as tokenType;
       if (refresh_token) {
-        setRefreshToken(refresh_token as string);
+        setRefreshToken(refresh_token);
       }
       if (access_token) {
         setIsLoading(true);
-        await getUser(access_token as string).then(result => {
+        await getUser(access_token).then(result => {
           let res = result as HttpResponse;
-          setIsLoading(false);
           if (res.success) {
             setUserToken(res.data.auth_token);
             setUserProfile(res.data as Profile);
