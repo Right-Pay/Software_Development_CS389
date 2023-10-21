@@ -8,12 +8,12 @@ import {
   Title,
   AuthInputBox,
   WrapperView,
-  MainButtonText,
   FinePrint,
   FinePrintButton,
   AuthButton,
   LogoContainer,
   Logo,
+  AuthButtonText,
 } from '../../../Helpers/StylizedComponents';
 
 type LogInScreenProps = NativeStackScreenProps<
@@ -58,7 +58,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
         onPress={() => {
           signIn(email, password);
         }}>
-        <MainButtonText>Log In</MainButtonText>
+        <AuthButtonText>Log In</AuthButtonText>
       </AuthButton>
     </WrapperView>
   );

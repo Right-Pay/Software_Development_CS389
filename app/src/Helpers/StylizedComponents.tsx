@@ -25,12 +25,14 @@ export const AuthInputBox = styled(
   'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border border-dark-green bg-light-green bg-transparent shadow-sm transition-colors',
 );
 
+export const AuthButtonText = styled(Text, 'text-xl text-light-green');
+
 export const MainButton = styled(
   Pressable,
-  'text-3xl p-2 border-2 border-gray-600 rounded-xl m-2',
+  'text-3xl p-2 border-2 border-dark-green rounded-xl m-2',
 );
 
-export const MainButtonText = styled(Text, 'text-xl text-light-green');
+export const MainButtonText = styled(Text, 'text-xl text-dark-green');
 
 export const GoogleMapsView = styled(
   MapView,

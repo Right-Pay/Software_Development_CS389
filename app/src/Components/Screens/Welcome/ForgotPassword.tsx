@@ -6,10 +6,10 @@ import {AuthContextType} from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
 import {
   AuthButton,
+  AuthButtonText,
   AuthInputBox,
   Logo,
   LogoContainer,
-  MainButtonText,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
@@ -52,7 +52,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
             navigation.navigate('Login');
           }, 3000);
         }}>
-        <MainButtonText>Reset Password</MainButtonText>
+        <AuthButtonText>Reset Password</AuthButtonText>
       </AuthButton>
     </WrapperView>
   );

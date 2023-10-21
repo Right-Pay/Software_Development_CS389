@@ -4,11 +4,11 @@ import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesT
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   AuthButton,
-  MainButtonText,
   Title,
   WrapperView,
   Logo,
   LogoContainer,
+  AuthButtonText,
 } from '../../../Helpers/StylizedComponents';
 
 type WelcomeScreenProps = NativeStackScreenProps<
@@ -27,10 +27,10 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({navigation}) => {
         />
       </LogoContainer>
       <AuthButton onPress={() => navigation.navigate('Login')}>
-        <MainButtonText>Log In</MainButtonText>
+        <AuthButtonText>Log In</AuthButtonText>
       </AuthButton>
       <AuthButton onPress={() => navigation.navigate('Register')}>
-        <MainButtonText>Sign Up</MainButtonText>
+        <AuthButtonText>Sign Up</AuthButtonText>
       </AuthButton>
     </WrapperView>
   );

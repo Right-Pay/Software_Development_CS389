@@ -17,7 +17,6 @@ const Tab = createBottomTabNavigator<NavigationRoutesType>();
 const tabOptions = (label: string) => {
   const options: BottomTabNavigationOptions = {
     tabBarLabel: label,
-    tabBarLabelStyle: {fontSize: 12, fontWeight: 'bold', color: 'green'},
     tabBarIconStyle: {color: 'green'},
   };
 
@@ -29,8 +28,12 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveBackgroundColor: '#c7c7c7',
-        tabBarActiveTintColor: 'green',
+        tabBarLabelStyle: {fontSize: 12, fontWeight: 'bold'},
+        tabBarActiveBackgroundColor: '#e6ffe3',
+        tabBarActiveTintColor: '#4d654e',
+        tabBarInactiveBackgroundColor: '#4d654e',
+        tabBarInactiveTintColor: '#e6ffe3',
+        //tabBarStyle: {shadowColor: 'red'},
       }}>
       <Tab.Screen
         name="HomeStack"

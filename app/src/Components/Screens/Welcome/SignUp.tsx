@@ -6,10 +6,10 @@ import AuthContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import {
   AuthButton,
+  AuthButtonText,
   AuthInputBox,
   Logo,
   LogoContainer,
-  MainButtonText,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
@@ -67,7 +67,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
           await signUp(email, username, password, repeatedPassword);
           userToken && navigation.navigate('Login');
         }}>
-        <MainButtonText>Sign Up</MainButtonText>
+        <AuthButtonText>Sign Up</AuthButtonText>
       </AuthButton>
       <Title>
         {userToken && 'You have successfully signed up\nRedirecting to login'}
