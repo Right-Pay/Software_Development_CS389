@@ -30,7 +30,7 @@ export const MainButton = styled(
   'text-3xl p-2 border-2 border-gray-600 rounded-xl m-2',
 );
 
-export const MainButtonText = styled(Text, 'text-xl text-white');
+export const MainButtonText = styled(Text, 'text-xl text-light-green');
 
 export const GoogleMapsView = styled(
   MapView,
