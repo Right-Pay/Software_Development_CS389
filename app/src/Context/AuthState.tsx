@@ -305,10 +305,9 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json',
-          'Access-Control-Request-Headers': '*',
         }),
         body: JSON.stringify({
-          client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
+          client_id: auth0ClientId,
           email: email,
           connection: 'Username-Password-Authentication',
         }),
