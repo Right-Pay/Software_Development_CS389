@@ -1,5 +1,5 @@
 import {styled} from 'nativewind';
-import {TextInput, Text, View, Pressable, FlatList} from 'react-native';
+import {TextInput, Text, View, Pressable, FlatList, Image} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 
 export const WrapperView = styled(View, 'flex-1 items-center bg-light-green');
@@ -30,7 +30,7 @@ export const MainButton = styled(
   'text-3xl p-2 border-2 border-gray-600 rounded-xl m-2',
 );
 
-export const ButtonText = styled(Text, 'text-xl text-white');
+export const MainButtonText = styled(Text, 'text-xl text-white');
 
 export const GoogleMapsView = styled(
   MapView,
@@ -44,4 +44,11 @@ export const ProfileList = styled(FlatList);
 export const ProfileView = styled(
   View,
   'flex-1 flex-col ml-20 mr-20 border-b-1 border-b-gray-500',
+);
+
+export const Logo = styled(Image, 'scale-15');
+
+export const LogoContainer = styled(
+  View,
+  'flex-initial flex-col justify-center items-center h-1/2 w-1/2',
 );

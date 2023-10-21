@@ -7,7 +7,7 @@ import AuthContext from '../../../Context/authContext';
 import {
   AuthButton,
   AuthInputBox,
-  ButtonText,
+  MainButtonText,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
@@ -46,7 +46,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
               navigation.navigate('Login');
             }, 3000);
           }}>
-          <ButtonText>Reset Password</ButtonText>
+          <MainButtonText>Reset Password</MainButtonText>
         </AuthButton>
       </WrapperView>
     </WrapperView>

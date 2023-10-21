@@ -1,13 +1,14 @@
 import React from 'react';
-import {Image} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   AuthButton,
-  ButtonText,
+  MainButtonText,
   Title,
   WrapperView,
+  Logo,
+  LogoContainer,
 } from '../../../Helpers/StylizedComponents';
 
 type WelcomeScreenProps = NativeStackScreenProps<
@@ -20,21 +21,17 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title>Welcome to RightPay</Title>
-      <WrapperView className="justify-center h-full w-full">
-        <StylizedImage 
-          style={{
-            resizeMode: 'center',
-            height: 200,
-            width: 200,
-          }}
-          source={require('../../../Assets/RightPay-logo-light-transparent.png')} />
-        <AuthButton onPress={() => navigation.navigate('Login')}>
-          <ButtonText>Log In</ButtonText>
-        </AuthButton>
-        <AuthButton onPress={() => navigation.navigate('Register')}>
-          <ButtonText>Sign Up</ButtonText>
-        </AuthButton>
-      </WrapperView>
+      <LogoContainer>
+        <Logo
+          source={require('../../../Assets/RightPay-logo-light-transparent.png')}
+        />
+      </LogoContainer>
+      <AuthButton onPress={() => navigation.navigate('Login')}>
+        <MainButtonText>Log In</MainButtonText>
+      </AuthButton>
+      <AuthButton onPress={() => navigation.navigate('Register')}>
+        <MainButtonText>Sign Up</MainButtonText>
+      </AuthButton>
     </WrapperView>
   );
 };

@@ -10,7 +10,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {
-  ButtonText,
+  MainButtonText,
   MainButton,
   ProfileList,
   ProfileView,
@@ -48,10 +48,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
         onPress={() =>
           navigation.navigate('HomeStack', {screen: 'HomeScreen'})
         }>
-        <ButtonText>Go Home</ButtonText>
+        <MainButtonText>Go Home</MainButtonText>
       </MainButton>
       <MainButton onPress={() => navigation.navigate('ProfileSettings')}>
-        <ButtonText>Settings</ButtonText>
+        <MainButtonText>Settings</MainButtonText>
       </MainButton>
     </WrapperView>
   );

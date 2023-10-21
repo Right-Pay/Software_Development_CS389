@@ -16,16 +16,19 @@ module.exports = {
       },
     },
     extend: {
+      scale: {
+        15: '.15',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
-        'light-green': "#e6ffe3",
-        'dark-green': "#4d654e",
-        'dark-gray': "#404340",
-        'white': "#ffffff",
+        'light-green': '#e6ffe3',
+        'dark-green': '#4d654e',
+        'dark-gray': '#404340',
+        white: '#ffffff',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',

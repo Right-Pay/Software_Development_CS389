@@ -8,7 +8,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {
-  ButtonText,
+  MainButtonText,
   MainButton,
   Subtitle,
   Title,
@@ -30,7 +30,7 @@ const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
       </Subtitle>
 
       <MainButton onPress={() => navigation.goBack()}>
-        <ButtonText>Go back</ButtonText>
+        <MainButtonText>Go back</MainButtonText>
       </MainButton>
     </WrapperView>
   );

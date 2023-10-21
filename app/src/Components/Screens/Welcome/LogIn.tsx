@@ -8,7 +8,7 @@ import {
   Title,
   AuthInputBox,
   WrapperView,
-  ButtonText,
+  MainButtonText,
   FinePrint,
   FinePrintButton,
   AuthButton,
@@ -52,7 +52,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
           onPress={() => {
             signIn(email, password);
           }}>
-          <ButtonText>Log In</ButtonText>
+          <MainButtonText>Log In</MainButtonText>
         </AuthButton>
       </WrapperView>
     </WrapperView>

@@ -11,7 +11,6 @@ import {WelcomeNavigationRoutesType} from '../types/NavigationRoutesType';
 import BottomTabNavigator from './TabNavigator';
 import Config from 'react-native-config';
 import Consts from '../Helpers/Consts';
-import authContext from '../Context/authContext';
 
 const WelcomeStack = createNativeStackNavigator<WelcomeNavigationRoutesType>();
 

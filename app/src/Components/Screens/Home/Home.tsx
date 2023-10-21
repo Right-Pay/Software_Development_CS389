@@ -10,7 +10,7 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import AuthContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import {
-  ButtonText,
+  MainButtonText,
   MainButton,
   Subtitle,
   Title,
@@ -36,10 +36,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         onPress={() =>
           navigation.navigate('ProfileStack', {screen: 'ProfileScreen'})
         }>
-        <ButtonText>Go to Profile</ButtonText>
+        <MainButtonText>Go to Profile</MainButtonText>
       </MainButton>
       <MainButton onPress={() => signOut()}>
-        <ButtonText>Logout</ButtonText>
+        <MainButtonText>Logout</MainButtonText>
       </MainButton>
     </WrapperView>
   );
