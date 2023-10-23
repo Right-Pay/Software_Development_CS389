@@ -26,7 +26,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
 
-  const {signUp, clearAuthErrors, userToken, AuthErrorComponent} =
+  const {signUp, clearAuthErrors, AuthErrorComponent, userToken} =
     React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();

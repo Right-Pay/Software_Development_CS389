@@ -7,12 +7,14 @@ import GlobalState from './GlobalState';
 import AuthErrorComponent from '../Helpers/AuthErrorComponent';
 import ConstsType from '../Helpers/Consts';
 import Config from 'react-native-config';
+import {tokenType} from '../types/AuthContextType';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
   const [userToken, setUserToken] = React.useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = React.useState<string | null>(null);
   const [lang, setLang] = React.useState<string>('en');
   const baseURL = Config.REACT_APP_API_URL;
   const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
@@ -22,6 +24,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
 
   const resetVariables = () => {
     setUserToken(null);
+    setRefreshToken(null);
     setUserProfile({} as Profile);
     clearAuthErrors();
   };
@@ -38,6 +41,48 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setAuthError(prevErrors => prevErrors.filter(value => value !== error));
   };
 
+  const refreshAuth0Token = async () => {
+    if (!refreshToken) {
+      addAuthError(ErrorMessages.invalidToken);
+      return false;
+    }
+    var requestOptions = {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }),
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        client_id: auth0ClientId,
+        refresh_token: refreshToken as string,
+      }).toString(),
+    };
+    return await fetch(`${auth0URL}/oauth/token`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(result);
+        switch (result.error) {
+          case 'invalid_grant':
+            addAuthError(ErrorMessages.userNotFound);
+            return false;
+          case 'too_many_attempts':
+            addAuthError(ErrorMessages.tooManyAttepts);
+            return false;
+          case undefined:
+            setRefreshToken(result.refresh_token);
+            setUserToken(result.access_token);
+            return true;
+          default:
+            addAuthError(ErrorMessages.userNotFound);
+            return false;
+        }
+      })
+      .catch(() => {
+        addAuthError(ErrorMessages.userNotFound);
+        false;
+      });
+  };
+
   const signIn = async (email: string, password: string) => {
     resetVariables();
     if (!checkValidEmail(email)) {
@@ -45,12 +90,17 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
     } else {
-      const authorized = await signInAuth(email, password);
-      if (authorized) {
+      const {access_token, refresh_token} = (await signInAuth(
+        email,
+        password,
+      )) as tokenType;
+      if (refresh_token) {
+        setRefreshToken(refresh_token);
+      }
+      if (access_token) {
         setIsLoading(true);
-        await getUser(authorized as string).then(result => {
+        await getUser(access_token).then(result => {
           let res = result as HttpResponse;
-          setIsLoading(false);
           if (res.success) {
             setUserToken(res.data.auth_token);
             setUserProfile(res.data as Profile);
@@ -78,12 +128,13 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         password: password,
         client_id: auth0ClientId,
         audience: auth0Audience,
+        scope: 'offline_access',
       }).toString(),
     };
 
     return await fetch(`${auth0URL}/oauth/token`, requestOptions)
       .then(response => response.json())
-      .then(result => {
+      .then(async result => {
         switch (result.error) {
           case 'invalid_grant':
             addAuthError(ErrorMessages.userNotFound);
@@ -92,7 +143,10 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             addAuthError(ErrorMessages.tooManyAttepts);
             return false;
           case undefined:
-            return result.access_token;
+            return {
+              access_token: result.access_token,
+              refresh_token: result.refresh_token,
+            };
           default:
             addAuthError(ErrorMessages.userNotFound);
             return false;
@@ -110,7 +164,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     await fetch(`${baseURL}users`, {
       method: 'GET',
       headers: {
-        authorization: `Bearer ${token as string}`,
+        authorization: `Bearer ${token}`,
         'X-Preferred-Language': lang,
       },
     })
@@ -141,43 +195,42 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     } else if (!checkEqualPasswords(password, repeatedPassword)) {
       addAuthError(ErrorMessages.passwordsDoNotMatch);
     } else {
-      //! Create new user using Auth0, get Auth0 token
-      const newAuth0UserCreated = await createNewAuth0User(
+      const {access_token}: tokenType = (await createNewAuth0User(
         email,
         password,
+        username,
       ).then(async () => {
         return await signInAuth(email, password);
-      });
-      //! For now we don't have creating the user setup with Auth0 so we must do it from the dashboard, thus:
-      //! Create new user using our backend, use Auth0 token
-      if (newAuth0UserCreated) {
-        await createNewDatabaseUser(
-          newAuth0UserCreated,
-          email,
-          username,
-          phone,
-        ).then(result => {
-          let res = result as HttpResponse;
-          setIsLoading(false);
-          if (res.success) {
-            setUserToken(res.data.auth_token);
-            setUserProfile(res.data as Profile);
-            clearAuthErrors();
-          } else {
-            setUserToken(null);
-            setUserProfile({} as Profile);
-            addAuthError(res.message as string);
-          }
-        });
+      })) as tokenType;
+
+      if (access_token) {
+        await createNewDatabaseUser(access_token, email, username, phone).then(
+          result => {
+            let res = result as HttpResponse;
+            setIsLoading(false);
+            if (res.success) {
+              setUserToken(res.data.auth_token);
+              setUserProfile(res.data as Profile);
+              clearAuthErrors();
+            } else {
+              setUserToken(null);
+              setUserProfile({} as Profile);
+              console.log(res.message);
+              addAuthError(res.message as string);
+            }
+          },
+        );
       } else {
         addAuthError(ErrorMessages.errorCreatingUser);
       }
     }
   };
 
-  const createNewAuth0User = async (email: string, password: string) => {
-    //do things
-    console.log('attempting auth0 signup: ' + email, password);
+  const createNewAuth0User = async (
+    email: string,
+    password: string,
+    username: string,
+  ) => {
     var requestOptions = {
       method: 'POST',
       headers: new Headers({
@@ -187,15 +240,12 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         client_id: auth0ClientId,
         email: email,
         password: password,
-        name: email,
+        name: username,
         connection: 'Username-Password-Authentication',
       }),
     };
 
-    return await fetch(
-      'https://dev-6uux541sywon80js.us.auth0.com/dbconnections/signup',
-      requestOptions,
-    )
+    return await fetch(`${auth0URL}/dbconnections/signup`, requestOptions)
       .then(response => response.json())
       .then(result => {
         return result;
@@ -257,16 +307,15 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json',
-          'Access-Control-Request-Headers': '*',
         }),
         body: JSON.stringify({
-          client_id: 'QMtWfucpCQDThBGf2hJ1uuwh4VTZ0C45',
+          client_id: auth0ClientId,
           email: email,
           connection: 'Username-Password-Authentication',
         }),
       };
       return await fetch(
-        'https://dev-6uux541sywon80js.us.auth0.com/dbconnections/change_password',
+        `${auth0URL}/dbconnections/change_password`,
         requestOptions,
       )
         .then(response => response.text())
@@ -307,17 +356,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return password === repeatedPassword && checkValidPassword(password);
   }
 
-  function verifyCode(code: string) {
-    //will need to make this an api call at some point
-    const test = code?.length > 0;
-    if (!test) {
-      addAuthError(ErrorMessages.invalidCode);
-      return false;
-    }
-    console.log('code: ' + code);
-    return true;
-  }
-
   useEffect(() => {
     setLang('es');
   }, []);
@@ -331,6 +369,8 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         authError,
         setIsLoading,
         setUserToken,
+        setRefreshToken,
+        refreshAuth0Token,
         signIn,
         signOut,
         signUp,
@@ -342,7 +382,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkValidEmail,
         checkValidPassword,
         checkEqualPasswords,
-        verifyCode,
         AuthErrorComponent,
         resetVariables,
       }}>
