@@ -4,9 +4,13 @@
 
 ```
 import Config from 'react-native-config';
+import AuthContext from '../../../Context/authContext';
+import {AuthContextType} from '../../../types/AuthContextType';
 
 const fetchAddObjectHere = async (url: String) => {
+  
   const baseURL = Config.REACT_APP_API_URL;
+  const {refreshToken()} = React.useContext(AuthContext) as AuthContextType;
 
   const response = await fetch(`${baseURL}${url}`, {
     method: ${Method Here},
@@ -18,6 +22,10 @@ const fetchAddObjectHere = async (url: String) => {
 
   // Manipulate result to return
   const result = await response.json();
+  if(result.error === 'expired token'){
+    await refreshToken();
+    return await fetchAddObjectHere(url);
+  }
 
   return result;
 };

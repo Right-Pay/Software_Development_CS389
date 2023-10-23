@@ -13,6 +13,7 @@ const AuthErrorMessages = {
     'The code is not correct\nEither your email is not correct or you entered an invalid code',
   errorChangingPassword: 'Error Changing Password',
   sentRestEmail: 'Check Your Email for Further Instructions',
+  invalidToken: 'Invalid Token\nPlease Contact Support',
 };
 
 const dummyProfile = {
