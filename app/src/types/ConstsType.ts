@@ -9,4 +9,5 @@ export default interface ConstsType {
   authErrorMessages: AuthErrorMessagesType;
   dummyProfile: Profile;
   dummyCreditCards: CreditCard[];
+  dummyCreditCardRewards: any[];
 };

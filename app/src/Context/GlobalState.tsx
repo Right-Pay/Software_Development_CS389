@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
-import {CreditCard} from '../types/CreditCardType';
+import {CreditCard, CreditCardReward} from '../types/CreditCardType';
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {Location} from '../types/Location';
@@ -10,6 +10,9 @@ import Consts from '../Helpers/Consts';
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>(
     Consts.dummyCreditCards,
+  );
+  const [rewards, setRewards] = React.useState<CreditCardReward[]>(
+    Consts.dummyCreditCardRewards,
   );
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -86,6 +89,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     <Context.Provider
       value={{
         creditCards,
+        rewards,
         addNewCreditCard,
         removeCreditCard,
         location,

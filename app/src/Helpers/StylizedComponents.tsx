@@ -55,14 +55,25 @@ export const LogoContainer = styled(
   'flex-initial flex-col justify-center items-center h-1/2 w-1/2',
 );
 
-export const CreditCardList = styled(FlatList);
+export const CreditCardList = styled(FlatList, 'w-full');
+
+export const CreditCardListView = styled(View, 'h-1/3 mt-10 w-full');
 
 export const CreditCardView = styled(
   View,
-  'w-auto hh-full p-5 rounded-xl bg-dark-green',
+  'rounded-xl bg-dark-green h-full w-screen pt-8 pl-8 pr-8',
 );
 
 export const CreditCardText = styled(
   Text,
   'text-2xl text-white text-left mb-2',
+);
+
+export const CreditCardItemSeperator = styled(View, 'w-12');
+
+export const AddCreditCardIcon = styled(Image);
+
+export const RewardsView = styled(
+  View,
+  'flex-1 flex-col ml-20 mr-20 mb-2 mt-10',
 );
