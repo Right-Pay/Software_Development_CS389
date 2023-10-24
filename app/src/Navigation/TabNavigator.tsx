@@ -4,8 +4,8 @@ import {
   HomeStackNavigator,
   CompanyStackNavigator,
   ProfileStackNavigator,
-  SearchStackNavigator,
   LocationStackNavigator,
+  WalletStackNavigator,
 } from './StackNavigator';
 import {NavigationRoutesType} from '../types/NavigationRoutesType';
 
@@ -16,7 +16,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
     <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen name="HomeStack" component={HomeStackNavigator} />
       <Tab.Screen name="CompanyStack" component={CompanyStackNavigator} />
-      <Tab.Screen name="SearchStack" component={SearchStackNavigator} />
+      <Tab.Screen name="WalletStack" component={WalletStackNavigator} />
       <Tab.Screen name="LocationStack" component={LocationStackNavigator} />
       <Tab.Screen name="ProfileStack" component={ProfileStackNavigator} />
     </Tab.Navigator>

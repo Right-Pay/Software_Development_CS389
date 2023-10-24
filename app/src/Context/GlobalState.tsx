@@ -5,26 +5,12 @@ import {CreditCard} from '../types/CreditCardType';
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {Location} from '../types/Location';
+import Consts from '../Helpers/Consts';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
-  const [creditCards, setCreditCards] = React.useState<CreditCard[]>([
-    {
-      id: 1,
-      cardNumber: '1234 5678 9012 3456',
-      name: 'John Doe',
-      expirationDate: '12/24',
-      securityCode: '123',
-      cardType: 'Visa',
-    },
-    {
-      id: 2,
-      cardNumber: '1234 5678 9012 3456',
-      name: 'John Doe',
-      expirationDate: '12/24',
-      securityCode: '123',
-      cardType: 'Visa',
-    },
-  ]);
+  const [creditCards, setCreditCards] = React.useState<CreditCard[]>(
+    Consts.dummyCreditCards,
+  );
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);

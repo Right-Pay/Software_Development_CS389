@@ -13,7 +13,7 @@ export type NavigationRoutesType = {
   HomeStack: NavigatorScreenParams<HomeNavigationRoutesType>;
   ProfileStack: NavigatorScreenParams<ProfileNavigationRoutesType>;
   CompanyStack: NavigatorScreenParams<CompanyNavigationRoutesType>;
-  SearchStack: NavigatorScreenParams<SearchNavigationRoutesType>;
+  WalletStack: NavigatorScreenParams<WalletNavigationRoutesType>;
   LocationStack: NavigatorScreenParams<LocationNavigationRoutesType>;
 };
 
@@ -32,9 +32,8 @@ export type CompanyNavigationRoutesType = {
   CompanyScreen: undefined;
 };
 
-export type SearchNavigationRoutesType = {
-  SearchScreen: undefined;
-  SearchSettingsScreen: undefined;
+export type WalletNavigationRoutesType = {
+  WalletScreen: undefined;
 };
 
 export type LocationNavigationRoutesType = {

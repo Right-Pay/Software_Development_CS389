@@ -1,3 +1,4 @@
+import {CreditCard} from './CreditCardType';
 import {Profile} from './ProfileType';
 
 interface AuthErrorMessagesType {
@@ -7,4 +8,5 @@ interface AuthErrorMessagesType {
 export default interface ConstsType {
   authErrorMessages: AuthErrorMessagesType;
   dummyProfile: Profile;
-}
+  dummyCreditCards: CreditCard[];
+};
