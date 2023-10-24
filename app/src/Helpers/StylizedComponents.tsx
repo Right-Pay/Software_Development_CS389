@@ -71,7 +71,22 @@ export const CreditCardText = styled(
 
 export const CreditCardItemSeperator = styled(View, 'w-12');
 
-export const AddCreditCardIcon = styled(Image);
+export const AddCreditCardIcon = styled(Image, 'w-full h-full');
+
+export const AddCreditCardView = styled(
+  View,
+  'flex flex-col items-center rounded-xl bg-dark-green h-full w-screen pt-8 pl-8 pr-8',
+);
+
+export const AddCreditCardButton = styled(
+  Pressable,
+  'w-40 h-40 items-center justify-center',
+);
+
+export const AddCCFormOverlayView = styled(
+  View,
+  'flex-1 justify-center items-center bg-light-green',
+);
 
 export const RewardsView = styled(
   View,

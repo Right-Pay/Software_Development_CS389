@@ -17,6 +17,7 @@ module.exports = {
     },
     extend: {
       scale: {
+        10: '.1',
         15: '.15',
       },
       colors: {

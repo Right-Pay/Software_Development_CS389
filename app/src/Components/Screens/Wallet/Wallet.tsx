@@ -8,7 +8,9 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {
+  AddCreditCardButton,
   AddCreditCardIcon,
+  AddCreditCardView,
   CreditCardItemSeperator,
   CreditCardList,
   CreditCardListView,
@@ -23,6 +25,7 @@ import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import {CreditCard, CreditCardReward} from '../../../types/CreditCardType';
 import {Dimensions} from 'react-native';
+import AddCreditCardForm from './AddCreditCardForm';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -30,11 +33,13 @@ type WalletScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const WalletScreen: React.FC<WalletScreenProps> = ({navigation}) => {
-  const {creditCards, rewards} = React.useContext(Context) as AppContext;
+const WalletScreen: React.FC<WalletScreenProps> = () => {
+  const {creditCards, rewards, addNewReward, removeCreditCard, removeReward} =
+    React.useContext(Context) as AppContext;
   const [currentViewedCard, setCurrentViewedCard] = React.useState<
     CreditCard[]
   >([creditCards[0]]);
+  const [showAddForm, setShowAddForm] = React.useState<boolean>(false);
 
   const getCreditCardRewards = (creditCardId: number) => {
     const ret = rewards.filter(r => r.creditCardId === creditCardId);
@@ -43,7 +48,7 @@ const WalletScreen: React.FC<WalletScreenProps> = ({navigation}) => {
 
   const renderCard = (item: CreditCard) => {
     if (item.name === 'Add') {
-      return addNewCreditCard();
+      return addNewCreditCardComponent();
     }
     return (
       <CreditCardView>
@@ -68,16 +73,20 @@ const WalletScreen: React.FC<WalletScreenProps> = ({navigation}) => {
     return <CreditCardItemSeperator />;
   };
 
-  const addNewCreditCard = () => {
-    return (
-      <CreditCardView>
-        <CreditCardText className="text-center">
-          Add New Credit Card
-        </CreditCardText>
-        <AddCreditCardIcon />
-      </CreditCardView>
-    );
+  const handleAddPress = () => {
+    setShowAddForm(true);
   };
+
+  const addNewCreditCardComponent = () => (
+    <AddCreditCardView>
+      <CreditCardText className="text-center">
+        Add New Credit Card
+      </CreditCardText>
+      <AddCreditCardButton onPress={handleAddPress}>
+        <AddCreditCardIcon source={require('../../../Assets/AddSign.png')} />
+      </AddCreditCardButton>
+    </AddCreditCardView>
+  );
 
   const onViewRef = React.useRef((viewableItems: any) => {
     let Check: CreditCard[] = [];
@@ -89,6 +98,10 @@ const WalletScreen: React.FC<WalletScreenProps> = ({navigation}) => {
 
   return (
     <WrapperView>
+      {AddCreditCardForm({
+        isVisible: showAddForm,
+        setIsVisible: setShowAddForm,
+      })}
       <Title className="mt-10">Wallet</Title>
       <CreditCardListView>
         <CreditCardList

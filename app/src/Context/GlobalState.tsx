@@ -20,7 +20,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   const addNewCreditCard = (creditCard: CreditCard) => {
     const newCard: CreditCard = {
-      id: Math.random(), // not really unique - but fine for this example
+      id: Math.random() * 100 + creditCards.length, // not really unique - but fine for this example
       name: creditCard.name,
       cardNumber: creditCard.cardNumber,
       expirationDate: creditCard.expirationDate,
@@ -30,8 +30,24 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     setCreditCards([...creditCards, newCard]);
   };
 
+  const addNewReward = (creditCardReward: CreditCardReward) => {
+    const newReward: CreditCardReward = {
+      id: Math.random() * 100 + rewards.length, // not really unique - but fine for this example
+      creditCardId: creditCardReward.creditCardId,
+      name: creditCardReward.name,
+      description: creditCardReward.description,
+      amount: creditCardReward.amount,
+      date: creditCardReward.date,
+    };
+    setRewards([...rewards, newReward]);
+  };
+
   const removeCreditCard = (creditCard: CreditCard) => {
     setCreditCards(creditCards.splice(creditCard.id, 1));
+  };
+
+  const removeReward = (creditCardReward: CreditCardReward) => {
+    setRewards(rewards.splice(creditCardReward.id, 1));
   };
 
   const requestLocationPermission = async () => {
@@ -92,6 +108,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         rewards,
         addNewCreditCard,
         removeCreditCard,
+        addNewReward,
+        removeReward,
         location,
         isLoading,
         setIsLoading,
