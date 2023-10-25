@@ -34,8 +34,10 @@ type WalletScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const WalletScreen: React.FC<WalletScreenProps> = () => {
-  const {creditCards, rewards, addNewReward, removeCreditCard, removeReward} =
-    React.useContext(Context) as AppContext;
+  const {
+    creditCards,
+    rewards /*, addNewReward, removeCreditCard, removeReward*/,
+  } = React.useContext(Context) as AppContext;
   const [currentViewedCard, setCurrentViewedCard] = React.useState<
     CreditCard[]
   >([creditCards[0]]);

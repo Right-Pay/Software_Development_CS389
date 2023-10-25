@@ -3,8 +3,6 @@ import {View, StyleSheet, Text} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {CompanyNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import Context from '../../../Context/context';
-import type {AppContext} from '../../../types/AppContextType';
 
 type CompanyScreenProps = NativeStackScreenProps<
   CompanyNavigationRoutesType,
