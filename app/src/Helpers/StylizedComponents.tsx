@@ -60,5 +60,8 @@ export const AddCCFormOverlayView = styledView(
 export const RewardsView = styledView('flex-1 flex-col ml-20 mr-20 mb-2 mt-10');
 export const Dropdown = styled(
   DropDownPicker,
-  'px-3 py-2 m-2 text-xl text-black flex h-12 w-1/2 rounded-xl border-2 border-dark-green bg-light-green bg-transparent shadow-sm transition-colors',
+  'text-xl text-black h-12 rounded-xl border-2 border-dark-green bg-light-green shadow-sm transition-colors z-50',
+);
+export const FormDateView = styledView(
+  'flex flex-row justify-center w-3/4 space-x-2',
 );

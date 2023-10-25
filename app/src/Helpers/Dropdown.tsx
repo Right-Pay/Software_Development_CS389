@@ -5,7 +5,7 @@ import {View} from 'react-native';
 
 const DropdownComponent = (props: DropdownProps) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(props.placeholder);
   const [items, setItems] = useState(
     props.options.map(o => ({
       label: o,
@@ -14,8 +14,13 @@ const DropdownComponent = (props: DropdownProps) => {
     })),
   );
 
+  const handleSetValue = (val: string) => {
+    setValue(val);
+    props.onDropdownChange(val);
+  };
+
   return (
-    <View>
+    <View className={props.style}>
       <Dropdown
         open={open}
         value={value}
@@ -24,6 +29,7 @@ const DropdownComponent = (props: DropdownProps) => {
         setValue={setValue}
         setItems={setItems}
         placeholder={props.placeholder}
+        onChangeValue={event => handleSetValue(event?.toString() as string)}
       />
     </View>
   );

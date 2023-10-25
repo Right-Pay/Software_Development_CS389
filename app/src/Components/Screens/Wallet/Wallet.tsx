@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
   WalletNavigationRoutesType,
@@ -43,10 +43,19 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   >([creditCards[0]]);
   const [showAddForm, setShowAddForm] = React.useState<boolean>(false);
 
-  const getCreditCardRewards = (creditCardId: number) => {
-    const ret = rewards.filter(r => r.creditCardId === creditCardId);
-    return ret ? ret : [];
-  };
+  const getCreditCardRewards = (creditCardId: number) =>
+    rewards.filter(r => r.creditCardId === creditCardId) || [];
+
+  const addNewCreditCardComponent = () => (
+    <AddCreditCardView>
+      <CreditCardText className="text-center">
+        Add New Credit Card
+      </CreditCardText>
+      <AddCreditCardButton onPress={handleAddPress}>
+        <AddCreditCardIcon source={require('../../../Assets/AddSign.png')} />
+      </AddCreditCardButton>
+    </AddCreditCardView>
+  );
 
   const renderCard = (item: CreditCard) => {
     if (item.name === 'Add') {
@@ -57,6 +66,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
         <CreditCardText>{`Name: ${item.name}`}</CreditCardText>
         <CreditCardText>{`Card Number: ${item.cardNumber}`}</CreditCardText>
         <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
+        <CreditCardText>{`Expiration Date: ${item.expirationDate}`}</CreditCardText>
       </CreditCardView>
     );
   };
@@ -71,31 +81,15 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     );
   };
 
-  const itemSeparatorComponent = () => {
-    return <CreditCardItemSeperator />;
-  };
+  const itemSeparatorComponent = () => <CreditCardItemSeperator />;
 
-  const handleAddPress = () => {
-    setShowAddForm(true);
-  };
+  const handleAddPress = () => setShowAddForm(true);
 
-  const addNewCreditCardComponent = () => (
-    <AddCreditCardView>
-      <CreditCardText className="text-center">
-        Add New Credit Card
-      </CreditCardText>
-      <AddCreditCardButton onPress={handleAddPress}>
-        <AddCreditCardIcon source={require('../../../Assets/AddSign.png')} />
-      </AddCreditCardButton>
-    </AddCreditCardView>
-  );
-
-  const onViewRef = React.useRef((viewableItems: any) => {
-    let Check: CreditCard[] = [];
-    for (var i = 0; i < viewableItems.viewableItems.length; i++) {
-      Check.push(viewableItems.viewableItems[i].item as CreditCard);
-    }
-    setCurrentViewedCard(Check);
+  const onViewRef = useRef((viewableItems: any) => {
+    const check: CreditCard[] = viewableItems.viewableItems.map(
+      (item: any) => item.item as CreditCard,
+    );
+    setCurrentViewedCard(check);
   });
 
   return (
@@ -104,6 +98,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
         isVisible: showAddForm,
         setIsVisible: setShowAddForm,
       })}
+
       <Title className="mt-10">Wallet</Title>
       <CreditCardListView>
         <CreditCardList
@@ -123,14 +118,16 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           snapToInterval={Dimensions.get('window').width + 48} //Change 48 based on width of CreditCardItemSeperator width
         />
       </CreditCardListView>
-      <CreditCardListView>
-        {(currentViewedCard[0].id !== -1 ||
-          (currentViewedCard[1] !== undefined &&
-            currentViewedCard[1].id !== 1)) && <Title>Rewards</Title>}
+      <CreditCardListView className="h-2/5">
         <CreditCardList
           data={getCreditCardRewards(
             currentViewedCard[currentViewedCard.length - 1].id,
           )}
+          ListHeaderComponent={
+            currentViewedCard.filter(i => i.id === -1).length === 0 ? (
+              <Title>Rewards</Title>
+            ) : null
+          }
           keyExtractor={item => (item as CreditCardReward).id.toString()}
           renderItem={({item}) => renderReward(item as CreditCardReward)}
           ItemSeparatorComponent={itemSeparatorComponent}

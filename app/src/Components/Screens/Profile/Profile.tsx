@@ -18,24 +18,9 @@ type ProfileScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
-  const {creditCards} = React.useContext(Context) as AppContext;
-
   return (
     <View style={styles.homeScreenView}>
       <Text style={styles.title}>Profile Screen</Text>
-      <FlatList
-        data={creditCards}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => {
-          return (
-            <View style={styles.rowcontainer}>
-              <Text style={styles.text}>Credit Card {index}:</Text>
-              <Text style={styles.text}>Card Number: {item.cardNumber}</Text>
-              <Text style={styles.text}>Card Type: {item.cardType}</Text>
-            </View>
-          );
-        }}
-      />
       <Button
         title="Go Home"
         onPress={() => navigation.navigate('HomeStack', {screen: 'HomeScreen'})}
