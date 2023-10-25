@@ -1,10 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {CompanyNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import Context from '../../../Context/context';
-import type {AppContext} from '../../../types/AppContextType';
+import {Title, WrapperView} from '../../../Helpers/StylizedComponents';
 
 type CompanyScreenProps = NativeStackScreenProps<
   CompanyNavigationRoutesType,
@@ -14,19 +12,10 @@ type CompanyScreenProps = NativeStackScreenProps<
 
 const CompanyScreen: React.FC<CompanyScreenProps> = () => {
   return (
-    <View style={styles.center}>
-      <Text>This is the company screen... what this for????</Text>
-    </View>
+    <WrapperView>
+      <Title>This is the company screen... what this for????</Title>
+    </WrapperView>
   );
 };
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-  },
-});
 
 export default CompanyScreen;

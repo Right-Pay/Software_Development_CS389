@@ -1,5 +1,4 @@
 import React from 'react';
-import {View, StyleSheet, Text, Button} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {
   LocationNavigationRoutesType,
@@ -8,10 +7,14 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
-import MapView, { Marker } from 'react-native-maps';
 import Context from '../../../Context/context';
-import { AppContext } from '../../../types/AppContextType';
-
+import {AppContext} from '../../../types/AppContextType';
+import {
+  GoogleMapsMarker,
+  GoogleMapsView,
+  Title,
+  WrapperView,
+} from '../../../Helpers/StylizedComponents';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -21,55 +24,34 @@ type LocationScreenProps = CompositeScreenProps<
 
 const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   const {location} = React.useContext(Context) as AppContext;
-  const long = location?.longitude;
-  const lat = location?.latitude;
   return (
-    <View style={styles.center}>
-      <Text>This is the location screen</Text>
-      <MapView
-          style={styles.mapStyle}
-          initialRegion={{
+    <WrapperView>
+      <Title>This is the location screen</Title>
+      <GoogleMapsView
+        initialRegion={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        customMapStyle={mapStyle}>
+        <GoogleMapsMarker
+          draggable
+          coordinate={{
             latitude: location.latitude,
             longitude: location.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
           }}
-          customMapStyle={mapStyle}>
-          <Marker
-            draggable
-            coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-            }}
-            onDragEnd={
-              (e) => console.log(JSON.stringify(e.nativeEvent.coordinate))
-            }
-            title={'Test Marker'}
-            description={'This is a description of the marker'}
-          />
-        </MapView>
-    </View>
+          onDragEnd={e => console.log(JSON.stringify(e.nativeEvent.coordinate))}
+          title={'Test Marker'}
+          description={'This is a description of the marker'}
+        />
+      </GoogleMapsView>
+    </WrapperView>
   ); //add button up here^^ between view and mapview <Button
   //title="Settings"
   //onPress={() => navigation.navigate('LocationSettings')}
-///>
+  ///>
 };
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-  },
-  mapStyle: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-});
 
 const mapStyle = [
   {elementType: 'geometry', stylers: [{color: '#242f3e'}]},

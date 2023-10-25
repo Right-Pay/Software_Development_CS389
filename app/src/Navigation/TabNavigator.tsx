@@ -1,5 +1,8 @@
 import React, {PropsWithChildren} from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import {
   HomeStackNavigator,
   CompanyStackNavigator,
@@ -11,14 +14,52 @@ import {NavigationRoutesType} from '../types/NavigationRoutesType';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
+const tabOptions = (label: string) => {
+  const options: BottomTabNavigationOptions = {
+    tabBarLabel: label,
+    tabBarIconStyle: {color: 'green'},
+  };
+
+  return options;
+};
+
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
   return (
-    <Tab.Navigator screenOptions={{headerShown: false}}>
-      <Tab.Screen name="HomeStack" component={HomeStackNavigator} />
-      <Tab.Screen name="CompanyStack" component={CompanyStackNavigator} />
-      <Tab.Screen name="SearchStack" component={SearchStackNavigator} />
-      <Tab.Screen name="LocationStack" component={LocationStackNavigator} />
-      <Tab.Screen name="ProfileStack" component={ProfileStackNavigator} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarLabelStyle: {fontSize: 12, fontWeight: 'bold'},
+        tabBarActiveBackgroundColor: '#e6ffe3',
+        tabBarActiveTintColor: '#4d654e',
+        tabBarInactiveBackgroundColor: '#4d654e',
+        tabBarInactiveTintColor: '#e6ffe3',
+        //tabBarStyle: {shadowColor: 'red'},
+      }}>
+      <Tab.Screen
+        name="HomeStack"
+        component={HomeStackNavigator}
+        options={tabOptions('Home')}
+      />
+      <Tab.Screen
+        name="CompanyStack"
+        component={CompanyStackNavigator}
+        options={tabOptions('Company')}
+      />
+      <Tab.Screen
+        name="SearchStack"
+        component={SearchStackNavigator}
+        options={tabOptions('Search')}
+      />
+      <Tab.Screen
+        name="LocationStack"
+        component={LocationStackNavigator}
+        options={tabOptions('Location')}
+      />
+      <Tab.Screen
+        name="ProfileStack"
+        component={ProfileStackNavigator}
+        options={tabOptions('Profile')}
+      />
     </Tab.Navigator>
   );
 };
