@@ -6,8 +6,11 @@ import cors from 'cors';
 import helmet from "helmet";
 import ErrorHandlers from './middleware/errorHandling';
 import { languageMiddleware } from './middleware/i18nMiddleware';
-import UserRouter from './routes/userRoutes';
 import DefaultRotuer from './routes/defaultRoutes';
+import UserRouter from './routes/userRoutes';
+import BankRouter from './routes/bankRoutes';
+import BrandRouter from './routes/brandRoutes';
+import CardRouter from './routes/cardRoutes';
 
 
 const app: Express = express();
@@ -24,7 +27,9 @@ app.use(languageMiddleware);
 
 app.use('/api', DefaultRotuer);
 app.use('/api/users', UserRouter);
-
+app.use('/api/banks', BankRouter);
+app.use('/api/brands', BrandRouter);
+app.use('/api/cards', CardRouter);
 
 // Needs to be last
 
