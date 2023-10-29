@@ -40,6 +40,9 @@ npm run ios
 
 # OR using Yarn
 yarn ios
+
+#Make sure iOS device is on same network as computer
+#Shake the screen and click Confugure Bundler and then enter computers ip address
 ```
 
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
