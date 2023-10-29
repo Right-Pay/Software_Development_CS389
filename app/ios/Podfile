@@ -51,7 +51,7 @@ target 'RightPay' do
   end
 
   ENVFILES = {
-    'Debug' => '$(PODS_ROOT)/../../.env.debug',
+    'Debug' => '$(PODS_ROOT)/../../.env.development',
     'Release' => '$(PODS_ROOT)/../../.env.production',
   }
   post_install do |installer|

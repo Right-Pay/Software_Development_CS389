@@ -2,7 +2,10 @@ import {styled} from 'nativewind';
 import {TextInput, Text, View, Pressable, FlatList, Image} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 
-export const WrapperView = styled(View, 'flex-1 items-center bg-light-green');
+export const WrapperView = styled(
+  View,
+  'flex-1 items-center h-full justify-center space-between bg-light-green',
+);
 
 export const Title = styled(
   Text,

@@ -35,10 +35,10 @@ const WelcomeNavigator: React.FC<PropsWithChildren> = () => {
 };
 
 const MainNavigator: React.FC<PropsWithChildren> = () => {
-  const apiBypass = Config.REACT_APP_API_BYPASS;
+  const apiBypass: string | boolean = Config.REACT_APP_API_BYPASS;
   const {isLoading, setIsLoading, userToken, setUserToken, setUserProfile} =
     React.useContext(AuthContext) as AuthContextType;
-  if (apiBypass === true) {
+  if (apiBypass === 'true' || apiBypass === true) {
     setIsLoading(false);
     setUserToken('testToken');
     setUserProfile(Consts.dummyProfile);

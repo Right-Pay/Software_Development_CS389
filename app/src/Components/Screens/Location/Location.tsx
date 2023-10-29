@@ -22,7 +22,7 @@ type LocationScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
+const LocationScreen: React.FC<LocationScreenProps> = () => {
   const {location} = React.useContext(Context) as AppContext;
   return (
     <WrapperView>
