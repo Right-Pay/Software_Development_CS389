@@ -26,6 +26,20 @@ type LocationScreenProps = CompositeScreenProps<
 
 const LocationScreen: React.FC<LocationScreenProps> = () => {
   const {location} = React.useContext(Context) as AppContext;
+
+  const markerFactory = (title: string, description: string) => {
+    return (
+      <GoogleMapsMarker
+        coordinate={{
+          latitude: location.latitude ?? 0,
+          longitude: location.longitude ?? 0,
+        }}
+        title={title}
+        description={description}
+      />
+    );
+  };
+
   return (
     <WrapperView>
       <Title>This is the location screen</Title>
@@ -38,16 +52,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         }}
         customMapStyle={mapStyle}
         provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
-        <GoogleMapsMarker
-          draggable
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          onDragEnd={e => console.log(JSON.stringify(e.nativeEvent.coordinate))}
-          title={'Test Marker'}
-          description={'This is a description of the marker'}
-        />
+        {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
     </WrapperView>
   ); //add button up here^^ between view and mapview <Button
