@@ -20,7 +20,7 @@ const RightPayApp = () => {
             style={{flex: 1}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             enabled
-            keyboardVerticalOffset={0}>
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
             <MainNavigator />
           </KeyboardAvoidingView>
         </NavigationContainer>
