@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "ENVFILE='.env.development' && npx react-native start --reset-cache && react-native run-ios --device \"TyleriPhone\"",
+    "ios": "ENVFILE='.env.development' && npx react-native start --reset-cache && react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start --reset-cache",
     "test": "jest",
