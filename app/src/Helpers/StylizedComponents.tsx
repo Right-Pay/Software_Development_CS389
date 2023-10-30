@@ -9,7 +9,7 @@ export const WrapperView = styled(
 
 export const Title = styled(
   Text,
-  'mt-10 text-3xl text-center font-bold text-dark-green',
+  'mt-10 text-4xl pl-10 pr-10 text-center font-bold text-dark-green',
 );
 
 export const Subtitle = styled(Text, 'text-xl text-center text-dark-green');

@@ -12,14 +12,14 @@ import AuthState from './src/Context/AuthState';
 import {KeyboardAvoidingView, Platform} from 'react-native';
 
 const RightPayApp = () => {
-  console.log(initialWindowMetrics);
   return (
     <AuthState>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <NavigationContainer>
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{flex: 1}}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            enabled
             keyboardVerticalOffset={0}>
             <MainNavigator />
           </KeyboardAvoidingView>
