@@ -45,8 +45,14 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
       <Title>This is the location screen</Title>
       <GoogleMapsView
         initialRegion={{
-          latitude: location.latitude,
-          longitude: location.longitude,
+          latitude: location.latitude ?? 0,
+          longitude: location.longitude ?? 0,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        region={{
+          latitude: location.latitude ?? 0,
+          longitude: location.longitude ?? 0,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
