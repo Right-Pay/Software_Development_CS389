@@ -7,7 +7,6 @@ import MainNavigator from './src/Navigation/MainNavigator';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import AuthState from './src/Context/AuthState';
 import {KeyboardAvoidingView, Platform} from 'react-native';
-import Config from 'react-native-config';
 
 const RightPayApp = () => {
   return (
