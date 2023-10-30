@@ -15,7 +15,8 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
+import {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -36,7 +37,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
           longitudeDelta: 0.0421,
         }}
         customMapStyle={mapStyle}
-        provider={Platform.OS === 'ios' ? null : 'google'}>
+        provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
         <GoogleMapsMarker
           draggable
           coordinate={{
