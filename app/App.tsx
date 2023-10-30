@@ -4,14 +4,18 @@ import React from 'react';
 // import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import MainNavigator from './src/Navigation/MainNavigator';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  initialWindowMetrics,
+} from 'react-native-safe-area-context';
 import AuthState from './src/Context/AuthState';
 import {KeyboardAvoidingView, Platform} from 'react-native';
 
 const RightPayApp = () => {
+  console.log(initialWindowMetrics);
   return (
     <AuthState>
-      <SafeAreaProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <NavigationContainer>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
