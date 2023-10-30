@@ -10,8 +10,6 @@ import {KeyboardAvoidingView, Platform} from 'react-native';
 import Config from 'react-native-config';
 
 const RightPayApp = () => {
-  const REACT_APP_API_BYPASS = Config.REACT_APP_API_BYPASS;
-  console.log(REACT_APP_API_BYPASS);
   return (
     <AuthState>
       <SafeAreaProvider>
