@@ -6,7 +6,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import MainNavigator from './src/Navigation/MainNavigator';
 import {
   SafeAreaProvider,
-  SafeAreaView,
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
 import AuthState from './src/Context/AuthState';
