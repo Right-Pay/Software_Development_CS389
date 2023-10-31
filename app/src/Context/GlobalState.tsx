@@ -4,7 +4,7 @@ import Context from './context';
 import {CreditCard} from '../types/CreditCardType';
 import {PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import {Location} from '../types/Location';
+import {Location, Place} from '../types/Location';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<CreditCard[]>([
@@ -28,6 +28,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
+  const [places, setPlaces] = useState<Place[]>([] as Place[]);
 
   const addNewCreditCard = (creditCard: CreditCard) => {
     const newCard: CreditCard = {
@@ -65,6 +66,59 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     } catch (err) {
       return false;
     }
+  };
+
+  const fetchPlaces = async () => {
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append(
+      'X-Goog-FieldMask',
+      'places.displayName,places.businessStatus,places.primaryType',
+    );
+    headers.append('X-Goog-Api-Key', 'AIzaSyDSQqzE6cXDeUCWEquYC4PPCCpk9KRJiw8');
+
+    var raw = JSON.stringify({
+      includedTypes: [
+        'restaurant',
+        'museum',
+        'movie_theater',
+        'gas_station',
+        'car_wash',
+        'car_repair',
+        'car_rental',
+        'car_dealer',
+        'electric_vehicle_charging_station',
+        'rest_stop',
+        'performing_arts_theater',
+      ],
+      maxResultCount: 20,
+      locationRestriction: {
+        circle: {
+          center: {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          },
+          radius: 1500,
+        },
+      },
+    });
+
+    const response = await fetch(
+      'https://places.googleapis.com/v1/places:searchNearby',
+      {
+        method: 'POST',
+        headers: headers,
+        body: raw,
+      },
+    );
+
+    // Manipulate result to return
+    const result = await response.json();
+    const resultPlaces = result.places.filter((place: Place) => {
+      return place.businessStatus === 'OPERATIONAL';
+    });
+    console.log(resultPlaces);
+    setPlaces(resultPlaces);
   };
 
   const getLocation = () => {
@@ -105,6 +159,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         location,
         isLoading,
         setIsLoading,
+        fetchPlaces,
+        places,
       }}>
       {children}
     </Context.Provider>

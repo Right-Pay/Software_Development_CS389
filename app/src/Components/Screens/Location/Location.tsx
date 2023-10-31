@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
   LocationNavigationRoutesType,
@@ -15,6 +15,9 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
+import { View } from 'react-native';
+import { styled } from 'nativewind';
+const StyledView = styled(View);
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -23,7 +26,12 @@ type LocationScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
-  const {location} = React.useContext(Context) as AppContext;
+  const {location, fetchPlaces, places} = React.useContext(
+    Context,
+  ) as AppContext;
+  useEffect(() => {
+    fetchPlaces();
+  },[]);
   return (
     <WrapperView>
       <Title>This is the location screen</Title>
@@ -46,6 +54,9 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
           description={'This is a description of the marker'}
         />
       </GoogleMapsView>
+      <StyledView className="absolute bottom-0 left-0 bg-white text-black z-50 max-h-36 w-full overflow-scroll">
+        {places && places.map(place => <Title>{place.displayName.text}</Title>)}
+      </StyledView>
     </WrapperView>
   ); //add button up here^^ between view and mapview <Button
   //title="Settings"
