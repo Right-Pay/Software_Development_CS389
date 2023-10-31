@@ -2,11 +2,14 @@ import {styled} from 'nativewind';
 import {TextInput, Text, View, Pressable, FlatList, Image} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 
-export const WrapperView = styled(View, 'flex-1 items-center bg-light-green');
+export const WrapperView = styled(
+  View,
+  'flex-1 items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
+);
 
 export const Title = styled(
   Text,
-  'mt-20 text-3xl text-center font-bold text-dark-green',
+  'mt-10 text-4xl pl-10 pr-10 text-center font-bold text-dark-green',
 );
 
 export const Subtitle = styled(Text, 'text-xl text-center text-dark-green');
@@ -17,7 +20,7 @@ export const FinePrintButton = styled(Pressable, 'flex pb-1');
 
 export const AuthButton = styled(
   Pressable,
-  'flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-dark-green shadow-sm transition-colors',
+  'flex items-center justify-center fixed m-2 text-xl text-black  h-9 w-5/12 rounded-xl bg-dark-green',
 );
 
 export const AuthInputBox = styled(
@@ -52,5 +55,5 @@ export const Logo = styled(Image, 'scale-15');
 
 export const LogoContainer = styled(
   View,
-  'flex-initial flex-col justify-center items-center h-1/2 w-1/2',
+  'flex-col justify-center items-center h-1/2 w-1/2',
 );
