@@ -46,7 +46,7 @@ Start your connection to the server
 **Need to download rightpay.pem from xander**
 
 ```bash
-  ssh -N -L 3001:127.0.0.1:3001 -i C:\Users\{username}\.ssh\rightpay.pem bitnami@54.146.229.213
+  ssh -N -L 3001:127.0.0.1:3001 -i ~/.ssh/rightpay.pem bitnami@54.146.229.213
 ```
 
 ## API Reference

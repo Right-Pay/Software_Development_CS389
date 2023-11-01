@@ -38,6 +38,7 @@ const MainNavigator: React.FC<PropsWithChildren> = () => {
   const {isLoading, userToken} = React.useContext(
     AuthContext,
   ) as AuthContextType;
+
   if (isLoading) {
     return <SplashScreen />;
   }

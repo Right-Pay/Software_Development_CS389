@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
 import {CreditCard, CreditCardReward} from '../types/CreditCardType';
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {Location} from '../types/Location';
 import Consts from '../Helpers/Consts';
@@ -52,20 +52,25 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   const requestLocationPermission = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Geolocation Permission',
-          message: 'Can we access your location?',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === 'granted') {
+      if (Platform.OS === 'ios') {
+        Geolocation.requestAuthorization('whenInUse');
         return true;
       } else {
-        return false;
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Geolocation Permission',
+            message: 'Can we access your location?',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === 'granted') {
+          return true;
+        } else {
+          return false;
+        }
       }
     } catch (err) {
       return false;

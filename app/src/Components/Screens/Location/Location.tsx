@@ -15,6 +15,8 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
+import {Platform} from 'react-native';
+import {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -22,29 +24,41 @@ type LocationScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
+const LocationScreen: React.FC<LocationScreenProps> = () => {
   const {location} = React.useContext(Context) as AppContext;
+
+  const markerFactory = (title: string, description: string) => {
+    return (
+      <GoogleMapsMarker
+        coordinate={{
+          latitude: location.latitude ?? 0,
+          longitude: location.longitude ?? 0,
+        }}
+        title={title}
+        description={description}
+      />
+    );
+  };
+
   return (
     <WrapperView>
       <Title className="mt-20">This is the location screen</Title>
       <GoogleMapsView
         initialRegion={{
-          latitude: location.latitude,
-          longitude: location.longitude,
+          latitude: location.latitude ?? 0,
+          longitude: location.longitude ?? 0,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        customMapStyle={mapStyle}>
-        <GoogleMapsMarker
-          draggable
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          onDragEnd={e => console.log(JSON.stringify(e.nativeEvent.coordinate))}
-          title={'Test Marker'}
-          description={'This is a description of the marker'}
-        />
+        region={{
+          latitude: location.latitude ?? 0,
+          longitude: location.longitude ?? 0,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        customMapStyle={mapStyle}
+        provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
+        {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
     </WrapperView>
   ); //add button up here^^ between view and mapview <Button
