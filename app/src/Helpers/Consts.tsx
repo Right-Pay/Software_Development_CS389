@@ -35,7 +35,7 @@ const dummyProfile = {
 const dummyCreditCards = [
   {
     id: 1,
-    cardNumber: '1234 5678 9012 3456',
+    cardNumber: '1234 56',
     name: 'John Doe',
     expirationDate: '12/24',
     securityCode: '123',
@@ -43,7 +43,7 @@ const dummyCreditCards = [
   },
   {
     id: 2,
-    cardNumber: '2345 6789 0123 4567',
+    cardNumber: '2345 67',
     name: 'Jane Smith',
     expirationDate: '11/25',
     securityCode: '456',
