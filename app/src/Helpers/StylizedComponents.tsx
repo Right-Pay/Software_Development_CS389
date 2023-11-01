@@ -3,7 +3,6 @@ import {TextInput, Text, View, Pressable, FlatList, Image} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-<<<<<<< HEAD
 const styledView = (styles: string) => styled(View, styles);
 const styledText = (styles: string) => styled(Text, styles);
 const styledPressable = (styles: string) => styled(Pressable, styles);
@@ -21,27 +20,6 @@ export const FinePrint = styledText('text-sm text-black');
 export const FinePrintButton = styledPressable('flex pb-1');
 export const AuthButton = styledPressable(
   'flex items-center justify-center fixed m-2 text-xl text-black h-9 w-5/12 rounded-xl bg-dark-green',
-=======
-export const WrapperView = styled(
-  View,
-  'flex-1 items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
-);
-
-export const Title = styled(
-  Text,
-  'mt-10 text-4xl pl-10 pr-10 text-center font-bold text-dark-green',
-);
-
-export const Subtitle = styled(Text, 'text-xl text-center text-dark-green');
-
-export const FinePrint = styled(Text, 'text-sm text-black');
-
-export const FinePrintButton = styled(Pressable, 'flex pb-1');
-
-export const AuthButton = styled(
-  Pressable,
-  'flex items-center justify-center fixed m-2 text-xl text-black  h-9 w-5/12 rounded-xl bg-dark-green',
->>>>>>> main
 );
 export const AuthInputBox = styled(
   TextInput,
