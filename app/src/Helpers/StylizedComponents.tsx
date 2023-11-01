@@ -19,7 +19,7 @@ export const Subtitle = styledText('text-xl text-center text-dark-green');
 export const FinePrint = styledText('text-sm text-black');
 export const FinePrintButton = styledPressable('flex pb-1');
 export const AuthButton = styledPressable(
-  'flex items-center justify-center fixed m-2 text-xl text-black  h-9 w-5/12 rounded-xl bg-dark-green',
+  'flex items-center justify-center fixed m-2 text-xl text-black h-9 w-5/12 rounded-xl bg-dark-green',
 );
 export const AuthInputBox = styled(
   TextInput,
