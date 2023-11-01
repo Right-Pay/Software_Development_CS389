@@ -49,6 +49,7 @@ export const CreditCardView = styledView(
 export const SecondaryCreditCardView = styledView(
   'w-11/12 h-full bg-dark-green rounded-xl border-2 pt-8 pl-8 pr-8',
 );
+export const CreditCardButton = styledPressable('w-full h-full');
 export const CreditCardText = styledText('text-2xl text-white text-left mb-2');
 export const CreditCardItemSeperator = styledView('w-12');
 export const AddCreditCardIcon = styled(Image, 'w-full h-full');

@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
   WalletNavigationRoutesType,
@@ -11,6 +11,7 @@ import {
   AddCreditCardButton,
   AddCreditCardIcon,
   AddCreditCardView,
+  CreditCardButton,
   CreditCardItemSeperator,
   CreditCardList,
   CreditCardListView,
@@ -44,6 +45,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     CreditCard[]
   >([creditCards[0]]);
   const [showAddForm, setShowAddForm] = React.useState<boolean>(false);
+  const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
   const getCreditCardRewards = (creditCardId: number) =>
     rewards.filter(r => r.creditCardId === creditCardId) || [];
@@ -67,14 +69,22 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     }
     return (
       <CreditCardView>
-        <SecondaryCreditCardView>
-          <CreditCardText>{`Name: ${item.name}`}</CreditCardText>
-          <CreditCardText>{`Card Number: ${item.cardNumber}`}</CreditCardText>
-          <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
-          <CreditCardText>{`Expiration Date: ${item.expirationDate}`}</CreditCardText>
+        <SecondaryCreditCardView
+          className={deleteCard ? 'opacity-50' : 'opacity-100'}>
+          <CreditCardButton onLongPress={event => handleCreditCardPress(event)}>
+            <CreditCardText>{`Name: ${item.name}`}</CreditCardText>
+            <CreditCardText>{`Card Number: ${item.cardNumber}`}</CreditCardText>
+            <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
+            <CreditCardText>{`Expiration Date: ${item.expirationDate}`}</CreditCardText>
+          </CreditCardButton>
         </SecondaryCreditCardView>
       </CreditCardView>
     );
+  };
+
+  const handleCreditCardPress = (event: any) => {
+    console.log(event.nativeEvent);
+    setDeleteCard(!deleteCard);
   };
 
   const renderReward = (item: CreditCardReward) => {
@@ -92,11 +102,16 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   const handleAddPress = () => setShowAddForm(true);
 
   const onViewRef = useRef((viewableItems: any) => {
+    setDeleteCard(false);
     const check: CreditCard[] = viewableItems.viewableItems.map(
       (item: any) => item.item as CreditCard,
     );
     setCurrentViewedCard(check);
   });
+
+  useEffect(() => {
+    setDeleteCard(false);
+  }, [currentViewedCard]);
 
   return (
     <WrapperView>
