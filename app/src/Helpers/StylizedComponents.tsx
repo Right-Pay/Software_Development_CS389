@@ -47,7 +47,7 @@ export const CreditCardView = styledView(
   'h-full w-screen flex flex-col items-center justify-center',
 );
 export const SecondaryCreditCardView = styledView(
-  'w-11/12 h-full bg-dark-green rounded-xl border-2 pt-8 pl-8 pr-8',
+  'w-11/12 h-full bg-dark-green rounded-xl border-2 p-8',
 );
 export const CreditCardButton = styledPressable('w-full h-full');
 export const CreditCardText = styledText('text-2xl text-white text-left mb-2');
@@ -57,7 +57,7 @@ export const AddCreditCardView = styledView(
   'flex flex-col items-center h-full w-screen',
 );
 export const SecondaryAddCreditCardView = styledView(
-  'rounded-xl bg-dark-green pt-8 pl-8 pr-8 border-2 w-11/12 h-full justify-center items-center',
+  'rounded-xl bg-dark-green p-8 border-2 w-11/12 h-full justify-center items-center',
 );
 export const AddCreditCardButton = styledPressable(
   'w-40 h-40 items-center justify-center',

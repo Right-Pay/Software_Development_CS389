@@ -102,7 +102,6 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   const handleAddPress = () => setShowAddForm(true);
 
   const onViewRef = useRef((viewableItems: any) => {
-    setDeleteCard(false);
     const check: CreditCard[] = viewableItems.viewableItems.map(
       (item: any) => item.item as CreditCard,
     );
