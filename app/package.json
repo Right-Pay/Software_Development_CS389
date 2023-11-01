@@ -9,6 +9,7 @@
     "start": "react-native start --reset-cache",
     "test": "jest",
     "start:development": "SET ENVFILE = '.env.development' && react-native start --reset-cache",
+    "macos:start:development": "ENVFILE='.env.development' && react-native start --reset-cache",
     "start:staging": "SET ENVFILE = '.env.staging' && react-native start --reset-cache",
     "start:production": "SET ENVFILE = '.env.production' && react-native start --reset-cache",
     "android:staging": "SET ENVFILE = '.env.staging' && react-native run-android",

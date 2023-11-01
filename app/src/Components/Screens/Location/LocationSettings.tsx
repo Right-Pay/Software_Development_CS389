@@ -1,5 +1,4 @@
 import React from 'react';
-import {View, StyleSheet, Text, Button} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import type {
   LocationNavigationRoutesType,
@@ -8,6 +7,13 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
+import {
+  MainButtonText,
+  MainButton,
+  Subtitle,
+  Title,
+  WrapperView,
+} from '../../../Helpers/StylizedComponents';
 
 type LocationSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationSettings'>,
@@ -17,22 +23,17 @@ type LocationSettingsProps = CompositeScreenProps<
 
 const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
   return (
-    <View style={styles.center}>
-      <Text>This is the location setttings</Text>
-      <Text>You will be able to turn off and on your location here.</Text>
+    <WrapperView>
+      <Title>This is the location setttings</Title>
+      <Subtitle>
+        You will be able to turn off and on your location here.
+      </Subtitle>
 
-      <Button title="Go Back" onPress={() => navigation.goBack()} />
-    </View>
+      <MainButton onPress={() => navigation.goBack()}>
+        <MainButtonText>Go back</MainButtonText>
+      </MainButton>
+    </WrapperView>
   );
 };
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-  },
-});
 
 export default LocationSettings;

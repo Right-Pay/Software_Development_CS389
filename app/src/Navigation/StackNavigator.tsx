@@ -33,9 +33,9 @@ const LocationStack =
 
 const screenOptionStyle = {
   headerStyle: {
-    backgroundColor: '#9AC4F8',
+    backgroundColor: '#4d654e',
   },
-  headerTintColor: 'white',
+  headerTintColor: '#e6ffe3',
   headerBackTitle: 'Back',
 };
 

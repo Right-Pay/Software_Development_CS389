@@ -1,7 +1,4 @@
 import React from 'react';
-import {View, StyleSheet, FlatList, Text, Button} from 'react-native';
-import Context from '../../../Context/context';
-import type {AppContext} from '../../../types/AppContextType';
 import type {PropsWithChildren} from 'react';
 import type {
   ProfileNavigationRoutesType,
@@ -10,6 +7,12 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
+import {
+  MainButtonText,
+  MainButton,
+  Title,
+  WrapperView,
+} from '../../../Helpers/StylizedComponents';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,
@@ -19,43 +22,19 @@ type ProfileScreenProps = CompositeScreenProps<
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
   return (
-    <View style={styles.homeScreenView}>
-      <Text style={styles.title}>Profile Screen</Text>
-      <Button
-        title="Go Home"
-        onPress={() => navigation.navigate('HomeStack', {screen: 'HomeScreen'})}
-      />
-      <Button
-        title="Settings"
-        onPress={() => navigation.navigate('ProfileSettings')}
-      />
-    </View>
+    <WrapperView>
+      <Title>Profile Screen</Title>
+      <MainButton
+        onPress={() =>
+          navigation.navigate('HomeStack', {screen: 'HomeScreen'})
+        }>
+        <MainButtonText>Go Home</MainButtonText>
+      </MainButton>
+      <MainButton onPress={() => navigation.navigate('ProfileSettings')}>
+        <MainButtonText>Settings</MainButtonText>
+      </MainButton>
+    </WrapperView>
   );
 };
-
-const styles = StyleSheet.create({
-  homeScreenView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowcontainer: {
-    flex: 1,
-    flexDirection: 'column',
-    marginLeft: 20,
-    marginRight: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-  },
-  title: {
-    marginTop: 20,
-    marginLeft: 20,
-    fontSize: 30,
-  },
-  text: {
-    padding: 10,
-    fontSize: 20,
-  },
-});
 
 export default ProfileScreen;

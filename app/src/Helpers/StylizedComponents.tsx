@@ -7,6 +7,7 @@ const styledView = (styles: string) => styled(View, styles);
 const styledText = (styles: string) => styled(Text, styles);
 const styledPressable = (styles: string) => styled(Pressable, styles);
 const styledFlatList = (styles: string) => styled(FlatList, styles);
+const styledMapView = (styles: string) => styled(MapView, styles);
 
 export const WrapperView = styledView('flex-1 items-center bg-light-green');
 export const Title = styledText(
@@ -27,8 +28,8 @@ export const MainButton = styledPressable(
   'text-3xl p-2 border-2 border-dark-green rounded-xl m-2',
 );
 export const MainButtonText = styledText('text-xl text-dark-green');
-export const GoogleMapsView = styled(
-  MapView,
+
+export const GoogleMapsView = styledMapView(
   'absolute top-0 left-0 right-0 bottom-0',
 );
 export const GoogleMapsMarker = styled(Marker);
