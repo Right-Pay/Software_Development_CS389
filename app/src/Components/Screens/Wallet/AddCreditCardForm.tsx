@@ -12,9 +12,15 @@ import {CreditCard, CreditCardFormProps} from '../../../types/CreditCardType';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import DropdownComponent from '../../../Helpers/Dropdown';
+import authContext from '../../../Context/authContext';
+import {AuthContextType} from '../../../types/AuthContextType';
+import Consts from '../../../Helpers/Consts';
 
 const AddCreditCardForm = (props: CreditCardFormProps) => {
   const {addNewCreditCard} = React.useContext(Context) as AppContext;
+  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
+    authContext,
+  ) as AuthContextType;
   const closeModal = () => props.setIsVisible(false);
   const [name, setName] = React.useState<string>('');
   const [cardNumber, setCardNumber] = React.useState<string>('');
@@ -26,6 +32,7 @@ const AddCreditCardForm = (props: CreditCardFormProps) => {
   const [expirationDate, setExpirationDate] = React.useState<string>(
     `${expirationMonth}/${expirationYear}`,
   );
+  const ErrorMessages = Consts.authErrorMessages;
 
   const years = Array.from(Array(6).keys()).map(i =>
     (i + parseInt(currentYear, 10)).toString(),
@@ -44,10 +51,16 @@ const AddCreditCardForm = (props: CreditCardFormProps) => {
   }, [expirationMonth, expirationYear]);
 
   const handleSubmit = () => {
+    clearAuthErrors();
+    const errors = validateForm();
+    if (errors.length > 0) {
+      errors.forEach(error => addAuthError(error));
+      return;
+    }
     const newCard: CreditCard = {
       id: 1,
       name: name,
-      cardNumber: cardNumber,
+      cardNumber: `${cardNumber.slice(0, 4)} ${cardNumber.slice(4, 7)}`,
       expirationDate: expirationDate,
       securityCode: '123',
       cardType: cardType,
@@ -55,6 +68,27 @@ const AddCreditCardForm = (props: CreditCardFormProps) => {
     addNewCreditCard(newCard);
     closeModal();
   };
+
+  const handleCCNumChange = (event: any) => {
+    setCardNumber(event.nativeEvent.text);
+  };
+
+  function validateForm() {
+    const errors: string[] = [];
+    const cardNumberRegex = /^[0-9]{6}$/;
+    const cardNameRegex = /^[a-zA-Z ]{1,}$/;
+    if (name.length <= 10 || !cardNameRegex.test(name)) {
+      errors.push(ErrorMessages.invalidCreditCardName);
+    }
+    if (cardNumber.length !== 6 || !cardNumberRegex.test(cardNumber)) {
+      errors.push(ErrorMessages.invalidCreditCardNumber);
+    }
+    return errors;
+  }
+
+  useEffect(() => {
+    clearAuthErrors();
+  }, []);
 
   return (
     <Modal
@@ -72,7 +106,7 @@ const AddCreditCardForm = (props: CreditCardFormProps) => {
         <AuthInputBox
           placeholder="First Six Digits"
           placeholderTextColor="#AFAEAE"
-          onChange={event => setCardNumber(event.nativeEvent.text)}
+          onChange={event => handleCCNumChange(event)}
         />
         <FormDateView>
           {DropdownComponent({
@@ -113,6 +147,7 @@ const AddCreditCardForm = (props: CreditCardFormProps) => {
         <AuthButton onPress={closeModal}>
           <AuthButtonText>Close</AuthButtonText>
         </AuthButton>
+        {AuthErrorComponent && <AuthErrorComponent />}
       </AddCCFormOverlayView>
     </Modal>
   );

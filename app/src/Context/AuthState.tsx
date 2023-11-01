@@ -5,7 +5,7 @@ import {Profile} from '../types/ProfileType';
 import {HttpResponse} from '../types/HttpResponse';
 import GlobalState from './GlobalState';
 import AuthErrorComponent from '../Helpers/AuthErrorComponent';
-import ConstsType from '../Helpers/Consts';
+import Consts from '../Helpers/Consts';
 import Config from 'react-native-config';
 import {tokenType} from '../types/AuthContextType';
 
@@ -20,7 +20,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
   const auth0ClientId = Config.REACT_APP_AUTH0_CLIENT_ID;
   const auth0Audience = Config.REACT_APP_AUTH0_AUDIENCE;
-  const ErrorMessages = ConstsType.authErrorMessages;
+  const ErrorMessages = Consts.authErrorMessages;
 
   const resetVariables = () => {
     setUserToken(null);
@@ -371,7 +371,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       setTimeout(() => {
         setIsLoading(false);
         setUserToken('testToken');
-        setUserProfile(ConstsType.dummyProfile);
+        setUserProfile(Consts.dummyProfile);
       }, 2000);
     }
   }, [apiBypass]);

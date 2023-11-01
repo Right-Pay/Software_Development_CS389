@@ -15,6 +15,9 @@ const AuthErrorMessages = {
   errorChangingPassword: 'Error Changing Password',
   sentRestEmail: 'Check Your Email for Further Instructions',
   invalidToken: 'Invalid Token\nPlease Contact Support',
+  invalidCreditCardName:
+    'Invalid Credit Card Name\nName must be more then 10 characters\nName must only contain letters',
+  invalidCreditCardNumber: 'Invalid Credit Card Number\nMust be 6 digits',
 };
 
 const dummyProfile = {
