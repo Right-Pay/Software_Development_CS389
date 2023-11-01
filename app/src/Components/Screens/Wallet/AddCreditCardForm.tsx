@@ -108,7 +108,7 @@ const AddCreditCardForm = (props: CreditCardFormProps) => {
           placeholderTextColor="#AFAEAE"
           onChange={event => handleCCNumChange(event)}
         />
-        <FormDateView>
+        <FormDateView className="z-100">
           {DropdownComponent({
             options: [
               '1',
@@ -126,20 +126,20 @@ const AddCreditCardForm = (props: CreditCardFormProps) => {
             ],
             placeholder: '1',
             onDropdownChange: onExpirationMonthDropdownChange,
-            style: 'w-1/3',
+            style: 'w-1/3 z-100',
           })}
           {DropdownComponent({
             options: years,
             placeholder: currentYear,
             onDropdownChange: onExpirationYearDropdownChange,
-            style: 'w-1/3',
+            style: 'w-1/3 z-100',
           })}
         </FormDateView>
         {DropdownComponent({
           options: ['Visa', 'MasterCard', 'Discover', 'American Express'],
           placeholder: 'Visa',
           onDropdownChange: onCardTypeDropdownChange,
-          style: 'm-2 w-1/2',
+          style: 'm-2 w-1/2 z-100',
         })}
         <AuthButton onPress={handleSubmit} className="mt-1">
           <AuthButtonText>Submit</AuthButtonText>
