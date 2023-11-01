@@ -20,7 +20,7 @@ type WelcomeScreenProps = NativeStackScreenProps<
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
-      <Title>Welcome to RightPay</Title>
+      <Title className="mt-20">Welcome to RightPay</Title>
       <LogoContainer>
         <Logo
           source={require('../../../Assets/RightPay-logo-light-transparent.png')}

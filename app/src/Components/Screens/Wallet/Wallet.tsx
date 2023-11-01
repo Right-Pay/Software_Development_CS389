@@ -17,6 +17,8 @@ import {
   CreditCardText,
   CreditCardView,
   RewardsView,
+  SecondaryAddCreditCardView,
+  SecondaryCreditCardView,
   Subtitle,
   Title,
   WrapperView,
@@ -48,12 +50,14 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   const addNewCreditCardComponent = () => (
     <AddCreditCardView>
-      <CreditCardText className="text-center">
-        Add New Credit Card
-      </CreditCardText>
-      <AddCreditCardButton onPress={handleAddPress}>
-        <AddCreditCardIcon source={require('../../../Assets/AddSign.png')} />
-      </AddCreditCardButton>
+      <SecondaryAddCreditCardView>
+        <CreditCardText className="text-center">
+          Add New Credit Card
+        </CreditCardText>
+        <AddCreditCardButton onPress={handleAddPress}>
+          <AddCreditCardIcon source={require('../../../Assets/AddSign.png')} />
+        </AddCreditCardButton>
+      </SecondaryAddCreditCardView>
     </AddCreditCardView>
   );
 
@@ -63,10 +67,12 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     }
     return (
       <CreditCardView>
-        <CreditCardText>{`Name: ${item.name}`}</CreditCardText>
-        <CreditCardText>{`Card Number: ${item.cardNumber}`}</CreditCardText>
-        <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
-        <CreditCardText>{`Expiration Date: ${item.expirationDate}`}</CreditCardText>
+        <SecondaryCreditCardView>
+          <CreditCardText>{`Name: ${item.name}`}</CreditCardText>
+          <CreditCardText>{`Card Number: ${item.cardNumber}`}</CreditCardText>
+          <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
+          <CreditCardText>{`Expiration Date: ${item.expirationDate}`}</CreditCardText>
+        </SecondaryCreditCardView>
       </CreditCardView>
     );
   };

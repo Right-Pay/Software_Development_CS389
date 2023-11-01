@@ -23,7 +23,7 @@ type ProfileScreenProps = CompositeScreenProps<
 const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
-      <Title>Profile Screen</Title>
+      <Title className="mt-20">Profile Screen</Title>
       <MainButton
         onPress={() =>
           navigation.navigate('HomeStack', {screen: 'HomeScreen'})

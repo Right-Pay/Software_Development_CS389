@@ -26,7 +26,7 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   const {location} = React.useContext(Context) as AppContext;
   return (
     <WrapperView>
-      <Title>This is the location screen</Title>
+      <Title className="mt-20">This is the location screen</Title>
       <GoogleMapsView
         initialRegion={{
           latitude: location.latitude,

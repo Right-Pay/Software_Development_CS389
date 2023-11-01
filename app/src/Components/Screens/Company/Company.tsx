@@ -13,7 +13,7 @@ type CompanyScreenProps = NativeStackScreenProps<
 const CompanyScreen: React.FC<CompanyScreenProps> = () => {
   return (
     <WrapperView>
-      <Title>This is the company screen... what this for????</Title>
+      <Title className="mt-20">This is the company screen... what this for????</Title>
     </WrapperView>
   );
 };

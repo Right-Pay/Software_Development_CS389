@@ -30,7 +30,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   return (
     <WrapperView>
-      <Title>Home Screen</Title>
+      <Title className="mt-20">Home Screen</Title>
       <Subtitle>Hello {userProfile.username}</Subtitle>
       <MainButton
         onPress={() =>
