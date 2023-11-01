@@ -30,7 +30,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
 
   return (
     <WrapperView>
-      <Title>Profile Screen</Title>
+      <Title className="mt-20">Profile Screen</Title>
       <ProfileList
         data={creditCards}
         keyExtractor={(item, index) => index.toString()}

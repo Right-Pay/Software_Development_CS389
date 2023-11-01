@@ -33,7 +33,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   const [password, setPassword] = React.useState<string>('');
   return (
     <WrapperView>
-      <Title>Log In to Your RightPay Account</Title>
+      <Title className="mt-20">Log In to Your RightPay Account</Title>
       <LogoContainer>
         <Logo
           source={require('../../../Assets/RightPay-logo-light-transparent.png')}

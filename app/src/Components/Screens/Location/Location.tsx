@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
   LocationNavigationRoutesType,
@@ -35,6 +35,10 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
     fetchPlaces();
   }, []);
 
+  const [currentViewedPlace, setCurrentViewedPlace] = React.useState<Place[]>(
+    [] as Place[],
+  );
+
   const renderPlace = (place: Place) => {
     return (
       <StyledView className="flex-1 border-2 flex-col place-items-center h-36 justify-center justify-items-center">
@@ -43,9 +47,16 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
     );
   };
 
+  const onViewRef = useRef((viewableItems: any) => {
+    const check: Place[] = viewableItems.viewableItems.map(
+      (item: any) => item.item as Place,
+    );
+    setCurrentViewedPlace(check);
+  });
+
   return (
     <WrapperView>
-      <Title>This is the location screen</Title>
+      <Title className="mt-20">This is the location screen</Title>
       <GoogleMapsView
         initialRegion={{
           latitude: location.latitude,
@@ -65,12 +76,16 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
           description={'This is a description of the marker'}
         />
       </GoogleMapsView>
-
       <StyledFlatList
-        className="absolute bottom-0 left-0 bg-white text-black z-50 max-h-36 w-full"
+        className="absolute bottom-0 left-0 bg-white text-black z-50 h-36 w-full"
         data={places}
         renderItem={({item}) => renderPlace(item as Place)}
+        showsHorizontalScrollIndicator={false}
+        horizontal={false}
+        onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
         keyExtractor={item => (item as Place).id}
+        snapToAlignment="start"
+        decelerationRate={'fast'}
         snapToInterval={36}
       />
     </WrapperView>

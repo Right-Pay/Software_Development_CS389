@@ -6,7 +6,7 @@ export const WrapperView = styled(View, 'flex-1 items-center bg-light-green');
 
 export const Title = styled(
   Text,
-  'mt-20 text-3xl text-center font-bold text-dark-green',
+  'text-3xl text-center font-bold text-dark-green',
 );
 
 export const Subtitle = styled(Text, 'text-xl text-center text-dark-green');
