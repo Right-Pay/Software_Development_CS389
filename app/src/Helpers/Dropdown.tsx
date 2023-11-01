@@ -29,7 +29,6 @@ const DropdownComponent = (props: DropdownProps) => {
         setValue={setValue}
         setItems={setItems}
         placeholder={props.placeholder}
-        zIndex={100}
         onChangeValue={event => handleSetValue(event?.toString() as string)}
       />
     </View>
