@@ -33,7 +33,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   }, []);
   return (
     <WrapperView>
-      <Title className="mt-20">Sign Up for RightPay</Title>
+      <Title>Sign Up for RightPay</Title>
       <LogoContainer>
         <Logo
           source={require('../../../Assets/RightPay-logo-light-transparent.png')}
@@ -69,9 +69,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
         }}>
         <AuthButtonText>Sign Up</AuthButtonText>
       </AuthButton>
-      <Title className="mt-20">
-        {userToken && 'You have successfully signed up\nRedirecting to login'}
-      </Title>
+      {userToken && <Title>'You have successfully signed up'</Title>}
     </WrapperView>
   );
 };

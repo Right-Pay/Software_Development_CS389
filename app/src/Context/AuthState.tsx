@@ -366,7 +366,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     : Config.REACT_APP_API_BYPASS;
 
   useEffect(() => {
-    if (true) {
+    if (false) {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);

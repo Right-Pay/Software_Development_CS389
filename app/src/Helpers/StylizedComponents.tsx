@@ -9,15 +9,17 @@ const styledPressable = (styles: string) => styled(Pressable, styles);
 const styledFlatList = (styles: string) => styled(FlatList, styles);
 const styledMapView = (styles: string) => styled(MapView, styles);
 
-export const WrapperView = styledView('flex-1 items-center bg-light-green');
+export const WrapperView = styledView(
+  'flex-1 items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
+);
 export const Title = styledText(
-  'text-3xl text-center font-bold text-dark-green',
+  'text-3xl text-4xl pl-10 pr-10 text-center font-bold text-dark-green',
 );
 export const Subtitle = styledText('text-xl text-center text-dark-green');
 export const FinePrint = styledText('text-sm text-black');
 export const FinePrintButton = styledPressable('flex pb-1');
 export const AuthButton = styledPressable(
-  'flex color items-center justify-center m-2 text-xl text-black flex h-9 w-5/12 rounded-xl bg-dark-green shadow-sm transition-colors',
+  'flex items-center justify-center fixed m-2 text-xl text-black  h-9 w-5/12 rounded-xl bg-dark-green',
 );
 export const AuthInputBox = styled(
   TextInput,
