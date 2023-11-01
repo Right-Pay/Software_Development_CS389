@@ -141,10 +141,10 @@ const AddCreditCardForm = (props: CreditCardFormProps) => {
           onDropdownChange: onCardTypeDropdownChange,
           style: 'm-2 w-1/2 z-100',
         })}
-        <AuthButton onPress={handleSubmit} className="mt-1">
+        <AuthButton onPress={handleSubmit} className="mt-1 z-0">
           <AuthButtonText>Submit</AuthButtonText>
         </AuthButton>
-        <AuthButton onPress={closeModal}>
+        <AuthButton onPress={closeModal} className="z-0">
           <AuthButtonText>Close</AuthButtonText>
         </AuthButton>
         {AuthErrorComponent && <AuthErrorComponent />}
