@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
   LocationNavigationRoutesType,
@@ -15,9 +15,11 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
-import { View } from 'react-native';
-import { styled } from 'nativewind';
+import {FlatList, View} from 'react-native';
+import {styled} from 'nativewind';
+import {Place} from '../../../types/Location';
 const StyledView = styled(View);
+const StyledFlatList = styled(FlatList);
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -31,7 +33,16 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   ) as AppContext;
   useEffect(() => {
     fetchPlaces();
-  },[]);
+  }, []);
+
+  const renderPlace = (place: Place) => {
+    return (
+      <StyledView className="flex-1 border-2 flex-col place-items-center h-36 justify-center justify-items-center">
+        <Title>{place.displayName.text}</Title>
+      </StyledView>
+    );
+  };
+
   return (
     <WrapperView>
       <Title>This is the location screen</Title>
@@ -54,9 +65,14 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
           description={'This is a description of the marker'}
         />
       </GoogleMapsView>
-      <StyledView className="absolute bottom-0 left-0 bg-white text-black z-50 max-h-36 w-full overflow-scroll">
-        {places && places.map(place => <Title>{place.displayName.text}</Title>)}
-      </StyledView>
+
+      <StyledFlatList
+        className="absolute bottom-0 left-0 bg-white text-black z-50 max-h-36 w-full"
+        data={places}
+        renderItem={({item}) => renderPlace(item as Place)}
+        keyExtractor={item => (item as Place).id}
+        snapToInterval={36}
+      />
     </WrapperView>
   ); //add button up here^^ between view and mapview <Button
   //title="Settings"

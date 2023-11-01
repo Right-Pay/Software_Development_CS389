@@ -9,6 +9,7 @@ export interface Place {
   displayName: DisplayName; // inline object type here
   businessStatus: string;
   primaryType: string;
+  id: string;
 }
 
 export interface DisplayName {

@@ -114,9 +114,16 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
     // Manipulate result to return
     const result = await response.json();
-    const resultPlaces = result.places.filter((place: Place) => {
-      return place.businessStatus === 'OPERATIONAL';
-    });
+    const resultPlaces = result.places
+      .filter((place: Place) => {
+        return place.businessStatus === 'OPERATIONAL';
+      })
+      .map((place: Place, index: number) => {
+        return {
+          ...place,
+          id: index.toString(),
+        } as Place;
+      });
     console.log(resultPlaces);
     setPlaces(resultPlaces);
   };
