@@ -1,10 +1,11 @@
 export interface CreditCard {
   id: number;
-  name: string;
+  cardName: string;
   cardNumber?: string;
   expirationDate?: string;
-  securityCode?: string;
   cardType?: string;
+  bankName?: string;
+  nickName?: string;
 }
 
 export interface CreditCardReward {

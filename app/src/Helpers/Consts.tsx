@@ -17,6 +17,7 @@ const AuthErrorMessages = {
   invalidToken: 'Invalid Token\nPlease Contact Support',
   invalidCreditCardName:
     'Invalid Credit Card Name\nName must be more then 10 characters\nName must only contain letters',
+  invalidCreditCardNickName: 'Invalid Credit Card Nick Name\nName must be more then 3 characters\nName must only contain letters',
   invalidCreditCardNumber: 'Invalid Credit Card Number\nMust be 6 digits',
 };
 
@@ -39,17 +40,19 @@ const dummyCreditCards = [
   {
     id: 1,
     cardNumber: '1234 56',
-    name: 'John Doe',
+    cardName: 'BofA Cash Back Rewards',
+    nickName: 'Johns Card',
+    bankName: 'Bank of America',
     expirationDate: '12/24',
-    securityCode: '123',
     cardType: 'Visa',
   },
   {
     id: 2,
     cardNumber: '2345 67',
-    name: 'Jane Smith',
+    cardName: 'Chase Freedom Unlimited',
+    nickName: 'Janes Card',
+    bankName: 'Chase',
     expirationDate: '11/25',
-    securityCode: '456',
     cardType: 'MasterCard',
   },
 ];

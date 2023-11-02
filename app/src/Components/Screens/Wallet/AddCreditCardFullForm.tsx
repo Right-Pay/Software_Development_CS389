@@ -25,14 +25,18 @@ const AddCreditCardFullForm = () => {
   ) as AppContext;
   const closeModal = () => {
     setCardForm(null);
-    setName('');
+    setCardName('');
+    setNickName('');
+    setBankName('');
     setCardNumber('');
     setExpirationDate('');
     setExpirationYear('');
     setExpirationMonth('');
     clearAuthErrors();
   };
-  const [name, setName] = React.useState<string>('');
+  const [cardName, setCardName] = React.useState<string>('');
+  const [nickName, setNickName] = React.useState<string>('');
+  const [bankName, setBankName] = React.useState<string>('');
   const [cardNumber, setCardNumber] = React.useState<string>('');
   const [cardType, setCardType] = React.useState<string>('visa');
   const [expirationMonth, setExpirationMonth] = React.useState<string>('1');
@@ -69,10 +73,11 @@ const AddCreditCardFullForm = () => {
     }
     const newCard: CreditCard = {
       id: 1,
-      name: name,
+      cardName: cardName,
       cardNumber: `${cardNumber.slice(0, 4)} ${cardNumber.slice(4, 7)}`,
       expirationDate: expirationDate,
-      securityCode: '123',
+      nickName: nickName,
+      bankName: bankName,
       cardType: cardType,
     };
     reviewCreditCard(newCard);
@@ -86,8 +91,11 @@ const AddCreditCardFullForm = () => {
     const errors: string[] = [];
     const cardNumberRegex = /^[0-9]{6}$/;
     const cardNameRegex = /^[a-zA-Z ]{1,}$/;
-    if (name.length <= 10 || !cardNameRegex.test(name)) {
+    if (cardName.length <= 10 || !cardNameRegex.test(cardName)) {
       errors.push(ErrorMessages.invalidCreditCardName);
+    }
+    if (nickName.length <= 3 || !cardNameRegex.test(nickName)) {
+      errors.push(ErrorMessages.invalidCreditCardNickName);
     }
     if (cardNumber.length !== 6 || !cardNumberRegex.test(cardNumber)) {
       errors.push(ErrorMessages.invalidCreditCardNumber);
@@ -119,7 +127,7 @@ const AddCreditCardFullForm = () => {
 
   useEffect(() => {
     clearAuthErrors();
-    setName('');
+    setCardName('');
     setCardNumber('');
     setExpirationDate('');
     setExpirationYear('');
@@ -146,7 +154,17 @@ const AddCreditCardFullForm = () => {
           <AuthInputBox
             placeholder="Name of Card"
             placeholderTextColor="#AFAEAE"
-            onChange={event => setName(event.nativeEvent.text)}
+            onChange={event => setCardName(event.nativeEvent.text)}
+          />
+          <AuthInputBox
+            placeholder="Nick Name"
+            placeholderTextColor="#AFAEAE"
+            onChange={event => setNickName(event.nativeEvent.text)}
+          />
+          <AuthInputBox
+            placeholder="Bank Name"
+            placeholderTextColor="#AFAEAE"
+            onChange={event => setBankName(event.nativeEvent.text)}
           />
           <AuthInputBox
             placeholder="First Six Digits"

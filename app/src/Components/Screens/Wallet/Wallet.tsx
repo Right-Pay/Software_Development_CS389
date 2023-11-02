@@ -70,7 +70,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     </AddCreditCardView>
   );
   const renderCard = (item: CreditCard) => {
-    if (item.name === 'Add') {
+    if (item.nickName === 'Add') {
       return addNewCreditCardComponent();
     }
     return (
@@ -79,18 +79,23 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           <CreditCardButton
             onLongPress={() => handleCreditCardPress()}
             className={deleteCard ? 'opacity-50 ' : 'opacity-100'}>
-            <CreditCardText>{`Name: ${item.name}`}</CreditCardText>
-            <CreditCardText>{`Card Number: ${item.cardNumber}`}</CreditCardText>
+            <CreditCardText>{`Nick Name: ${item.nickName}`}</CreditCardText>
+            <CreditCardText>{`Card Name: ${item.cardName}`}</CreditCardText>
             <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
-            <CreditCardText>{`Expiration Date: ${item.expirationDate}`}</CreditCardText>
+            <CreditCardText>{`Bank Name: ${item.bankName}`}</CreditCardText>
           </CreditCardButton>
           {deleteCard && (
-            <DeleteCreditCardButton onLongPress={handleDelete}>
+            <DeleteCreditCardButton
+              onLongPress={handleDelete}
+              onPress={() => setDeleteCard(false)}>
               <CreditCardText className="opacity-100 text-4xl text-center">
                 Delete Card?
               </CreditCardText>
               <CreditCardText className="opacity-100 text-3xl text-center">
                 Long Press Again to Confirm
+              </CreditCardText>
+              <CreditCardText className="opacity-100 text-2xl text-center">
+                Tap to Exist
               </CreditCardText>
             </DeleteCreditCardButton>
           )}
@@ -145,9 +150,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           data={[
             ...creditCards,
             {
-              name: 'Add',
+              nickName: 'Add',
               id: -1,
-            },
+            } as CreditCard,
           ]}
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => (item as CreditCard).id.toString()}
@@ -158,8 +163,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           snapToInterval={Dimensions.get('window').width + 48} //Change 48 based on width of CreditCardItemSeperator width
         />
       </CreditCardListView>
-      <CreditCardListView className="h-2/5">
+      <CreditCardListView className="h-2/6 justify-center items-center">
         <CreditCardList
+          className=" text-center w-3/4 p-2"
           data={getCreditCardRewards(
             currentViewedCard[currentViewedCard.length - 1].id,
           )}
@@ -168,6 +174,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
               <Title>Rewards</Title>
             ) : null
           }
+          showsHorizontalScrollIndicator={false}
           keyExtractor={item => (item as CreditCardReward).id.toString()}
           renderItem={({item}) => renderReward(item as CreditCardReward)}
           ItemSeparatorComponent={itemSeparatorComponent}

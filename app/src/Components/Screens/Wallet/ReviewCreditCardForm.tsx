@@ -65,19 +65,40 @@ const ReviewCreditCardForm = () => {
           {newCreditCard && (
             <>
               <AuthInputBox
-                defaultValue={newCreditCard.name}
+                defaultValue={newCreditCard.cardName}
+                placeholder="Name of Card"
+                placeholderTextColor={'black'}
                 onChange={event =>
-                  (newCreditCard.name = event.nativeEvent.text)
+                  (newCreditCard.cardName = event.nativeEvent.text)
+                }
+              />
+              <AuthInputBox
+                defaultValue={newCreditCard.nickName}
+                placeholder="Nick Name"
+                placeholderTextColor={'black'}
+                onChange={event =>
+                  (newCreditCard.nickName = event.nativeEvent.text)
+                }
+              />
+              <AuthInputBox
+                defaultValue={newCreditCard.bankName}
+                placeholder="Bank Name"
+                placeholderTextColor={'black'}
+                onChange={event =>
+                  (newCreditCard.bankName = event.nativeEvent.text)
                 }
               />
               <AuthInputBox
                 defaultValue={newCreditCard.cardNumber}
+                placeholder="Card Number"
+                placeholderTextColor={'black'}
                 onChange={event =>
                   (newCreditCard.cardNumber = event.nativeEvent.text)
                 }
               />
               <AuthInputBox
                 defaultValue={newCreditCard.cardType}
+                placeholder="Card Type"
                 placeholderTextColor={'black'}
                 onChange={event =>
                   (newCreditCard.cardType = event.nativeEvent.text)
@@ -85,6 +106,7 @@ const ReviewCreditCardForm = () => {
               />
               <AuthInputBox
                 defaultValue={newCreditCard.expirationDate}
+                placeholder="Expiration Date"
                 placeholderTextColor={'black'}
                 onChange={event =>
                   (newCreditCard.expirationDate = event.nativeEvent.text)

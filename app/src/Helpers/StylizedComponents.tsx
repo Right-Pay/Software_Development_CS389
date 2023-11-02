@@ -44,7 +44,7 @@ export const LogoContainer = styledView(
   'flex-col justify-center items-center h-1/2 w-1/2',
 );
 export const CreditCardList = styledFlatList('w-full');
-export const CreditCardListView = styledView('h-1/3 mt-10 w-full');
+export const CreditCardListView = styledView('h-1/2 mt-10 w-full');
 export const CreditCardView = styledView(
   'h-full w-screen flex flex-col items-center justify-center',
 );

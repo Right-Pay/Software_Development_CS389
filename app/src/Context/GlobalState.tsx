@@ -25,12 +25,14 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     //found card will need to be set if found
     const foundCard = {
       id: Math.random() * 100 + creditCards.length, // not really unique - but fine for this example
-      name: 'test',
+      cardName: 'Chase Sapphire Reserved',
+      nickName: '',
+      bankName: 'Chase',
       cardNumber: cardNumber.toString(),
       cardType: 'visa',
       expirationDate: '12/22',
     } as CreditCard;
-    if (foundCard !== null) {
+    if (foundCard === null) {
       console.log('found card');
       setNewCard(foundCard);
       setCardForm('Review');
