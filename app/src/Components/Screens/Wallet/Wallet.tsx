@@ -17,6 +17,7 @@ import {
   CreditCardListView,
   CreditCardText,
   CreditCardView,
+  DeleteCreditCardButton,
   RewardsView,
   SecondaryAddCreditCardView,
   SecondaryCreditCardView,
@@ -28,7 +29,9 @@ import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import {CreditCard, CreditCardReward} from '../../../types/CreditCardType';
 import {Dimensions} from 'react-native';
+import AddCreditCardFullForm from './AddCreditCardFullForm';
 import AddCreditCardForm from './AddCreditCardForm';
+import ReviewCreditCardForm from './ReviewCreditCardForm';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -39,17 +42,21 @@ type WalletScreenProps = CompositeScreenProps<
 const WalletScreen: React.FC<WalletScreenProps> = () => {
   const {
     creditCards,
-    rewards /*, addNewReward, removeCreditCard, removeReward*/,
+    rewards,
+    removeCreditCard,
+    cardForm,
+    setCardForm /*, addNewReward, , removeReward*/,
   } = React.useContext(Context) as AppContext;
   const [currentViewedCard, setCurrentViewedCard] = React.useState<
     CreditCard[]
   >([creditCards[0]]);
-  const [showAddForm, setShowAddForm] = React.useState<boolean>(false);
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
+  //helpers
   const getCreditCardRewards = (creditCardId: number) =>
     rewards.filter(r => r.creditCardId === creditCardId) || [];
 
+  //components
   const addNewCreditCardComponent = () => (
     <AddCreditCardView>
       <SecondaryAddCreditCardView>
@@ -62,29 +69,34 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
       </SecondaryAddCreditCardView>
     </AddCreditCardView>
   );
-
   const renderCard = (item: CreditCard) => {
     if (item.name === 'Add') {
       return addNewCreditCardComponent();
     }
     return (
       <CreditCardView>
-        <SecondaryCreditCardView
-          className={deleteCard ? 'opacity-50' : 'opacity-100'}>
-          <CreditCardButton onLongPress={event => handleCreditCardPress(event)}>
+        <SecondaryCreditCardView>
+          <CreditCardButton
+            onLongPress={() => handleCreditCardPress()}
+            className={deleteCard ? 'opacity-50 ' : 'opacity-100'}>
             <CreditCardText>{`Name: ${item.name}`}</CreditCardText>
             <CreditCardText>{`Card Number: ${item.cardNumber}`}</CreditCardText>
             <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
             <CreditCardText>{`Expiration Date: ${item.expirationDate}`}</CreditCardText>
           </CreditCardButton>
+          {deleteCard && (
+            <DeleteCreditCardButton onLongPress={handleDelete}>
+              <CreditCardText className="opacity-100 text-4xl text-center">
+                Delete Card?
+              </CreditCardText>
+              <CreditCardText className="opacity-100 text-3xl text-center">
+                Long Press Again to Confirm
+              </CreditCardText>
+            </DeleteCreditCardButton>
+          )}
         </SecondaryCreditCardView>
       </CreditCardView>
     );
-  };
-
-  const handleCreditCardPress = (event: any) => {
-    console.log(event.nativeEvent);
-    setDeleteCard(!deleteCard);
   };
 
   const renderReward = (item: CreditCardReward) => {
@@ -99,7 +111,17 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   const itemSeparatorComponent = () => <CreditCardItemSeperator />;
 
-  const handleAddPress = () => setShowAddForm(true);
+  //handlers
+  const handleCreditCardPress = () => {
+    setDeleteCard(!deleteCard);
+  };
+
+  const handleDelete = () => {
+    setDeleteCard(false);
+    removeCreditCard(currentViewedCard[0]);
+  };
+
+  const handleAddPress = () => setCardForm('Search');
 
   const onViewRef = useRef((viewableItems: any) => {
     const check: CreditCard[] = viewableItems.viewableItems.map(
@@ -114,11 +136,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   return (
     <WrapperView>
-      {AddCreditCardForm({
-        isVisible: showAddForm,
-        setIsVisible: setShowAddForm,
-      })}
-
+      {AddCreditCardFullForm()}
+      {AddCreditCardForm()}
+      {ReviewCreditCardForm()}
       <Title className="mt-10">Wallet</Title>
       <CreditCardListView>
         <CreditCardList

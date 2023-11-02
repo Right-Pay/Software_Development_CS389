@@ -9,47 +9,19 @@ import {
 } from '../../../Helpers/StylizedComponents';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
-import authContext from '../../../Context/authContext';
-import {AuthContextType} from '../../../types/AuthContextType';
-import Consts from '../../../Helpers/Consts';
 
-const AddCreditCardFullForm = () => {
-  const {findCreditCard} = React.useContext(Context) as AppContext;
-  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
-    authContext,
-  ) as AuthContextType;
+const ReviewCreditCardForm = () => {
+  const {addCreditCard, newCreditCard} = React.useContext(
+    Context,
+  ) as AppContext;
   const {cardForm, setCardForm} = React.useContext(Context) as AppContext;
-  const closeModal = () => {
-    setCardForm(null);
-    setCardNumber('');
-    clearAuthErrors();
-  };
-  const [cardNumber, setCardNumber] = React.useState<string>('');
-  const ErrorMessages = Consts.authErrorMessages;
+  const closeModal = () => setCardForm(null);
 
   const handleSubmit = () => {
-    clearAuthErrors();
-    const errors = validateForm();
-    if (errors.length > 0) {
-      errors.forEach(error => addAuthError(error));
-      return;
-    }
-    findCreditCard(+cardNumber as number);
+    addCreditCard();
+    closeModal();
     //Check if db has card
   };
-
-  const handleCCNumChange = (event: any) => {
-    setCardNumber(event.nativeEvent.text);
-  };
-
-  function validateForm() {
-    const errors: string[] = [];
-    const cardNumberRegex = /^[0-9]{6}$/;
-    if (cardNumber.length !== 6 || !cardNumberRegex.test(cardNumber)) {
-      errors.push(ErrorMessages.invalidCreditCardNumber);
-    }
-    return errors;
-  }
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -73,16 +45,11 @@ const AddCreditCardFullForm = () => {
     };
   }, []);
 
-  useEffect(() => {
-    clearAuthErrors();
-    setCardNumber('');
-  }, [cardForm]);
-
   return (
     <Modal
       animationType="slide"
       transparent={false}
-      visible={cardForm === 'Search'}
+      visible={cardForm === 'Review'}
       onRequestClose={closeModal}>
       <KeyboardAvoidingView
         style={{
@@ -95,22 +62,46 @@ const AddCreditCardFullForm = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         <AddCCFormOverlayView>
           <Title>Add New Credit Card</Title>
-          <AuthInputBox
-            placeholder="First Six Digits"
-            placeholderTextColor="#AFAEAE"
-            onChange={event => handleCCNumChange(event)}
-          />
+          {newCreditCard && (
+            <>
+              <AuthInputBox
+                defaultValue={newCreditCard.name}
+                onChange={event =>
+                  (newCreditCard.name = event.nativeEvent.text)
+                }
+              />
+              <AuthInputBox
+                defaultValue={newCreditCard.cardNumber}
+                onChange={event =>
+                  (newCreditCard.cardNumber = event.nativeEvent.text)
+                }
+              />
+              <AuthInputBox
+                defaultValue={newCreditCard.cardType}
+                placeholderTextColor={'black'}
+                onChange={event =>
+                  (newCreditCard.cardType = event.nativeEvent.text)
+                }
+              />
+              <AuthInputBox
+                defaultValue={newCreditCard.expirationDate}
+                placeholderTextColor={'black'}
+                onChange={event =>
+                  (newCreditCard.expirationDate = event.nativeEvent.text)
+                }
+              />
+            </>
+          )}
           <AuthButton onPress={handleSubmit} className="mt-1 z-0">
             <AuthButtonText>Submit</AuthButtonText>
           </AuthButton>
           <AuthButton onPress={closeModal} className="z-0">
-            <AuthButtonText>Close</AuthButtonText>
+            <AuthButtonText>Cancel</AuthButtonText>
           </AuthButton>
-          {AuthErrorComponent && <AuthErrorComponent />}
         </AddCCFormOverlayView>
       </KeyboardAvoidingView>
     </Modal>
   );
 };
 
-export default AddCreditCardFullForm;
+export default ReviewCreditCardForm;

@@ -14,25 +14,45 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [rewards, setRewards] = React.useState<CreditCardReward[]>(
     Consts.dummyCreditCardRewards,
   );
+  const [cardForm, setCardForm] = React.useState<string | null>(null);
+  const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
 
-  const addNewCreditCard = (creditCard: CreditCard) => {
-    const newCard: CreditCard = {
+  const findCreditCard = (cardNumber: number) => {
+    //Check db for card
+    //found card will need to be set if found
+    const foundCard = {
       id: Math.random() * 100 + creditCards.length, // not really unique - but fine for this example
-      name: creditCard.name,
-      cardNumber: creditCard.cardNumber,
-      expirationDate: creditCard.expirationDate,
-      securityCode: creditCard.securityCode,
-      cardType: creditCard.cardType,
-    };
-    setCreditCards([...creditCards, newCard]);
+      name: 'test',
+      cardNumber: cardNumber.toString(),
+      cardType: 'visa',
+      expirationDate: '12/22',
+    } as CreditCard;
+    if (foundCard !== null) {
+      console.log('found card');
+      setNewCard(foundCard);
+      setCardForm('Review');
+    } else {
+      setCardForm('Full');
+    }
+  };
+
+  const reviewCreditCard = (creditCard: CreditCard) => {
+    setNewCard(creditCard);
+    setCardForm('Review');
+  };
+
+  const addCreditCard = () => {
+    //add to db
+    setCreditCards([...creditCards, newCreditCard as CreditCard]);
+    return true;
   };
 
   const addNewReward = (creditCardReward: CreditCardReward) => {
     const newReward: CreditCardReward = {
-      id: Math.random() * 100 + rewards.length, // not really unique - but fine for this example
+      id: Math.random() * 10, // not really unique - but fine for this example
       creditCardId: creditCardReward.creditCardId,
       name: creditCardReward.name,
       description: creditCardReward.description,
@@ -43,7 +63,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const removeCreditCard = (creditCard: CreditCard) => {
-    setCreditCards(creditCards.splice(creditCard.id, 1));
+    setCreditCards(creditCards.filter(c => c.id !== creditCard.id));
   };
 
   const removeReward = (creditCardReward: CreditCardReward) => {
@@ -110,14 +130,19 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     <Context.Provider
       value={{
         creditCards,
+        newCreditCard,
         rewards,
-        addNewCreditCard,
+        reviewCreditCard,
+        findCreditCard,
+        addCreditCard,
         removeCreditCard,
         addNewReward,
         removeReward,
         location,
         isLoading,
         setIsLoading,
+        cardForm,
+        setCardForm,
       }}>
       {children}
     </Context.Provider>

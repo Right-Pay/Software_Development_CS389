@@ -16,7 +16,4 @@ export interface CreditCardReward {
   date: string;
 }
 
-export interface CreditCardFormProps {
-  isVisible: boolean;
-  setIsVisible: (_isVisible: boolean) => void;
-}
+export interface CreditCardFormProps {}
