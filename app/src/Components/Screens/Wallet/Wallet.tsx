@@ -30,8 +30,9 @@ import Context from '../../../Context/context';
 import {CreditCard, CreditCardReward} from '../../../types/CreditCardType';
 import {Dimensions} from 'react-native';
 import AddCreditCardFullForm from './AddCreditCardFullForm';
-import AddCreditCardForm from './AddCreditCardForm';
+import AddCreditCardSearchForm from './AddCreditCardSearchForm';
 import ReviewCreditCardForm from './ReviewCreditCardForm';
+import consts from '../../../Helpers/Consts';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -51,6 +52,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     CreditCard[]
   >([creditCards[0]]);
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
+  const Forms = consts.CredtCardForms;
 
   //helpers
   const getCreditCardRewards = (creditCardId: number) =>
@@ -79,7 +81,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           <CreditCardButton
             onLongPress={() => handleCreditCardPress()}
             className={deleteCard ? 'opacity-50 ' : 'opacity-100'}>
-            <CreditCardText>{`Nick Name: ${item.nickName}`}</CreditCardText>
+            <CreditCardText className="text-center">
+              {item.nickName}
+            </CreditCardText>
             <CreditCardText>{`Card Name: ${item.cardName}`}</CreditCardText>
             <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
             <CreditCardText>{`Bank Name: ${item.bankName}`}</CreditCardText>
@@ -126,7 +130,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     removeCreditCard(currentViewedCard[0]);
   };
 
-  const handleAddPress = () => setCardForm('Search');
+  const handleAddPress = () => setCardForm(Forms.Search);
 
   const onViewRef = useRef((viewableItems: any) => {
     const check: CreditCard[] = viewableItems.viewableItems.map(
@@ -142,7 +146,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   return (
     <WrapperView>
       {AddCreditCardFullForm()}
-      {AddCreditCardForm()}
+      {AddCreditCardSearchForm()}
       {ReviewCreditCardForm()}
       <Title className="mt-10">Wallet</Title>
       <CreditCardListView>
@@ -174,7 +178,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
               <Title>Rewards</Title>
             ) : null
           }
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
           keyExtractor={item => (item as CreditCardReward).id.toString()}
           renderItem={({item}) => renderReward(item as CreditCardReward)}
           ItemSeparatorComponent={itemSeparatorComponent}

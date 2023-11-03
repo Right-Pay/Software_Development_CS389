@@ -17,10 +17,19 @@ const AuthErrorMessages = {
   invalidToken: 'Invalid Token\nPlease Contact Support',
   invalidCreditCardName:
     'Invalid Credit Card Name\nName must be more then 10 characters\nName must only contain letters',
-  invalidCreditCardNickName: 'Invalid Credit Card Nick Name\nName must be more then 3 characters\nName must only contain letters',
+  invalidCreditCardNickName:
+    'Invalid Credit Card Nick Name\nName must be more then 3 characters\nName must only contain letters',
   invalidCreditCardNumber: 'Invalid Credit Card Number\nMust be 6 digits',
 };
 
+const CredtCardForms = {
+  Search: 'Search',
+  Full: 'Full',
+  Review: 'Review',
+  Rewards: 'Rewards',
+};
+
+//Dummy Data for development
 const dummyProfile = {
   //Need to change this with an api call
   id: 1,
@@ -93,6 +102,7 @@ const dummyCreditCardRewards: CreditCardReward[] = [
 ];
 
 const Consts: ConstsType = {
+  CredtCardForms: CredtCardForms,
   authErrorMessages: AuthErrorMessages,
   dummyProfile: dummyProfile,
   dummyCreditCards: dummyCreditCards,

@@ -47,10 +47,39 @@ const AddCreditCardFullForm = () => {
     `${expirationMonth}/${expirationYear}`,
   );
   const ErrorMessages = Consts.authErrorMessages;
+  const Forms = Consts.CredtCardForms;
 
   const years = Array.from(Array(6).keys()).map(i =>
     (i + parseInt(currentYear, 10)).toString(),
   );
+
+  //These consts need to be updated to be pulled from db and will add the Add New option
+  const bankOptions = () => {
+    const tempBankOptions = [
+      'Bank of America',
+      'Chase',
+      'Wells Fargo',
+      'Citi',
+      'US Bank',
+      'Capital One',
+      'PNC',
+      'TD Bank',
+      'USAA',
+    ];
+    tempBankOptions.push('Add New');
+    return tempBankOptions;
+  };
+
+  const typeOptions = () => {
+    const tempTypeOptions = [
+      'Visa',
+      'MasterCard',
+      'Discover',
+      'American Express',
+    ];
+    tempTypeOptions.push('Add New');
+    return tempTypeOptions;
+  };
 
   const onCardTypeDropdownChange = (item: string) => setCardType(item);
 
@@ -59,6 +88,14 @@ const AddCreditCardFullForm = () => {
 
   const onExpirationYearDropdownChange = (item: string) =>
     setExpirationYear(item);
+
+  const onBankNameDropdownChange = (item: string) => {
+    if (item === 'Add New') {
+      //open modal for adding new item
+    } else {
+      setBankName(item);
+    }
+  };
 
   useEffect(() => {
     setExpirationDate(`${expirationMonth}/${expirationYear}`);
@@ -138,7 +175,7 @@ const AddCreditCardFullForm = () => {
     <Modal
       animationType="slide"
       transparent={false}
-      visible={cardForm === 'Full'}
+      visible={cardForm === Forms.Full}
       onRequestClose={closeModal}>
       <KeyboardAvoidingView
         style={{
@@ -162,16 +199,23 @@ const AddCreditCardFullForm = () => {
             onChange={event => setNickName(event.nativeEvent.text)}
           />
           <AuthInputBox
-            placeholder="Bank Name"
-            placeholderTextColor="#AFAEAE"
-            onChange={event => setBankName(event.nativeEvent.text)}
-          />
-          <AuthInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
             onChange={event => handleCCNumChange(event)}
           />
-          <FormDateView className="z-50">
+          {DropdownComponent({
+            options: bankOptions(),
+            placeholder: bankOptions()[0],
+            onDropdownChange: onBankNameDropdownChange,
+            style: 'm-2 w-1/2 z-50',
+          })}
+          {DropdownComponent({
+            options: typeOptions(),
+            placeholder: typeOptions()[0],
+            onDropdownChange: onCardTypeDropdownChange,
+            style: 'm-2 w-1/2 z-40',
+          })}
+          <FormDateView className="z-30">
             {DropdownComponent({
               options: [
                 '1',
@@ -198,12 +242,6 @@ const AddCreditCardFullForm = () => {
               style: 'w-1/3',
             })}
           </FormDateView>
-          {DropdownComponent({
-            options: ['Visa', 'MasterCard', 'Discover', 'American Express'],
-            placeholder: 'Visa',
-            onDropdownChange: onCardTypeDropdownChange,
-            style: 'm-2 w-1/2 z-40',
-          })}
           <AuthButton onPress={handleSubmit} className="mt-1 z-0">
             <AuthButtonText>Submit</AuthButtonText>
           </AuthButton>

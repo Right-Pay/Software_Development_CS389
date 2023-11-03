@@ -15,11 +15,19 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     Consts.dummyCreditCardRewards,
   );
   const [cardForm, setCardForm] = React.useState<string | null>(null);
+  const Forms = Consts.CredtCardForms;
   const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
 
+  /*Credit Card Add Flow
+   * 1. Search for card using 6 digit number
+   * 2. If found show review screen and make sure it is correct. User will enter nickname and maybe update card. Send this card to users db
+   * 3. If not found show full form. User will enter all info and send to db
+   * 4. Rewards will be found using a few details from card. Rewards review screen will show which will allow the user to enter rewards and see rewards already associated to that card. Send rewards to db
+   *
+   */
   const findCreditCard = (cardNumber: number) => {
     //Check db for card
     //found card will need to be set if found
@@ -35,15 +43,15 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     if (foundCard === null) {
       console.log('found card');
       setNewCard(foundCard);
-      setCardForm('Review');
+      setCardForm(Forms.Review);
     } else {
-      setCardForm('Full');
+      setCardForm(Forms.Full);
     }
   };
 
   const reviewCreditCard = (creditCard: CreditCard) => {
     setNewCard(creditCard);
-    setCardForm('Review');
+    setCardForm(Forms.Review);
   };
 
   const addCreditCard = () => {

@@ -28,6 +28,7 @@ const DropdownComponent = (props: DropdownProps) => {
         setOpen={setOpen}
         setValue={setValue}
         setItems={setItems}
+        autoScroll={true}
         placeholder={props.placeholder}
         onChangeValue={event => handleSetValue(event?.toString() as string)}
       />

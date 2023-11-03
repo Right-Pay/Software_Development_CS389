@@ -372,7 +372,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         setIsLoading(false);
         setUserToken('testToken');
         setUserProfile(Consts.dummyProfile);
-      }, 2000);
+      }, 1000);
     }
   }, [apiBypass]);
 

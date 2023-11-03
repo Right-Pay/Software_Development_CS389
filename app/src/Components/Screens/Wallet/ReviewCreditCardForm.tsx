@@ -9,6 +9,7 @@ import {
 } from '../../../Helpers/StylizedComponents';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
+import consts from '../../../Helpers/Consts';
 
 const ReviewCreditCardForm = () => {
   const {addCreditCard, newCreditCard} = React.useContext(
@@ -16,6 +17,7 @@ const ReviewCreditCardForm = () => {
   ) as AppContext;
   const {cardForm, setCardForm} = React.useContext(Context) as AppContext;
   const closeModal = () => setCardForm(null);
+  const Forms = consts.CredtCardForms;
 
   const handleSubmit = () => {
     addCreditCard();
@@ -49,7 +51,7 @@ const ReviewCreditCardForm = () => {
     <Modal
       animationType="slide"
       transparent={false}
-      visible={cardForm === 'Review'}
+      visible={cardForm === Forms.Review}
       onRequestClose={closeModal}>
       <KeyboardAvoidingView
         style={{
