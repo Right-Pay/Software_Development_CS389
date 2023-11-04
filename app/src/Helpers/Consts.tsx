@@ -27,6 +27,14 @@ const CredtCardForms = {
   Full: 'Full',
   Review: 'Review',
   Rewards: 'Rewards',
+  AddOption: 'AddOption',
+};
+
+const DropdownListModes = {
+  DEFAULT: 'DEFAULT',
+  FLATLIST: 'FLATLIST',
+  SCROLLVIEW: 'SCROLLVIEW',
+  MODAL: 'MODAL',
 };
 
 //Dummy Data for development
@@ -103,6 +111,7 @@ const dummyCreditCardRewards: CreditCardReward[] = [
 
 const Consts: ConstsType = {
   CredtCardForms: CredtCardForms,
+  DropdownListModes: DropdownListModes,
   authErrorMessages: AuthErrorMessages,
   dummyProfile: dummyProfile,
   dummyCreditCards: dummyCreditCards,

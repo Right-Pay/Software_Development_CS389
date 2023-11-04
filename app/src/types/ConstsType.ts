@@ -9,9 +9,14 @@ interface CredtCardFormsType {
   [key: string]: string;
 }
 
+interface DropdownListModesType {
+  [key: string]: string;
+}
+
 export default interface ConstsType {
   CredtCardForms: CredtCardFormsType;
   authErrorMessages: AuthErrorMessagesType;
+  DropdownListModes: DropdownListModesType;
   dummyProfile: Profile;
   dummyCreditCards: CreditCard[];
   dummyCreditCardRewards: any[];

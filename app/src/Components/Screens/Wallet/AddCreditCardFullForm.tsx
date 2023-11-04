@@ -15,14 +15,19 @@ import DropdownComponent from '../../../Helpers/Dropdown';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import Consts from '../../../Helpers/Consts';
+import AddNewDropdownOption from './AddNewDropdownOption';
 
 const AddCreditCardFullForm = () => {
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {cardForm, setCardForm, reviewCreditCard} = React.useContext(
-    Context,
-  ) as AppContext;
+  const {
+    cardForm,
+    setCardForm,
+    reviewCreditCard,
+    updatingDropdown,
+    setUpdatingDropdown,
+  } = React.useContext(Context) as AppContext;
   const closeModal = () => {
     setCardForm(null);
     setCardName('');
@@ -48,40 +53,38 @@ const AddCreditCardFullForm = () => {
   );
   const ErrorMessages = Consts.authErrorMessages;
   const Forms = Consts.CredtCardForms;
+  const ModalMode = Consts.DropdownListModes.MODAL;
+
+  const [newBankOption, setNewBankOption] = useState<string>('');
+  const [showNewBankOption, setShowNewBankOption] = useState<boolean>(false);
+  const [newTypeOption, setNewTypeOption] = useState<string>('');
+  const [showNewTypeOption, setShowNewTypeOption] = useState<boolean>(false);
 
   const years = Array.from(Array(6).keys()).map(i =>
     (i + parseInt(currentYear, 10)).toString(),
   );
 
   //These consts need to be updated to be pulled from db and will add the Add New option
-  const bankOptions = () => {
-    const tempBankOptions = [
-      'Bank of America',
-      'Chase',
-      'Wells Fargo',
-      'Citi',
-      'US Bank',
-      'Capital One',
-      'PNC',
-      'TD Bank',
-      'USAA',
-    ];
-    tempBankOptions.push('Add New');
-    return tempBankOptions;
-  };
+  const [bankOptions, setBankOptions] = useState<string[]>([
+    'Bank of America',
+    'Chase',
+    'Wells Fargo',
+    'Citi',
+    'US Bank',
+    'Capital One',
+    'PNC',
+    'TD Bank',
+    'USAA',
+    'Add New Bank',
+  ]);
 
-  const typeOptions = () => {
-    const tempTypeOptions = [
-      'Visa',
-      'MasterCard',
-      'Discover',
-      'American Express',
-    ];
-    tempTypeOptions.push('Add New');
-    return tempTypeOptions;
-  };
-
-  const onCardTypeDropdownChange = (item: string) => setCardType(item);
+  const [typeOptions, setTypeOptions] = useState<string[]>([
+    'Visa',
+    'MasterCard',
+    'Discover',
+    'American Express',
+    'Add New Type',
+  ]);
 
   const onExpirationMonthDropdownChange = (item: string) =>
     setExpirationMonth(item);
@@ -89,11 +92,36 @@ const AddCreditCardFullForm = () => {
   const onExpirationYearDropdownChange = (item: string) =>
     setExpirationYear(item);
 
+  const onCardTypeDropdownChange = (item: string) => {
+    if (!checkForAddNew(item)) {
+      setCardType(item);
+    }
+  };
+
   const onBankNameDropdownChange = (item: string) => {
-    if (item === 'Add New') {
-      //open modal for adding new item
-    } else {
+    if (!checkForAddNew(item)) {
       setBankName(item);
+    }
+  };
+
+  const checkForAddNew = (item: string) => {
+    const regex: RegExp = /^Add New\s.*/;
+    const AddNew = regex.test(item);
+    if (AddNew && !updatingDropdown) {
+      switch (item.split('Add New')[1].trim()) {
+        case 'Bank':
+          setShowNewBankOption(true);
+          break;
+        case 'Type':
+          setShowNewTypeOption(true);
+          break;
+        default:
+          break;
+      }
+      return true;
+    } else {
+      setUpdatingDropdown(false);
+      return false;
     }
   };
 
@@ -109,7 +137,7 @@ const AddCreditCardFullForm = () => {
       return;
     }
     const newCard: CreditCard = {
-      id: 1,
+      id: Math.random() * 100, //Will need to be updated to be unique
       cardName: cardName,
       cardNumber: `${cardNumber.slice(0, 4)} ${cardNumber.slice(4, 7)}`,
       expirationDate: expirationDate,
@@ -171,6 +199,28 @@ const AddCreditCardFullForm = () => {
     setExpirationMonth('');
   }, [cardForm]);
 
+  useEffect(() => {
+    if (newBankOption !== '') {
+      setBankName(newBankOption);
+      setBankOptions([
+        ...bankOptions.slice(0, -1),
+        newBankOption,
+        bankOptions.slice(-1)[0],
+      ]);
+    }
+  }, [newBankOption]);
+
+  useEffect(() => {
+    if (newTypeOption !== '') {
+      setCardType(newTypeOption);
+      setTypeOptions([
+        ...typeOptions.slice(0, -1),
+        newTypeOption,
+        typeOptions.slice(-1)[0],
+      ]);
+    }
+  }, [newTypeOption]);
+
   return (
     <Modal
       animationType="slide"
@@ -204,18 +254,34 @@ const AddCreditCardFullForm = () => {
             onChange={event => handleCCNumChange(event)}
           />
           {DropdownComponent({
-            options: bankOptions(),
-            placeholder: bankOptions()[0],
+            options: bankOptions,
+            placeholder: bankOptions[0],
             onDropdownChange: onBankNameDropdownChange,
+            mode: ModalMode,
             style: 'm-2 w-1/2 z-50',
+            refresh: bankOptions,
           })}
+          <AddNewDropdownOption
+            name="Bank"
+            setOption={setNewBankOption}
+            show={showNewBankOption}
+            setShow={setShowNewBankOption}
+          />
           {DropdownComponent({
-            options: typeOptions(),
-            placeholder: typeOptions()[0],
+            options: typeOptions,
+            placeholder: typeOptions[0],
             onDropdownChange: onCardTypeDropdownChange,
+            mode: ModalMode,
             style: 'm-2 w-1/2 z-40',
+            refresh: typeOptions,
           })}
-          <FormDateView className="z-30">
+          <AddNewDropdownOption
+            name="Type"
+            setOption={setNewTypeOption}
+            show={showNewTypeOption}
+            setShow={setShowNewTypeOption}
+          />
+          <FormDateView className="m-2 z-30">
             {DropdownComponent({
               options: [
                 '1',
@@ -233,12 +299,14 @@ const AddCreditCardFullForm = () => {
               ],
               placeholder: '1',
               onDropdownChange: onExpirationMonthDropdownChange,
+              mode: ModalMode,
               style: 'w-1/3',
             })}
             {DropdownComponent({
               options: years,
               placeholder: currentYear,
               onDropdownChange: onExpirationYearDropdownChange,
+              mode: ModalMode,
               style: 'w-1/3',
             })}
           </FormDateView>

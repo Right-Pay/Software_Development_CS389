@@ -16,6 +16,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   );
   const [cardForm, setCardForm] = React.useState<string | null>(null);
   const Forms = Consts.CredtCardForms;
+  const [updatingDropdown, setUpdatingDropdown] =
+    React.useState<boolean>(false);
   const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -153,6 +155,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         setIsLoading,
         cardForm,
         setCardForm,
+        updatingDropdown,
+        setUpdatingDropdown,
       }}>
       {children}
     </Context.Provider>

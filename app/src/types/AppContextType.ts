@@ -16,4 +16,6 @@ export interface AppContext {
   setIsLoading: (_isLoading: boolean) => void;
   cardForm: string | null;
   setCardForm: (_cardForm: string | null) => void;
+  updatingDropdown: boolean;
+  setUpdatingDropdown: (_updatingDropdown: boolean) => void;
 }
