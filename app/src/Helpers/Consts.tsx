@@ -20,6 +20,9 @@ const AuthErrorMessages = {
   invalidCreditCardNickName:
     'Invalid Credit Card Nick Name\nName must be more then 3 characters\nName must only contain letters',
   invalidCreditCardNumber: 'Invalid Credit Card Number\nMust be 6 digits',
+  invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
+  invalidCardType: 'Invalid Card Type\nType must be more then 3 characters',
+  invalidDropdownOption: 'Invalid Dropdown Option',
 };
 
 const CredtCardForms = {
@@ -28,6 +31,7 @@ const CredtCardForms = {
   Review: 'Review',
   Rewards: 'Rewards',
   AddOption: 'AddOption',
+  Off: 'Off',
 };
 
 const DropdownListModes = {

@@ -20,7 +20,7 @@ const AddCreditCardSearchForm = () => {
   ) as AuthContextType;
   const {cardForm, setCardForm} = React.useContext(Context) as AppContext;
   const closeModal = () => {
-    setCardForm(null);
+    setCardForm(Forms.Off);
     setCardNumber('');
     clearAuthErrors();
   };

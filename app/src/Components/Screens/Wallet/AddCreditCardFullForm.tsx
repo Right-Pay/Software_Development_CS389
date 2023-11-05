@@ -18,6 +18,7 @@ import Consts from '../../../Helpers/Consts';
 import AddNewDropdownOption from './AddNewDropdownOption';
 
 const AddCreditCardFullForm = () => {
+  //Context
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
@@ -28,17 +29,8 @@ const AddCreditCardFullForm = () => {
     updatingDropdown,
     setUpdatingDropdown,
   } = React.useContext(Context) as AppContext;
-  const closeModal = () => {
-    setCardForm(null);
-    setCardName('');
-    setNickName('');
-    setBankName('');
-    setCardNumber('');
-    setExpirationDate('');
-    setExpirationYear('');
-    setExpirationMonth('');
-    clearAuthErrors();
-  };
+
+  //card stuff
   const [cardName, setCardName] = React.useState<string>('');
   const [nickName, setNickName] = React.useState<string>('');
   const [bankName, setBankName] = React.useState<string>('');
@@ -46,23 +38,25 @@ const AddCreditCardFullForm = () => {
   const [cardType, setCardType] = React.useState<string>('visa');
   const [expirationMonth, setExpirationMonth] = React.useState<string>('1');
   const currentYear = new Date().getFullYear().toString().split('20')[1];
+  const years = Array.from(Array(6).keys()).map(i =>
+    (i + parseInt(currentYear, 10)).toString(),
+  );
   const [expirationYear, setExpirationYear] =
     React.useState<string>(currentYear);
   const [expirationDate, setExpirationDate] = React.useState<string>(
     `${expirationMonth}/${expirationYear}`,
   );
+
+  //consts
   const ErrorMessages = Consts.authErrorMessages;
   const Forms = Consts.CredtCardForms;
   const ModalMode = Consts.DropdownListModes.MODAL;
 
+  //Add New Options
   const [newBankOption, setNewBankOption] = useState<string>('');
   const [showNewBankOption, setShowNewBankOption] = useState<boolean>(false);
   const [newTypeOption, setNewTypeOption] = useState<string>('');
   const [showNewTypeOption, setShowNewTypeOption] = useState<boolean>(false);
-
-  const years = Array.from(Array(6).keys()).map(i =>
-    (i + parseInt(currentYear, 10)).toString(),
-  );
 
   //These consts need to be updated to be pulled from db and will add the Add New option
   const [bankOptions, setBankOptions] = useState<string[]>([
@@ -86,6 +80,7 @@ const AddCreditCardFullForm = () => {
     'Add New Type',
   ]);
 
+  //onChange Methods
   const onExpirationMonthDropdownChange = (item: string) =>
     setExpirationMonth(item);
 
@@ -125,10 +120,7 @@ const AddCreditCardFullForm = () => {
     }
   };
 
-  useEffect(() => {
-    setExpirationDate(`${expirationMonth}/${expirationYear}`);
-  }, [expirationMonth, expirationYear]);
-
+  //Handlers
   const handleSubmit = () => {
     clearAuthErrors();
     const errors = validateForm();
@@ -152,6 +144,18 @@ const AddCreditCardFullForm = () => {
     setCardNumber(event.nativeEvent.text);
   };
 
+  const closeModal = () => {
+    setCardForm(Forms.Off);
+    setCardName('');
+    setNickName('');
+    setBankName('');
+    setCardNumber('');
+    setExpirationDate('');
+    setExpirationYear('');
+    setExpirationMonth('');
+    clearAuthErrors();
+  };
+
   function validateForm() {
     const errors: string[] = [];
     const cardNumberRegex = /^[0-9]{6}$/;
@@ -168,6 +172,7 @@ const AddCreditCardFullForm = () => {
     return errors;
   }
 
+  //Keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -190,6 +195,7 @@ const AddCreditCardFullForm = () => {
     };
   }, []);
 
+  //useEffect
   useEffect(() => {
     clearAuthErrors();
     setCardName('');
@@ -198,6 +204,17 @@ const AddCreditCardFullForm = () => {
     setExpirationYear('');
     setExpirationMonth('');
   }, [cardForm]);
+
+  useEffect(() => {
+    if (newTypeOption !== '') {
+      setCardType(newTypeOption);
+      setTypeOptions([
+        ...typeOptions.slice(0, -1),
+        newTypeOption,
+        typeOptions.slice(-1)[0],
+      ]);
+    }
+  }, [newTypeOption]);
 
   useEffect(() => {
     if (newBankOption !== '') {
@@ -211,15 +228,8 @@ const AddCreditCardFullForm = () => {
   }, [newBankOption]);
 
   useEffect(() => {
-    if (newTypeOption !== '') {
-      setCardType(newTypeOption);
-      setTypeOptions([
-        ...typeOptions.slice(0, -1),
-        newTypeOption,
-        typeOptions.slice(-1)[0],
-      ]);
-    }
-  }, [newTypeOption]);
+    setExpirationDate(`${expirationMonth}/${expirationYear}`);
+  }, [expirationMonth, expirationYear]);
 
   return (
     <Modal

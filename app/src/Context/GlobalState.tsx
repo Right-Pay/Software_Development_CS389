@@ -14,11 +14,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [rewards, setRewards] = React.useState<CreditCardReward[]>(
     Consts.dummyCreditCardRewards,
   );
-  const [cardForm, setCardForm] = React.useState<string | null>(null);
   const Forms = Consts.CredtCardForms;
+  const [cardForm, setCardForm] = React.useState<string>(Forms.Off);
+  const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
   const [updatingDropdown, setUpdatingDropdown] =
     React.useState<boolean>(false);
-  const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
@@ -43,7 +43,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       expirationDate: '12/22',
     } as CreditCard;
     if (foundCard === null) {
-      console.log('found card');
       setNewCard(foundCard);
       setCardForm(Forms.Review);
     } else {

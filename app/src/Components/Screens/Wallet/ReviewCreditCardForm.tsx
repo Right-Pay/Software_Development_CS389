@@ -16,7 +16,7 @@ const ReviewCreditCardForm = () => {
     Context,
   ) as AppContext;
   const {cardForm, setCardForm} = React.useContext(Context) as AppContext;
-  const closeModal = () => setCardForm(null);
+  const closeModal = () => setCardForm(Forms.Off);
   const Forms = consts.CredtCardForms;
 
   const handleSubmit = () => {

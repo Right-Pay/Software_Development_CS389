@@ -45,7 +45,6 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     creditCards,
     rewards,
     removeCreditCard,
-    cardForm,
     setCardForm /*, addNewReward, , removeReward*/,
   } = React.useContext(Context) as AppContext;
   const [currentViewedCard, setCurrentViewedCard] = React.useState<
