@@ -42,7 +42,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       cardType: 'visa',
       expirationDate: '12/22',
     } as CreditCard;
-    if (foundCard === null) {
+    if (foundCard !== null) {
       setNewCard(foundCard);
       setCardForm(Forms.Review);
     } else {

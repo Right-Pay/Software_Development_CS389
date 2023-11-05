@@ -33,7 +33,6 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
   const handleSubmit = () => {
     clearAuthErrors();
     const errors = validateForm();
-    console.log(errors);
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
