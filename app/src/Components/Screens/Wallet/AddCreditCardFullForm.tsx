@@ -266,13 +266,12 @@ const AddCreditCardFullForm = () => {
             onDropdownChange={onBankNameDropdownChange}
             mode={ModalMode}
             style="m-2 w-2/3 h-auto z-50"
-            refresh={CreditCardForms.AddBankOption} //Fix this refresh
+            refresh={CreditCardForms.AddBankOption}
           />
           <AddNewDropdownOption
             name="Bank"
             setOption={setNewBankOption}
             show={CreditCardForms.AddBankOption}
-            setShow={setShowAddBankOption}
           />
           <DropdownComponent
             options={typeOptions}
@@ -286,7 +285,6 @@ const AddCreditCardFullForm = () => {
             name="Type"
             setOption={setNewTypeOption}
             show={CreditCardForms.AddTypeOption}
-            setShow={setShowAddTypeOption}
           />
           <FormDateView className="m-2 z-30">
             {DropdownComponent({
