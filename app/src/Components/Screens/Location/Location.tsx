@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
   LocationNavigationRoutesType,
@@ -20,6 +20,8 @@ import {styled} from 'nativewind';
 import {Place} from '../../../types/Location';
 const StyledView = styled(View);
 const StyledFlatList = styled(FlatList);
+import {Platform} from 'react-native';
+import {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -33,7 +35,7 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   const [currentViewedPlace, setCurrentViewedPlace] = React.useState<Place[]>(
     [] as Place[],
   );
-
+  console.log(places);
   const renderPlace = (place: Place) => {
     return (
       <StyledView className="flex-1 border-2 flex-col place-items-center h-36 justify-center justify-items-center">
@@ -49,7 +51,18 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
     setCurrentViewedPlace(check);
   });
 
-  console.log(location);
+  const markerFactory = (title: string, description: string) => {
+    return (
+      <GoogleMapsMarker
+        coordinate={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+        }}
+        title={title}
+        description={description}
+      />
+    );
+  };
 
   return (
     <WrapperView>
@@ -62,17 +75,15 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        customMapStyle={mapStyle}>
-        <GoogleMapsMarker
-          draggable
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          onDragEnd={e => console.log(JSON.stringify(e.nativeEvent.coordinate))}
-          title={'Test Marker'}
-          description={'This is a description of the marker'}
-        />
+        region={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        customMapStyle={mapStyle}
+        provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
+        {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
       <StyledFlatList
         className="absolute bottom-0 left-0 bg-white text-black z-50 h-36 w-full"

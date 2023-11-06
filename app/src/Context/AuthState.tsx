@@ -360,6 +360,22 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setLang('es');
   }, []);
 
+  //Api Bypass. Delete this when done testing
+  const apiBypass: string | boolean = userToken
+    ? false
+    : Config.REACT_APP_API_BYPASS;
+
+  useEffect(() => {
+    if (true) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        setUserToken('testToken');
+        setUserProfile(ConstsType.dummyProfile);
+      }, 2000);
+    }
+  }, [apiBypass]);
+
   return (
     <AuthContext.Provider
       value={{
