@@ -68,7 +68,7 @@ const ReviewCreditCardForm = () => {
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         {newCreditCard && (
-          <AddCCFormOverlayView>
+          <AddCCFormOverlayView className="flex-auto ">
             <Title>Review Credit Card</Title>
 
             <AuthInputBox

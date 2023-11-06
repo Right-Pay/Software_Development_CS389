@@ -243,7 +243,7 @@ const AddCreditCardFullForm = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-        <AddCCFormOverlayView>
+        <AddCCFormOverlayView className="flex-auto ">
           <Title>Add New Credit Card</Title>
           <AuthInputBox
             placeholder="Name of Card"

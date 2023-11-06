@@ -10,7 +10,7 @@ const styledFlatList = (styles: string) => styled(FlatList, styles);
 const styledMapView = (styles: string) => styled(MapView, styles);
 
 export const WrapperView = styledView(
-  'flex-auto items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
+  'flex-1 items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
 );
 export const Title = styledText(
   'text-3xl text-4xl pl-10 pr-10 text-center font-bold text-dark-green',
@@ -70,7 +70,7 @@ export const AddCreditCardButton = styledPressable(
   'w-40 h-40 items-center justify-center',
 );
 export const AddCCFormOverlayView = styledView(
-  'flex-auto justify-center items-center bg-light-green',
+  'justify-center items-center bg-light-green',
 );
 export const RewardsView = styledView('flex-1 flex-col ml-20 mr-20 mb-2 mt-10');
 export const Dropdown = styled(

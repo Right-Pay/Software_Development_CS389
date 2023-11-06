@@ -95,14 +95,16 @@ const AddCreditCardSearchForm = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-        <AddCCFormOverlayView>
-          <Title>Enter First Six Digits of your Credit Card Number</Title>
+        <AddCCFormOverlayView className="flex-1">
+          <Title className="mb-24">
+            Enter First Six Digits of your Credit Card Number
+          </Title>
           <AuthInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
             onChange={event => handleCCNumChange(event)}
           />
-          <AuthButton onPress={handleSubmit} className="mt-1 z-0">
+          <AuthButton onPress={handleSubmit} className="m4-2 z-0">
             <AuthButtonText>Submit</AuthButtonText>
           </AuthButton>
           <AuthButton onPress={closeModal} className="z-0">

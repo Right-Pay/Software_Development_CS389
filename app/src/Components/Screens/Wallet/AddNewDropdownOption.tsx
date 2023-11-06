@@ -129,7 +129,7 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-        <AddCCFormOverlayView>
+        <AddCCFormOverlayView className="flex-auto ">
           <Title>{`Enter a New Option for ${props.name}`}</Title>
           <AuthInputBox
             placeholder="Name of Option"
