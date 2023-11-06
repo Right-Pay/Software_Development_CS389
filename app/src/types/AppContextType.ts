@@ -10,4 +10,6 @@ export interface AppContext {
   setIsLoading: (_isLoading: boolean) => void;
   fetchPlaces: () => void;
   places: Place[];
+  fetchAddress: () => void;
+  address: Place | undefined;
 }

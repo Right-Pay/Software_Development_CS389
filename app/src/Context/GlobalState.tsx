@@ -29,6 +29,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
   const [places, setPlaces] = useState<Place[]>([] as Place[]);
+  const [address, setAddress] = useState<Place | undefined>(undefined);
 
   const addNewCreditCard = (creditCard: CreditCard) => {
     const newCard: CreditCard = {
@@ -68,6 +69,54 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     }
   };
 
+  const fetchAddress = async () => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append(
+      'X-Goog-FieldMask',
+      'places.displayName,places.businessStatus,places.primaryType',
+    );
+    myHeaders.append(
+      'X-Goog-Api-Key',
+      'AIzaSyDSQqzE6cXDeUCWEquYC4PPCCpk9KRJiw8',
+    );
+
+    var raw = JSON.stringify({
+      excludedTypes: ['parking'],
+      maxResultCount: 1,
+      rankPreference: 'DISTANCE',
+      locationRestriction: {
+        circle: {
+          center: {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          },
+          radius: 50000,
+        },
+      },
+    });
+
+    const response = await fetch(
+      'https://places.googleapis.com/v1/places:searchNearby',
+      {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+      },
+    );
+
+    // Manipulate result to return
+    const result = await response.json();
+    const resultAddress = result.places.map((place: Place, index: number) => {
+      return {
+        ...place,
+        id: index.toString(),
+      } as Place;
+    });
+    //console.log(resultAddress[0].displayName);
+    setAddress(resultAddress[0]);
+  };
+
   const fetchPlaces = async () => {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -92,13 +141,14 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         'performing_arts_theater',
       ],
       maxResultCount: 20,
+      rankPreference: 'DISTANCE',
       locationRestriction: {
         circle: {
           center: {
             latitude: location.latitude,
             longitude: location.longitude,
           },
-          radius: 1500,
+          radius: 50000,
         },
       },
     });
@@ -124,7 +174,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           id: index.toString(),
         } as Place;
       });
-    console.log(resultPlaces);
+    //console.log(resultPlaces);
     setPlaces(resultPlaces);
   };
 
@@ -155,6 +205,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   useEffect(() => {
     getLocation();
+    fetchPlaces();
+    fetchAddress();
   }, []);
 
   return (
@@ -168,6 +220,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         setIsLoading,
         fetchPlaces,
         places,
+        fetchAddress,
+        address,
       }}>
       {children}
     </Context.Provider>

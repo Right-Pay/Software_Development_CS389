@@ -28,12 +28,7 @@ type LocationScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
-  const {location, fetchPlaces, places} = React.useContext(
-    Context,
-  ) as AppContext;
-  useEffect(() => {
-    fetchPlaces();
-  }, []);
+  const {location, places} = React.useContext(Context) as AppContext;
 
   const [currentViewedPlace, setCurrentViewedPlace] = React.useState<Place[]>(
     [] as Place[],
