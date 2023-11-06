@@ -52,25 +52,29 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title className="mt-20">This is the location screen</Title>
-      <GoogleMapsView
-        initialRegion={{
-          latitude: location.latitude,
-          longitude: location.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        customMapStyle={mapStyle}>
-        <GoogleMapsMarker
-          draggable
-          coordinate={{
+      {location.latitude && (
+        <GoogleMapsView
+          initialRegion={{
             latitude: location.latitude,
             longitude: location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
-          onDragEnd={e => console.log(JSON.stringify(e.nativeEvent.coordinate))}
-          title={'Test Marker'}
-          description={'This is a description of the marker'}
-        />
-      </GoogleMapsView>
+          customMapStyle={mapStyle}>
+          <GoogleMapsMarker
+            draggable
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            onDragEnd={e =>
+              console.log(JSON.stringify(e.nativeEvent.coordinate))
+            }
+            title={'Test Marker'}
+            description={'This is a description of the marker'}
+          />
+        </GoogleMapsView>
+      )}
       <StyledFlatList
         className="absolute bottom-0 left-0 bg-white text-black z-50 h-36 w-full"
         data={places}
