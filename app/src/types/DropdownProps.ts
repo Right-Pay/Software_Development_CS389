@@ -4,7 +4,7 @@ export interface DropdownProps {
   onDropdownChange: (_item: string) => void;
   style?: string;
   mode?: string;
-  refresh?: string[];
+  refresh?: boolean;
 }
 
 export interface optionsPropsType {

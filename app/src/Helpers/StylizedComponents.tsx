@@ -23,7 +23,7 @@ export const AuthButton = styledPressable(
 );
 export const AuthInputBox = styled(
   TextInput,
-  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-1/2 rounded-xl border-2 border-dark-green bg-light-green bg-transparent shadow-sm transition-colors',
+  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green bg-transparent shadow-sm transition-colors',
 );
 export const AuthButtonText = styledText(
   'text-center text-xl text-light-green',
@@ -78,5 +78,5 @@ export const Dropdown = styled(
   'text-xl text-black h-12 rounded-xl border-2 border-dark-green bg-light-green shadow-sm transition-colors z-50',
 );
 export const FormDateView = styledView(
-  'flex flex-row justify-center w-3/4 space-x-2',
+  'flex flex-row justify-center w-2/3 space-x-2',
 );

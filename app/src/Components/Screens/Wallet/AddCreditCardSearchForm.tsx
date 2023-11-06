@@ -22,6 +22,7 @@ const AddCreditCardSearchForm = () => {
     Context,
   ) as AppContext;
   const closeModal = () => {
+    setCreditCardForms({...CreditCardForms, Search: false});
     setCardNumber('');
     clearAuthErrors();
   };

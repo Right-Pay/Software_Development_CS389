@@ -200,8 +200,10 @@ const AddCreditCardFullForm = () => {
         newTypeOption,
         typeOptions.slice(-1)[0],
       ]);
+    }else{
+      setCardType(typeOptions[0]);
     }
-  }, [newTypeOption]);
+  }, [CreditCardForms.AddTypeOption]);
 
   useEffect(() => {
     if (newBankOption !== '') {
@@ -211,8 +213,10 @@ const AddCreditCardFullForm = () => {
         newBankOption,
         bankOptions.slice(-1)[0],
       ]);
+    }else{
+      setBankName(bankOptions[0]);
     }
-  }, [newBankOption]);
+  }, [CreditCardForms.AddBankOption]);
 
   useEffect(() => {
     setExpirationDate(`${expirationMonth}/${expirationYear}`);
@@ -255,8 +259,8 @@ const AddCreditCardFullForm = () => {
             placeholder={bankOptions[0]}
             onDropdownChange={onBankNameDropdownChange}
             mode={ModalMode}
-            style="m-2 w-1/2 h-auto z-50"
-            refresh={bankOptions}
+            style="m-2 w-2/3 h-auto z-50"
+            refresh={bankOptions} //Fix this refresh
           />
           <AddNewDropdownOption
             name="Bank"
@@ -269,8 +273,8 @@ const AddCreditCardFullForm = () => {
             placeholder={typeOptions[0]}
             onDropdownChange={onCardTypeDropdownChange}
             mode={ModalMode}
-            style="m-2 w-1/2 h-auto z-40"
-            refresh={typeOptions}
+            style="m-2 w-2/3 h-auto z-40"
+            refresh={CreditCardForms.AddTypeOption}
           />
           <AddNewDropdownOption
             name="Type"
@@ -297,14 +301,14 @@ const AddCreditCardFullForm = () => {
               placeholder: '1',
               onDropdownChange: onExpirationMonthDropdownChange,
               mode: ModalMode,
-              style: 'w-1/3',
+              style: 'w-1/2',
             })}
             {DropdownComponent({
               options: years,
               placeholder: currentYear,
               onDropdownChange: onExpirationYearDropdownChange,
               mode: ModalMode,
-              style: 'w-1/3',
+              style: 'w-1/2',
             })}
           </FormDateView>
           <AuthButton onPress={handleSubmit} className="mt-1 z-0">

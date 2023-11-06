@@ -25,7 +25,8 @@ const DropdownComponent = (props: DropdownProps) => {
   const listMode: any = props.mode ? props.mode : 'FLATLIST';
 
   useEffect(() => {
-    const newItems = props.refresh?.map(o => ({
+    console.log(props.options);
+    const newItems = props.options?.map(o => ({
       label: o,
       value: o,
       labelStyle: {color: 'black'},
@@ -59,20 +60,30 @@ const DropdownComponent = (props: DropdownProps) => {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
+                width: '100%',
               }
             : {}
         }
         listItemContainerStyle={
           listMode === 'MODAL'
             ? {
-                width: '90%',
+                width: '95%',
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderStyle: 'solid',
                 borderWidth: 3,
                 borderColor: 'black',
+                borderRadius: 10,
                 margin: 10,
+              }
+            : {}
+        }
+        listItemLabelStyle={
+          listMode === 'MODAL'
+            ? {
+                fontSize: 20,
+                color: 'black',
               }
             : {}
         }
