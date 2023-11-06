@@ -78,6 +78,7 @@ const DropdownComponent = (props: DropdownProps) => {
         }
         placeholder={props.placeholder}
         placeholderStyle={{color: 'black', fontWeight: 'bold', fontSize: 20}}
+        textStyle={{color: 'black', fontSize: 20}}
         onChangeValue={event => handleSetValue(event?.toString() as string)}
       />
     </View>

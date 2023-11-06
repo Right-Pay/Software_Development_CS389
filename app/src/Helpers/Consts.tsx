@@ -18,21 +18,21 @@ const AuthErrorMessages = {
   invalidCreditCardName:
     'Invalid Credit Card Name\nName must be more then 10 characters\nName must only contain letters',
   invalidCreditCardNickName:
-    'Invalid Credit Card Nick Name\nName must be more then 3 characters\nName must only contain letters',
+    'Invalid Credit Card Nickname\nName must be more then 3 characters\nName must only contain letters',
   invalidCreditCardNumber: 'Invalid Credit Card Number\nMust be 6 digits',
   invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
   invalidCardType: 'Invalid Card Type\nType must be more then 3 characters',
   invalidDropdownOption: 'Invalid Dropdown Option',
 };
 
-const CredtCardForms = {
-  Search: 'Search',
-  Full: 'Full',
-  Review: 'Review',
-  Rewards: 'Rewards',
-  AddOption: 'AddOption',
-  Off: 'Off',
-};
+enum CreditCardFormEnum {
+  Search = 0,
+  Full = 1,
+  Review = 2,
+  Rewards = 3,
+  AddOption = 4,
+  Off = 5,
+}
 
 const DropdownListModes = {
   DEFAULT: 'DEFAULT',
@@ -62,7 +62,7 @@ const dummyCreditCards = [
     id: 1,
     cardNumber: '1234 56',
     cardName: 'BofA Cash Back Rewards',
-    nickName: 'Johns Card',
+    nickname: 'Johns Card',
     bankName: 'Bank of America',
     expirationDate: '12/24',
     cardType: 'Visa',
@@ -71,7 +71,7 @@ const dummyCreditCards = [
     id: 2,
     cardNumber: '2345 67',
     cardName: 'Chase Freedom Unlimited',
-    nickName: 'Janes Card',
+    nickname: 'Janes Card',
     bankName: 'Chase',
     expirationDate: '11/25',
     cardType: 'MasterCard',
@@ -114,7 +114,7 @@ const dummyCreditCardRewards: CreditCardReward[] = [
 ];
 
 const Consts: ConstsType = {
-  CredtCardForms: CredtCardForms,
+  CreditCardFormEnum: CreditCardFormEnum,
   DropdownListModes: DropdownListModes,
   authErrorMessages: AuthErrorMessages,
   dummyProfile: dummyProfile,

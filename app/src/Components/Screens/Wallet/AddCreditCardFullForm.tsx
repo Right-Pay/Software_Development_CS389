@@ -23,16 +23,20 @@ const AddCreditCardFullForm = () => {
     authContext,
   ) as AuthContextType;
   const {
-    cardForm,
-    setCardForm,
     reviewCreditCard,
     updatingDropdown,
     setUpdatingDropdown,
+    bankOptions,
+    setBankOptions,
+    typeOptions,
+    setTypeOptions,
+    CreditCardForms,
+    setCreditCardForms,
   } = React.useContext(Context) as AppContext;
 
   //card stuff
   const [cardName, setCardName] = React.useState<string>('');
-  const [nickName, setNickName] = React.useState<string>('');
+  const [nickname, setNickName] = React.useState<string>('');
   const [bankName, setBankName] = React.useState<string>('');
   const [cardNumber, setCardNumber] = React.useState<string>('');
   const [cardType, setCardType] = React.useState<string>('visa');
@@ -49,7 +53,6 @@ const AddCreditCardFullForm = () => {
 
   //consts
   const ErrorMessages = Consts.authErrorMessages;
-  const Forms = Consts.CredtCardForms;
   const ModalMode = Consts.DropdownListModes.MODAL;
 
   //Add New Options
@@ -59,26 +62,6 @@ const AddCreditCardFullForm = () => {
   const [showNewTypeOption, setShowNewTypeOption] = useState<boolean>(false);
 
   //These consts need to be updated to be pulled from db and will add the Add New option
-  const [bankOptions, setBankOptions] = useState<string[]>([
-    'Bank of America',
-    'Chase',
-    'Wells Fargo',
-    'Citi',
-    'US Bank',
-    'Capital One',
-    'PNC',
-    'TD Bank',
-    'USAA',
-    'Add New Bank',
-  ]);
-
-  const [typeOptions, setTypeOptions] = useState<string[]>([
-    'Visa',
-    'MasterCard',
-    'Discover',
-    'American Express',
-    'Add New Type',
-  ]);
 
   //onChange Methods
   const onExpirationMonthDropdownChange = (item: string) =>
@@ -97,6 +80,10 @@ const AddCreditCardFullForm = () => {
     if (!checkForAddNew(item)) {
       setBankName(item);
     }
+  };
+
+  const onCCNumberChange = (event: any) => {
+    setCardNumber(event.nativeEvent.text);
   };
 
   const checkForAddNew = (item: string) => {
@@ -133,19 +120,15 @@ const AddCreditCardFullForm = () => {
       cardName: cardName,
       cardNumber: `${cardNumber.slice(0, 4)} ${cardNumber.slice(4, 7)}`,
       expirationDate: expirationDate,
-      nickName: nickName,
+      nickname: nickname,
       bankName: bankName,
       cardType: cardType,
     };
     reviewCreditCard(newCard);
   };
 
-  const handleCCNumChange = (event: any) => {
-    setCardNumber(event.nativeEvent.text);
-  };
-
   const closeModal = () => {
-    setCardForm(Forms.Off);
+    setCreditCardForms({...CreditCardForms, Full: false});
     setCardName('');
     setNickName('');
     setBankName('');
@@ -163,7 +146,7 @@ const AddCreditCardFullForm = () => {
     if (cardName.length <= 10 || !cardNameRegex.test(cardName)) {
       errors.push(ErrorMessages.invalidCreditCardName);
     }
-    if (nickName.length <= 3 || !cardNameRegex.test(nickName)) {
+    if (nickname.length <= 3 || !cardNameRegex.test(nickname)) {
       errors.push(ErrorMessages.invalidCreditCardNickName);
     }
     if (cardNumber.length !== 6 || !cardNumberRegex.test(cardNumber)) {
@@ -203,7 +186,7 @@ const AddCreditCardFullForm = () => {
     setExpirationDate('');
     setExpirationYear('');
     setExpirationMonth('');
-  }, [cardForm]);
+  }, [CreditCardForms.Full]);
 
   useEffect(() => {
     if (newTypeOption !== '') {
@@ -235,7 +218,7 @@ const AddCreditCardFullForm = () => {
     <Modal
       animationType="slide"
       transparent={false}
-      visible={cardForm === Forms.Full}
+      visible={CreditCardForms.Full}
       onRequestClose={closeModal}>
       <KeyboardAvoidingView
         style={{
@@ -254,37 +237,37 @@ const AddCreditCardFullForm = () => {
             onChange={event => setCardName(event.nativeEvent.text)}
           />
           <AuthInputBox
-            placeholder="Nick Name"
+            placeholder="Nickname"
             placeholderTextColor="#AFAEAE"
             onChange={event => setNickName(event.nativeEvent.text)}
           />
           <AuthInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
-            onChange={event => handleCCNumChange(event)}
+            onChange={event => onCCNumberChange(event)}
           />
-          {DropdownComponent({
-            options: bankOptions,
-            placeholder: bankOptions[0],
-            onDropdownChange: onBankNameDropdownChange,
-            mode: ModalMode,
-            style: 'm-2 w-1/2 z-50',
-            refresh: bankOptions,
-          })}
+          <DropdownComponent
+            options={bankOptions}
+            placeholder={bankOptions[0]}
+            onDropdownChange={onBankNameDropdownChange}
+            mode={ModalMode}
+            style="m-2 w-1/2 h-auto z-50"
+            refresh={bankOptions}
+          />
           <AddNewDropdownOption
             name="Bank"
             setOption={setNewBankOption}
             show={showNewBankOption}
             setShow={setShowNewBankOption}
           />
-          {DropdownComponent({
-            options: typeOptions,
-            placeholder: typeOptions[0],
-            onDropdownChange: onCardTypeDropdownChange,
-            mode: ModalMode,
-            style: 'm-2 w-1/2 z-40',
-            refresh: typeOptions,
-          })}
+          <DropdownComponent
+            options={typeOptions}
+            placeholder={typeOptions[0]}
+            onDropdownChange={onCardTypeDropdownChange}
+            mode={ModalMode}
+            style="m-2 w-1/2 h-auto z-40"
+            refresh={typeOptions}
+          />
           <AddNewDropdownOption
             name="Type"
             setOption={setNewTypeOption}

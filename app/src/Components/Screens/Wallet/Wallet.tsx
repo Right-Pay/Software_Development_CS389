@@ -32,7 +32,6 @@ import {Dimensions} from 'react-native';
 import AddCreditCardFullForm from './AddCreditCardFullForm';
 import AddCreditCardSearchForm from './AddCreditCardSearchForm';
 import ReviewCreditCardForm from './ReviewCreditCardForm';
-import consts from '../../../Helpers/Consts';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -45,13 +44,13 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     creditCards,
     rewards,
     removeCreditCard,
-    setCardForm /*, addNewReward, , removeReward*/,
+    setCreditCardForms,
+    CreditCardForms,
   } = React.useContext(Context) as AppContext;
   const [currentViewedCard, setCurrentViewedCard] = React.useState<
     CreditCard[]
   >([creditCards[0]]);
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
-  const Forms = consts.CredtCardForms;
 
   //helpers
   const getCreditCardRewards = (creditCardId: number) =>
@@ -71,7 +70,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     </AddCreditCardView>
   );
   const renderCard = (item: CreditCard) => {
-    if (item.nickName === 'Add') {
+    if (item.nickname === 'Add') {
       return addNewCreditCardComponent();
     }
     return (
@@ -81,7 +80,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
             onLongPress={() => handleCreditCardPress()}
             className={deleteCard ? 'opacity-50 ' : 'opacity-100'}>
             <CreditCardText className="text-center">
-              {item.nickName}
+              {item.nickname}
             </CreditCardText>
             <CreditCardText>{`Card Name: ${item.cardName}`}</CreditCardText>
             <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
@@ -129,7 +128,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     removeCreditCard(currentViewedCard[0]);
   };
 
-  const handleAddPress = () => setCardForm(Forms.Search);
+  const handleAddPress = () => {
+    setCreditCardForms({...CreditCardForms, Search: true});
+  };
 
   const onViewRef = useRef((viewableItems: any) => {
     const check: CreditCard[] = viewableItems.viewableItems.map(
@@ -153,7 +154,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           data={[
             ...creditCards,
             {
-              nickName: 'Add',
+              nickname: 'Add',
               id: -1,
             } as CreditCard,
           ]}

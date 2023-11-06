@@ -19,9 +19,7 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {cardForm, setUpdatingDropdown} = React.useContext(
-    Context,
-  ) as AppContext;
+  const {setUpdatingDropdown} = React.useContext(Context) as AppContext;
 
   //consts
   const ErrorMessages = Consts.authErrorMessages;
@@ -116,7 +114,7 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
   //useEffect
   useEffect(() => {
     clearAuthErrors();
-  }, [cardForm]);
+  }, [props.show]);
 
   return (
     <Modal
