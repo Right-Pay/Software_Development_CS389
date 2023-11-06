@@ -95,7 +95,7 @@ const AddCreditCardSearchForm = () => {
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         <AddCCFormOverlayView>
-          <Title>Add New Credit Card</Title>
+          <Title>Enter First Six Digits of your Credit Card Number</Title>
           <AuthInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
