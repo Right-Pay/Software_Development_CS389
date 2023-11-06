@@ -200,10 +200,9 @@ const AddCreditCardFullForm = () => {
         newTypeOption,
         typeOptions.slice(-1)[0],
       ]);
-    }else{
-      setCardType(typeOptions[0]);
     }
-  }, [CreditCardForms.AddTypeOption]);
+    setCreditCardForms({...CreditCardForms, AddTypeOption: false});
+  }, [newTypeOption]);
 
   useEffect(() => {
     if (newBankOption !== '') {
@@ -213,10 +212,17 @@ const AddCreditCardFullForm = () => {
         newBankOption,
         bankOptions.slice(-1)[0],
       ]);
-    }else{
-      setBankName(bankOptions[0]);
     }
+    setCreditCardForms({...CreditCardForms, AddBankOption: false});
+  }, [newBankOption]);
+
+  useEffect(() => {
+    setBankName(bankOptions[0]);
   }, [CreditCardForms.AddBankOption]);
+
+  useEffect(() => {
+    setCardType(typeOptions[0]);
+  }, [CreditCardForms.AddTypeOption]);
 
   useEffect(() => {
     setExpirationDate(`${expirationMonth}/${expirationYear}`);
@@ -260,7 +266,7 @@ const AddCreditCardFullForm = () => {
             onDropdownChange={onBankNameDropdownChange}
             mode={ModalMode}
             style="m-2 w-2/3 h-auto z-50"
-            refresh={bankOptions} //Fix this refresh
+            refresh={CreditCardForms.AddBankOption} //Fix this refresh
           />
           <AddNewDropdownOption
             name="Bank"

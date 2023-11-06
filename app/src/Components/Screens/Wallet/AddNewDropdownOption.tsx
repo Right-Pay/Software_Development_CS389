@@ -37,12 +37,10 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
     } else {
       setUpdatingDropdown(true);
       props.setOption(newOption);
-      closeModal();
     }
   };
 
   const closeModal = () => {
-    props.setShow(false);
     clearAuthErrors();
   };
 

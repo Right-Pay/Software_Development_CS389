@@ -25,7 +25,6 @@ const DropdownComponent = (props: DropdownProps) => {
   const listMode: any = props.mode ? props.mode : 'FLATLIST';
 
   useEffect(() => {
-    console.log(props.options);
     const newItems = props.options?.map(o => ({
       label: o,
       value: o,
