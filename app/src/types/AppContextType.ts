@@ -1,4 +1,8 @@
-import {CreditCard, CreditCardReward} from './CreditCardType';
+import {
+  CreditCard,
+  CreditCardFormsType,
+  CreditCardReward,
+} from './CreditCardType';
 import {Location} from './Location';
 
 export interface AppContext {
@@ -14,8 +18,12 @@ export interface AppContext {
   location: Location;
   isLoading: boolean;
   setIsLoading: (_isLoading: boolean) => void;
-  cardForm: string | null;
-  setCardForm: (_cardForm: string | null) => void;
   updatingDropdown: boolean;
   setUpdatingDropdown: (_updatingDropdown: boolean) => void;
+  bankOptions: string[];
+  setBankOptions: (_bankOptions: string[]) => void;
+  typeOptions: string[];
+  setTypeOptions: (_typeOptions: string[]) => void;
+  CreditCardForms: CreditCardFormsType;
+  setCreditCardForms: (_creditCardForms: CreditCardFormsType) => void;
 }

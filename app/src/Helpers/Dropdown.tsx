@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {DropdownProps} from '../types/DropdownProps';
 import {Dropdown} from './StylizedComponents';
 import {View} from 'react-native';
+import {AppContext} from '../types/AppContextType';
+import Context from '../Context/context';
 
 const DropdownComponent = (props: DropdownProps) => {
   const [open, setOpen] = useState(false);
@@ -13,6 +15,7 @@ const DropdownComponent = (props: DropdownProps) => {
       labelStyle: {color: 'black'},
     })),
   );
+  const {updatingDropdown} = React.useContext(Context) as AppContext;
 
   const handleSetValue = (val: string) => {
     setValue(val);
@@ -31,6 +34,10 @@ const DropdownComponent = (props: DropdownProps) => {
       setItems(newItems);
     }
   }, [props.refresh]);
+
+  useEffect(() => {
+    setValue(props.options[props.options.length - 2]);
+  }, [updatingDropdown]);
 
   return (
     <View className={props.style}>
@@ -71,6 +78,7 @@ const DropdownComponent = (props: DropdownProps) => {
         }
         placeholder={props.placeholder}
         placeholderStyle={{color: 'black', fontWeight: 'bold', fontSize: 20}}
+        textStyle={{color: 'black', fontSize: 20}}
         onChangeValue={event => handleSetValue(event?.toString() as string)}
       />
     </View>

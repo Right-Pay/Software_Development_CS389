@@ -18,74 +18,56 @@ import Consts from '../../../Helpers/Consts';
 import AddNewDropdownOption from './AddNewDropdownOption';
 
 const AddCreditCardFullForm = () => {
+  //Context
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
   const {
-    cardForm,
-    setCardForm,
     reviewCreditCard,
     updatingDropdown,
     setUpdatingDropdown,
+    bankOptions,
+    setBankOptions,
+    typeOptions,
+    setTypeOptions,
+    CreditCardForms,
+    setCreditCardForms,
   } = React.useContext(Context) as AppContext;
-  const closeModal = () => {
-    setCardForm(null);
-    setCardName('');
-    setNickName('');
-    setBankName('');
-    setCardNumber('');
-    setExpirationDate('');
-    setExpirationYear('');
-    setExpirationMonth('');
-    clearAuthErrors();
-  };
+
+  //card stuff
   const [cardName, setCardName] = React.useState<string>('');
-  const [nickName, setNickName] = React.useState<string>('');
+  const [nickname, setNickName] = React.useState<string>('');
   const [bankName, setBankName] = React.useState<string>('');
   const [cardNumber, setCardNumber] = React.useState<string>('');
   const [cardType, setCardType] = React.useState<string>('visa');
   const [expirationMonth, setExpirationMonth] = React.useState<string>('1');
   const currentYear = new Date().getFullYear().toString().split('20')[1];
+  const years = Array.from(Array(6).keys()).map(i =>
+    (i + parseInt(currentYear, 10)).toString(),
+  );
   const [expirationYear, setExpirationYear] =
     React.useState<string>(currentYear);
   const [expirationDate, setExpirationDate] = React.useState<string>(
     `${expirationMonth}/${expirationYear}`,
   );
+
+  //consts
   const ErrorMessages = Consts.authErrorMessages;
-  const Forms = Consts.CredtCardForms;
   const ModalMode = Consts.DropdownListModes.MODAL;
 
+  //Add New Options
   const [newBankOption, setNewBankOption] = useState<string>('');
-  const [showNewBankOption, setShowNewBankOption] = useState<boolean>(false);
   const [newTypeOption, setNewTypeOption] = useState<string>('');
-  const [showNewTypeOption, setShowNewTypeOption] = useState<boolean>(false);
 
-  const years = Array.from(Array(6).keys()).map(i =>
-    (i + parseInt(currentYear, 10)).toString(),
-  );
+  const setShowAddBankOption = (show: boolean) => {
+    setCreditCardForms({...CreditCardForms, AddBankOption: show});
+  };
 
-  //These consts need to be updated to be pulled from db and will add the Add New option
-  const [bankOptions, setBankOptions] = useState<string[]>([
-    'Bank of America',
-    'Chase',
-    'Wells Fargo',
-    'Citi',
-    'US Bank',
-    'Capital One',
-    'PNC',
-    'TD Bank',
-    'USAA',
-    'Add New Bank',
-  ]);
+  const setShowAddTypeOption = (show: boolean) => {
+    setCreditCardForms({...CreditCardForms, AddTypeOption: show});
+  };
 
-  const [typeOptions, setTypeOptions] = useState<string[]>([
-    'Visa',
-    'MasterCard',
-    'Discover',
-    'American Express',
-    'Add New Type',
-  ]);
-
+  //onChange Methods
   const onExpirationMonthDropdownChange = (item: string) =>
     setExpirationMonth(item);
 
@@ -104,16 +86,20 @@ const AddCreditCardFullForm = () => {
     }
   };
 
+  const onCCNumberChange = (event: any) => {
+    setCardNumber(event.nativeEvent.text);
+  };
+
   const checkForAddNew = (item: string) => {
     const regex: RegExp = /^Add New\s.*/;
     const AddNew = regex.test(item);
     if (AddNew && !updatingDropdown) {
       switch (item.split('Add New')[1].trim()) {
         case 'Bank':
-          setShowNewBankOption(true);
+          setShowAddBankOption(true);
           break;
         case 'Type':
-          setShowNewTypeOption(true);
+          setShowAddTypeOption(true);
           break;
         default:
           break;
@@ -125,10 +111,7 @@ const AddCreditCardFullForm = () => {
     }
   };
 
-  useEffect(() => {
-    setExpirationDate(`${expirationMonth}/${expirationYear}`);
-  }, [expirationMonth, expirationYear]);
-
+  //Handlers
   const handleSubmit = () => {
     clearAuthErrors();
     const errors = validateForm();
@@ -141,15 +124,23 @@ const AddCreditCardFullForm = () => {
       cardName: cardName,
       cardNumber: `${cardNumber.slice(0, 4)} ${cardNumber.slice(4, 7)}`,
       expirationDate: expirationDate,
-      nickName: nickName,
+      nickname: nickname,
       bankName: bankName,
       cardType: cardType,
     };
     reviewCreditCard(newCard);
   };
 
-  const handleCCNumChange = (event: any) => {
-    setCardNumber(event.nativeEvent.text);
+  const closeModal = () => {
+    setCreditCardForms({...CreditCardForms, Full: false});
+    setCardName('');
+    setNickName('');
+    setBankName('');
+    setCardNumber('');
+    setExpirationDate('');
+    setExpirationYear('');
+    setExpirationMonth('');
+    clearAuthErrors();
   };
 
   function validateForm() {
@@ -159,7 +150,7 @@ const AddCreditCardFullForm = () => {
     if (cardName.length <= 10 || !cardNameRegex.test(cardName)) {
       errors.push(ErrorMessages.invalidCreditCardName);
     }
-    if (nickName.length <= 3 || !cardNameRegex.test(nickName)) {
+    if (nickname.length <= 3 || !cardNameRegex.test(nickname)) {
       errors.push(ErrorMessages.invalidCreditCardNickName);
     }
     if (cardNumber.length !== 6 || !cardNumberRegex.test(cardNumber)) {
@@ -168,6 +159,7 @@ const AddCreditCardFullForm = () => {
     return errors;
   }
 
+  //Keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -190,6 +182,7 @@ const AddCreditCardFullForm = () => {
     };
   }, []);
 
+  //useEffect
   useEffect(() => {
     clearAuthErrors();
     setCardName('');
@@ -197,7 +190,18 @@ const AddCreditCardFullForm = () => {
     setExpirationDate('');
     setExpirationYear('');
     setExpirationMonth('');
-  }, [cardForm]);
+  }, [CreditCardForms.Full]);
+
+  useEffect(() => {
+    if (newTypeOption !== '') {
+      setCardType(newTypeOption);
+      setTypeOptions([
+        ...typeOptions.slice(0, -1),
+        newTypeOption,
+        typeOptions.slice(-1)[0],
+      ]);
+    }
+  }, [newTypeOption]);
 
   useEffect(() => {
     if (newBankOption !== '') {
@@ -211,21 +215,14 @@ const AddCreditCardFullForm = () => {
   }, [newBankOption]);
 
   useEffect(() => {
-    if (newTypeOption !== '') {
-      setCardType(newTypeOption);
-      setTypeOptions([
-        ...typeOptions.slice(0, -1),
-        newTypeOption,
-        typeOptions.slice(-1)[0],
-      ]);
-    }
-  }, [newTypeOption]);
+    setExpirationDate(`${expirationMonth}/${expirationYear}`);
+  }, [expirationMonth, expirationYear]);
 
   return (
     <Modal
       animationType="slide"
       transparent={false}
-      visible={cardForm === Forms.Full}
+      visible={CreditCardForms.Full}
       onRequestClose={closeModal}>
       <KeyboardAvoidingView
         style={{
@@ -244,42 +241,42 @@ const AddCreditCardFullForm = () => {
             onChange={event => setCardName(event.nativeEvent.text)}
           />
           <AuthInputBox
-            placeholder="Nick Name"
+            placeholder="Nickname"
             placeholderTextColor="#AFAEAE"
             onChange={event => setNickName(event.nativeEvent.text)}
           />
           <AuthInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
-            onChange={event => handleCCNumChange(event)}
+            onChange={event => onCCNumberChange(event)}
           />
-          {DropdownComponent({
-            options: bankOptions,
-            placeholder: bankOptions[0],
-            onDropdownChange: onBankNameDropdownChange,
-            mode: ModalMode,
-            style: 'm-2 w-1/2 z-50',
-            refresh: bankOptions,
-          })}
+          <DropdownComponent
+            options={bankOptions}
+            placeholder={bankOptions[0]}
+            onDropdownChange={onBankNameDropdownChange}
+            mode={ModalMode}
+            style="m-2 w-1/2 h-auto z-50"
+            refresh={bankOptions}
+          />
           <AddNewDropdownOption
             name="Bank"
             setOption={setNewBankOption}
-            show={showNewBankOption}
-            setShow={setShowNewBankOption}
+            show={CreditCardForms.AddBankOption}
+            setShow={setShowAddBankOption}
           />
-          {DropdownComponent({
-            options: typeOptions,
-            placeholder: typeOptions[0],
-            onDropdownChange: onCardTypeDropdownChange,
-            mode: ModalMode,
-            style: 'm-2 w-1/2 z-40',
-            refresh: typeOptions,
-          })}
+          <DropdownComponent
+            options={typeOptions}
+            placeholder={typeOptions[0]}
+            onDropdownChange={onCardTypeDropdownChange}
+            mode={ModalMode}
+            style="m-2 w-1/2 h-auto z-40"
+            refresh={typeOptions}
+          />
           <AddNewDropdownOption
             name="Type"
             setOption={setNewTypeOption}
-            show={showNewTypeOption}
-            setShow={setShowNewTypeOption}
+            show={CreditCardForms.AddTypeOption}
+            setShow={setShowAddTypeOption}
           />
           <FormDateView className="m-2 z-30">
             {DropdownComponent({

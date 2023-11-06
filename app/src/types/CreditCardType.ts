@@ -5,7 +5,7 @@ export interface CreditCard {
   expirationDate?: string;
   cardType?: string;
   bankName?: string;
-  nickName?: string;
+  nickname?: string;
 }
 
 export interface CreditCardReward {
@@ -18,3 +18,7 @@ export interface CreditCardReward {
 }
 
 export interface CreditCardFormProps {}
+
+export interface CreditCardFormsType {
+  [key: string]: boolean;
+}

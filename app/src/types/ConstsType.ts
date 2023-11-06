@@ -5,16 +5,12 @@ interface AuthErrorMessagesType {
   [key: string]: string;
 }
 
-interface CredtCardFormsType {
-  [key: string]: string;
-}
-
 interface DropdownListModesType {
   [key: string]: string;
 }
 
 export default interface ConstsType {
-  CredtCardForms: CredtCardFormsType;
+  CreditCardFormEnum: any;
   authErrorMessages: AuthErrorMessagesType;
   DropdownListModes: DropdownListModesType;
   dummyProfile: Profile;

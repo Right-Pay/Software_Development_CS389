@@ -10,7 +10,7 @@ const styledFlatList = (styles: string) => styled(FlatList, styles);
 const styledMapView = (styles: string) => styled(MapView, styles);
 
 export const WrapperView = styledView(
-  'flex-1 items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
+  'flex-auto items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
 );
 export const Title = styledText(
   'text-3xl text-4xl pl-10 pr-10 text-center font-bold text-dark-green',
@@ -23,13 +23,15 @@ export const AuthButton = styledPressable(
 );
 export const AuthInputBox = styled(
   TextInput,
-  'px-3 py-1 m-1 text-xl text-black flex h-9 w-1/2 rounded-xl border-2 border-dark-green bg-light-green bg-transparent shadow-sm transition-colors',
+  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-1/2 rounded-xl border-2 border-dark-green bg-light-green bg-transparent shadow-sm transition-colors',
 );
-export const AuthButtonText = styledText('text-xl text-light-green');
+export const AuthButtonText = styledText(
+  'text-center text-xl text-light-green',
+);
 export const MainButton = styledPressable(
   'text-3xl p-2 border-2 border-dark-green rounded-xl m-2',
 );
-export const MainButtonText = styledText('text-xl text-dark-green');
+export const MainButtonText = styledText('text-center text-xl text-dark-green');
 
 export const GoogleMapsView = styledMapView(
   'absolute top-0 left-0 right-0 bottom-0',
@@ -68,7 +70,7 @@ export const AddCreditCardButton = styledPressable(
   'w-40 h-40 items-center justify-center',
 );
 export const AddCCFormOverlayView = styledView(
-  'flex-1 justify-center items-center bg-light-green',
+  'flex-auto justify-center items-center bg-light-green',
 );
 export const RewardsView = styledView('flex-1 flex-col ml-20 mr-20 mb-2 mt-10');
 export const Dropdown = styled(

@@ -18,15 +18,15 @@ const AddCreditCardSearchForm = () => {
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {cardForm, setCardForm} = React.useContext(Context) as AppContext;
+  const {CreditCardForms, setCreditCardForms} = React.useContext(
+    Context,
+  ) as AppContext;
   const closeModal = () => {
-    setCardForm(null);
     setCardNumber('');
     clearAuthErrors();
   };
   const [cardNumber, setCardNumber] = React.useState<string>('');
   const ErrorMessages = Consts.authErrorMessages;
-  const Forms = Consts.CredtCardForms;
 
   const handleSubmit = () => {
     clearAuthErrors();
@@ -77,13 +77,13 @@ const AddCreditCardSearchForm = () => {
   useEffect(() => {
     clearAuthErrors();
     setCardNumber('');
-  }, [cardForm]);
+  }, [CreditCardForms.Search]);
 
   return (
     <Modal
       animationType="slide"
       transparent={false}
-      visible={cardForm === Forms.Search}
+      visible={CreditCardForms.Search}
       onRequestClose={closeModal}>
       <KeyboardAvoidingView
         style={{

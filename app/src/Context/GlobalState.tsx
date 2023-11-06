@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
-import {CreditCard, CreditCardReward} from '../types/CreditCardType';
+import {
+  CreditCard,
+  CreditCardFormsType,
+  CreditCardReward,
+} from '../types/CreditCardType';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {Location} from '../types/Location';
@@ -14,14 +18,41 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [rewards, setRewards] = React.useState<CreditCardReward[]>(
     Consts.dummyCreditCardRewards,
   );
-  const [cardForm, setCardForm] = React.useState<string | null>(null);
-  const Forms = Consts.CredtCardForms;
+  const [CreditCardForms, setCreditCardForms] = useState<CreditCardFormsType>({
+    Search: false,
+    Full: false,
+    Review: false,
+    Rewards: false,
+    AddBankOption: false,
+    AddTypeOption: false,
+  });
+  const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
   const [updatingDropdown, setUpdatingDropdown] =
     React.useState<boolean>(false);
-  const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
+
+  const [bankOptions, setBankOptions] = useState<string[]>([
+    'Bank of America',
+    'Chase',
+    'Wells Fargo',
+    'Citi',
+    'US Bank',
+    'Capital One',
+    'PNC',
+    'TD Bank',
+    'USAA',
+    'Add New Bank',
+  ]);
+
+  const [typeOptions, setTypeOptions] = useState<string[]>([
+    'Visa',
+    'MasterCard',
+    'Discover',
+    'American Express',
+    'Add New Type',
+  ]);
 
   /*Credit Card Add Flow
    * 1. Search for card using 6 digit number
@@ -30,30 +61,30 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
    * 4. Rewards will be found using a few details from card. Rewards review screen will show which will allow the user to enter rewards and see rewards already associated to that card. Send rewards to db
    *
    */
-  const findCreditCard = (cardNumber: number) => {
+  const findCreditCard = async (cardNumber: number) => {
     //Check db for card
     //found card will need to be set if found
     const foundCard = {
       id: Math.random() * 100 + creditCards.length, // not really unique - but fine for this example
       cardName: 'Chase Sapphire Reserved',
-      nickName: '',
+      nickname: '',
       bankName: 'Chase',
       cardNumber: cardNumber.toString(),
       cardType: 'visa',
       expirationDate: '12/22',
     } as CreditCard;
+    setCreditCardForms(c => ({...c, Search: false}));
     if (foundCard === null) {
-      console.log('found card');
       setNewCard(foundCard);
-      setCardForm(Forms.Review);
+      setCreditCardForms(c => ({...c, Review: true}));
     } else {
-      setCardForm(Forms.Full);
+      setCreditCardForms(c => ({...c, Full: true}));
     }
   };
 
   const reviewCreditCard = (creditCard: CreditCard) => {
     setNewCard(creditCard);
-    setCardForm(Forms.Review);
+    setCreditCardForms(c => ({...c, Review: false}));
   };
 
   const addCreditCard = () => {
@@ -153,10 +184,14 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         location,
         isLoading,
         setIsLoading,
-        cardForm,
-        setCardForm,
         updatingDropdown,
         setUpdatingDropdown,
+        bankOptions,
+        setBankOptions,
+        typeOptions,
+        setTypeOptions,
+        CreditCardForms,
+        setCreditCardForms,
       }}>
       {children}
     </Context.Provider>

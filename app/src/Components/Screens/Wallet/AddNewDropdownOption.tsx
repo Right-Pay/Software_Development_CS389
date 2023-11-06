@@ -12,39 +12,83 @@ import Context from '../../../Context/context';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import {optionsPropsType} from '../../../types/DropdownProps';
+import Consts from '../../../Helpers/Consts';
 
 const AddNewDropdownOption = (props: optionsPropsType) => {
+  //Context
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {cardForm, setUpdatingDropdown} = React.useContext(
-    Context,
-  ) as AppContext;
-  const closeModal = () => {
-    props.setShow(false);
-    clearAuthErrors();
-  };
+  const {setUpdatingDropdown} = React.useContext(Context) as AppContext;
 
+  //consts
+  const ErrorMessages = Consts.authErrorMessages;
+
+  //options state
   const [newOption, setNewOption] = useState<string>('');
 
+  //handlers
   const handleSubmit = () => {
     clearAuthErrors();
     const errors = validateForm();
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
+    } else {
+      setUpdatingDropdown(true);
+      props.setOption(newOption);
+      closeModal();
     }
-    setUpdatingDropdown(true);
-    props.setOption(newOption);
-    closeModal();
   };
 
+  const closeModal = () => {
+    props.setShow(false);
+    clearAuthErrors();
+  };
+
+  //validation
   function validateForm() {
     const errors: string[] = [];
+    switch (props.name) {
+      case 'Type':
+        errors.push(...validateType());
+        break;
+      case 'Bank':
+        errors.push(...validateBank());
+        break;
 
+      default:
+        errors.push(ErrorMessages.invalidDropdownOption);
+        break;
+    }
     return errors;
   }
 
+  function validateBank() {
+    const errors: string[] = [];
+    const regex = /^[A-Za-z ]*$/;
+    if (newOption.length < 3) {
+      errors.push(ErrorMessages.invalidBankName);
+    }
+    if (!regex.test(newOption)) {
+      errors.push(ErrorMessages.invalidBankName);
+    }
+    return errors;
+  }
+
+  function validateType() {
+    const errors: string[] = [];
+    const regex = /^[A-Za-z ]*$/;
+    if (newOption.length < 3) {
+      errors.push(ErrorMessages.invalidCardType);
+    }
+    if (!regex.test(newOption)) {
+      errors.push(ErrorMessages.invalidCardType);
+    }
+    return errors;
+  }
+
+  //keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -67,9 +111,10 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
     };
   }, []);
 
+  //useEffect
   useEffect(() => {
     clearAuthErrors();
-  }, [cardForm]);
+  }, [props.show]);
 
   return (
     <Modal
