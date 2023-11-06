@@ -12,14 +12,15 @@ import {AppContext} from '../../../types/AppContextType';
 import {
   GoogleMapsMarker,
   GoogleMapsView,
+  NearbyLocationScrollView,
+  NearbyLocationSeperator,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
-import {FlatList, View} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 import {styled} from 'nativewind';
 import {Place} from '../../../types/Location';
 const StyledView = styled(View);
-const StyledFlatList = styled(FlatList);
 import {Platform} from 'react-native';
 import {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 
@@ -35,14 +36,15 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   const [currentViewedPlace, setCurrentViewedPlace] = React.useState<Place[]>(
     [] as Place[],
   );
-  console.log(places);
   const renderPlace = (place: Place) => {
     return (
-      <StyledView className="flex-1 border-2 flex-col place-items-center h-36 justify-center justify-items-center">
+      <StyledView className="flex-1 border-2 border-b-0 flex-col place-items-center h-36 justify-center justify-items-center">
         <Title>{place.displayName.text}</Title>
       </StyledView>
     );
   };
+
+  const seperatorComponent = <NearbyLocationSeperator />;
 
   const onViewRef = useRef((viewableItems: any) => {
     const check: Place[] = viewableItems.viewableItems.map(
@@ -85,17 +87,18 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
         provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
         {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
-      <StyledFlatList
-        className="absolute bottom-0 left-0 bg-white text-black z-50 h-36 w-full"
+      <NearbyLocationScrollView
+        className="absolute bottom-0 left-0 bg-white text-black z-50"
         data={places}
         renderItem={({item}) => renderPlace(item as Place)}
+        ItemSeparatorComponent={() => seperatorComponent}
         showsHorizontalScrollIndicator={false}
         horizontal={false}
         onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
         keyExtractor={item => (item as Place).id}
         snapToAlignment="start"
         decelerationRate={'fast'}
-        snapToInterval={36}
+        snapToInterval={160}
       />
     </WrapperView>
   ); //add button up here^^ between view and mapview <Button
