@@ -23,8 +23,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     Full: false,
     Review: false,
     Rewards: false,
-    AddOption: false,
-    Off: false,
+    AddBankOption: false,
+    AddTypeOption: false,
   });
   const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
   const [updatingDropdown, setUpdatingDropdown] =

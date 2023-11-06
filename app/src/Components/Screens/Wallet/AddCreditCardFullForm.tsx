@@ -57,11 +57,15 @@ const AddCreditCardFullForm = () => {
 
   //Add New Options
   const [newBankOption, setNewBankOption] = useState<string>('');
-  const [showNewBankOption, setShowNewBankOption] = useState<boolean>(false);
   const [newTypeOption, setNewTypeOption] = useState<string>('');
-  const [showNewTypeOption, setShowNewTypeOption] = useState<boolean>(false);
 
-  //These consts need to be updated to be pulled from db and will add the Add New option
+  const setShowAddBankOption = (show: boolean) => {
+    setCreditCardForms({...CreditCardForms, AddBankOption: show});
+  };
+
+  const setShowAddTypeOption = (show: boolean) => {
+    setCreditCardForms({...CreditCardForms, AddTypeOption: show});
+  };
 
   //onChange Methods
   const onExpirationMonthDropdownChange = (item: string) =>
@@ -92,10 +96,10 @@ const AddCreditCardFullForm = () => {
     if (AddNew && !updatingDropdown) {
       switch (item.split('Add New')[1].trim()) {
         case 'Bank':
-          setShowNewBankOption(true);
+          setShowAddBankOption(true);
           break;
         case 'Type':
-          setShowNewTypeOption(true);
+          setShowAddTypeOption(true);
           break;
         default:
           break;
@@ -257,8 +261,8 @@ const AddCreditCardFullForm = () => {
           <AddNewDropdownOption
             name="Bank"
             setOption={setNewBankOption}
-            show={showNewBankOption}
-            setShow={setShowNewBankOption}
+            show={CreditCardForms.AddBankOption}
+            setShow={setShowAddBankOption}
           />
           <DropdownComponent
             options={typeOptions}
@@ -271,8 +275,8 @@ const AddCreditCardFullForm = () => {
           <AddNewDropdownOption
             name="Type"
             setOption={setNewTypeOption}
-            show={showNewTypeOption}
-            setShow={setShowNewTypeOption}
+            show={CreditCardForms.AddTypeOption}
+            setShow={setShowAddTypeOption}
           />
           <FormDateView className="m-2 z-30">
             {DropdownComponent({
