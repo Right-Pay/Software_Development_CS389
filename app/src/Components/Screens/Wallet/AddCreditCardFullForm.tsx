@@ -8,14 +8,14 @@ import {
   FormDateView,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import {CreditCard} from '../../../types/CreditCardType';
+import {CreditCard, CreditCardFormTypes} from '../../../types/CreditCardType';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import DropdownComponent from '../../../Helpers/Dropdown';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import Consts from '../../../Helpers/Consts';
-import AddNewDropdownOption from './AddNewDropdownOption';
+import AddNewDropdownOption from './AddNewBankOption';
 
 const AddCreditCardFullForm = () => {
   //Context
@@ -24,12 +24,9 @@ const AddCreditCardFullForm = () => {
   ) as AuthContextType;
   const {
     reviewCreditCard,
-    updatingDropdown,
-    setUpdatingDropdown,
     bankOptions,
     setBankOptions,
     typeOptions,
-    setTypeOptions,
     CreditCardForms,
     setCreditCardForms,
     validateCreditCardForm,
@@ -57,52 +54,21 @@ const AddCreditCardFullForm = () => {
 
   //Add New Options
   const [newBankOption, setNewBankOption] = useState<string>('');
-  const [newTypeOption, setNewTypeOption] = useState<string>('');
 
   const setShowAddBankOption = (show: boolean) => {
     setCreditCardForms({...CreditCardForms, AddBankOption: show});
   };
 
-  const setShowAddTypeOption = (show: boolean) => {
-    setCreditCardForms({...CreditCardForms, AddTypeOption: show});
-  };
-
   //onChange Methods
-  const onCardTypeDropdownChange = (item: string) => {
-    if (!checkForAddNew(item)) {
-      setCardType(item);
-    }
-  };
+  const onCardTypeDropdownChange = (item: string) => setCardType(item);
 
   const onBankNameDropdownChange = (item: string) => {
-    if (!checkForAddNew(item)) {
-      setBankName(item);
-    }
+    setShowAddBankOption(true);
+    setBankName(item);
   };
 
   const onCCNumberChange = (event: any) => {
     setCardNumber(event.nativeEvent.text);
-  };
-
-  const checkForAddNew = (item: string) => {
-    const regex: RegExp = /^Add New\s.*/;
-    const AddNew = regex.test(item);
-    if (AddNew && !updatingDropdown) {
-      switch (item.split('Add New')[1].trim()) {
-        case 'Bank':
-          setShowAddBankOption(true);
-          break;
-        case 'Type':
-          setShowAddTypeOption(true);
-          break;
-        default:
-          break;
-      }
-      return true;
-    } else {
-      setUpdatingDropdown(false);
-      return false;
-    }
   };
 
   //Handlers
@@ -110,7 +76,7 @@ const AddCreditCardFullForm = () => {
     clearAuthErrors();
     const errors = validateCreditCardForm(
       {cardName, cardNumber, bankName, nickname},
-      'Full',
+      CreditCardFormTypes.Full,
     );
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
@@ -174,18 +140,6 @@ const AddCreditCardFullForm = () => {
   }, [CreditCardForms.Full]);
 
   useEffect(() => {
-    if (newTypeOption !== '') {
-      setCardType(newTypeOption);
-      setTypeOptions([
-        ...typeOptions.slice(0, -1),
-        newTypeOption,
-        typeOptions.slice(-1)[0],
-      ]);
-    }
-    setCreditCardForms({...CreditCardForms, AddTypeOption: false});
-  }, [newTypeOption]);
-
-  useEffect(() => {
     if (newBankOption !== '') {
       setBankName(newBankOption);
       setBankOptions([
@@ -200,10 +154,6 @@ const AddCreditCardFullForm = () => {
   useEffect(() => {
     setBankName(bankOptions[0]);
   }, [CreditCardForms.AddBankOption]);
-
-  useEffect(() => {
-    setCardType(typeOptions[0]);
-  }, [CreditCardForms.AddTypeOption]);
 
   useEffect(() => {
     setExpirationDate(`${expirationMonth}/${expirationYear}`);
@@ -250,7 +200,6 @@ const AddCreditCardFullForm = () => {
             refresh={CreditCardForms.AddBankOption}
           />
           <AddNewDropdownOption
-            name="Bank"
             setOption={setNewBankOption}
             show={CreditCardForms.AddBankOption}
           />
@@ -261,11 +210,6 @@ const AddCreditCardFullForm = () => {
             mode={ModalMode}
             style="m-2 w-2/3 h-auto z-40"
             refresh={CreditCardForms.AddTypeOption}
-          />
-          <AddNewDropdownOption
-            name="Type"
-            setOption={setNewTypeOption}
-            show={CreditCardForms.AddTypeOption}
           />
           <FormDateView className="m-2 z-30">
             {DropdownComponent({

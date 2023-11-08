@@ -21,7 +21,6 @@ const AuthErrorMessages = {
     'Invalid Credit Card Nickname\nName must be more then 3 characters\nName must only contain letters',
   invalidCreditCardNumber: 'Invalid Credit Card Number\nMust be 6 digits',
   invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
-  invalidCardType: 'Invalid Card Type\nType must be more then 3 characters',
   invalidDropdownOption: 'Invalid Dropdown Option',
 };
 

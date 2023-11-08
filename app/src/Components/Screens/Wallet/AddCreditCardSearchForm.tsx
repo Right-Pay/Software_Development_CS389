@@ -11,6 +11,7 @@ import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
+import {CreditCardFormTypes} from '../../../types/CreditCardType';
 
 const AddCreditCardSearchForm = () => {
   const {findCreditCard} = React.useContext(Context) as AppContext;
@@ -28,7 +29,10 @@ const AddCreditCardSearchForm = () => {
 
   const handleSubmit = () => {
     clearAuthErrors();
-    const errors = validateCreditCardForm({cardNumber}, 'Search');
+    const errors = validateCreditCardForm(
+      {cardNumber},
+      CreditCardFormTypes.Search,
+    );
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;

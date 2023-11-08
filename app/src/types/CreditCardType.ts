@@ -29,3 +29,10 @@ export interface CreditCardFormDetails {
   bankName?: string;
   nickname?: string;
 }
+
+export enum CreditCardFormTypes {
+  Full = 'Full',
+  Search = 'Search',
+  Review = 'Review',
+  AddBank = 'AddBank',
+}

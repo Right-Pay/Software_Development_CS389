@@ -6,6 +6,7 @@ import {
   CreditCardFormDetails,
   CreditCardFormsType,
   CreditCardReward,
+  CreditCardFormTypes,
 } from '../types/CreditCardType';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -54,7 +55,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     'MasterCard',
     'Discover',
     'American Express',
-    'Add New Type',
   ]);
 
   /*Credit Card Add Flow
@@ -173,71 +173,56 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return regex.test(cardName);
   }
 
+  function testCardNumber(cardNumber: string) {
+    const regex: RegExp = /^[0-9]{6}$/;
+    return regex.test(cardNumber);
+  }
+
+  function testNickname(nickname: string) {
+    const regex: RegExp = /^[a-zA-Z ]{3,}$/;
+    return regex.test(nickname);
+  }
+
+  function testBankName(bankName: string) {
+    const regex: RegExp = /^[a-zA-Z ]{3,}$/;
+    return regex.test(bankName);
+  }
+
   function validateCreditCardForm(
     formDetails: CreditCardFormDetails,
     formType: string,
   ) {
     const errors: string[] = [];
-    const cardNumberRegex = /^[0-9]{6}$/;
-    const cardNameRegex = /^[a-zA-Z ]{1,}$/;
     switch (formType) {
-      case 'Full':
-        if (formDetails.cardName && !testCardName) {
+      case CreditCardFormTypes.Full:
+        if (formDetails.cardName && !testCardName(formDetails.cardName)) {
           errors.push(ErrorMessages.invalidCreditCardName);
         }
-        if (
-          formDetails.nickname &&
-          (formDetails.nickname.length <= 3 ||
-            !cardNameRegex.test(formDetails.nickname))
-        ) {
+        if (formDetails.nickname && testNickname(formDetails.nickname)) {
           errors.push(ErrorMessages.invalidCreditCardNickName);
         }
-        if (
-          formDetails.cardNumber &&
-          (formDetails.cardNumber.length !== 6 ||
-            !cardNumberRegex.test(formDetails.cardNumber))
-        ) {
+        if (formDetails.cardNumber && testCardNumber(formDetails.cardNumber)) {
           errors.push(ErrorMessages.invalidCreditCardNumber);
         }
         break;
-      case 'Search':
-        if (
-          formDetails.cardNumber &&
-          (formDetails.cardNumber.length !== 6 ||
-            !cardNumberRegex.test(formDetails.cardNumber))
-        ) {
+      case CreditCardFormTypes.Search:
+        if (formDetails.cardNumber && testCardNumber(formDetails.cardNumber)) {
           errors.push(ErrorMessages.invalidCreditCardNumber);
         }
         break;
-      case 'Review':
-        if (
-          formDetails.cardName &&
-          (formDetails.cardName.length <= 10 ||
-            !cardNameRegex.test(formDetails.cardName))
-        ) {
+      case CreditCardFormTypes.Review:
+        if (formDetails.cardName && !testCardName(formDetails.cardName)) {
           errors.push(ErrorMessages.invalidCreditCardName);
         }
-        if (
-          formDetails.nickname &&
-          (formDetails.nickname.length <= 3 ||
-            !cardNameRegex.test(formDetails.nickname))
-        ) {
+        if (formDetails.nickname && testNickname(formDetails.nickname)) {
           errors.push(ErrorMessages.invalidCreditCardNickName);
         }
-        if (
-          formDetails.cardNumber &&
-          (formDetails.cardNumber.length !== 6 ||
-            !cardNumberRegex.test(formDetails.cardNumber))
-        ) {
+        if (formDetails.cardNumber && testCardNumber(formDetails.cardNumber)) {
           errors.push(ErrorMessages.invalidCreditCardNumber);
         }
         break;
-      case 'AddBank':
-        if (
-          formDetails.bankName &&
-          (formDetails.bankName.length <= 3 ||
-            !cardNameRegex.test(formDetails.bankName))
-        ) {
+      case CreditCardFormTypes.AddBank:
+        if (formDetails.bankName && testBankName(formDetails.bankName)) {
           errors.push(ErrorMessages.invalidBankName);
         }
         break;

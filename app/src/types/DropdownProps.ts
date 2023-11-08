@@ -8,7 +8,6 @@ export interface DropdownProps {
 }
 
 export interface optionsPropsType {
-  name: string;
   setOption: (_item: string) => void;
   show: boolean;
 }

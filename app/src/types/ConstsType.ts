@@ -16,4 +16,4 @@ export default interface ConstsType {
   dummyProfile: Profile;
   dummyCreditCards: CreditCard[];
   dummyCreditCardRewards: any[];
-};
+}

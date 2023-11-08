@@ -12,17 +12,16 @@ import Context from '../../../Context/context';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import {optionsPropsType} from '../../../types/DropdownProps';
-import Consts from '../../../Helpers/Consts';
+import {CreditCardFormTypes} from '../../../types/CreditCardType';
 
-const AddNewDropdownOption = (props: optionsPropsType) => {
+const AddNewBankOption = (props: optionsPropsType) => {
   //Context
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {setUpdatingDropdown} = React.useContext(Context) as AppContext;
-
-  //consts
-  const ErrorMessages = Consts.authErrorMessages;
+  const {setUpdatingDropdown, validateCreditCardForm} = React.useContext(
+    Context,
+  ) as AppContext;
 
   //options state
   const [newOption, setNewOption] = useState<string>('');
@@ -30,7 +29,10 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
   //handlers
   const handleSubmit = () => {
     clearAuthErrors();
-    const errors = validateForm();
+    const errors = validateCreditCardForm(
+      {bankName: newOption},
+      CreditCardFormTypes.AddBank,
+    );
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
@@ -43,48 +45,6 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
   const closeModal = () => {
     clearAuthErrors();
   };
-
-  //validation
-  function validateForm() {
-    const errors: string[] = [];
-    switch (props.name) {
-      case 'Type':
-        errors.push(...validateType());
-        break;
-      case 'Bank':
-        errors.push(...validateBank());
-        break;
-
-      default:
-        errors.push(ErrorMessages.invalidDropdownOption);
-        break;
-    }
-    return errors;
-  }
-
-  function validateBank() {
-    const errors: string[] = [];
-    const regex = /^[A-Za-z ]*$/;
-    if (newOption.length < 3) {
-      errors.push(ErrorMessages.invalidBankName);
-    }
-    if (!regex.test(newOption)) {
-      errors.push(ErrorMessages.invalidBankName);
-    }
-    return errors;
-  }
-
-  function validateType() {
-    const errors: string[] = [];
-    const regex = /^[A-Za-z ]*$/;
-    if (newOption.length < 3) {
-      errors.push(ErrorMessages.invalidCardType);
-    }
-    if (!regex.test(newOption)) {
-      errors.push(ErrorMessages.invalidCardType);
-    }
-    return errors;
-  }
 
   //keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -130,7 +90,7 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         <AddCCFormOverlayView className="flex-auto ">
-          <Title>{`Enter a New Option for ${props.name}`}</Title>
+          <Title>{'Enter a New Option for bank'}</Title>
           <AuthInputBox
             placeholder="Name of Option"
             placeholderTextColor="#AFAEAE"
@@ -149,4 +109,4 @@ const AddNewDropdownOption = (props: optionsPropsType) => {
   );
 };
 
-export default AddNewDropdownOption;
+export default AddNewBankOption;
