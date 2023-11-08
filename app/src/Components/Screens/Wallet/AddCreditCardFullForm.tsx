@@ -130,14 +130,6 @@ const AddCreditCardFullForm = () => {
   }, []);
 
   //useEffect
-  useEffect(() => {
-    clearAuthErrors();
-    setCardName('');
-    setCardNumber('');
-    setExpirationDate('');
-    setExpirationYear('');
-    setExpirationMonth('');
-  }, [CreditCardForms.Full]);
 
   useEffect(() => {
     if (newBankOption !== '') {
