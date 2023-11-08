@@ -12,7 +12,7 @@ import type {
   NavigationRoutesType,
 } from '../types/NavigationRoutesType';
 import SearchScreen from '../Components/Screens/Search/Search';
-import SearchSettingsScreen from '../Components/Screens/Search/SearchSettings';
+import SettingsScreen from '../Components/Screens/Profile/Settings/Settings';
 import LocationScreen from '../Components/Screens/Location/Location';
 import ProfileSettings from '../Components/Screens/Profile/ProfileSettings';
 import {
@@ -85,6 +85,7 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
       screenOptions={screenOptionStyle}>
       <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <ProfileStack.Screen name="ProfileSettings" component={ProfileSettings} />
+      <ProfileStack.Screen name="SettingsScreen" component={SettingsScreen} />
     </ProfileStack.Navigator>
   );
 };
@@ -109,10 +110,6 @@ const SearchStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   return (
     <SearchStack.Navigator screenOptions={screenOptionStyle}>
       <SearchStack.Screen name="SearchScreen" component={SearchScreen} />
-      <SearchStack.Screen
-        name="SearchSettingsScreen"
-        component={SearchSettingsScreen}
-      />
     </SearchStack.Navigator>
   );
 };

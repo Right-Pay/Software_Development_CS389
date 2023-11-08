@@ -2,6 +2,8 @@ import {styled} from 'nativewind';
 import {TextInput, Text, View, Pressable, FlatList, Image} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 
+const StyledFlatList = styled(FlatList);
+
 export const WrapperView = styled(
   View,
   'flex-1 items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
@@ -57,3 +59,5 @@ export const LogoContainer = styled(
   View,
   'flex-col justify-center items-center h-1/2 w-1/2',
 );
+
+export const SettingsList = StyledFlatList('flex-1 w-full')
