@@ -61,7 +61,9 @@ export const LogoContainer = styled(
   'flex-col justify-center items-center h-1/2 w-1/2',
 );
 
-export const SettingsList = styledFlatList('flex-1 w-full p-10');
+export const SettingsList = styledFlatList(
+  'flex-1 w-full p-6 border-t-4 border-dark-green mt-5 h-2/3 absolute bg-light-green',
+);
 export const SettingsNavText = styledText(
   'text-2xl text-dark-green m-2 font-bold',
 );

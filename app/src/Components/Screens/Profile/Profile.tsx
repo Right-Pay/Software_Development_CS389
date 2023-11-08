@@ -30,7 +30,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
 
   return (
     <WrapperView>
-      <Title>Profile Screen</Title>
+      <Title className="absolute inset-x-0 top-0">Profile Screen</Title>
       <Subtitle>Username: {userProfile.username}</Subtitle>
       <Subtitle>Email: {userProfile.email}</Subtitle>
       <Subtitle>Phone: {userProfile.phone}</Subtitle>

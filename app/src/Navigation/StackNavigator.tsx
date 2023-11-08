@@ -14,7 +14,7 @@ import type {
 import SearchScreen from '../Components/Screens/Search/Search';
 import SettingsScreen from '../Components/Screens/Profile/Settings/Settings';
 import LocationScreen from '../Components/Screens/Location/Location';
-import ProfileSettings from '../Components/Screens/Profile/ProfileSettings';
+import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSettings';
 import {
   getFocusedRouteNameFromRoute,
   RouteProp,
@@ -24,6 +24,8 @@ import type {
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
 import LocationSettings from '../Components/Screens/Profile/Settings/LocationSettings';
+import NotificationSettingsScreen from '../Components/Screens/Profile/Settings/NotificationSettings';
+import CreditCardSettings from '../Components/Screens/Profile/Settings/CreditCardSettings';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
@@ -89,6 +91,14 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
       <ProfileStack.Screen
         name="LocationSettings"
         component={LocationSettings}
+      />
+      <ProfileStack.Screen
+        name="NotificationSettings"
+        component={NotificationSettingsScreen}
+      />
+      <ProfileStack.Screen
+        name="CreditCardSettings"
+        component={CreditCardSettings}
       />
     </ProfileStack.Navigator>
   );
