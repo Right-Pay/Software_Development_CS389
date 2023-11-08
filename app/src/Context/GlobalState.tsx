@@ -3,6 +3,7 @@ import type {PropsWithChildren} from 'react';
 import Context from './context';
 import {
   CreditCard,
+  CreditCardFormDetails,
   CreditCardFormsType,
   CreditCardReward,
 } from '../types/CreditCardType';
@@ -18,6 +19,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [rewards, setRewards] = React.useState<CreditCardReward[]>(
     Consts.dummyCreditCardRewards,
   );
+  const ErrorMessages = Consts.authErrorMessages;
+
   const [CreditCardForms, setCreditCardForms] = useState<CreditCardFormsType>({
     Search: false,
     Full: false,
@@ -74,7 +77,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       expirationDate: '12/22',
     } as CreditCard;
     setCreditCardForms(c => ({...c, Search: false}));
-    if (foundCard === null) {
+    if (foundCard !== null) {
       setNewCard(foundCard);
       setCreditCardForms(c => ({...c, Review: true}));
     } else {
@@ -165,6 +168,85 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     });
   };
 
+  function validateCreditCardForm(
+    formDetails: CreditCardFormDetails,
+    formType: string,
+  ) {
+    const errors: string[] = [];
+    const cardNumberRegex = /^[0-9]{6}$/;
+    const cardNameRegex = /^[a-zA-Z ]{1,}$/;
+    switch (formType) {
+      case 'Full':
+        if (
+          formDetails.cardName &&
+          (formDetails.cardName.length <= 10 ||
+            !cardNameRegex.test(formDetails.cardName))
+        ) {
+          errors.push(ErrorMessages.invalidCreditCardName);
+        }
+        if (
+          formDetails.nickname &&
+          (formDetails.nickname.length <= 3 ||
+            !cardNameRegex.test(formDetails.nickname))
+        ) {
+          errors.push(ErrorMessages.invalidCreditCardNickName);
+        }
+        if (
+          formDetails.cardNumber &&
+          (formDetails.cardNumber.length !== 6 ||
+            !cardNumberRegex.test(formDetails.cardNumber))
+        ) {
+          errors.push(ErrorMessages.invalidCreditCardNumber);
+        }
+        break;
+      case 'Search':
+        if (
+          formDetails.cardNumber &&
+          (formDetails.cardNumber.length !== 6 ||
+            !cardNumberRegex.test(formDetails.cardNumber))
+        ) {
+          errors.push(ErrorMessages.invalidCreditCardNumber);
+        }
+        break;
+      case 'Review':
+        if (
+          formDetails.cardName &&
+          (formDetails.cardName.length <= 10 ||
+            !cardNameRegex.test(formDetails.cardName))
+        ) {
+          errors.push(ErrorMessages.invalidCreditCardName);
+        }
+        if (
+          formDetails.nickname &&
+          (formDetails.nickname.length <= 3 ||
+            !cardNameRegex.test(formDetails.nickname))
+        ) {
+          errors.push(ErrorMessages.invalidCreditCardNickName);
+        }
+        if (
+          formDetails.cardNumber &&
+          (formDetails.cardNumber.length !== 6 ||
+            !cardNumberRegex.test(formDetails.cardNumber))
+        ) {
+          errors.push(ErrorMessages.invalidCreditCardNumber);
+        }
+        break;
+      case 'AddBank':
+        if (
+          formDetails.bankName &&
+          (formDetails.bankName.length <= 3 ||
+            !cardNameRegex.test(formDetails.bankName))
+        ) {
+          errors.push(ErrorMessages.invalidBankName);
+        }
+        break;
+      default:
+        break;
+    }
+
+    return errors;
+  }
+
   useEffect(() => {
     getLocation();
   }, []);
@@ -192,6 +274,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         setTypeOptions,
         CreditCardForms,
         setCreditCardForms,
+        validateCreditCardForm,
       }}>
       {children}
     </Context.Provider>

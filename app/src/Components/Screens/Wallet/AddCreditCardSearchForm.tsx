@@ -11,27 +11,24 @@ import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
-import Consts from '../../../Helpers/Consts';
 
 const AddCreditCardSearchForm = () => {
   const {findCreditCard} = React.useContext(Context) as AppContext;
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {CreditCardForms, setCreditCardForms} = React.useContext(
-    Context,
-  ) as AppContext;
+  const {CreditCardForms, setCreditCardForms, validateCreditCardForm} =
+    React.useContext(Context) as AppContext;
   const closeModal = () => {
     setCreditCardForms({...CreditCardForms, Search: false});
     setCardNumber('');
     clearAuthErrors();
   };
   const [cardNumber, setCardNumber] = React.useState<string>('');
-  const ErrorMessages = Consts.authErrorMessages;
 
   const handleSubmit = () => {
     clearAuthErrors();
-    const errors = validateForm();
+    const errors = validateCreditCardForm({cardNumber}, 'Search');
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
@@ -43,15 +40,6 @@ const AddCreditCardSearchForm = () => {
   const handleCCNumChange = (event: any) => {
     setCardNumber(event.nativeEvent.text);
   };
-
-  function validateForm() {
-    const errors: string[] = [];
-    const cardNumberRegex = /^[0-9]{6}$/;
-    if (cardNumber.length !== 6 || !cardNumberRegex.test(cardNumber)) {
-      errors.push(ErrorMessages.invalidCreditCardNumber);
-    }
-    return errors;
-  }
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 

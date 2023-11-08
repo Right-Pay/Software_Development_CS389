@@ -1,5 +1,6 @@
 import {
   CreditCard,
+  CreditCardFormDetails,
   CreditCardFormsType,
   CreditCardReward,
 } from './CreditCardType';
@@ -26,4 +27,8 @@ export interface AppContext {
   setTypeOptions: (_typeOptions: string[]) => void;
   CreditCardForms: CreditCardFormsType;
   setCreditCardForms: (_creditCardForms: CreditCardFormsType) => void;
+  validateCreditCardForm: (
+    _formDetails: CreditCardFormDetails,
+    _formType: string,
+  ) => string[];
 }

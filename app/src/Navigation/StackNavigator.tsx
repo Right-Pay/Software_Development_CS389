@@ -23,7 +23,7 @@ import type {
 } from '@react-navigation/bottom-tabs';
 import LocationSettings from '../Components/Screens/Location/LocationSettings';
 import WalletScreen from '../Components/Screens/Wallet/Wallet';
-import { AppContext } from '../types/AppContextType';
+import {AppContext} from '../types/AppContextType';
 import Context from '../Context/context';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();

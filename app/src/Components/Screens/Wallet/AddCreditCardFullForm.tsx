@@ -32,6 +32,7 @@ const AddCreditCardFullForm = () => {
     setTypeOptions,
     CreditCardForms,
     setCreditCardForms,
+    validateCreditCardForm,
   } = React.useContext(Context) as AppContext;
 
   //card stuff
@@ -52,7 +53,6 @@ const AddCreditCardFullForm = () => {
   );
 
   //consts
-  const ErrorMessages = Consts.authErrorMessages;
   const ModalMode = Consts.DropdownListModes.MODAL;
 
   //Add New Options
@@ -68,12 +68,6 @@ const AddCreditCardFullForm = () => {
   };
 
   //onChange Methods
-  const onExpirationMonthDropdownChange = (item: string) =>
-    setExpirationMonth(item);
-
-  const onExpirationYearDropdownChange = (item: string) =>
-    setExpirationYear(item);
-
   const onCardTypeDropdownChange = (item: string) => {
     if (!checkForAddNew(item)) {
       setCardType(item);
@@ -114,7 +108,10 @@ const AddCreditCardFullForm = () => {
   //Handlers
   const handleSubmit = () => {
     clearAuthErrors();
-    const errors = validateForm();
+    const errors = validateCreditCardForm(
+      {cardName, cardNumber, bankName, nickname},
+      'Full',
+    );
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
@@ -142,22 +139,6 @@ const AddCreditCardFullForm = () => {
     setExpirationMonth('');
     clearAuthErrors();
   };
-
-  function validateForm() {
-    const errors: string[] = [];
-    const cardNumberRegex = /^[0-9]{6}$/;
-    const cardNameRegex = /^[a-zA-Z ]{1,}$/;
-    if (cardName.length <= 10 || !cardNameRegex.test(cardName)) {
-      errors.push(ErrorMessages.invalidCreditCardName);
-    }
-    if (nickname.length <= 3 || !cardNameRegex.test(nickname)) {
-      errors.push(ErrorMessages.invalidCreditCardNickName);
-    }
-    if (cardNumber.length !== 6 || !cardNumberRegex.test(cardNumber)) {
-      errors.push(ErrorMessages.invalidCreditCardNumber);
-    }
-    return errors;
-  }
 
   //Keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -303,14 +284,14 @@ const AddCreditCardFullForm = () => {
                 '12',
               ],
               placeholder: '1',
-              onDropdownChange: onExpirationMonthDropdownChange,
+              onDropdownChange: setExpirationMonth,
               mode: ModalMode,
               style: 'w-1/2',
             })}
             {DropdownComponent({
               options: years,
               placeholder: currentYear,
-              onDropdownChange: onExpirationYearDropdownChange,
+              onDropdownChange: setExpirationYear,
               mode: ModalMode,
               style: 'w-1/2',
             })}

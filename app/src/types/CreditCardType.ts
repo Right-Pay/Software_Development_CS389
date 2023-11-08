@@ -22,3 +22,10 @@ export interface CreditCardFormProps {}
 export interface CreditCardFormsType {
   [key: string]: boolean;
 }
+
+export interface CreditCardFormDetails {
+  cardName?: string;
+  cardNumber?: string;
+  bankName?: string;
+  nickname?: string;
+}
