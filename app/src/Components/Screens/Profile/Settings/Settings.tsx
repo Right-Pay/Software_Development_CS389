@@ -7,7 +7,7 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
-import {SettingsList, Title, WrapperView} from '../../../../Helpers/StylizedComponents';
+import {SettingsList, SettingsNavText, Title, WrapperView} from '../../../../Helpers/StylizedComponents';
 import { navSettingType } from '../../../../types/SettingsType';
 
 type SettingsScreenProps = CompositeScreenProps<
@@ -42,9 +42,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
   };
   const renderSettingsNav = (item: navSettingType) => {
     return (
-      <Title onPress={() => handleSettingsNavPress(item.route)}>
+      <SettingsNavText onPress={() => handleSettingsNavPress(item.route)}>
         {item.name}
-      </Title>
+      </SettingsNavText>
     );
   }
 
