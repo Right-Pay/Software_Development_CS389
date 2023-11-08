@@ -1,9 +1,9 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
-  LocationNavigationRoutesType,
   NavigationRoutesType,
-} from '../../../types/NavigationRoutesType';
+  ProfileNavigationRoutesType,
+} from '../../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
@@ -13,10 +13,10 @@ import {
   Subtitle,
   Title,
   WrapperView,
-} from '../../../Helpers/StylizedComponents';
+} from '../../../../Helpers/StylizedComponents';
 
 type LocationSettingsProps = CompositeScreenProps<
-  NativeStackScreenProps<LocationNavigationRoutesType, 'LocationSettings'>,
+  NativeStackScreenProps<ProfileNavigationRoutesType, 'LocationSettings'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;

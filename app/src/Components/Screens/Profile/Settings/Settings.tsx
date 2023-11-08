@@ -34,7 +34,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
         navigation.navigate('ProfileSettings');
         break;
       case 'LocationSettings':
-        //navigation.navigate('LocationSettings');
+        navigation.navigate('LocationSettings');
         break;
       default:
         break;

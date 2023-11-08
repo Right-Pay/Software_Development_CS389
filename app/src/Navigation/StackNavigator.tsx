@@ -23,7 +23,7 @@ import type {
   BottomTabNavigationProp,
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
-import LocationSettings from '../Components/Screens/Location/LocationSettings';
+import LocationSettings from '../Components/Screens/Profile/Settings/LocationSettings';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
@@ -86,6 +86,10 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
       <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <ProfileStack.Screen name="ProfileSettings" component={ProfileSettings} />
       <ProfileStack.Screen name="SettingsScreen" component={SettingsScreen} />
+      <ProfileStack.Screen
+        name="LocationSettings"
+        component={LocationSettings}
+      />
     </ProfileStack.Navigator>
   );
 };
@@ -122,10 +126,6 @@ const LocationStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   return (
     <LocationStack.Navigator screenOptions={screenOptionStyle}>
       <LocationStack.Screen name="LocationScreen" component={LocationScreen} />
-      <LocationStack.Screen
-        name="LocationSettings"
-        component={LocationSettings}
-      />
     </LocationStack.Navigator>
   );
 };

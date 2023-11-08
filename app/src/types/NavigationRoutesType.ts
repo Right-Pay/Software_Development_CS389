@@ -27,6 +27,7 @@ export type ProfileNavigationRoutesType = {
   ProfileScreen: undefined;
   ProfileSettings: undefined;
   SettingsScreen: undefined;
+  LocationSettings: undefined;
 };
 
 export type CompanyNavigationRoutesType = {
@@ -39,5 +40,4 @@ export type SearchNavigationRoutesType = {
 
 export type LocationNavigationRoutesType = {
   LocationScreen: undefined;
-  LocationSettings: undefined;
 };
