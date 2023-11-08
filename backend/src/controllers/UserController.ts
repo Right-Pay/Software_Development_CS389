@@ -7,7 +7,7 @@ import i18n from '../config/i18n';
 class UserController {
   async getUser(req: Request, res: Response) {
     const response: IJsonResponse = {
-      message: 'TLX API - Register User',
+      message: 'TLX API - Register User1',
       success: true,
       data: {}
     };

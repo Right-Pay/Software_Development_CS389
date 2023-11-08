@@ -67,6 +67,29 @@ export class CardModel {
     }
   }
 
+
+  async getByUser(user_id: number): Promise<Card[]> {
+    try {
+      const client = await dbPool.connect();
+      const sql = `SELECT c.*
+      FROM rp_user_to_card_link ucl
+      LEFT JOIN rp_cards c ON c.id = ucl.card_id
+      WHERE ucl.user_id = $1`;
+      const values = [user_id];
+      const result = await client.query(sql, values);
+      client.release();
+      if (result.rows.length) {
+        return result.rows;
+      } else {
+        return [];
+      }
+    } catch (err: any) {
+      console.log('DB Error', err);
+      const userFriendlyError = i18n.t([err.message, 'error.default']);
+      throw new Error(userFriendlyError);
+    }
+  }
+
   async delete(card_id: number): Promise<boolean> {
     try {
       const cardCheck = await this.get(card_id);
