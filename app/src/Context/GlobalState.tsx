@@ -168,6 +168,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     });
   };
 
+  function testCardName(cardName: string) {
+    const regex: RegExp = /^[a-zA-Z ]{10,}$/;
+    return regex.test(cardName);
+  }
+
   function validateCreditCardForm(
     formDetails: CreditCardFormDetails,
     formType: string,
@@ -177,11 +182,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     const cardNameRegex = /^[a-zA-Z ]{1,}$/;
     switch (formType) {
       case 'Full':
-        if (
-          formDetails.cardName &&
-          (formDetails.cardName.length <= 10 ||
-            !cardNameRegex.test(formDetails.cardName))
-        ) {
+        if (formDetails.cardName && !testCardName) {
           errors.push(ErrorMessages.invalidCreditCardName);
         }
         if (
