@@ -13,24 +13,29 @@ import Consts from '../../../Helpers/Consts';
 import DropdownComponent from '../../../Helpers/Dropdown';
 
 const ReviewCreditCardForm = () => {
+  //Context
   const {addCreditCard, newCreditCard} = React.useContext(
     Context,
   ) as AppContext;
   const {bankOptions, typeOptions, CreditCardForms, setCreditCardForms} =
     React.useContext(Context) as AppContext;
+
+  //Constants
+  const ModalMode = Consts.DropdownListModes.MODAL;
+
+  //Functions
   const closeModal = () =>
     setCreditCardForms({
       ...CreditCardForms,
       Review: false,
     });
-  const ModalMode = Consts.DropdownListModes.MODAL;
 
   const handleSubmit = () => {
     addCreditCard();
     closeModal();
-    //Check if db has card
   };
 
+  //Keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -52,6 +57,7 @@ const ReviewCreditCardForm = () => {
       keyboardDidShowListener.remove();
     };
   }, []);
+
   return (
     <Modal
       animationType="slide"
@@ -70,7 +76,6 @@ const ReviewCreditCardForm = () => {
         {newCreditCard && (
           <AddCCFormOverlayView className="flex-auto ">
             <Title>Review Credit Card</Title>
-
             <AuthInputBox
               defaultValue={newCreditCard.cardName}
               placeholder="Name of Card"

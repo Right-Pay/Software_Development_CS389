@@ -130,7 +130,6 @@ const AddCreditCardFullForm = () => {
   }, []);
 
   //useEffect
-
   useEffect(() => {
     if (newBankOption !== '') {
       setBankName(newBankOption);

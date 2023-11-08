@@ -14,18 +14,26 @@ import {AuthContextType} from '../../../types/AuthContextType';
 import {CreditCardFormTypes} from '../../../types/CreditCardType';
 
 const AddCreditCardSearchForm = () => {
-  const {findCreditCard} = React.useContext(Context) as AppContext;
+  //Context
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {CreditCardForms, setCreditCardForms, validateCreditCardForm} =
-    React.useContext(Context) as AppContext;
+  const {
+    CreditCardForms,
+    setCreditCardForms,
+    validateCreditCardForm,
+    findCreditCard,
+  } = React.useContext(Context) as AppContext;
+
+  //State
+  const [cardNumber, setCardNumber] = React.useState<string>('');
+
+  //Functions
   const closeModal = () => {
     setCreditCardForms({...CreditCardForms, Search: false});
     setCardNumber('');
     clearAuthErrors();
   };
-  const [cardNumber, setCardNumber] = React.useState<string>('');
 
   const handleSubmit = () => {
     clearAuthErrors();
@@ -45,6 +53,7 @@ const AddCreditCardSearchForm = () => {
     setCardNumber(event.nativeEvent.text);
   };
 
+  //Keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -67,6 +76,7 @@ const AddCreditCardSearchForm = () => {
     };
   }, []);
 
+  //useEffect
   useEffect(() => {
     clearAuthErrors();
     setCardNumber('');
