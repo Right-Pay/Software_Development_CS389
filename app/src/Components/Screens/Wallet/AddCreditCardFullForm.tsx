@@ -145,7 +145,7 @@ const AddCreditCardFullForm = () => {
 
   useEffect(() => {
     setBankName(bankOptions[0]);
-  }, [CreditCardForms.AddBankOption]);
+  }, [bankOptions]);
 
   useEffect(() => {
     setExpirationDate(`${expirationMonth}/${expirationYear}`);
