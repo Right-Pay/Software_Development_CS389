@@ -13,8 +13,9 @@ export interface Card {
 
   // used when returning a card linked to a user
   rewards?: Reward[];
-  card_bank?: Bank;
-  card_brand?: Brand;
+  card_bank_name?: string;
+  card_bank_abbr?: string;
+  card_brand_name?: string;
   exp_date?: string;
   date_card_linked?: string;
 }

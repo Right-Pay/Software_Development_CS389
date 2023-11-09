@@ -52,11 +52,12 @@ export class UserModel {
           user.cards.forEach((card: Card) => {
             const bank = banks.find((bank: Bank) => Number(bank.id) === Number(card.card_bank_id));
             if (bank) {
-              card.card_bank = bank;
+              card.card_bank_name = bank.bank_name;
+              card.card_bank_abbr = bank.abbr;
             }
             const brand = brands.find((brand: Brand) => Number(brand.id) === Number(card.card_brand_id));
             if (brand) {
-              card.card_brand = brand;
+              card.card_brand_name = brand.brand_name;
             }
             card.rewards = [];
           });
