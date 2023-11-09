@@ -71,7 +71,7 @@ export class CardModel {
   async getByUser(user_id: number): Promise<Card[]> {
     try {
       const client = await dbPool.connect();
-      const sql = `SELECT c.*
+      const sql = `SELECT ucl.exp_date, ucl.date_created as date_card_linked, c.*
       FROM rp_user_to_card_link ucl
       LEFT JOIN rp_cards c ON c.id = ucl.card_id
       WHERE ucl.user_id = $1`;
