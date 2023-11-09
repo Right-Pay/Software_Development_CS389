@@ -4,6 +4,9 @@ import {Dropdown} from './StylizedComponents';
 import {View} from 'react-native';
 import {AppContext} from '../types/AppContextType';
 import Context from '../Context/context';
+import {styled} from 'nativewind';
+
+const StyledView = styled(View);
 
 const DropdownComponent = (props: DropdownProps) => {
   const [open, setOpen] = useState(false);
@@ -40,7 +43,7 @@ const DropdownComponent = (props: DropdownProps) => {
   }, [updatingDropdown]);
 
   return (
-    <View className={props.style}>
+    <StyledView className={props.style}>
       <Dropdown
         open={open}
         value={value}
@@ -91,7 +94,7 @@ const DropdownComponent = (props: DropdownProps) => {
         textStyle={{color: 'black', fontSize: 20}}
         onChangeValue={event => handleSetValue(event?.toString() as string)}
       />
-    </View>
+    </StyledView>
   );
 };
 
