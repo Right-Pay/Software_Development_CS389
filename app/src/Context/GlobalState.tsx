@@ -76,7 +76,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       exp_date: '12/22',
     } as Card;
     setCreditCardForms(c => ({...c, Search: false}));
-    if (foundCard === null) {
+    if (foundCard !== null) {
       setNewCreditCard(foundCard);
       setCreditCardForms(c => ({...c, Review: true}));
     } else {
