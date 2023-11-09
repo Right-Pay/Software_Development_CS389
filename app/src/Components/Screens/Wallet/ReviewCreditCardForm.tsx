@@ -48,18 +48,18 @@ const ReviewCreditCardForm = () => {
     });
 
   const handleExpirationMonthChange = (month: string) => {
-    const currentExpirationDate = newCreditCard?.expirationDate;
+    const currentExpirationDate = newCreditCard?.exp_date;
     const year = currentExpirationDate?.split('/')[1];
     if (currentExpirationDate) {
-      setNewCreditCard({...newCreditCard, expirationDate: `${month}/${year}`});
+      setNewCreditCard({...newCreditCard, exp_date: `${month}/${year}`});
     }
   };
 
   const handleExpirationYearChange = (year: string) => {
-    const currentExpirationDate = newCreditCard?.expirationDate;
+    const currentExpirationDate = newCreditCard?.exp_date;
     const month = currentExpirationDate?.split('/')[0];
     if (currentExpirationDate) {
-      setNewCreditCard({...newCreditCard, expirationDate: `${month}/${year}`});
+      setNewCreditCard({...newCreditCard, exp_date: `${month}/${year}`});
     }
   };
 
@@ -69,10 +69,9 @@ const ReviewCreditCardForm = () => {
     }
     const errors = validateCreditCardForm(
       {
-        cardName: newCreditCard.cardName,
-        nickname: newCreditCard.nickname,
-        cardBin: newCreditCard.cardBin,
-        bankName: newCreditCard.bankName,
+        cardName: newCreditCard.card_name,
+        cardBin: newCreditCard.card_bin.toString(),
+        bankName: newCreditCard.card_bank,
       },
       CreditCardFormTypes.Review,
     );
@@ -126,35 +125,25 @@ const ReviewCreditCardForm = () => {
           <AddCCFormOverlayView className="flex-auto ">
             <Title>Review Credit Card</Title>
             <FormInputBox
-              defaultValue={newCreditCard.cardName}
+              defaultValue={newCreditCard.card_name}
               placeholder="Name of Card"
               placeholderTextColor={'grey'}
               onChange={event =>
-                (newCreditCard.cardName = event.nativeEvent.text)
+                (newCreditCard.card_name = event.nativeEvent.text)
               }
             />
             <FormInputBox
-              defaultValue={newCreditCard.nickname}
-              placeholder="Nickname"
-              placeholderTextColor={'grey'}
-              onChange={event =>
-                (newCreditCard.nickname = event.nativeEvent.text)
-              }
-            />
-            <FormInputBox
-              defaultValue={newCreditCard.cardBin}
+              defaultValue={newCreditCard.card_bin.toString()}
               placeholder="Card Number"
               placeholderTextColor={'grey'}
               onChange={event =>
-                (newCreditCard.cardBin = event.nativeEvent.text)
+                (newCreditCard.card_bin = +event.nativeEvent.text)
               }
             />
             <DropdownComponent
               options={bankOptions.filter(b => b !== 'Add New Bank')}
               placeholder={bankOptions[0]}
-              onDropdownChange={event => {
-                newCreditCard.bankName = event;
-              }}
+              onDropdownChange={event => (newCreditCard.card_bank = event)}
               mode={ModalMode}
               dropdownStyle="m-2 h-auto w-2/3"
             />
@@ -162,7 +151,7 @@ const ReviewCreditCardForm = () => {
               options={typeOptions}
               placeholder={typeOptions[0]}
               onDropdownChange={event => {
-                newCreditCard.cardType = event;
+                newCreditCard.card_brand = event;
               }}
               mode={ModalMode}
               dropdownStyle="m-2 h-auto w-2/3"

@@ -43,7 +43,7 @@ const AddCreditCardFullForm = () => {
   const [nickname, setNickName] = React.useState<string>('');
   const [bankName, setBankName] = React.useState<string>('');
   const [cardBin, setCardBin] = React.useState<string>('');
-  const [cardType, setCardType] = React.useState<string>('visa');
+  const [cardBrand, setCardBrand] = React.useState<string>('visa');
   const [expirationMonth, setExpirationMonth] = React.useState<string>('1');
   const currentYear = new Date().getFullYear().toString().split('20')[1];
   const years = Array.from(Array(6).keys()).map(i =>
@@ -66,7 +66,7 @@ const AddCreditCardFullForm = () => {
   };
 
   //onChange Methods
-  const onCardTypeDropdownChange = (item: string) => setCardType(item);
+  const onCardTypeDropdownChange = (item: string) => setCardBrand(item);
 
   const onBankNameDropdownChange = (item: string) => {
     if (item === 'Add New Bank' && newBankOption !== 'false') {
@@ -93,11 +93,10 @@ const AddCreditCardFullForm = () => {
     const newCard: Card = {
       id: Math.random() * 100, //Will need to be updated to be unique
       card_name: cardName,
-      card_bin: +`${cardBin.slice(0, 4)} ${cardBin.slice(4, 7)}`,
+      card_bin: +`${cardBin.slice(0, 4)}${cardBin.slice(4, 7)}`,
       exp_date: expirationDate,
-      nickname: nickname,
       card_bank: bankName,
-      card_brand: cardType,
+      card_brand: cardBrand,
     };
     reviewCreditCard(newCard);
   };
@@ -179,11 +178,6 @@ const AddCreditCardFullForm = () => {
             placeholder="Name of Card"
             placeholderTextColor="#AFAEAE"
             onChange={event => setCardName(event.nativeEvent.text)}
-          />
-          <FormInputBox
-            placeholder="Nickname"
-            placeholderTextColor="#AFAEAE"
-            onChange={event => setNickName(event.nativeEvent.text)}
           />
           <FormInputBox
             placeholder="First Six Digits"

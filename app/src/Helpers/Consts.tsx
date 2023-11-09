@@ -1,5 +1,5 @@
 import ConstsType from '../types/ConstsType';
-import {CreditCardReward} from '../types/CreditCardType';
+import {Card, CreditCardReward, Reward} from '../types/CreditCardType';
 
 const AuthErrorMessages = {
   invalidEmail: 'Invalid Email',
@@ -17,8 +17,6 @@ const AuthErrorMessages = {
   invalidToken: 'Invalid Token\nPlease Contact Support',
   invalidCreditCardName:
     'Invalid Credit Card Name\nName must be more then 10 characters\nName must only contain letters',
-  invalidCreditCardNickName:
-    'Invalid Credit Card Nickname\nName must be more then 3 characters\nName must only contain letters',
   invalidCreditCardBin: 'Invalid Credit Card Number\nMust be 6 digits',
   invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
   invalidDropdownOption: 'Invalid Dropdown Option',
@@ -56,61 +54,26 @@ const dummyProfile = {
   //password: 'JohnDoe1234!',
 };
 
-const dummyCreditCards = [
+const dummyCreditCards: Card[] = [
   {
     id: 1,
-    cardBin: '1234 56',
-    cardName: 'BofA Cash Back Rewards',
-    nickname: 'Johns Card',
-    bankName: 'Bank of America',
-    expirationDate: '12/24',
-    cardType: 'Visa',
+    card_bin: 123456,
+    card_name: 'BofA Cash Back Rewards',
+    card_bank: 'Bank of America',
+    exp_date: '12/24',
+    card_brand: 'Visa',
   },
   {
     id: 2,
-    cardBin: '2345 67',
-    cardName: 'Chase Freedom Unlimited',
-    nickname: 'Janes Card',
-    bankName: 'Chase',
-    expirationDate: '11/25',
-    cardType: 'MasterCard',
+    card_bin: 234567,
+    card_name: 'Chase Freedom Unlimited',
+    card_bank: 'Chase',
+    exp_date: '11/25',
+    card_brand: 'MasterCard',
   },
 ];
 
-const dummyCreditCardRewards: CreditCardReward[] = [
-  {
-    id: 0,
-    creditCardId: 1,
-    name: 'Reward 1',
-    description: 'Description for Reward 1',
-    amount: 0.02,
-    date: '2023-10-24',
-  },
-  {
-    id: 1,
-    creditCardId: 2,
-    name: 'Reward 2',
-    description: 'Description for Reward 2',
-    amount: 0.03,
-    date: '2023-10-25',
-  },
-  {
-    id: 2,
-    creditCardId: 1,
-    name: 'Reward 3',
-    description: 'Description for Reward 3',
-    amount: 0.02,
-    date: '2023-11-03',
-  },
-  {
-    id: 3,
-    creditCardId: 2,
-    name: 'Reward 4',
-    description: 'Description for Reward 4',
-    amount: 0.03,
-    date: '2023-11-04',
-  },
-];
+const dummyCreditCardRewards: Reward[] = [];
 
 const Consts: ConstsType = {
   CreditCardFormEnum: CreditCardFormEnum,

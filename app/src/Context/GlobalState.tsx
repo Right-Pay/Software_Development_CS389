@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
 import {
-  CreditCard,
   CreditCardFormDetails,
   CreditCardFormsType,
-  CreditCardReward,
   CreditCardFormTypes,
+  Card,
+  Reward,
 } from '../types/CreditCardType';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -14,10 +14,10 @@ import {Location} from '../types/Location';
 import Consts from '../Helpers/Consts';
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
-  const [creditCards, setCreditCards] = React.useState<CreditCard[]>(
+  const [creditCards, setCreditCards] = React.useState<Card[]>(
     Consts.dummyCreditCards,
   );
-  const [rewards, setRewards] = React.useState<CreditCardReward[]>(
+  const [rewards, setRewards] = React.useState<Reward[]>(
     Consts.dummyCreditCardRewards,
   );
   const ErrorMessages = Consts.authErrorMessages;
@@ -30,9 +30,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     AddBankOption: false,
     AddTypeOption: false,
   });
-  const [newCreditCard, setNewCreditCard] = React.useState<CreditCard | null>(
-    null,
-  );
+  const [newCreditCard, setNewCreditCard] = React.useState<Card | null>(null);
   const [updatingDropdown, setUpdatingDropdown] =
     React.useState<boolean>(false);
 
@@ -71,13 +69,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     //found card will need to be set if found
     const foundCard = {
       id: Math.random() * 100 + creditCards.length, // not really unique - but fine for this example
-      cardName: 'Chase Sapphire Reserved',
-      nickname: '',
-      bankName: 'Chase',
-      cardBin: cardBin.toString(),
-      cardType: 'visa',
-      expirationDate: '12/22',
-    } as CreditCard;
+      card_name: 'Chase Sapphire Reserved',
+      card_bank: 'Chase',
+      card_bin: cardBin,
+      card_brand: 'visa',
+      exp_date: '12/22',
+    } as Card;
     setCreditCardForms(c => ({...c, Search: false}));
     if (foundCard === null) {
       setNewCreditCard(foundCard);
@@ -87,35 +84,28 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     }
   };
 
-  const reviewCreditCard = (creditCard: CreditCard) => {
+  const reviewCreditCard = (creditCard: Card) => {
     setNewCreditCard(creditCard);
-    setCreditCardForms(c => ({...c, Review: false}));
+    setCreditCardForms(c => ({...c, Full: false}));
+    setCreditCardForms(c => ({...c, Review: true}));
   };
 
   const addCreditCard = () => {
     //add to db
-    setCreditCards([...creditCards, newCreditCard as CreditCard]);
+    setCreditCards([...creditCards, newCreditCard as Card]);
     return true;
   };
 
-  const addNewReward = (creditCardReward: CreditCardReward) => {
-    const newReward: CreditCardReward = {
-      id: Math.random() * 10, // not really unique - but fine for this example
-      creditCardId: creditCardReward.creditCardId,
-      name: creditCardReward.name,
-      description: creditCardReward.description,
-      amount: creditCardReward.amount,
-      date: creditCardReward.date,
-    };
-    setRewards([...rewards, newReward]);
+  const addNewReward = (creditCardReward: Card) => {
+    //Do something here
   };
 
-  const removeCreditCard = (creditCard: CreditCard) => {
+  const removeCreditCard = (creditCard: Card) => {
     setCreditCards(creditCards.filter(c => c.id !== creditCard.id));
   };
 
-  const removeReward = (creditCardReward: CreditCardReward) => {
-    setRewards(rewards.splice(creditCardReward.id, 1));
+  const removeReward = (creditCardReward: Reward) => {
+    //Do something here
   };
 
   const requestLocationPermission = async () => {
@@ -180,11 +170,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return regex.test(cardBin);
   }
 
-  function testNickname(nickname: string) {
-    const regex: RegExp = /^[a-zA-Z ]{3,}$/;
-    return regex.test(nickname);
-  }
-
   function testBankName(bankName: string) {
     const regex: RegExp = /^[a-zA-Z ]{3,}$/;
     return regex.test(bankName);
@@ -195,14 +180,10 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     formType: string,
   ) {
     const errors: string[] = [];
-    console.log(formDetails, formType);
     switch (formType) {
       case CreditCardFormTypes.Full:
         if (!testCardName(formDetails.cardName as string)) {
           errors.push(ErrorMessages.invalidCreditCardName);
-        }
-        if (!testNickname(formDetails.nickname as string)) {
-          errors.push(ErrorMessages.invalidCreditCardNickName);
         }
         if (!testCardBin(formDetails.cardBin as string)) {
           errors.push(ErrorMessages.invalidCreditCardBin);
@@ -216,10 +197,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       case CreditCardFormTypes.Review:
         if (!testCardName(formDetails.cardName as string)) {
           errors.push(ErrorMessages.invalidCreditCardName);
-        }
-        if (!testNickname(formDetails.nickname as string)) {
-          console.log('jh');
-          errors.push(ErrorMessages.invalidCreditCardNickName);
         }
         if (!testCardBin(formDetails.cardBin as string)) {
           errors.push(ErrorMessages.invalidCreditCardBin);

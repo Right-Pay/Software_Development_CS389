@@ -27,7 +27,7 @@ import {
 } from '../../../Helpers/StylizedComponents';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
-import {CreditCard, CreditCardReward} from '../../../types/CreditCardType';
+import {Card, Reward} from '../../../types/CreditCardType';
 import {Dimensions} from 'react-native';
 import AddCreditCardFullForm from './AddCreditCardFullForm';
 import AddCreditCardSearchForm from './AddCreditCardSearchForm';
@@ -40,21 +40,15 @@ type WalletScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const WalletScreen: React.FC<WalletScreenProps> = () => {
-  const {
-    creditCards,
-    rewards,
-    removeCreditCard,
-    setCreditCardForms,
-    CreditCardForms,
-  } = React.useContext(Context) as AppContext;
-  const [currentViewedCard, setCurrentViewedCard] = React.useState<
-    CreditCard[]
-  >([creditCards[0]]);
+  const {creditCards, removeCreditCard, setCreditCardForms, CreditCardForms} =
+    React.useContext(Context) as AppContext;
+  const [currentViewedCard, setCurrentViewedCard] = React.useState<Card[]>([
+    creditCards[0],
+  ]);
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
   //helpers
-  const getCreditCardRewards = (creditCardId: number) =>
-    rewards.filter(r => r.creditCardId === creditCardId) || [];
+  const getCreditCardRewards = (creditCardId: number) => [];
 
   //components
   const addNewCreditCardComponent = () => (
@@ -69,8 +63,8 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
       </SecondaryAddCreditCardView>
     </AddCreditCardView>
   );
-  const renderCard = (item: CreditCard) => {
-    if (item.nickname === 'Add') {
+  const renderCard = (item: Card) => {
+    if (item.card_name === 'Add') {
       return addNewCreditCardComponent();
     }
     return (
@@ -79,12 +73,11 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           <CreditCardButton
             onLongPress={() => handleCreditCardPress()}
             className={deleteCard ? 'opacity-50 ' : 'opacity-100'}>
-            <CreditCardText className="text-center">
-              {item.nickname}
+            <CreditCardText className="text-center font-bold truncate">
+              {item.card_name}
             </CreditCardText>
-            <CreditCardText>{`Card Name: ${item.cardName}`}</CreditCardText>
-            <CreditCardText>{`Card Type: ${item.cardType}`}</CreditCardText>
-            <CreditCardText>{`Bank Name: ${item.bankName}`}</CreditCardText>
+            <CreditCardText>{`Card Type: ${item.card_brand}`}</CreditCardText>
+            <CreditCardText>{`Bank Name: ${item.card_bank}`}</CreditCardText>
           </CreditCardButton>
           {deleteCard && (
             <DeleteCreditCardButton
@@ -106,12 +99,11 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     );
   };
 
-  const renderReward = (item: CreditCardReward) => {
+  const renderReward = (item: Reward) => {
     return (
       <RewardsView>
-        <Subtitle className="text-left">{item.name}</Subtitle>
-        <Subtitle>{item.description}</Subtitle>
-        <Subtitle>{item.amount}</Subtitle>
+        <Subtitle className="text-left">{item.reward_name}</Subtitle>
+        <Subtitle>{item.reward_description}</Subtitle>
       </RewardsView>
     );
   };
@@ -133,8 +125,8 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   };
 
   const onViewRef = useRef((viewableItems: any) => {
-    const check: CreditCard[] = viewableItems.viewableItems.map(
-      (item: any) => item.item as CreditCard,
+    const check: Card[] = viewableItems.viewableItems.map(
+      (item: any) => item.item as Card,
     );
     setCurrentViewedCard(check);
   });
@@ -154,13 +146,13 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           data={[
             ...creditCards,
             {
-              nickname: 'Add',
+              card_name: 'Add',
               id: -1,
-            } as CreditCard,
+            } as Card,
           ]}
           showsHorizontalScrollIndicator={false}
-          keyExtractor={item => (item as CreditCard).id.toString()}
-          renderItem={({item}) => renderCard(item as CreditCard)}
+          keyExtractor={item => (item as Card).id.toString()}
+          renderItem={({item}) => renderCard(item as Card)}
           horizontal={true}
           ItemSeparatorComponent={itemSeparatorComponent}
           onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
@@ -179,8 +171,8 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
             ) : null
           }
           showsVerticalScrollIndicator={true}
-          keyExtractor={item => (item as CreditCardReward).id.toString()}
-          renderItem={({item}) => renderReward(item as CreditCardReward)}
+          keyExtractor={item => (item as Reward).reward_name.toString()}
+          renderItem={({item}) => renderReward(item as Reward)}
           ItemSeparatorComponent={itemSeparatorComponent}
         />
       </CreditCardListView>
