@@ -76,7 +76,6 @@ const ReviewCreditCardForm = () => {
       },
       CreditCardFormTypes.Review,
     );
-    console.log(errors);
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
@@ -157,7 +156,7 @@ const ReviewCreditCardForm = () => {
                 newCreditCard.bankName = event;
               }}
               mode={ModalMode}
-              style="m-2 h-auto w-2/3 z-50"
+              dropdownStyle="m-2 h-auto w-2/3"
             />
             <DropdownComponent
               options={typeOptions}
@@ -166,9 +165,9 @@ const ReviewCreditCardForm = () => {
                 newCreditCard.cardType = event;
               }}
               mode={ModalMode}
-              style="m-2 h-auto w-2/3 z-40"
+              dropdownStyle="m-2 h-auto w-2/3"
             />
-            <FormDateView className="m-2 z-30">
+            <FormDateView>
               <DropdownComponent
                 options={[
                   '1',
@@ -189,14 +188,14 @@ const ReviewCreditCardForm = () => {
                 }
                 onDropdownChange={handleExpirationMonthChange}
                 mode={ModalMode}
-                style="w-1/2"
+                dropdownStyle="w-1/3 mr-4"
               />
               <DropdownComponent
                 options={years}
                 placeholder={currentYear}
                 onDropdownChange={handleExpirationYearChange}
                 mode={ModalMode}
-                style="w-1/2"
+                dropdownStyle="w-1/3 ml-4"
               />
             </FormDateView>
             <FormButton onPress={handleSubmit} className="mt-1 z-0">

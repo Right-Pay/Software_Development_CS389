@@ -63,8 +63,10 @@ const AddCreditCardFullForm = () => {
   const onCardTypeDropdownChange = (item: string) => setCardType(item);
 
   const onBankNameDropdownChange = (item: string) => {
-    setShowAddBankOption(true);
-    setBankName(item);
+    if (item === 'Add New Bank' && newBankOption !== 'false') {
+      setShowAddBankOption(true);
+    }
+    setBankName(bankOptions[0]);
   };
 
   const onCCNumberChange = (event: any) => {
@@ -187,7 +189,7 @@ const AddCreditCardFullForm = () => {
             placeholder={bankOptions[0]}
             onDropdownChange={onBankNameDropdownChange}
             mode={ModalMode}
-            style="m-2 w-2/3 h-auto z-50"
+            dropdownStyle="m-2 w-2/3 h-auto z-50"
             refresh={CreditCardForms.AddBankOption}
           />
           <AddNewDropdownOption
@@ -199,7 +201,7 @@ const AddCreditCardFullForm = () => {
             placeholder={typeOptions[0]}
             onDropdownChange={onCardTypeDropdownChange}
             mode={ModalMode}
-            style="m-2 w-2/3 h-auto z-40"
+            dropdownStyle="m-2 w-2/3 h-auto z-40"
             refresh={CreditCardForms.AddTypeOption}
           />
           <FormDateView className="m-2 z-30">
@@ -221,14 +223,14 @@ const AddCreditCardFullForm = () => {
               placeholder: '1',
               onDropdownChange: setExpirationMonth,
               mode: ModalMode,
-              style: 'w-1/2',
+              dropdownStyle: 'w-1/3 mr-4',
             })}
             {DropdownComponent({
               options: years,
               placeholder: currentYear,
               onDropdownChange: setExpirationYear,
               mode: ModalMode,
-              style: 'w-1/2',
+              dropdownStyle: 'w-1/3 ml-4',
             })}
           </FormDateView>
           <FormButton onPress={handleSubmit} className="mt-1 z-0">

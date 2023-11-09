@@ -19,9 +19,12 @@ const AddNewBankOption = (props: optionsPropsType) => {
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {setUpdatingDropdown, validateCreditCardForm} = React.useContext(
-    Context,
-  ) as AppContext;
+  const {
+    setUpdatingDropdown,
+    validateCreditCardForm,
+    setCreditCardForms,
+    CreditCardForms,
+  } = React.useContext(Context) as AppContext;
 
   //options state
   const [newOption, setNewOption] = useState<string>('');
@@ -43,6 +46,8 @@ const AddNewBankOption = (props: optionsPropsType) => {
   };
 
   const closeModal = () => {
+    setUpdatingDropdown(true);
+    setCreditCardForms({...CreditCardForms, AddBankOption: false});
     clearAuthErrors();
   };
 

@@ -5,6 +5,7 @@ import {View} from 'react-native';
 import {AppContext} from '../types/AppContextType';
 import Context from '../Context/context';
 import {styled} from 'nativewind';
+import {Console} from 'console';
 
 const StyledView = styled(View);
 
@@ -19,10 +20,9 @@ const DropdownComponent = (props: DropdownProps) => {
     })),
   );
 
-  const styleFromProps =
-    typeof props.style === 'string' ? props.style : (props?.style as any)[0];
-
-  const {updatingDropdown} = React.useContext(Context) as AppContext;
+  const {updatingDropdown, setUpdatingDropdown} = React.useContext(
+    Context,
+  ) as AppContext;
 
   const handleSetValue = (val: string) => {
     setValue(val);
@@ -44,11 +44,11 @@ const DropdownComponent = (props: DropdownProps) => {
 
   useEffect(() => {
     setValue(props.options[props.options.length - 2]);
+    setUpdatingDropdown(false);
   }, [updatingDropdown]);
 
   return (
-    <StyledView
-      className={isNaN(+props.placeholder) ? 'w-2/3 mb-2 mt-1' : 'w-1/2'}>
+    <StyledView className={props.dropdownStyle}>
       <Dropdown
         open={open}
         value={value}
