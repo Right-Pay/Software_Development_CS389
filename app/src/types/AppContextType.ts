@@ -1,21 +1,21 @@
 import {
-  CreditCard,
+  Card,
   CreditCardFormDetails,
   CreditCardFormsType,
-  CreditCardReward,
+  Reward,
 } from './CreditCardType';
 import {Location} from './Location';
 
 export interface AppContext {
-  creditCards: CreditCard[];
-  newCreditCard: CreditCard | null;
-  rewards: CreditCardReward[];
-  reviewCreditCard: (_creditCard: CreditCard) => void;
-  findCreditCard: (_cardNumber: number) => void;
+  creditCards: Card[];
+  newCreditCard: Card | null;
+  rewards: Reward[];
+  reviewCreditCard: (_creditCard: Card) => void;
+  findCreditCard: (_cardBin: number) => void;
   addCreditCard: () => boolean;
-  removeCreditCard: (_creditCard: CreditCard) => void;
-  addNewReward: (_reward: CreditCardReward) => void;
-  removeReward: (_reward: CreditCardReward) => void;
+  removeCreditCard: (_creditCard: Card) => void;
+  addNewReward: (_reward: Reward) => void;
+  removeReward: (_reward: Reward) => void;
   location: Location;
   isLoading: boolean;
   setIsLoading: (_isLoading: boolean) => void;
@@ -31,5 +31,5 @@ export interface AppContext {
     _formDetails: CreditCardFormDetails,
     _formType: string,
   ) => string[];
-  setNewCreditCard: (_newCreditCard: CreditCard | null) => void;
+  setNewCreditCard: (_newCreditCard: Card | null) => void;
 }

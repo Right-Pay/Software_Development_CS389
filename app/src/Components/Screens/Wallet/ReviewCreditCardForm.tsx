@@ -71,7 +71,7 @@ const ReviewCreditCardForm = () => {
       {
         cardName: newCreditCard.cardName,
         nickname: newCreditCard.nickname,
-        cardNumber: newCreditCard.cardNumber,
+        cardBin: newCreditCard.cardBin,
         bankName: newCreditCard.bankName,
       },
       CreditCardFormTypes.Review,
@@ -142,11 +142,11 @@ const ReviewCreditCardForm = () => {
               }
             />
             <FormInputBox
-              defaultValue={newCreditCard.cardNumber}
+              defaultValue={newCreditCard.cardBin}
               placeholder="Card Number"
               placeholderTextColor={'grey'}
               onChange={event =>
-                (newCreditCard.cardNumber = event.nativeEvent.text)
+                (newCreditCard.cardBin = event.nativeEvent.text)
               }
             />
             <DropdownComponent

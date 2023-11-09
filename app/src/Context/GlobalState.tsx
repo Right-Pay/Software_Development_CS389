@@ -66,7 +66,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
    * 4. Rewards will be found using a few details from card. Rewards review screen will show which will allow the user to enter rewards and see rewards already associated to that card. Send rewards to db
    *
    */
-  const findCreditCard = async (cardNumber: number) => {
+  const findCreditCard = async (cardBin: number) => {
     //Check db for card
     //found card will need to be set if found
     const foundCard = {
@@ -74,7 +74,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       cardName: 'Chase Sapphire Reserved',
       nickname: '',
       bankName: 'Chase',
-      cardNumber: cardNumber.toString(),
+      cardBin: cardBin.toString(),
       cardType: 'visa',
       expirationDate: '12/22',
     } as CreditCard;
@@ -175,9 +175,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return regex.test(cardName);
   }
 
-  function testCardNumber(cardNumber: string) {
+  function testCardBin(cardBin: string) {
     const regex: RegExp = /^[0-9]{6}$/;
-    return regex.test(cardNumber);
+    return regex.test(cardBin);
   }
 
   function testNickname(nickname: string) {
@@ -204,13 +204,13 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         if (!testNickname(formDetails.nickname as string)) {
           errors.push(ErrorMessages.invalidCreditCardNickName);
         }
-        if (!testCardNumber(formDetails.cardNumber as string)) {
-          errors.push(ErrorMessages.invalidCreditCardNumber);
+        if (!testCardBin(formDetails.cardBin as string)) {
+          errors.push(ErrorMessages.invalidCreditCardBin);
         }
         break;
       case CreditCardFormTypes.Search:
-        if (!testCardNumber(formDetails.cardNumber as string)) {
-          errors.push(ErrorMessages.invalidCreditCardNumber);
+        if (!testCardBin(formDetails.cardBin as string)) {
+          errors.push(ErrorMessages.invalidCreditCardBin);
         }
         break;
       case CreditCardFormTypes.Review:
@@ -221,8 +221,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           console.log('jh');
           errors.push(ErrorMessages.invalidCreditCardNickName);
         }
-        if (!testCardNumber(formDetails.cardNumber as string)) {
-          errors.push(ErrorMessages.invalidCreditCardNumber);
+        if (!testCardBin(formDetails.cardBin as string)) {
+          errors.push(ErrorMessages.invalidCreditCardBin);
         }
         break;
       case CreditCardFormTypes.AddBank:

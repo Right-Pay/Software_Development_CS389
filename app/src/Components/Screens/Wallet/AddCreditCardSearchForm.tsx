@@ -26,31 +26,31 @@ const AddCreditCardSearchForm = () => {
   } = React.useContext(Context) as AppContext;
 
   //State
-  const [cardNumber, setCardNumber] = React.useState<string>('');
+  const [cardBin, setCardBin] = React.useState<string>('');
 
   //Functions
   const closeModal = () => {
     setCreditCardForms({...CreditCardForms, Search: false});
-    setCardNumber('');
+    setCardBin('');
     clearAuthErrors();
   };
 
   const handleSubmit = () => {
     clearAuthErrors();
     const errors = validateCreditCardForm(
-      {cardNumber},
+      {cardBin},
       CreditCardFormTypes.Search,
     );
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     }
-    findCreditCard(+cardNumber as number);
+    findCreditCard(+cardBin as number);
     //Check if db has card
   };
 
   const handleCCNumChange = (event: any) => {
-    setCardNumber(event.nativeEvent.text);
+    setCardBin(event.nativeEvent.text);
   };
 
   //Keyboard
@@ -79,7 +79,7 @@ const AddCreditCardSearchForm = () => {
   //useEffect
   useEffect(() => {
     clearAuthErrors();
-    setCardNumber('');
+    setCardBin('');
   }, [CreditCardForms.Search]);
 
   return (

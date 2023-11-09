@@ -19,7 +19,7 @@ const AuthErrorMessages = {
     'Invalid Credit Card Name\nName must be more then 10 characters\nName must only contain letters',
   invalidCreditCardNickName:
     'Invalid Credit Card Nickname\nName must be more then 3 characters\nName must only contain letters',
-  invalidCreditCardNumber: 'Invalid Credit Card Number\nMust be 6 digits',
+  invalidCreditCardBin: 'Invalid Credit Card Number\nMust be 6 digits',
   invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
   invalidDropdownOption: 'Invalid Dropdown Option',
 };
@@ -59,7 +59,7 @@ const dummyProfile = {
 const dummyCreditCards = [
   {
     id: 1,
-    cardNumber: '1234 56',
+    cardBin: '1234 56',
     cardName: 'BofA Cash Back Rewards',
     nickname: 'Johns Card',
     bankName: 'Bank of America',
@@ -68,7 +68,7 @@ const dummyCreditCards = [
   },
   {
     id: 2,
-    cardNumber: '2345 67',
+    cardBin: '2345 67',
     cardName: 'Chase Freedom Unlimited',
     nickname: 'Janes Card',
     bankName: 'Chase',

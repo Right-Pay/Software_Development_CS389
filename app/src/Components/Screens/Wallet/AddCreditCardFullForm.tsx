@@ -8,7 +8,13 @@ import {
   FormDateView,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import {CreditCard, CreditCardFormTypes} from '../../../types/CreditCardType';
+import {
+  Card,
+  Reward,
+  Bank,
+  Brand,
+  CreditCardFormTypes,
+} from '../../../types/CreditCardType';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import DropdownComponent from '../../../Helpers/Dropdown';
@@ -36,7 +42,7 @@ const AddCreditCardFullForm = () => {
   const [cardName, setCardName] = React.useState<string>('');
   const [nickname, setNickName] = React.useState<string>('');
   const [bankName, setBankName] = React.useState<string>('');
-  const [cardNumber, setCardNumber] = React.useState<string>('');
+  const [cardBin, setCardBin] = React.useState<string>('');
   const [cardType, setCardType] = React.useState<string>('visa');
   const [expirationMonth, setExpirationMonth] = React.useState<string>('1');
   const currentYear = new Date().getFullYear().toString().split('20')[1];
@@ -70,28 +76,28 @@ const AddCreditCardFullForm = () => {
   };
 
   const onCCNumberChange = (event: any) => {
-    setCardNumber(event.nativeEvent.text);
+    setCardBin(event.nativeEvent.text);
   };
 
   //Handlers
   const handleSubmit = () => {
     clearAuthErrors();
     const errors = validateCreditCardForm(
-      {cardName, cardNumber, bankName, nickname},
+      {cardName, cardBin, bankName, nickname},
       CreditCardFormTypes.Full,
     );
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     }
-    const newCard: CreditCard = {
+    const newCard: Card = {
       id: Math.random() * 100, //Will need to be updated to be unique
-      cardName: cardName,
-      cardNumber: `${cardNumber.slice(0, 4)} ${cardNumber.slice(4, 7)}`,
-      expirationDate: expirationDate,
+      card_name: cardName,
+      card_bin: +`${cardBin.slice(0, 4)} ${cardBin.slice(4, 7)}`,
+      exp_date: expirationDate,
       nickname: nickname,
-      bankName: bankName,
-      cardType: cardType,
+      card_bank: bankName,
+      card_brand: cardType,
     };
     reviewCreditCard(newCard);
   };
@@ -101,7 +107,7 @@ const AddCreditCardFullForm = () => {
     setCardName('');
     setNickName('');
     setBankName('');
-    setCardNumber('');
+    setCardBin('');
     setExpirationDate('');
     setExpirationYear('');
     setExpirationMonth('');
