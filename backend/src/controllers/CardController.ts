@@ -3,6 +3,7 @@ import CardModel from '../models/CardModel';
 import { IJsonResponse } from '../types/jsonResponse';
 import { Card } from '../types/cardTypes';
 import i18n from '../config/i18n';
+import BankModelInstance from '../models/BankModel';
 
 class CardController {
   async getCard(req: Request, res: Response) {
@@ -50,13 +51,23 @@ class CardController {
       data: {}
     };
     const cardData = req.body as Card;
-    if (!cardData.card_bin || !cardData.card_bank_id || !cardData.card_brand_id || !cardData.card_type || !cardData.card_name || !cardData.card_type || !cardData.card_level) {
+    if (!cardData.card_bin || !cardData.card_bank_id || !cardData.card_brand_id || !cardData.card_type || !cardData.card_type || !cardData.card_level) {
       response.success = false;
       response.message = i18n.t('error.missingFields');
       res.status(400).json(response);
       return;
     }
     try {
+      const bank = await BankModelInstance.get(cardData.card_bank_id);
+      if (!bank) {
+        throw new Error(i18n.t('error.bankNotFound'));
+      }
+      if (!cardData.card_name) {
+        cardData.card_name = bank.bank_name + ' ' +
+          cardData.card_type + ' ' +
+          cardData.card_level + ' ' +
+          cardData.card_type.charAt(0).toUpperCase() + cardData.card_level.slice(1);
+      }
       const newCard = await CardModel.create(cardData);
       response.data = newCard;
       res.status(201).json(response);

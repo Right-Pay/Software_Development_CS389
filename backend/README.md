@@ -182,15 +182,15 @@ Returns Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
   POST /api/cards
 ```
 
-| Parameter       | Type     | Description                                                |
-| :-------------- | :------- | :--------------------------------------------------------- |
-| `card_bin`      | `number` | **Required** Bank Identification Number (first six digits) |
-| `card_name`     | `string` | **Required** Name of card                                  |
-| `card_brand_id` | `number` | **Required** Brand ID                                      |
-| `card_bank_id`  | `number` | **Required** Bank ID                                       |
-| `card_type`     | `string` | **Required** Type of card (Credit/Debit)                   |
-| `card_level`    | `string` | **Required** Card level (Gold)                             |
-| `card_country`  | `string` | **Required** Card Country                                  |
+| Parameter       | Type     | Description                                                 |
+| :-------------- | :------- | :---------------------------------------------------------- |
+| `card_bin`      | `number` | **Required** Bank Identification Number (first six digits)  |
+| `card_name`     | `string` | **Optional** Name of card, if none given, will generate one |
+| `card_brand_id` | `number` | **Required** Brand ID                                       |
+| `card_bank_id`  | `number` | **Required** Bank ID                                        |
+| `card_type`     | `string` | **Required** Type of card (Credit/Debit)                    |
+| `card_level`    | `string` | **Required** Card level (Gold)                              |
+| `card_country`  | `string` | **Required** Card Country                                   |
 
 Returns Created Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
 
