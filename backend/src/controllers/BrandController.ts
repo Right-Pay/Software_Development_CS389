@@ -114,6 +114,7 @@ class BrandController {
       return;
     }
     try {
+      throw new Error(i18n.t('error.notAllowedAtThisTime'));
       const brandDeleted = await BrandModel.delete(brandId);
       if (brandDeleted) {
         response.data = brandDeleted;

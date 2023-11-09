@@ -115,6 +115,7 @@ class BankController {
       return;
     }
     try {
+      throw new Error(i18n.t('error.notAllowedAtThisTime'));
       const bankDeleted = await BankModel.delete(bankId);
       if (bankDeleted) {
         response.data = bankDeleted;

@@ -4,6 +4,8 @@
     "userFound": "User already exists!",
     "userNotCreated": "User could not be created!",
     "userCardNotLinked": "Card could not be linked!",
+    "userCardAlreadyLinked": "Card is already linked!",
+    "userCardNotUnlinked": "Card could not be unlinked!",
 
     "bankNotFound": "Bank does not exist!",
     "bankFound": "Bank already exists!",
@@ -19,6 +21,8 @@
 
     "default": "An unexpected error occurred. Please try again or contact support.",
     "unauthorized": "You are not authorized to perform this action.",
-    "missingFields": "Please fill in all required fields."
+    "missingFields": "Please fill in all required fields.",
+    "notAllowedAtThisTime": "You are not allowed to perform this action at this time.",
+    "invalidDate": "Please enter a valid date."
   }
 }

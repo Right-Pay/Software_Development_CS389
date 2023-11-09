@@ -50,14 +50,15 @@ export class UserModel {
 
         if (userCards.length) {
           user.cards.forEach((card: Card) => {
-            const bank = banks.find((bank: Bank) => bank.id === card.card_bank_id);
+            const bank = banks.find((bank: Bank) => Number(bank.id) === Number(card.card_bank_id));
             if (bank) {
               card.card_bank = bank;
             }
-            const brand = brands.find((brand: Brand) => brand.id === card.card_brand_id);
+            const brand = brands.find((brand: Brand) => Number(brand.id) === Number(card.card_brand_id));
             if (brand) {
               card.card_brand = brand;
             }
+            card.rewards = [];
           });
         }
         return user;
@@ -90,8 +91,11 @@ export class UserModel {
     }
   }
 
-  async link_user_to_card(auth_id: string, card_id: number): Promise<Card> {
+  async link_card(auth_id: string, card_id: number, exp_date: string): Promise<Card> {
     try {
+      if (!exp_date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        throw new Error('error.invalidDate');
+      }
       const client = await dbPool.connect();
       const userCheck = await this.get(auth_id);
       if (userCheck === null) {
@@ -103,8 +107,15 @@ export class UserModel {
         throw new Error('error.cardNotFound');
       }
 
-      const sql = 'INSERT INTO rp_users_to_card_link (user_id, card_id) VALUES ($1, $2) RETURNING *';
-      const values = [user_id, card_id];
+      const sql_check = 'SELECT * FROM rp_user_to_card_link WHERE user_id = $1 AND card_id = $2';
+      const values_check = [user_id, card_id];
+      const result_check = await client.query(sql_check, values_check);
+      if (result_check.rows.length) {
+        throw new Error('error.userCardAlreadyLinked');
+      }
+
+      const sql = 'INSERT INTO rp_user_to_card_link (user_id, card_id, expiration_date) VALUES ($1, $2, $3) RETURNING *';
+      const values = [user_id, card_id, exp_date];
       const result = await client.query(sql, values);
       if (!result.rows.length) {
         throw new Error('error.userCardNotLinked');
@@ -118,7 +129,7 @@ export class UserModel {
     }
   }
 
-  async unlink_user_from_card(auth_id: string, card_id: number): Promise<Card> {
+  async unlink_card(auth_id: string, card_id: number): Promise<Card> {
     try {
       const client = await dbPool.connect();
       const userCheck = await this.get(auth_id);
@@ -131,11 +142,11 @@ export class UserModel {
         throw new Error('error.cardNotFound');
       }
 
-      const sql = 'INSERT INTO rp_users_to_card_link (user_id, card_id) VALUES ($1, $2) RETURNING *';
+      const sql = 'DELETE FROM rp_user_to_card_link WHERE user_id = $1 AND card_id = $2 RETURNING *';
       const values = [user_id, card_id];
       const result = await client.query(sql, values);
       if (!result.rows.length) {
-        throw new Error('error.userCardNotLinked');
+        throw new Error('error.userCardNotUnlinked');
       }
       client.release();
       return cardCheck;

@@ -77,6 +77,7 @@ class CardController {
     };
     const cardId = req.body.card_id;
     try {
+      throw new Error(i18n.t('error.notAllowedAtThisTime'));
       const cardDeleted = await CardModel.delete(cardId);
       if (cardDeleted) {
         response.data = cardDeleted;
