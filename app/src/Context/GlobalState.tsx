@@ -30,7 +30,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     AddBankOption: false,
     AddTypeOption: false,
   });
-  const [newCreditCard, setNewCard] = React.useState<CreditCard | null>(null);
+  const [newCreditCard, setNewCreditCard] = React.useState<CreditCard | null>(
+    null,
+  );
   const [updatingDropdown, setUpdatingDropdown] =
     React.useState<boolean>(false);
 
@@ -78,7 +80,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     } as CreditCard;
     setCreditCardForms(c => ({...c, Search: false}));
     if (foundCard !== null) {
-      setNewCard(foundCard);
+      setNewCreditCard(foundCard);
       setCreditCardForms(c => ({...c, Review: true}));
     } else {
       setCreditCardForms(c => ({...c, Full: true}));
@@ -86,7 +88,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const reviewCreditCard = (creditCard: CreditCard) => {
-    setNewCard(creditCard);
+    setNewCreditCard(creditCard);
     setCreditCardForms(c => ({...c, Review: false}));
   };
 
@@ -193,36 +195,38 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     formType: string,
   ) {
     const errors: string[] = [];
+    console.log(formDetails, formType);
     switch (formType) {
       case CreditCardFormTypes.Full:
-        if (formDetails.cardName && !testCardName(formDetails.cardName)) {
+        if (!testCardName(formDetails.cardName as string)) {
           errors.push(ErrorMessages.invalidCreditCardName);
         }
-        if (formDetails.nickname && testNickname(formDetails.nickname)) {
+        if (!testNickname(formDetails.nickname as string)) {
           errors.push(ErrorMessages.invalidCreditCardNickName);
         }
-        if (formDetails.cardNumber && testCardNumber(formDetails.cardNumber)) {
+        if (!testCardNumber(formDetails.cardNumber as string)) {
           errors.push(ErrorMessages.invalidCreditCardNumber);
         }
         break;
       case CreditCardFormTypes.Search:
-        if (formDetails.cardNumber && testCardNumber(formDetails.cardNumber)) {
+        if (!testCardNumber(formDetails.cardNumber as string)) {
           errors.push(ErrorMessages.invalidCreditCardNumber);
         }
         break;
       case CreditCardFormTypes.Review:
-        if (formDetails.cardName && !testCardName(formDetails.cardName)) {
+        if (!testCardName(formDetails.cardName as string)) {
           errors.push(ErrorMessages.invalidCreditCardName);
         }
-        if (formDetails.nickname && testNickname(formDetails.nickname)) {
+        if (!testNickname(formDetails.nickname as string)) {
+          console.log('jh');
           errors.push(ErrorMessages.invalidCreditCardNickName);
         }
-        if (formDetails.cardNumber && testCardNumber(formDetails.cardNumber)) {
+        if (!testCardNumber(formDetails.cardNumber as string)) {
           errors.push(ErrorMessages.invalidCreditCardNumber);
         }
         break;
       case CreditCardFormTypes.AddBank:
-        if (formDetails.bankName && testBankName(formDetails.bankName)) {
+        if (!testBankName(formDetails.bankName as string)) {
           errors.push(ErrorMessages.invalidBankName);
         }
         break;
@@ -261,6 +265,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         CreditCardForms,
         setCreditCardForms,
         validateCreditCardForm,
+        setNewCreditCard,
       }}>
       {children}
     </Context.Provider>

@@ -18,6 +18,10 @@ const DropdownComponent = (props: DropdownProps) => {
       labelStyle: {color: 'black'},
     })),
   );
+
+  const styleFromProps =
+    typeof props.style === 'string' ? props.style : (props?.style as any)[0];
+
   const {updatingDropdown} = React.useContext(Context) as AppContext;
 
   const handleSetValue = (val: string) => {
@@ -43,7 +47,8 @@ const DropdownComponent = (props: DropdownProps) => {
   }, [updatingDropdown]);
 
   return (
-    <StyledView className={props.style}>
+    <StyledView
+      className={isNaN(+props.placeholder) ? 'w-2/3 mb-2 mt-1' : 'w-1/2'}>
       <Dropdown
         open={open}
         value={value}

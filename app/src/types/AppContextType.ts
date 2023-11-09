@@ -31,4 +31,5 @@ export interface AppContext {
     _formDetails: CreditCardFormDetails,
     _formType: string,
   ) => string[];
+  setNewCreditCard: (_newCreditCard: CreditCard | null) => void;
 }
