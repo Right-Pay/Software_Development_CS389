@@ -11,10 +11,10 @@ import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
-import {optionsPropsType} from '../../../types/DropdownProps';
 import {CreditCardFormTypes} from '../../../types/CreditCardType';
+import {OptionsPropsType} from '../../../Helpers/Dropdown';
 
-const AddNewBankOption = (props: optionsPropsType) => {
+const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,

@@ -1,24 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {DropdownProps} from '../types/DropdownProps';
 import {Dropdown} from './StylizedComponents';
 import {View} from 'react-native';
 import {AppContext} from '../types/AppContextType';
 import Context from '../Context/context';
 import {styled} from 'nativewind';
-import {Console} from 'console';
 
 const StyledView = styled(View);
 
 const DropdownComponent = (props: DropdownProps) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(props.placeholder);
-  const [items, setItems] = useState(
-    props.options.map(o => ({
-      label: o,
-      value: o,
-      labelStyle: {color: 'black'},
-    })),
-  );
+  const [items, setItems] = useState<OptionsProps[]>([]);
 
   const {updatingDropdown, setUpdatingDropdown} = React.useContext(
     Context,
@@ -46,6 +38,14 @@ const DropdownComponent = (props: DropdownProps) => {
     setValue(props.options[props.options.length - 2]);
     setUpdatingDropdown(false);
   }, [updatingDropdown]);
+
+  useEffect(() => {
+    props.options.map(o => ({
+      label: o,
+      value: o,
+      labelStyle: {color: 'black'},
+    }));
+  }, []);
 
   return (
     <StyledView className={props.dropdownStyle}>
@@ -104,3 +104,23 @@ const DropdownComponent = (props: DropdownProps) => {
 };
 
 export default DropdownComponent;
+
+export interface DropdownProps {
+  options: string[];
+  placeholder: string;
+  onDropdownChange: (_item: string) => void;
+  dropdownStyle?: string;
+  mode?: string;
+  refresh?: boolean;
+}
+
+export interface OptionsPropsType {
+  setOption: (_item: string) => void;
+  show: boolean;
+}
+
+export interface OptionsProps {
+  label: string;
+  value: string;
+  labelStyle: {};
+}
