@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
 import {
   AddCCFormOverlayView,
-  AuthButton,
-  AuthButtonText,
-  AuthInputBox,
+  FormButton,
+  FormButtonText,
+  FormInputBox,
   Title,
 } from '../../../Helpers/StylizedComponents';
 import {AppContext} from '../../../types/AppContextType';
@@ -101,17 +101,17 @@ const AddCreditCardSearchForm = () => {
           <Title className="mb-24">
             Enter First Six Digits of your Credit Card Number
           </Title>
-          <AuthInputBox
+          <FormInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
             onChange={event => handleCCNumChange(event)}
           />
-          <AuthButton onPress={handleSubmit} className="m4-2 z-0">
-            <AuthButtonText>Submit</AuthButtonText>
-          </AuthButton>
-          <AuthButton onPress={closeModal} className="z-0">
-            <AuthButtonText>Close</AuthButtonText>
-          </AuthButton>
+          <FormButton onPress={handleSubmit} className="m4-2 z-0">
+            <FormButtonText>Submit</FormButtonText>
+          </FormButton>
+          <FormButton onPress={closeModal} className="z-0">
+            <FormButtonText>Close</FormButtonText>
+          </FormButton>
           {AuthErrorComponent && <AuthErrorComponent />}
         </AddCCFormOverlayView>
       </KeyboardAvoidingView>

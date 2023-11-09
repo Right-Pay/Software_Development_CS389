@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
 import {
   AddCCFormOverlayView,
-  AuthButton,
-  AuthButtonText,
-  AuthInputBox,
+  FormButton,
+  FormButtonText,
+  FormInputBox,
   Title,
 } from '../../../Helpers/StylizedComponents';
 import {AppContext} from '../../../types/AppContextType';
@@ -91,17 +91,17 @@ const AddNewBankOption = (props: optionsPropsType) => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         <AddCCFormOverlayView className="flex-auto ">
           <Title>{'Enter a New Option for bank'}</Title>
-          <AuthInputBox
+          <FormInputBox
             placeholder="Name of Option"
             placeholderTextColor="#AFAEAE"
             onChange={event => setNewOption(event.nativeEvent.text)}
           />
-          <AuthButton onPress={handleSubmit} className="mt-1 z-0">
-            <AuthButtonText>Submit</AuthButtonText>
-          </AuthButton>
-          <AuthButton onPress={closeModal} className="z-0">
-            <AuthButtonText>Close</AuthButtonText>
-          </AuthButton>
+          <FormButton onPress={handleSubmit} className="mt-1 z-0">
+            <FormButtonText>Submit</FormButtonText>
+          </FormButton>
+          <FormButton onPress={closeModal} className="z-0">
+            <FormButtonText>Close</FormButtonText>
+          </FormButton>
           {AuthErrorComponent && <AuthErrorComponent />}
         </AddCCFormOverlayView>
       </KeyboardAvoidingView>

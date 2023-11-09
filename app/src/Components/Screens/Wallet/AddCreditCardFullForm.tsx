@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
 import {
   AddCCFormOverlayView,
-  AuthButton,
-  AuthButtonText,
-  AuthInputBox,
+  FormButton,
+  FormButtonText,
+  FormInputBox,
   FormDateView,
   Title,
 } from '../../../Helpers/StylizedComponents';
@@ -167,17 +167,17 @@ const AddCreditCardFullForm = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         <AddCCFormOverlayView className="flex-auto ">
           <Title>Add New Credit Card</Title>
-          <AuthInputBox
+          <FormInputBox
             placeholder="Name of Card"
             placeholderTextColor="#AFAEAE"
             onChange={event => setCardName(event.nativeEvent.text)}
           />
-          <AuthInputBox
+          <FormInputBox
             placeholder="Nickname"
             placeholderTextColor="#AFAEAE"
             onChange={event => setNickName(event.nativeEvent.text)}
           />
-          <AuthInputBox
+          <FormInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
             onChange={event => onCCNumberChange(event)}
@@ -231,12 +231,12 @@ const AddCreditCardFullForm = () => {
               style: 'w-1/2',
             })}
           </FormDateView>
-          <AuthButton onPress={handleSubmit} className="mt-1 z-0">
-            <AuthButtonText>Submit</AuthButtonText>
-          </AuthButton>
-          <AuthButton onPress={closeModal} className="z-0">
-            <AuthButtonText>Close</AuthButtonText>
-          </AuthButton>
+          <FormButton onPress={handleSubmit} className="mt-1 z-0">
+            <FormButtonText>Submit</FormButtonText>
+          </FormButton>
+          <FormButton onPress={closeModal} className="z-0">
+            <FormButtonText>Close</FormButtonText>
+          </FormButton>
           {AuthErrorComponent && <AuthErrorComponent />}
         </AddCCFormOverlayView>
       </KeyboardAvoidingView>

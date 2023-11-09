@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
 import {
   AddCCFormOverlayView,
-  AuthButton,
-  AuthButtonText,
-  AuthInputBox,
+  FormButton,
+  FormButtonText,
+  FormInputBox,
   Title,
 } from '../../../Helpers/StylizedComponents';
 import {AppContext} from '../../../types/AppContextType';
@@ -76,7 +76,7 @@ const ReviewCreditCardForm = () => {
         {newCreditCard && (
           <AddCCFormOverlayView className="flex-auto ">
             <Title>Review Credit Card</Title>
-            <AuthInputBox
+            <FormInputBox
               defaultValue={newCreditCard.cardName}
               placeholder="Name of Card"
               placeholderTextColor={'black'}
@@ -84,7 +84,7 @@ const ReviewCreditCardForm = () => {
                 (newCreditCard.cardName = event.nativeEvent.text)
               }
             />
-            <AuthInputBox
+            <FormInputBox
               defaultValue={newCreditCard.nickname}
               placeholder="Nickname"
               placeholderTextColor={'black'}
@@ -92,7 +92,7 @@ const ReviewCreditCardForm = () => {
                 (newCreditCard.nickname = event.nativeEvent.text)
               }
             />
-            <AuthInputBox
+            <FormInputBox
               defaultValue={newCreditCard.cardNumber}
               placeholder="Card Number"
               placeholderTextColor={'black'}
@@ -118,7 +118,7 @@ const ReviewCreditCardForm = () => {
               mode={ModalMode}
               style="m-2 h-auto w-1/2 z-40"
             />
-            <AuthInputBox
+            <FormInputBox
               defaultValue={newCreditCard.expirationDate}
               placeholder="Expiration Date"
               placeholderTextColor={'black'}
@@ -126,12 +126,12 @@ const ReviewCreditCardForm = () => {
                 (newCreditCard.expirationDate = event.nativeEvent.text)
               }
             />
-            <AuthButton onPress={handleSubmit} className="mt-1 z-0">
-              <AuthButtonText>Submit</AuthButtonText>
-            </AuthButton>
-            <AuthButton onPress={closeModal} className="z-0">
-              <AuthButtonText>Cancel</AuthButtonText>
-            </AuthButton>
+            <FormButton onPress={handleSubmit} className="mt-1 z-0">
+              <FormButtonText>Submit</FormButtonText>
+            </FormButton>
+            <FormButton onPress={closeModal} className="z-0">
+              <FormButtonText>Cancel</FormButtonText>
+            </FormButton>
           </AddCCFormOverlayView>
         )}
       </KeyboardAvoidingView>
