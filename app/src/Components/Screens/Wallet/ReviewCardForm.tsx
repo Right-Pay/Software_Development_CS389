@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
 import {
-  AddCCFormOverlayView,
+  AddCFormOverlayView,
   FormButton,
   FormButtonText,
   FormDateView,
@@ -13,23 +13,23 @@ import Context from '../../../Context/context';
 import Consts from '../../../Helpers/Consts';
 import DropdownComponent from '../../../Helpers/Dropdown';
 import AuthErrorComponent from '../../../Helpers/AuthErrorComponent';
-import {CreditCardFormTypes} from '../../../types/CreditCardType';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 
-const ReviewCreditCardForm = () => {
+const ReviewCardForm = () => {
   //Context
   const {addAuthError} = React.useContext(authContext) as AuthContextType;
 
   const {
-    addCreditCard,
-    newCreditCard,
+    addCard,
+    newCard,
     bankOptions,
     typeOptions,
-    CreditCardForms,
-    setCreditCardForms,
-    setNewCreditCard,
-    validateCreditCardForm,
+    CardForms,
+    setCardForms,
+    setNewCard,
+    validateCardForm,
+    setNewCardBin,
   } = React.useContext(Context) as AppContext;
 
   //Constants
@@ -41,45 +41,43 @@ const ReviewCreditCardForm = () => {
   );
 
   //Functions
-  const closeModal = () =>
-    setCreditCardForms({
-      ...CreditCardForms,
+  const closeModal = () => {
+    setNewCardBin(0o0);
+    setCardForms({
+      ...CardForms,
       Review: false,
     });
+  };
 
   const handleExpirationMonthChange = (month: string) => {
-    const currentExpirationDate = newCreditCard?.exp_date;
+    const currentExpirationDate = newCard?.exp_date;
     const year = currentExpirationDate?.split('/')[1];
     if (currentExpirationDate) {
-      setNewCreditCard({...newCreditCard, exp_date: `${month}/${year}`});
+      setNewCard({...newCard, exp_date: `${month}/${year}`});
     }
   };
 
   const handleExpirationYearChange = (year: string) => {
-    const currentExpirationDate = newCreditCard?.exp_date;
+    const currentExpirationDate = newCard?.exp_date;
     const month = currentExpirationDate?.split('/')[0];
     if (currentExpirationDate) {
-      setNewCreditCard({...newCreditCard, exp_date: `${month}/${year}`});
+      setNewCard({...newCard, exp_date: `${month}/${year}`});
     }
   };
 
   const handleSubmit = () => {
-    if (!newCreditCard) {
+    if (!newCard) {
       return;
     }
-    const errors = validateCreditCardForm(
-      {
-        cardName: newCreditCard.card_name,
-        cardBin: newCreditCard.card_bin,
-        bankName: newCreditCard.card_bank,
-      },
-      CreditCardFormTypes.Review,
-    );
+    const errors = validateCardForm({
+      bankName: newCard.card_bank,
+      level: newCard.card_level,
+    });
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     }
-    addCreditCard();
+    addCard();
     closeModal();
   };
 
@@ -110,7 +108,7 @@ const ReviewCreditCardForm = () => {
     <Modal
       animationType="slide"
       transparent={false}
-      visible={CreditCardForms.Review}
+      visible={CardForms.Review}
       onRequestClose={closeModal}>
       <KeyboardAvoidingView
         style={{
@@ -121,30 +119,26 @@ const ReviewCreditCardForm = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-        {newCreditCard && (
-          <AddCCFormOverlayView className="flex-auto ">
-            <Title>Review Credit Card</Title>
+        {newCard && (
+          <AddCFormOverlayView className="flex-auto ">
+            <Title>Review Card</Title>
             <FormInputBox
-              defaultValue={newCreditCard.card_name}
-              placeholder="Name of Card"
-              placeholderTextColor={'grey'}
-              onChange={event =>
-                (newCreditCard.card_name = event.nativeEvent.text)
-              }
-            />
-            <FormInputBox
-              defaultValue={newCreditCard.card_bin.toString()}
+              defaultValue={newCard.card_bin.toString()}
               placeholder="Card Number"
               placeholderTextColor={'grey'}
               maxLength={6}
-              onChange={event =>
-                (newCreditCard.card_bin = +event.nativeEvent.text)
-              }
+              onChange={event => (newCard.card_bin = +event.nativeEvent.text)}
+            />
+            <FormInputBox
+              placeholder="Level"
+              placeholderTextColor="#AFAEAE"
+              onChange={event => (newCard.card_level = event.nativeEvent.text)}
+              value={newCard.card_level}
             />
             <DropdownComponent
               options={bankOptions.filter(b => b !== 'Add New Bank')}
               placeholder={bankOptions[0]}
-              onDropdownChange={event => (newCreditCard.card_bank = event)}
+              onDropdownChange={event => (newCard.card_bank = event)}
               mode={ModalMode}
               dropdownStyle="m-2 h-auto w-2/3"
             />
@@ -152,10 +146,17 @@ const ReviewCreditCardForm = () => {
               options={typeOptions}
               placeholder={typeOptions[0]}
               onDropdownChange={event => {
-                newCreditCard.card_brand = event;
+                newCard.card_brand = event;
               }}
               mode={ModalMode}
               dropdownStyle="m-2 h-auto w-2/3"
+            />
+            <DropdownComponent
+              options={['Debit', 'Credit']}
+              placeholder="Credit"
+              onDropdownChange={event => (newCard.card_type = event)}
+              mode={ModalMode}
+              dropdownStyle="m-2 w-2/3 h-auto"
             />
             <FormDateView>
               <DropdownComponent
@@ -173,16 +174,14 @@ const ReviewCreditCardForm = () => {
                   '11',
                   '12',
                 ]}
-                placeholder={newCreditCard?.exp_date?.split('/')[0] ?? '1'}
+                placeholder={newCard?.exp_date?.split('/')[0] ?? '1'}
                 onDropdownChange={handleExpirationMonthChange}
                 mode={ModalMode}
                 dropdownStyle="w-1/3 mr-4"
               />
               <DropdownComponent
                 options={years}
-                placeholder={
-                  newCreditCard?.exp_date?.split('/')[1] ?? currentYear
-                }
+                placeholder={newCard?.exp_date?.split('/')[1] ?? currentYear}
                 onDropdownChange={handleExpirationYearChange}
                 mode={ModalMode}
                 dropdownStyle="w-1/3 ml-4"
@@ -195,11 +194,11 @@ const ReviewCreditCardForm = () => {
               <FormButtonText>Cancel</FormButtonText>
             </FormButton>
             {AuthErrorComponent && <AuthErrorComponent />}
-          </AddCCFormOverlayView>
+          </AddCFormOverlayView>
         )}
       </KeyboardAvoidingView>
     </Modal>
   );
 };
 
-export default ReviewCreditCardForm;
+export default ReviewCardForm;

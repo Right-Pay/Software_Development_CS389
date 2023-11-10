@@ -8,30 +8,30 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {
-  AddCreditCardButton,
-  AddCreditCardIcon,
-  AddCreditCardView,
-  CreditCardButton,
-  CreditCardItemSeperator,
-  CreditCardList,
-  CreditCardListView,
-  CreditCardText,
-  CreditCardView,
-  DeleteCreditCardButton,
+  AddCardButton,
+  AddCardIcon,
+  AddCardView,
+  CardButton,
+  CardItemSeperator,
+  CardList,
+  CardListView,
+  CardText,
+  CardView,
+  DeleteCardButton,
   RewardsView,
-  SecondaryAddCreditCardView,
-  SecondaryCreditCardView,
+  SecondaryAddCardView,
+  SecondaryCardView,
   Subtitle,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
-import {Card, Reward} from '../../../types/CreditCardType';
+import {Card, Reward} from '../../../types/CardType';
 import {Dimensions} from 'react-native';
-import AddCreditCardFullForm from './AddCreditCardFullForm';
-import AddCreditCardSearchForm from './AddCreditCardSearchForm';
-import ReviewCreditCardForm from './ReviewCreditCardForm';
+import AddCardFullForm from './AddCardFullForm';
+import ReviewCardForm from './ReviewCardForm';
+import Consts from '../../../Helpers/Consts';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -40,62 +40,63 @@ type WalletScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const WalletScreen: React.FC<WalletScreenProps> = () => {
-  const {creditCards, removeCreditCard, setCreditCardForms, CreditCardForms} =
-    React.useContext(Context) as AppContext;
+  const {Cards, removeCard, setCardForms, CardForms} = React.useContext(
+    Context,
+  ) as AppContext;
   const [currentViewedCard, setCurrentViewedCard] = React.useState<Card[]>([
-    creditCards[0],
+    Cards[0],
   ]);
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
   //helpers
-  const getCreditCardRewards = (creditCardId: number) => [];
+  const getCardRewards = (CardId: number) => [];
 
   //components
-  const addNewCreditCardComponent = () => (
-    <AddCreditCardView>
-      <SecondaryAddCreditCardView>
-        <CreditCardText className="text-center">
-          Add New Credit Card
-        </CreditCardText>
-        <AddCreditCardButton onPress={handleAddPress}>
-          <AddCreditCardIcon source={require('../../../Assets/AddSign.png')} />
-        </AddCreditCardButton>
-      </SecondaryAddCreditCardView>
-    </AddCreditCardView>
+  const addNewCardComponent = () => (
+    <AddCardView>
+      <SecondaryAddCardView>
+        <CardText className="text-center">Add New Card</CardText>
+        <AddCardButton onPress={handleAddPress}>
+          <AddCardIcon source={require('../../../Assets/AddSign.png')} />
+        </AddCardButton>
+      </SecondaryAddCardView>
+    </AddCardView>
   );
   const renderCard = (item: Card) => {
     if (item.card_name === 'Add') {
-      return addNewCreditCardComponent();
+      return addNewCardComponent();
     }
     return (
-      <CreditCardView>
-        <SecondaryCreditCardView>
-          <CreditCardButton
-            onLongPress={() => handleCreditCardPress()}
+      <CardView>
+        <SecondaryCardView>
+          <CardButton
+            onLongPress={() => handleCardPress()}
             className={deleteCard ? 'opacity-50 ' : 'opacity-100'}>
-            <CreditCardText className="text-center font-bold truncate">
+            <CardText className="text-center font-bold truncate">
               {item.card_name}
-            </CreditCardText>
-            <CreditCardText>{`Card Type: ${item.card_brand}`}</CreditCardText>
-            <CreditCardText>{`Bank Name: ${item.card_bank}`}</CreditCardText>
-          </CreditCardButton>
+            </CardText>
+            <CardText>{`Card Type: ${item.card_type}`}</CardText>
+            <CardText>{`Card Brand: ${item.card_brand}`}</CardText>
+            <CardText>{`Bank Name: ${item.card_bank}`}</CardText>
+            <CardText>{`Card Bin: ${item.card_bin}`}</CardText>
+          </CardButton>
           {deleteCard && (
-            <DeleteCreditCardButton
+            <DeleteCardButton
               onLongPress={handleDelete}
               onPress={() => setDeleteCard(false)}>
-              <CreditCardText className="opacity-100 text-4xl text-center">
+              <CardText className="opacity-100 text-4xl text-center">
                 Delete Card?
-              </CreditCardText>
-              <CreditCardText className="opacity-100 text-3xl text-center">
+              </CardText>
+              <CardText className="opacity-100 text-3xl text-center">
                 Long Press Again to Confirm
-              </CreditCardText>
-              <CreditCardText className="opacity-100 text-2xl text-center">
-                Tap to Exist
-              </CreditCardText>
-            </DeleteCreditCardButton>
+              </CardText>
+              <CardText className="opacity-100 text-2xl text-center">
+                Tap to Exit
+              </CardText>
+            </DeleteCardButton>
           )}
-        </SecondaryCreditCardView>
-      </CreditCardView>
+        </SecondaryCardView>
+      </CardView>
     );
   };
 
@@ -108,20 +109,20 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     );
   };
 
-  const itemSeparatorComponent = () => <CreditCardItemSeperator />;
+  const itemSeparatorComponent = () => <CardItemSeperator />;
 
   //handlers
-  const handleCreditCardPress = () => {
+  const handleCardPress = () => {
     setDeleteCard(!deleteCard);
   };
 
   const handleDelete = () => {
     setDeleteCard(false);
-    removeCreditCard(currentViewedCard[0]);
+    removeCard(currentViewedCard[0]);
   };
 
   const handleAddPress = () => {
-    setCreditCardForms({...CreditCardForms, Search: true});
+    setCardForms({...CardForms, Full: true});
   };
 
   const onViewRef = useRef((viewableItems: any) => {
@@ -137,14 +138,13 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   return (
     <WrapperView>
-      {AddCreditCardFullForm()}
-      {AddCreditCardSearchForm()}
-      {ReviewCreditCardForm()}
+      {AddCardFullForm()}
+      {ReviewCardForm()}
       <Title className="mt-10">Wallet</Title>
-      <CreditCardListView>
-        <CreditCardList
+      <CardListView>
+        <CardList
           data={[
-            ...creditCards,
+            ...Cards,
             {
               card_name: 'Add',
               id: -1,
@@ -157,11 +157,13 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           horizontal={true}
           ItemSeparatorComponent={itemSeparatorComponent}
           onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
-          snapToInterval={Dimensions.get('window').width + 48} //Change 48 based on width of CreditCardItemSeperator width
+          snapToInterval={
+            Dimensions.get('window').width + Consts.cardItemSeparatorWidth
+          } //Change 48 based on width of CardItemSeperator width
         />
-      </CreditCardListView>
-      <CreditCardListView className="h-2/6 justify-center items-center">
-        <CreditCardList
+      </CardListView>
+      <CardListView className="h-2/6 justify-center items-center">
+        <CardList
           className=" text-center w-3/4 p-2"
           data={[]} //This will need to be done
           ListHeaderComponent={
@@ -174,7 +176,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           renderItem={({item}) => renderReward(item as Reward)}
           ItemSeparatorComponent={itemSeparatorComponent}
         />
-      </CreditCardListView>
+      </CardListView>
     </WrapperView>
   );
 };

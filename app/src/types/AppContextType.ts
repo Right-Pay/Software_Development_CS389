@@ -1,19 +1,13 @@
-import {
-  Card,
-  CreditCardFormDetails,
-  CreditCardFormsType,
-  Reward,
-} from './CreditCardType';
+import {Card, CardFormDetails, CardFormsType, Reward} from './CardType';
 import {Location} from './Location';
 
 export interface AppContext {
-  creditCards: Card[];
-  newCreditCard: Card | null;
+  Cards: Card[];
+  newCard: Card | null;
   rewards: Reward[];
-  reviewCreditCard: (_creditCard: Card) => void;
-  findCreditCard: (_cardBin: number) => void;
-  addCreditCard: () => boolean;
-  removeCreditCard: (_creditCard: Card) => void;
+  findCard: (_cardBin: number) => boolean;
+  addCard: () => boolean;
+  removeCard: (_Card: Card) => void;
   addNewReward: (_reward: Reward) => void;
   removeReward: (_reward: Reward) => void;
   location: Location;
@@ -25,13 +19,11 @@ export interface AppContext {
   setBankOptions: (_bankOptions: string[]) => void;
   typeOptions: string[];
   setTypeOptions: (_typeOptions: string[]) => void;
-  CreditCardForms: CreditCardFormsType;
-  setCreditCardForms: (_creditCardForms: CreditCardFormsType) => void;
-  validateCreditCardForm: (
-    _formDetails: CreditCardFormDetails,
-    _formType: string,
-  ) => string[];
-  setNewCreditCard: (_newCreditCard: Card | null) => void;
+  CardForms: CardFormsType;
+  setCardForms: (_CardForms: CardFormsType) => void;
+  validateCardForm: (_formDetails: CardFormDetails) => string[];
+  setNewCard: (_newCard: Card | null) => void;
   setNewCardBin: (_newCardBin: number) => void;
   newCardBin: number;
+  reviewCard: (_card: Card) => void;
 }

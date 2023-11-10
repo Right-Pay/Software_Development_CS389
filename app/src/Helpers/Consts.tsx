@@ -1,5 +1,5 @@
 import ConstsType from '../types/ConstsType';
-import {Card, Reward} from '../types/CreditCardType';
+import {Card, Reward} from '../types/CardType';
 
 const AuthErrorMessages = {
   invalidEmail: 'Invalid Email',
@@ -15,14 +15,15 @@ const AuthErrorMessages = {
   errorChangingPassword: 'Error Changing Password',
   sentRestEmail: 'Check Your Email for Further Instructions',
   invalidToken: 'Invalid Token\nPlease Contact Support',
-  invalidCreditCardName:
-    'Invalid Credit Card Name\nName must be more then 10 characters\nName must only contain letters',
-  invalidCreditCardBin: 'Invalid Credit Card Number\nMust be 6 digits',
+  invalidCardName:
+    'Invalid  Card Name\nName must be more then 10 characters\nName must only contain letters',
+  invalidCardBin: 'Invalid  Card Number\nMust be 6 digits',
   invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
   invalidDropdownOption: 'Invalid Dropdown Option',
+  invalidCardLevel: 'Invalid Card Level\nName must be more then 3 characters',
 };
 
-enum CreditCardFormEnum {
+enum CardFormEnum {
   Search = 0,
   Full = 1,
   Review = 2,
@@ -54,7 +55,7 @@ const dummyProfile = {
   //password: 'JohnDoe1234!',
 };
 
-const dummyCreditCards: Card[] = [
+const dummyCards: Card[] = [
   {
     id: 1,
     card_bin: 123456,
@@ -62,6 +63,8 @@ const dummyCreditCards: Card[] = [
     card_bank: 'Bank of America',
     exp_date: '12/24',
     card_brand: 'Visa',
+    card_level: 'Freedom Unlimited',
+    card_type: 'Credit',
   },
   {
     id: 2,
@@ -70,21 +73,23 @@ const dummyCreditCards: Card[] = [
     card_bank: 'Chase',
     exp_date: '11/25',
     card_brand: 'MasterCard',
+    card_level: 'Freedom Unlimited',
+    card_type: 'Credit',
   },
 ];
 
-const dummyCreditCardRewards: Reward[] = [];
+const dummyCardRewards: Reward[] = [];
 
-const addBank = 'Add New Bank';
+const cardItemSeparatorWidth = 48;
 
 const Consts: ConstsType = {
-  CreditCardFormEnum: CreditCardFormEnum,
+  CardFormEnum: CardFormEnum,
   DropdownListModes: DropdownListModes,
   authErrorMessages: AuthErrorMessages,
   dummyProfile: dummyProfile,
-  dummyCreditCards: dummyCreditCards,
-  dummyCreditCardRewards: dummyCreditCardRewards,
-  addBank: addBank,
+  dummyCards: dummyCards,
+  dummyCardRewards: dummyCardRewards,
+  cardItemSeparatorWidth,
 };
 
 export default Consts;

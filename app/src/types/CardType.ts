@@ -1,7 +1,7 @@
 export interface Card {
   id?: number;
   card_bin: number;
-  card_name: string;
+  card_name?: string;
   card_brand?: string;
   card_bank?: string;
   card_type?: string;
@@ -23,22 +23,22 @@ export interface Reward {
   reward_value_currency: string;
 }
 
-export interface CreditCardFormProps {}
+export interface CardFormProps {}
 
-export interface CreditCardFormsType {
+export interface CardFormsType {
   [key: string]: boolean;
 }
 
-export interface CreditCardFormDetails {
+export interface CardFormDetails {
   cardName?: string;
   cardBin?: number;
   bankName?: string;
   nickname?: string;
+  level?: string;
 }
 
-export enum CreditCardFormTypes {
+export enum CardFormTypes {
   Full = 'Full',
-  Search = 'Search',
   Review = 'Review',
   AddBank = 'AddBank',
 }
