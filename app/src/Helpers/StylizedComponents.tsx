@@ -33,6 +33,19 @@ export const AuthInputBox = styled(
 
 export const AuthButtonText = styled(Text, 'text-xl text-light-green');
 
+export const FormInputBox = styled(
+  TextInput,
+  'px-2 py-1 m-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green',
+);
+export const FormButton = styled(
+  Pressable,
+  'flex items-center justify-center fixed m-2 text-xl text-black h-9 w-5/12 rounded-xl bg-dark-green',
+);
+export const FormButtonText = styled(
+  Text,
+  'text-center text-xl text-light-green',
+);
+
 export const MainButton = styled(
   Pressable,
   'text-3xl p-2 border-2 border-dark-green rounded-xl m-2',
