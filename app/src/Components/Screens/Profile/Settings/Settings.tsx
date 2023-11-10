@@ -10,10 +10,13 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import {
   SettingsList,
   SettingsNavText,
+  Subtitle,
   Title,
   WrapperView,
 } from '../../../../Helpers/StylizedComponents';
 import {navSettingType} from '../../../../types/SettingsType';
+import authContext from '../../../../Context/authContext';
+import {AuthContextType} from '../../../../types/AuthContextType';
 
 type SettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'SettingsScreen'>,
@@ -21,7 +24,9 @@ type SettingsScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
+const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation} ) => {
+  const {userProfile} = React.useContext(authContext) as AuthContextType;
+
   const settingsPages: navSettingType[] = [
     {
       name: 'Profile Settings',
@@ -70,6 +75,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title className="absolute inset-x-0 top-0">Settings</Title>
+      <Subtitle className="absolute inset-x-0 top-20">
+        {userProfile.username}
+      </Subtitle>
       <SettingsList
         data={settingsPages}
         renderItem={({item}) => renderSettingsNav(item as navSettingType)}

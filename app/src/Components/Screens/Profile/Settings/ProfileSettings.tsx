@@ -12,6 +12,8 @@ import {
   MainButton,
   WrapperView,
 } from '../../../../Helpers/StylizedComponents';
+import authContext from '../../../../Context/authContext';
+import {AuthContextType} from '../../../../types/AuthContextType';
 
 type ProfileSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileSettings'>,
@@ -20,6 +22,7 @@ type ProfileSettingsProps = CompositeScreenProps<
   PropsWithChildren;
 
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
+  const {userProfile} = React.useContext(authContext) as AuthContextType;
 
   return (
     <WrapperView>
