@@ -16,8 +16,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [userToken, setUserToken] = React.useState<string | null>(null);
   const [refreshToken, setRefreshToken] = React.useState<string | null>(null);
   const [lang, setLang] = React.useState<string>('en');
-  // const baseURL = Config.REACT_APP_API_URL;
-  const baseURL = 'http://localhost:3001/api/';
+  const baseURL = Config.REACT_APP_API_URL;
   const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
   const auth0ClientId = Config.REACT_APP_AUTH0_CLIENT_ID;
   const auth0Audience = Config.REACT_APP_AUTH0_AUDIENCE;
@@ -171,14 +170,12 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     })
       .then(async res => (result = await res.json()))
       .catch(() => {
-        console.log(result);
         result = {
           success: false,
           message: ErrorMessages.errorGettingUser,
         };
       });
 
-    console.log(result);
     return result;
   };
 
