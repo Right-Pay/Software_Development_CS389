@@ -17,9 +17,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [creditCards, setCreditCards] = React.useState<Card[]>(
     Consts.dummyCreditCards,
   );
-  const [rewards, setRewards] = React.useState<Reward[]>(
-    Consts.dummyCreditCardRewards,
-  );
+  const [rewards] = React.useState<Reward[]>(Consts.dummyCreditCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
 
   const [CreditCardForms, setCreditCardForms] = useState<CreditCardFormsType>({
@@ -31,6 +29,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     AddTypeOption: false,
   });
   const [newCreditCard, setNewCreditCard] = React.useState<Card | null>(null);
+  const [newCardBin, setNewCardBin] = React.useState<number>(0o0);
   const [updatingDropdown, setUpdatingDropdown] =
     React.useState<boolean>(false);
 
@@ -76,7 +75,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       exp_date: '12/22',
     } as Card;
     setCreditCardForms(c => ({...c, Search: false}));
-    if (foundCard !== null) {
+
+    if (foundCard === null) {
       setNewCreditCard(foundCard);
       setCreditCardForms(c => ({...c, Review: true}));
     } else {
@@ -96,7 +96,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return true;
   };
 
-  const addNewReward = (creditCardReward: Card) => {
+  const addNewReward = (creditCardReward: Reward) => {
     //Do something here
   };
 
@@ -165,9 +165,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return regex.test(cardName);
   }
 
-  function testCardBin(cardBin: string) {
+  function testCardBin() {
     const regex: RegExp = /^[0-9]{6}$/;
-    return regex.test(cardBin);
+    return regex.test(newCardBin.toString());
   }
 
   function testBankName(bankName: string) {
@@ -185,12 +185,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         if (!testCardName(formDetails.cardName as string)) {
           errors.push(ErrorMessages.invalidCreditCardName);
         }
-        if (!testCardBin(formDetails.cardBin as string)) {
+        if (!testCardBin()) {
           errors.push(ErrorMessages.invalidCreditCardBin);
         }
         break;
       case CreditCardFormTypes.Search:
-        if (!testCardBin(formDetails.cardBin as string)) {
+        if (!testCardBin()) {
           errors.push(ErrorMessages.invalidCreditCardBin);
         }
         break;
@@ -198,7 +198,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         if (!testCardName(formDetails.cardName as string)) {
           errors.push(ErrorMessages.invalidCreditCardName);
         }
-        if (!testCardBin(formDetails.cardBin as string)) {
+        if (!testCardBin()) {
           errors.push(ErrorMessages.invalidCreditCardBin);
         }
         break;
@@ -243,6 +243,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         setCreditCardForms,
         validateCreditCardForm,
         setNewCreditCard,
+        newCardBin,
+        setNewCardBin,
       }}>
       {children}
     </Context.Provider>

@@ -1,4 +1,4 @@
-import {CreditCard} from './CreditCardType';
+import {Card} from './CreditCardType';
 import {Profile} from './ProfileType';
 
 interface AuthErrorMessagesType {
@@ -14,6 +14,7 @@ export default interface ConstsType {
   authErrorMessages: AuthErrorMessagesType;
   DropdownListModes: DropdownListModesType;
   dummyProfile: Profile;
-  dummyCreditCards: CreditCard[];
+  dummyCreditCards: Card[];
   dummyCreditCardRewards: any[];
+  addBank: string;
 }

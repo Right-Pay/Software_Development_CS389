@@ -8,13 +8,7 @@ import {
   FormDateView,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import {
-  Card,
-  Reward,
-  Bank,
-  Brand,
-  CreditCardFormTypes,
-} from '../../../types/CreditCardType';
+import {Card, CreditCardFormTypes} from '../../../types/CreditCardType';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import DropdownComponent from '../../../Helpers/Dropdown';
@@ -25,9 +19,8 @@ import AddNewDropdownOption from './AddNewBankOption';
 
 const AddCreditCardFullForm = () => {
   //Context
-  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
-    authContext,
-  ) as AuthContextType;
+  const {addAuthError, clearAuthErrors, AuthErrorComponent, removeAuthError} =
+    React.useContext(authContext) as AuthContextType;
   const {
     reviewCreditCard,
     bankOptions,
@@ -36,13 +29,14 @@ const AddCreditCardFullForm = () => {
     CreditCardForms,
     setCreditCardForms,
     validateCreditCardForm,
+    setUpdatingDropdown,
+    setNewCardBin,
+    newCardBin,
   } = React.useContext(Context) as AppContext;
 
   //card stuff
   const [cardName, setCardName] = React.useState<string>('');
-  const [nickname, setNickName] = React.useState<string>('');
   const [bankName, setBankName] = React.useState<string>('');
-  const [cardBin, setCardBin] = React.useState<string>('');
   const [cardBrand, setCardBrand] = React.useState<string>('visa');
   const [expirationMonth, setExpirationMonth] = React.useState<string>('1');
   const currentYear = new Date().getFullYear().toString().split('20')[1];
@@ -66,24 +60,27 @@ const AddCreditCardFullForm = () => {
   };
 
   //onChange Methods
-  const onCardTypeDropdownChange = (item: string) => setCardBrand(item);
-
   const onBankNameDropdownChange = (item: string) => {
-    if (item === 'Add New Bank' && newBankOption !== 'false') {
+    if (item === Consts.addBank) {
+      setUpdatingDropdown(true);
       setShowAddBankOption(true);
     }
-    setBankName(bankOptions[0]);
   };
 
-  const onCCNumberChange = (event: any) => {
-    setCardBin(event.nativeEvent.text);
+  const onBinChange = (bin: number) => {
+    if (isNaN(bin)) {
+      addAuthError(Consts.authErrorMessages.invalidCreditCardBin);
+      return;
+    }
+    removeAuthError(Consts.authErrorMessages.invalidCreditCardBin);
+    setNewCardBin(bin);
   };
 
   //Handlers
   const handleSubmit = () => {
     clearAuthErrors();
     const errors = validateCreditCardForm(
-      {cardName, cardBin, bankName, nickname},
+      {cardName, bankName},
       CreditCardFormTypes.Full,
     );
     if (errors.length > 0) {
@@ -91,9 +88,8 @@ const AddCreditCardFullForm = () => {
       return;
     }
     const newCard: Card = {
-      id: Math.random() * 100, //Will need to be updated to be unique
       card_name: cardName,
-      card_bin: +`${cardBin.slice(0, 4)}${cardBin.slice(4, 7)}`,
+      card_bin: newCardBin,
       exp_date: expirationDate,
       card_bank: bankName,
       card_brand: cardBrand,
@@ -104,9 +100,7 @@ const AddCreditCardFullForm = () => {
   const closeModal = () => {
     setCreditCardForms({...CreditCardForms, Full: false});
     setCardName('');
-    setNickName('');
     setBankName('');
-    setCardBin('');
     setExpirationDate('');
     setExpirationYear('');
     setExpirationMonth('');
@@ -182,7 +176,9 @@ const AddCreditCardFullForm = () => {
           <FormInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
-            onChange={event => onCCNumberChange(event)}
+            value={newCardBin !== 0o0 ? newCardBin.toString() : ''}
+            maxLength={6}
+            onChange={event => onBinChange(+event.nativeEvent.text)}
           />
           <DropdownComponent
             options={bankOptions}
@@ -199,7 +195,7 @@ const AddCreditCardFullForm = () => {
           <DropdownComponent
             options={typeOptions}
             placeholder={typeOptions[0]}
-            onDropdownChange={onCardTypeDropdownChange}
+            onDropdownChange={setCardBrand}
             mode={ModalMode}
             dropdownStyle="m-2 w-2/3 h-auto z-40"
             refresh={CreditCardForms.AddTypeOption}

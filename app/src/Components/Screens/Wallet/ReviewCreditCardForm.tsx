@@ -70,7 +70,7 @@ const ReviewCreditCardForm = () => {
     const errors = validateCreditCardForm(
       {
         cardName: newCreditCard.card_name,
-        cardBin: newCreditCard.card_bin.toString(),
+        cardBin: newCreditCard.card_bin,
         bankName: newCreditCard.card_bank,
       },
       CreditCardFormTypes.Review,
@@ -136,6 +136,7 @@ const ReviewCreditCardForm = () => {
               defaultValue={newCreditCard.card_bin.toString()}
               placeholder="Card Number"
               placeholderTextColor={'grey'}
+              maxLength={6}
               onChange={event =>
                 (newCreditCard.card_bin = +event.nativeEvent.text)
               }
@@ -172,16 +173,16 @@ const ReviewCreditCardForm = () => {
                   '11',
                   '12',
                 ]}
-                placeholder={
-                  newCreditCard?.expirationDate?.split('/')[0] ?? '1'
-                }
+                placeholder={newCreditCard?.exp_date?.split('/')[0] ?? '1'}
                 onDropdownChange={handleExpirationMonthChange}
                 mode={ModalMode}
                 dropdownStyle="w-1/3 mr-4"
               />
               <DropdownComponent
                 options={years}
-                placeholder={currentYear}
+                placeholder={
+                  newCreditCard?.exp_date?.split('/')[1] ?? currentYear
+                }
                 onDropdownChange={handleExpirationYearChange}
                 mode={ModalMode}
                 dropdownStyle="w-1/3 ml-4"

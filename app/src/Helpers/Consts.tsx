@@ -1,5 +1,5 @@
 import ConstsType from '../types/ConstsType';
-import {Card, CreditCardReward, Reward} from '../types/CreditCardType';
+import {Card, Reward} from '../types/CreditCardType';
 
 const AuthErrorMessages = {
   invalidEmail: 'Invalid Email',
@@ -75,6 +75,8 @@ const dummyCreditCards: Card[] = [
 
 const dummyCreditCardRewards: Reward[] = [];
 
+const addBank = 'Add New Bank';
+
 const Consts: ConstsType = {
   CreditCardFormEnum: CreditCardFormEnum,
   DropdownListModes: DropdownListModes,
@@ -82,6 +84,7 @@ const Consts: ConstsType = {
   dummyProfile: dummyProfile,
   dummyCreditCards: dummyCreditCards,
   dummyCreditCardRewards: dummyCreditCardRewards,
+  addBank: addBank,
 };
 
 export default Consts;

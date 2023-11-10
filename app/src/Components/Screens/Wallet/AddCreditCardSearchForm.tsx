@@ -12,45 +12,46 @@ import Context from '../../../Context/context';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import {CreditCardFormTypes} from '../../../types/CreditCardType';
+import Consts from '../../../Helpers/Consts';
 
 const AddCreditCardSearchForm = () => {
   //Context
-  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
-    authContext,
-  ) as AuthContextType;
+  const {addAuthError, clearAuthErrors, AuthErrorComponent, removeAuthError} =
+    React.useContext(authContext) as AuthContextType;
   const {
     CreditCardForms,
     setCreditCardForms,
     validateCreditCardForm,
     findCreditCard,
+    newCardBin,
+    setNewCardBin,
   } = React.useContext(Context) as AppContext;
-
-  //State
-  const [cardBin, setCardBin] = React.useState<string>('');
 
   //Functions
   const closeModal = () => {
     setCreditCardForms({...CreditCardForms, Search: false});
-    setCardBin('');
+    setNewCardBin(0o0);
     clearAuthErrors();
   };
 
   const handleSubmit = () => {
     clearAuthErrors();
-    const errors = validateCreditCardForm(
-      {cardBin},
-      CreditCardFormTypes.Search,
-    );
+    const errors = validateCreditCardForm({}, CreditCardFormTypes.Search);
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     }
-    findCreditCard(+cardBin as number);
+    findCreditCard(+newCardBin as number);
     //Check if db has card
   };
 
-  const handleCCNumChange = (event: any) => {
-    setCardBin(event.nativeEvent.text);
+  const onBinChange = (bin: number) => {
+    if (isNaN(bin)) {
+      addAuthError(Consts.authErrorMessages.invalidCreditCardBin);
+      return;
+    }
+    removeAuthError(Consts.authErrorMessages.invalidCreditCardBin);
+    setNewCardBin(bin);
   };
 
   //Keyboard
@@ -79,8 +80,11 @@ const AddCreditCardSearchForm = () => {
   //useEffect
   useEffect(() => {
     clearAuthErrors();
-    setCardBin('');
   }, [CreditCardForms.Search]);
+
+  useEffect(() => {
+    setNewCardBin(0o0);
+  }, []);
 
   return (
     <Modal
@@ -104,7 +108,8 @@ const AddCreditCardSearchForm = () => {
           <FormInputBox
             placeholder="First Six Digits"
             placeholderTextColor="#AFAEAE"
-            onChange={event => handleCCNumChange(event)}
+            maxLength={6}
+            onChange={event => onBinChange(+event.nativeEvent.text)}
           />
           <FormButton onPress={handleSubmit} className="m4-2 z-0">
             <FormButtonText>Submit</FormButtonText>

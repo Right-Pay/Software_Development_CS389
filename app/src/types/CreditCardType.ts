@@ -1,5 +1,5 @@
 export interface Card {
-  id: number;
+  id?: number;
   card_bin: number;
   card_name: string;
   card_brand?: string;
@@ -31,7 +31,7 @@ export interface CreditCardFormsType {
 
 export interface CreditCardFormDetails {
   cardName?: string;
-  cardBin?: string;
+  cardBin?: number;
   bankName?: string;
   nickname?: string;
 }

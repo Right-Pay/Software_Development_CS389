@@ -148,10 +148,11 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
             {
               card_name: 'Add',
               id: -1,
+              card_bin: 0o0,
             } as Card,
           ]}
           showsHorizontalScrollIndicator={false}
-          keyExtractor={item => (item as Card).id.toString()}
+          keyExtractor={item => (item as Card).card_bin.toString()}
           renderItem={({item}) => renderCard(item as Card)}
           horizontal={true}
           ItemSeparatorComponent={itemSeparatorComponent}
@@ -162,9 +163,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
       <CreditCardListView className="h-2/6 justify-center items-center">
         <CreditCardList
           className=" text-center w-3/4 p-2"
-          data={getCreditCardRewards(
-            currentViewedCard[currentViewedCard.length - 1].id,
-          )}
+          data={[]} //This will need to be done
           ListHeaderComponent={
             currentViewedCard.filter(i => i.id === -1).length === 0 ? (
               <Title>Rewards</Title>
