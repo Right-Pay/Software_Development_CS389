@@ -12,7 +12,6 @@ import {
   MainButton,
   WrapperView,
   Title,
-  SettingsList,
   FormInputBox,
   ProfileView,
 } from '../../../../Helpers/StylizedComponents';
