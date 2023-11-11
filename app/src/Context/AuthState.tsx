@@ -361,7 +361,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }, []);
 
   //Api Bypass. Delete this when done testing
-  const apiBypass: string | boolean = userToken
+  /*const apiBypass: string | boolean = userToken
     ? false
     : Config.REACT_APP_API_BYPASS;
 
@@ -374,7 +374,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         setUserProfile(Consts.dummyProfile);
       }, 1000);
     }
-  }, [apiBypass]);
+  }, [apiBypass]);*/
 
   return (
     <AuthContext.Provider
