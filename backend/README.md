@@ -235,7 +235,7 @@ Returns all banks in an array of objects, format specified in [bankTypes.ts](./s
 | Parameter     | Type     | Description                    |
 | :------------ | :------- | :----------------------------- |
 | `bank_name`   | `string` | **Required** Bank name         |
-| `bank_abbr`   | `string` | **Required** Bank abbreviation |
+| `abbr`        | `string` | **Required** Bank abbreviation |
 
 Returns Created Bank in format specified in [bankTypes.ts](./src/types/bankTypes.ts)
 
