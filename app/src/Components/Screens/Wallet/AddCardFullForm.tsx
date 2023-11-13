@@ -78,7 +78,7 @@ const AddCardFullForm = () => {
   //Handlers
   const handleSubmit = () => {
     clearAuthErrors();
-    setExpirationDate(`${expirationMonth}/${expirationYear}`);
+    setExpirationDate(`${expirationYear}-${expirationMonth}`);
     const cardDetails = showFull ? {bankName, level} : {};
     const errors = validateCardForm(cardDetails);
     if (errors.length > 0) {
@@ -89,7 +89,7 @@ const AddCardFullForm = () => {
     if (showFull) {
       const newCard: Card = {
         card_bin: newCardBin,
-        expiration_date: expirationDate,
+        exp_date: expirationDate,
         card_bank_name: bankName,
         card_bank_id: bankOptions.find(b => b.bank_name === bankName)?.id,
         card_brand_name: cardBrand,
@@ -111,10 +111,6 @@ const AddCardFullForm = () => {
   const closeModal = () => {
     setCardForms({...CardForms, Full: false});
     setNewCardBin(0o0);
-    setBankName('');
-    setLevel('');
-    setCardBrand('');
-    setCardType('');
     clearAuthErrors();
     setShowFull(false);
   };
@@ -159,10 +155,6 @@ const AddCardFullForm = () => {
   }, [updatingDropdown]);
 
   useEffect(() => {
-    setBankName('');
-    setLevel('');
-    setCardBrand('');
-    setCardType('');
     clearAuthErrors();
   }, [CardForms.Full]);
 

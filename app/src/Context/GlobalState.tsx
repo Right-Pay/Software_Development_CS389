@@ -89,7 +89,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       card_brand_name: 'visa',
       card_level: 'Platinum Reserved',
       card_type: 'Credit',
-      expiration_date: '12/22',
+      exp_date: '12/22',
     } as Card;*/
     /*if (foundCard === null) {
       //Card was found in the db
@@ -145,6 +145,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           id: data.id,
         } as Card;
         await setNewCard(card);
+
         linkToUser(card);
       }
     };
@@ -155,12 +156,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       headers.append('Access-Control-Allow-Origin', '*');
       headers.append('Authorization', `bearer ${userToken}`);
 
+      const date = testExpirationDate(card.exp_date as string);
+
       const raw = {
         card_id: card?.id,
-        exp_date: '28-11', //card?.expiration_date,
+        exp_date: date,
       };
-
-      console.log(raw, 'link to user');
 
       const response = await fetch(`${baseURL}users/linkCard`, {
         method: 'PUT',
@@ -168,8 +169,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         body: JSON.stringify(raw),
       });
       const content = await response.text();
-
-      console.log(content, 'link to user');
     };
 
     if (!cardInDB) {
@@ -212,6 +211,27 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   function testLevel(level: string) {
     const regex: RegExp = /^[a-zA-Z ]{3,}$/;
     return regex.test(level);
+  }
+
+  function testExpirationDate(expirationDate: string) {
+    const date = expirationDate.split('-');
+    let year = date[0];
+    let month = date[1];
+
+    if (year.length === 1) {
+      year = `2${year}`;
+    }
+    if (year.length > 2 || year.length === 0) {
+      year = '23';
+    }
+    if (month.length === 1) {
+      month = `0${month}`;
+    }
+    if (month.length > 2 || month.length === 0) {
+      month = '01';
+    }
+
+    return `${year}-${month}`;
   }
 
   function validateCardForm(formDetails: CardFormDetails) {
@@ -329,8 +349,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     }
     setUpdatingDropdown(true);
   }, [userProfile]);
-
-  console.log(Cards);
 
   return (
     <Context.Provider
