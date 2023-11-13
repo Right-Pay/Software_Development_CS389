@@ -208,7 +208,16 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             setIsLoading(false);
             if (res.success) {
               setUserToken(res.data.auth_token);
-              setUserProfile(res.data);
+              const cards = res.data.cards.map((card: any) => {
+                return {
+                  ...card,
+                  exp_date: card.expiration_date,
+                };
+              });
+              setUserProfile({
+                ...res.data,
+                cards: cards,
+              });
 
               clearAuthErrors();
             } else {
@@ -358,13 +367,14 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setLang('en');
   }, []);
 
-  //Api Bypass. Delete this when done testing
+  /*//Api Bypass. Delete this when done testing
   const apiBypass: string | boolean = userToken
     ? false
     : Config.REACT_APP_API_BYPASS;
 
   useEffect(() => {
     const signInDummy = async () => {
+      //await signIn('JohnDoe@JohnDoe.com', 'JohnDoe1234!');
       const {access_token} = (await signInAuth(
         'JohnDoe@JohnDoe.com',
         'JohnDoe1234!',
@@ -378,7 +388,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         setIsLoading(false);
       }, 1000);
     }
-  }, [apiBypass]);
+  }, [apiBypass]);*/
 
   return (
     <AuthContext.Provider

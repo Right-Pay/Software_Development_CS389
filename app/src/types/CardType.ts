@@ -9,7 +9,7 @@ export interface Card {
   card_type?: string;
   card_level?: string;
   card_country?: string;
-  expiration_date?: string;
+  exp_date?: string;
   // used when returning a card linked to a user
   rewards?: Reward[];
   date_card_linked?: string;

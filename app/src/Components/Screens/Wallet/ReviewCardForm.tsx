@@ -50,18 +50,18 @@ const ReviewCardForm = () => {
   };
 
   const handleExpirationMonthChange = (month: string) => {
-    const currentExpirationDate = newCard?.expiration_date;
-    const year = currentExpirationDate?.split('/')[1];
+    const currentExpirationDate = newCard?.exp_date;
+    const year = currentExpirationDate?.split('-')[1];
     if (currentExpirationDate) {
-      setNewCard({...newCard, expiration_date: `${month}/${year}`});
+      setNewCard({...newCard, exp_date: `${month}-${year}`});
     }
   };
 
   const handleExpirationYearChange = (year: string) => {
-    const currentExpirationDate = newCard?.expiration_date;
-    const month = currentExpirationDate?.split('/')[0];
+    const currentExpirationDate = newCard?.exp_date;
+    const month = currentExpirationDate?.split('-')[0];
     if (currentExpirationDate) {
-      setNewCard({...newCard, expiration_date: `${month}/${year}`});
+      setNewCard({...newCard, exp_date: `${month}-${year}`});
     }
   };
 
@@ -142,7 +142,7 @@ const ReviewCardForm = () => {
             />
             <DropdownComponent
               options={bankOptions.map(b => b.bank_name)}
-              placeholder={bankOptions[0].bank_name}
+              placeholder={newCard.card_bank_name ?? bankOptions[0].bank_name}
               onDropdownChange={event =>
                 (newCard.card_bank_id = bankOptions.find(
                   b => b.bank_name === event,
@@ -153,7 +153,9 @@ const ReviewCardForm = () => {
             />
             <DropdownComponent
               options={brandOptions.map(b => b.brand_name)}
-              placeholder={brandOptions[0].brand_name}
+              placeholder={
+                newCard.card_brand_name ?? brandOptions[0].brand_name
+              }
               onDropdownChange={event => {
                 newCard.card_brand_id = brandOptions.find(
                   b => b.brand_name === event,
@@ -185,14 +187,14 @@ const ReviewCardForm = () => {
                   '11',
                   '12',
                 ]}
-                placeholder={newCard?.expiration_date?.split('/')[0] ?? '1'}
+                placeholder={newCard?.exp_date?.split('-')[1] ?? '1'}
                 onDropdownChange={handleExpirationMonthChange}
                 mode={ModalMode}
                 dropdownStyle="w-1/3 mr-4"
               />
               <DropdownComponent
                 options={years}
-                placeholder={newCard?.expiration_date?.split('/')[1] ?? currentYear}
+                placeholder={newCard?.exp_date?.split('-')[0] ?? currentYear}
                 onDropdownChange={handleExpirationYearChange}
                 mode={ModalMode}
                 dropdownStyle="w-1/3 ml-4"

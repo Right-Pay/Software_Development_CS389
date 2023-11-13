@@ -65,10 +65,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     const raw = {
       card_bin: cardBin,
     };
-
+    console.log(raw);
     const response = await fetch(`${baseURL}cards`, {
       method: 'GET',
       headers: headers,
+      body: JSON.stringify(raw),
     });
     const content = await response.text();
 
@@ -81,23 +82,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     } else {
       return true;
     }
-
-    /*const foundCard = {
-      id: Math.random() * 100 + Cards.length, // not really unique - but fine for this example
-      card_bank_name: 'Chase',
-      card_bin: cardBin,
-      card_brand_name: 'visa',
-      card_level: 'Platinum Reserved',
-      card_type: 'Credit',
-      expiration_date: '12/22',
-    } as Card;*/
-    /*if (foundCard === null) {
-      //Card was found in the db
-
-    } else {
-      //Card was not found in the db. Going to addFullForm
-
-    }*/
   };
 
   const reviewCard = (card: Card) => {
@@ -144,6 +128,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         } as Card;
         console.log(card, 'create new');
         await setNewCard(card);
+
         linkToUser(card);
       }
     };
@@ -154,12 +139,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       headers.append('Access-Control-Allow-Origin', '*');
       headers.append('Authorization', `bearer ${userToken}`);
 
+      const date = testExpirationDate(card.exp_date as string);
+
       const raw = {
         card_id: card?.id,
-        exp_date: '28-11', //card?.expiration_date,
+        exp_date: date,
       };
-
-      console.log(raw, 'link to user');
 
       const response = await fetch(`${baseURL}users/linkCard`, {
         method: 'PUT',
@@ -167,8 +152,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         body: JSON.stringify(raw),
       });
       const content = await response.text();
-
-      console.log(content, 'link to user');
     };
 
     if (!cardInDB) {
@@ -211,6 +194,27 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   function testLevel(level: string) {
     const regex: RegExp = /^[a-zA-Z ]{3,}$/;
     return regex.test(level);
+  }
+
+  function testExpirationDate(expirationDate: string) {
+    const date = expirationDate.split('-');
+    let year = date[0];
+    let month = date[1];
+
+    if (year.length === 1) {
+      year = `2${year}`;
+    }
+    if (year.length > 2 || year.length === 0) {
+      year = '23';
+    }
+    if (month.length === 1) {
+      month = `0${month}`;
+    }
+    if (month.length > 2 || month.length === 0) {
+      month = '01';
+    }
+
+    return `${year}-${month}`;
   }
 
   function validateCardForm(formDetails: CardFormDetails) {
@@ -328,8 +332,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     }
     setUpdatingDropdown(true);
   }, [userProfile]);
-
-  console.log(Cards);
 
   return (
     <Context.Provider
