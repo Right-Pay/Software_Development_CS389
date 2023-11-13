@@ -8,8 +8,6 @@ import AuthErrorComponent from '../Helpers/AuthErrorComponent';
 import Consts from '../Helpers/Consts';
 import Config from 'react-native-config';
 import {tokenType} from '../types/AuthContextType';
-import {access} from 'fs';
-import {Card} from '../types/CardType';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -101,6 +99,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       if (access_token) {
         setIsLoading(true);
         await getUser(access_token).then(result => {
+          console.log(result);
           let res = result as HttpResponse;
           if (res.success) {
             setUserToken(access_token);
@@ -356,7 +355,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   useEffect(() => {
-    setLang('es');
+    setLang('en');
   }, []);
 
   //Api Bypass. Delete this when done testing

@@ -101,8 +101,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const reviewCard = (card: Card) => {
-    //This step will be done in the backend. Just doing it now for temp
-    card.card_name = 'temp level';
     setNewCard(card);
     setCardForms(c => ({...c, Full: false}));
     setCardForms(c => ({...c, Review: true}));
@@ -137,13 +135,14 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       const content = await response.text();
 
       const data = JSON.parse(content).data;
-
+      console.log(data.card_name);
       if (response.status === 201) {
         const card = {
           ...newCard,
           card_name: data.card_name,
           id: data.id,
         } as Card;
+        console.log(card, 'create new');
         await setNewCard(card);
         linkToUser(card);
       }

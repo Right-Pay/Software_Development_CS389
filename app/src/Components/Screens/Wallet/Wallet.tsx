@@ -55,7 +55,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   const addNewCardComponent = () => (
     <AddCardView>
       <SecondaryAddCardView>
-        <CardText className="text-center">Add New Card</CardText>
+        <CardText className="text-center opacity-100">Add New Card</CardText>
         <AddCardButton onPress={handleAddPress}>
           <AddCardIcon source={require('../../../Assets/AddSign.png')} />
         </AddCardButton>
