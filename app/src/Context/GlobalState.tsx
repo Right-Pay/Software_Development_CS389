@@ -65,10 +65,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     const raw = {
       card_bin: cardBin,
     };
-
+    console.log(raw);
     const response = await fetch(`${baseURL}cards`, {
       method: 'GET',
       headers: headers,
+      body: JSON.stringify(raw),
     });
     const content = await response.text();
 
@@ -81,23 +82,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     } else {
       return true;
     }
-
-    /*const foundCard = {
-      id: Math.random() * 100 + Cards.length, // not really unique - but fine for this example
-      card_bank_name: 'Chase',
-      card_bin: cardBin,
-      card_brand_name: 'visa',
-      card_level: 'Platinum Reserved',
-      card_type: 'Credit',
-      exp_date: '12/22',
-    } as Card;*/
-    /*if (foundCard === null) {
-      //Card was found in the db
-
-    } else {
-      //Card was not found in the db. Going to addFullForm
-
-    }*/
   };
 
   const reviewCard = (card: Card) => {
