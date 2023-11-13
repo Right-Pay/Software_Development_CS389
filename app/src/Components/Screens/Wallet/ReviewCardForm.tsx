@@ -50,18 +50,18 @@ const ReviewCardForm = () => {
   };
 
   const handleExpirationMonthChange = (month: string) => {
-    const currentExpirationDate = newCard?.exp_date;
+    const currentExpirationDate = newCard?.expiration_date;
     const year = currentExpirationDate?.split('/')[1];
     if (currentExpirationDate) {
-      setNewCard({...newCard, exp_date: `${month}/${year}`});
+      setNewCard({...newCard, expiration_date: `${month}/${year}`});
     }
   };
 
   const handleExpirationYearChange = (year: string) => {
-    const currentExpirationDate = newCard?.exp_date;
+    const currentExpirationDate = newCard?.expiration_date;
     const month = currentExpirationDate?.split('/')[0];
     if (currentExpirationDate) {
-      setNewCard({...newCard, exp_date: `${month}/${year}`});
+      setNewCard({...newCard, expiration_date: `${month}/${year}`});
     }
   };
 
@@ -185,14 +185,14 @@ const ReviewCardForm = () => {
                   '11',
                   '12',
                 ]}
-                placeholder={newCard?.exp_date?.split('/')[0] ?? '1'}
+                placeholder={newCard?.expiration_date?.split('/')[0] ?? '1'}
                 onDropdownChange={handleExpirationMonthChange}
                 mode={ModalMode}
                 dropdownStyle="w-1/3 mr-4"
               />
               <DropdownComponent
                 options={years}
-                placeholder={newCard?.exp_date?.split('/')[1] ?? currentYear}
+                placeholder={newCard?.expiration_date?.split('/')[1] ?? currentYear}
                 onDropdownChange={handleExpirationYearChange}
                 mode={ModalMode}
                 dropdownStyle="w-1/3 ml-4"

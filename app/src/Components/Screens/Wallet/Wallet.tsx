@@ -43,9 +43,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   const {Cards, removeCard, setCardForms, CardForms} = React.useContext(
     Context,
   ) as AppContext;
-  const [currentViewedCard, setCurrentViewedCard] = React.useState<Card[]>([
-    Cards[0],
-  ]);
+  const [currentViewedCard, setCurrentViewedCard] = React.useState<Card[]>(
+    Cards && Cards.length > 0 ? [Cards[0]] : [Consts.addCard],
+  );
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
   //helpers
@@ -76,8 +76,8 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
               {item.card_name}
             </CardText>
             <CardText>{`Card Type: ${item.card_type}`}</CardText>
-            <CardText>{`Card Brand: ${item.card_brand}`}</CardText>
-            <CardText>{`Bank Name: ${item.card_bank}`}</CardText>
+            <CardText>{`Card Brand: ${item.card_brand_name}`}</CardText>
+            <CardText>{`Bank Name: ${item.card_bank_name}`}</CardText>
             <CardText>{`Card Bin: ${item.card_bin}`}</CardText>
           </CardButton>
           {deleteCard && (
@@ -143,14 +143,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
       <Title className="mt-10">Wallet</Title>
       <CardListView>
         <CardList
-          data={[
-            ...Cards,
-            {
-              card_name: 'Add',
-              id: -1,
-              card_bin: 0o0,
-            } as Card,
-          ]}
+          data={Cards ? [...Cards, Consts.addCard] : [Consts.addCard]}
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => (item as Card).card_bin.toString()}
           renderItem={({item}) => renderCard(item as Card)}

@@ -17,4 +17,5 @@ export default interface ConstsType {
   dummyCards: Card[];
   dummyCardRewards: any[];
   cardItemSeparatorWidth: number;
-};
+  addCard: Card;
+}

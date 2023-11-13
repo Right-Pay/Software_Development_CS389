@@ -89,10 +89,10 @@ const AddCardFullForm = () => {
     if (showFull) {
       const newCard: Card = {
         card_bin: newCardBin,
-        exp_date: expirationDate,
-        card_bank: bankName,
+        expiration_date: expirationDate,
+        card_bank_name: bankName,
         card_bank_id: bankOptions.find(b => b.bank_name === bankName)?.id,
-        card_brand: cardBrand,
+        card_brand_name: cardBrand,
         card_brand_id: brandOptions.find(b => b.brand_name === cardBrand)?.id,
         card_type: cardType,
         card_level: level,
@@ -115,9 +115,6 @@ const AddCardFullForm = () => {
     setLevel('');
     setCardBrand('');
     setCardType('');
-    setExpirationDate('');
-    setExpirationYear('');
-    setExpirationMonth('');
     clearAuthErrors();
     setShowFull(false);
   };
@@ -158,8 +155,6 @@ const AddCardFullForm = () => {
         },
         bankOptions.slice(-1)[0],
       ]);
-    } else {
-      setBankName(bankOptions[0].bank_name);
     }
   }, [updatingDropdown]);
 
@@ -168,9 +163,6 @@ const AddCardFullForm = () => {
     setLevel('');
     setCardBrand('');
     setCardType('');
-    setExpirationDate('');
-    setExpirationYear('');
-    setExpirationMonth('');
     clearAuthErrors();
   }, [CardForms.Full]);
 
@@ -235,7 +227,7 @@ const AddCardFullForm = () => {
                 dropdownStyle="m-2 w-2/3 h-auto"
               />
               <DropdownComponent
-                options={['Debit', 'Credit']}
+                options={['Credit', 'Debit']}
                 placeholder="Credit"
                 onDropdownChange={setCardType}
                 mode={ModalMode}

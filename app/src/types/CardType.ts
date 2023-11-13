@@ -3,13 +3,13 @@ export interface Card {
   card_bin: number;
   card_name?: string;
   card_brand_id?: number;
-  card_brand?: string;
+  card_brand_name?: string;
   card_bank_id?: number;
-  card_bank?: string;
+  card_bank_name?: string;
   card_type?: string;
   card_level?: string;
   card_country?: string;
-  exp_date?: string;
+  expiration_date?: string;
   // used when returning a card linked to a user
   rewards?: Reward[];
   date_card_linked?: string;

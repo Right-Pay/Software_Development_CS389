@@ -19,14 +19,14 @@ import AuthContext from './authContext';
 const baseURL = Config.REACT_APP_API_URL;
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
-  const {refreshAuth0Token, userToken} = React.useContext(
+  const {refreshAuth0Token, userToken, userProfile} = React.useContext(
     AuthContext,
   ) as AuthContextType;
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
 
-  const [Cards, setCards] = React.useState<Card[]>(Consts.dummyCards);
+  const [Cards, setCards] = React.useState<Card[]>([]);
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
 
@@ -72,7 +72,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     });
     const content = await response.text();
 
-    console.log(content);
+    console.log(content, 'find card');
 
     if (response.status === 200) {
       reviewCard(JSON.parse(content));
@@ -84,12 +84,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
     /*const foundCard = {
       id: Math.random() * 100 + Cards.length, // not really unique - but fine for this example
-      card_bank: 'Chase',
+      card_bank_name: 'Chase',
       card_bin: cardBin,
-      card_brand: 'visa',
+      card_brand_name: 'visa',
       card_level: 'Platinum Reserved',
       card_type: 'Credit',
-      exp_date: '12/22',
+      expiration_date: '12/22',
     } as Card;*/
     /*if (foundCard === null) {
       //Card was found in the db
@@ -136,40 +136,47 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       });
       const content = await response.text();
 
-      if (response.status === 200) {
-        setNewCard({
+      const data = JSON.parse(content).data;
+
+      if (response.status === 201) {
+        const card = {
           ...newCard,
-          card_name: JSON.parse(content).card_name,
-        } as Card);
+          card_name: data.card_name,
+          id: data.id,
+        } as Card;
+        await setNewCard(card);
+        linkToUser(card);
       }
     };
 
-    const linkToUser = async () => {
+    const linkToUser = async (card: Card) => {
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
       headers.append('Authorization', `bearer ${userToken}`);
 
       const raw = {
-        card_id: newCard?.id,
-        exp_date: newCard?.exp_date,
+        card_id: card?.id,
+        exp_date: '28-11', //card?.expiration_date,
       };
 
+      console.log(raw, 'link to user');
+
       const response = await fetch(`${baseURL}users/linkCard`, {
-        method: 'POST',
+        method: 'PUT',
         headers: headers,
         body: JSON.stringify(raw),
       });
       const content = await response.text();
 
-      console.log(content);
+      console.log(content, 'link to user');
     };
 
     if (!cardInDB) {
       createNew();
+    } else {
+      linkToUser(newCard as Card);
     }
-    linkToUser();
-
     setCards([...Cards, newCard as Card]);
     setNewCard(null);
     return true;
@@ -318,9 +325,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     if (userToken) {
       fetchBanks();
       fetchBrands();
+      setCards(userProfile.cards.length > 0 ? userProfile.cards : []);
     }
     setUpdatingDropdown(true);
-  }, [userToken]);
+  }, [userProfile]);
+
+  console.log(Cards);
 
   return (
     <Context.Provider

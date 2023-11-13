@@ -35,7 +35,6 @@ const DropdownComponent = (props: DropdownProps) => {
   }, [props.refresh]);
 
   useEffect(() => {
-    setValue(props.options[props.options.length - 2]);
     setUpdatingDropdown(false);
   }, [updatingDropdown]);
 

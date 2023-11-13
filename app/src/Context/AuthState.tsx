@@ -8,6 +8,8 @@ import AuthErrorComponent from '../Helpers/AuthErrorComponent';
 import Consts from '../Helpers/Consts';
 import Config from 'react-native-config';
 import {tokenType} from '../types/AuthContextType';
+import {access} from 'fs';
+import {Card} from '../types/CardType';
 
 const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -101,7 +103,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         await getUser(access_token).then(result => {
           let res = result as HttpResponse;
           if (res.success) {
-            setUserToken(res.data.auth_token);
+            setUserToken(access_token);
             setUserProfile(res.data as Profile);
             clearAuthErrors();
           } else {
@@ -130,7 +132,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         scope: 'offline_access',
       }).toString(),
     };
-
     return await fetch(`${auth0URL}/oauth/token`, requestOptions)
       .then(response => response.json())
       .then(async result => {
@@ -201,7 +202,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       ).then(async () => {
         return await signInAuth(email, password);
       })) as tokenType;
-
       if (access_token) {
         await createNewDatabaseUser(access_token, email, username, phone).then(
           result => {
@@ -209,7 +209,8 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             setIsLoading(false);
             if (res.success) {
               setUserToken(res.data.auth_token);
-              setUserProfile(res.data as Profile);
+              setUserProfile(res.data);
+
               clearAuthErrors();
             } else {
               setUserToken(null);
@@ -371,7 +372,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       )) as tokenType;
       setUserToken(access_token);
     };
-    if (true) {
+    if (false) {
       setIsLoading(true);
       signInDummy();
       setTimeout(() => {

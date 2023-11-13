@@ -39,7 +39,36 @@ const DropdownListModes = {
   MODAL: 'MODAL',
 };
 
+const addCard: Card = {
+  card_name: 'Add',
+  id: -1,
+  card_bin: 0o0,
+};
+
 //Dummy Data for development
+const dummyCards: Card[] = [
+  {
+    id: 1,
+    card_bin: 123456,
+    card_name: 'BofA Cash Back Rewards',
+    card_bank_name: 'Bank of America',
+    expiration_date: '12/24',
+    card_brand_name: 'Visa',
+    card_level: 'Freedom Unlimited',
+    card_type: 'Credit',
+  },
+  {
+    id: 2,
+    card_bin: 234567,
+    card_name: 'Chase Freedom Unlimited',
+    card_bank_name: 'Chase',
+    expiration_date: '11/25',
+    card_brand_name: 'MasterCard',
+    card_level: 'Freedom Unlimited',
+    card_type: 'Credit',
+  },
+];
+
 const dummyProfile = {
   //Need to change this with an api call
   id: 1,
@@ -52,31 +81,9 @@ const dummyProfile = {
   state: 'CA',
   zip: '12345',
   subscribed: true,
+  cards: dummyCards,
   //password: 'JohnDoe1234!',
 };
-
-const dummyCards: Card[] = [
-  {
-    id: 1,
-    card_bin: 123456,
-    card_name: 'BofA Cash Back Rewards',
-    card_bank: 'Bank of America',
-    exp_date: '12/24',
-    card_brand: 'Visa',
-    card_level: 'Freedom Unlimited',
-    card_type: 'Credit',
-  },
-  {
-    id: 2,
-    card_bin: 234567,
-    card_name: 'Chase Freedom Unlimited',
-    card_bank: 'Chase',
-    exp_date: '11/25',
-    card_brand: 'MasterCard',
-    card_level: 'Freedom Unlimited',
-    card_type: 'Credit',
-  },
-];
 
 const dummyCardRewards: Reward[] = [];
 
@@ -90,6 +97,7 @@ const Consts: ConstsType = {
   dummyCards: dummyCards,
   dummyCardRewards: dummyCardRewards,
   cardItemSeparatorWidth,
+  addCard,
 };
 
 export default Consts;
