@@ -3,8 +3,26 @@
     "userNotFound": "¡El usuario no existe!",
     "userFound": "¡El usuario ya existe!",
     "userNotCreated": "¡El usuario no pudo ser creado!",
+    "userCardNotLinked": "¡La tarjeta no pudo ser vinculada al usuario!",
+    "userCardAlreadyLinked": "¡La tarjeta ya está vinculada al usuario!",
+    "userCardNotUnlinked": "¡La tarjeta no pudo ser desvinculada del usuario!",
+
+    "bankNotFound": "¡El banco no existe!",
+    "bankFound": "¡El banco ya existe!",
+    "bankNotCreated": "¡El banco no pudo ser creado!",
+
+    "brandNotFound": "¡La marca no existe!",
+    "brandFound": "¡La marca ya existe!",
+    "brandNotCreated": "¡La marca no pudo ser creada!",
+
+    "cardNotFound": "¡La tarjeta no existe!",
+    "cardFound": "¡La tarjeta ya existe!",
+    "cardNotCreated": "¡La tarjeta no pudo ser creada!",
+
     "default": "Ocurrió un error inesperado. Por favor, inténtelo de nuevo o póngase en contacto con el soporte.",
     "unauthorized": "No está autorizado para realizar esta acción.",
-    "missingFields": "Por favor, rellene todos los campos obligatorios."
+    "missingFields": "Por favor, rellene todos los campos obligatorios.",
+    "notAllowedAtThisTime": "No está permitido realizar esta acción en este momento.",
+    "invalidDate": "La fecha introducida no es válida."
   }
 }
