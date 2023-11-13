@@ -115,7 +115,9 @@ class UserController {
     const userId = req.auth?.payload.sub;
     const cardId = req.body.card_id;
     const newCard = req.body.new_card;
-    const expDate = req.body.exp_date;
+    // get current year
+    let year = new Date().getFullYear().toString().slice(0, 2);
+    const expDate = year + req.body.exp_date + '-01';
     if ((!cardId || !newCard) && !expDate) {
       response.success = false;
       response.message = i18n.t('error.missingFields');

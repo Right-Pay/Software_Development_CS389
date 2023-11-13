@@ -129,7 +129,7 @@ Returns User's Created Profile in format specified in [userTypes.ts](./src/types
 | Parameter    | Type     | Description                                                    |
 | :----------- | :------- | :------------------------------------------------------------- |
 | `card_id`    | `number` | **This or new_card Required** Card ID                          |
-| `exp_date `  | `date`   | **Required** Expiration date (yyy-mm-dd)                       |
+| `exp_date `  | `date`   | **Required** Expiration date (yy-mm)                           |
 | `new_card`   | `Card`   | **Optional if Card ID is used** A new Card to use when linking |
 
 Links a card to a user's profile, returns the linked card 

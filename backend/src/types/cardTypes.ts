@@ -4,7 +4,7 @@ import { Brand } from "./brandTypes";
 export interface Card {
   id?: number;
   card_bin: number;
-  card_name: string;
+  card_name?: string;
   card_brand_id: number;
   card_bank_id: number;
   card_type: string;
