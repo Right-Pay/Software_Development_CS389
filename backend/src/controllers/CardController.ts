@@ -51,7 +51,7 @@ class CardController {
       data: {}
     };
     const cardData = req.body as Card;
-    if (!cardData.card_bin || !cardData.card_bank_id || !cardData.card_brand_id || !cardData.card_type || !cardData.card_type || !cardData.card_level) {
+    if (!cardData.card_bin || !cardData.card_bank_id || !cardData.card_brand_id || !cardData.card_type || !cardData.card_level) {
       response.success = false;
       response.message = i18n.t('error.missingFields');
       res.status(400).json(response);
