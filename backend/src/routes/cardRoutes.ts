@@ -39,4 +39,7 @@ router.delete("/", checkJwt, async (req: Request, res: Response) => {
   }
 });
 
+// not used anymore
+// router.post("/import-csv", checkJwt, async (req: Request, res: Response) => await CardController.addCardsFromCSV(req, res));
+
 export default router;
