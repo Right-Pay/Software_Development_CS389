@@ -208,12 +208,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             setIsLoading(false);
             if (res.success) {
               setUserToken(res.data.auth_token);
-              const cards = res.data.cards.map((card: any) => {
-                return {
-                  ...card,
-                  exp_date: card.expiration_date,
-                };
-              });
+              const cards = res.data.cards;
               setUserProfile({
                 ...res.data,
                 cards: cards,
