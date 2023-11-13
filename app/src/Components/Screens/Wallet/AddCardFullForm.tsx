@@ -25,7 +25,7 @@ const AddCardFullForm = () => {
   const {
     bankOptions,
     setBankOptions,
-    typeOptions,
+    brandOptions,
     CardForms,
     setCardForms,
     validateCardForm,
@@ -79,18 +79,21 @@ const AddCardFullForm = () => {
   const handleSubmit = () => {
     clearAuthErrors();
     setExpirationDate(`${expirationMonth}/${expirationYear}`);
-    const cardDetails = showFull ? {bankName} : {};
-    const errors = validateCardForm(cardDetails); //Change this up
+    const cardDetails = showFull ? {bankName, level} : {};
+    const errors = validateCardForm(cardDetails);
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     }
+    Keyboard.dismiss();
     if (showFull) {
       const newCard: Card = {
         card_bin: newCardBin,
         exp_date: expirationDate,
         card_bank: bankName,
+        card_bank_id: bankOptions.find(b => b.bank_name === bankName)?.id,
         card_brand: cardBrand,
+        card_brand_id: brandOptions.find(b => b.brand_name === cardBrand)?.id,
         card_type: cardType,
         card_level: level,
       };
@@ -98,7 +101,10 @@ const AddCardFullForm = () => {
       reviewCard(newCard);
       setShowFull(false);
     } else {
-      setShowFull(findCard(+newCardBin as number));
+      const searchForCard = async () => {
+        setShowFull(await findCard(+newCardBin as number));
+      };
+      searchForCard();
     }
   };
 
@@ -145,11 +151,15 @@ const AddCardFullForm = () => {
       setBankName(newBankOption);
       setBankOptions([
         ...bankOptions.slice(0, -1),
-        newBankOption,
+        {
+          id: bankOptions.length + 1,
+          bank_name: newBankOption,
+          abbr: newBankOption.substring(0, 3),
+        },
         bankOptions.slice(-1)[0],
       ]);
     } else {
-      setBankName(bankOptions[0]);
+      setBankName(bankOptions[0].bank_name);
     }
   }, [updatingDropdown]);
 
@@ -197,8 +207,8 @@ const AddCardFullForm = () => {
                 value={level}
               />
               <DropdownComponent
-                options={bankOptions}
-                placeholder={bankOptions[0]}
+                options={bankOptions.map(b => b.bank_name)}
+                placeholder={bankOptions[0].bank_name}
                 onDropdownChange={onBankNameDropdownChange}
                 mode={ModalMode}
                 dropdownStyle="m-2 w-2/3 h-auto z-40"
@@ -218,8 +228,8 @@ const AddCardFullForm = () => {
                 show={CardForms.AddBankOption}
               />
               <DropdownComponent
-                options={typeOptions}
-                placeholder={typeOptions[0]}
+                options={brandOptions.map(b => b.brand_name)}
+                placeholder={brandOptions[0].brand_name}
                 onDropdownChange={setCardBrand}
                 mode={ModalMode}
                 dropdownStyle="m-2 w-2/3 h-auto"

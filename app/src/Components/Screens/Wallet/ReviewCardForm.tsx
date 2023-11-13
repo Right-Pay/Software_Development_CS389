@@ -24,7 +24,7 @@ const ReviewCardForm = () => {
     addCard,
     newCard,
     bankOptions,
-    typeOptions,
+    brandOptions,
     CardForms,
     setCardForms,
     setNewCard,
@@ -70,13 +70,14 @@ const ReviewCardForm = () => {
       return;
     }
     const errors = validateCardForm({
-      bankName: newCard.card_bank,
+      bankName: bankOptions.find(b => b.id === newCard.card_bank_id)?.bank_name,
       level: newCard.card_level,
     });
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     }
+    Keyboard.dismiss();
     addCard();
     closeModal();
   };
@@ -133,20 +134,30 @@ const ReviewCardForm = () => {
               placeholder="Level"
               placeholderTextColor="#AFAEAE"
               onChange={event => (newCard.card_level = event.nativeEvent.text)}
-              value={newCard.card_level}
+              defaultValue={
+                newCard.card_level && newCard.card_level?.length > 0
+                  ? newCard.card_level
+                  : 'Level'
+              }
             />
             <DropdownComponent
-              options={bankOptions.filter(b => b !== 'Add New Bank')}
-              placeholder={bankOptions[0]}
-              onDropdownChange={event => (newCard.card_bank = event)}
+              options={bankOptions.map(b => b.bank_name)}
+              placeholder={bankOptions[0].bank_name}
+              onDropdownChange={event =>
+                (newCard.card_bank_id = bankOptions.find(
+                  b => b.bank_name === event,
+                )?.id)
+              }
               mode={ModalMode}
               dropdownStyle="m-2 h-auto w-2/3"
             />
             <DropdownComponent
-              options={typeOptions}
-              placeholder={typeOptions[0]}
+              options={brandOptions.map(b => b.brand_name)}
+              placeholder={brandOptions[0].brand_name}
               onDropdownChange={event => {
-                newCard.card_brand = event;
+                newCard.card_brand_id = brandOptions.find(
+                  b => b.brand_name === event,
+                )?.id;
               }}
               mode={ModalMode}
               dropdownStyle="m-2 h-auto w-2/3"

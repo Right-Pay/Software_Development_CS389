@@ -20,7 +20,7 @@ export const AuthButton = styled(
 );
 export const AuthInputBox = styled(
   TextInput,
-  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green bg-transparent shadow-sm transition-colors',
+  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green bg-transparent',
 );
 export const AuthButtonText = styled(
   Text,
@@ -28,7 +28,7 @@ export const AuthButtonText = styled(
 );
 export const FormInputBox = styled(
   TextInput,
-  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green bg-transparent shadow-sm transition-colors',
+  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green bg-transparent',
 );
 export const FormButton = styled(
   Pressable,

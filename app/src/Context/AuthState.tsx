@@ -60,7 +60,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return await fetch(`${auth0URL}/oauth/token`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log(result);
         switch (result.error) {
           case 'invalid_grant':
             addAuthError(ErrorMessages.userNotFound);
@@ -215,7 +214,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             } else {
               setUserToken(null);
               setUserProfile({} as Profile);
-              console.log(res.message);
               addAuthError(res.message as string);
             }
           },
@@ -361,20 +359,26 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }, []);
 
   //Api Bypass. Delete this when done testing
-  /*const apiBypass: string | boolean = userToken
+  const apiBypass: string | boolean = userToken
     ? false
     : Config.REACT_APP_API_BYPASS;
 
   useEffect(() => {
+    const signInDummy = async () => {
+      const {access_token} = (await signInAuth(
+        'JohnDoe@JohnDoe.com',
+        'JohnDoe1234!',
+      )) as tokenType;
+      setUserToken(access_token);
+    };
     if (true) {
       setIsLoading(true);
+      signInDummy();
       setTimeout(() => {
         setIsLoading(false);
-        setUserToken('testToken');
-        setUserProfile(Consts.dummyProfile);
       }, 1000);
     }
-  }, [apiBypass]);*/
+  }, [apiBypass]);
 
   return (
     <AuthContext.Provider

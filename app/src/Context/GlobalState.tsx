@@ -1,13 +1,28 @@
 import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
-import {CardFormDetails, CardFormsType, Card, Reward} from '../types/CardType';
+import {
+  CardFormDetails,
+  CardFormsType,
+  Card,
+  Reward,
+  CardBank,
+  CardBrand,
+} from '../types/CardType';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {Location} from '../types/Location';
 import Consts from '../Helpers/Consts';
+import Config from 'react-native-config';
+import {AuthContextType} from '../types/AuthContextType';
+import AuthContext from './authContext';
+const baseURL = Config.REACT_APP_API_URL;
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
+  const {refreshAuth0Token, userToken} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
+
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
 
@@ -26,24 +41,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [updatingDropdown, setUpdatingDropdown] =
     React.useState<boolean>(false);
 
-  const [bankOptions, setBankOptions] = useState<string[]>([
-    'Bank of America',
-    'Chase',
-    'Wells Fargo',
-    'Citi',
-    'US Bank',
-    'Capital One',
-    'PNC',
-    'TD Bank',
-    'USAA',
-  ]);
+  const [cardInDB, setCardInDB] = React.useState<boolean>(false);
 
-  const [typeOptions, setTypeOptions] = useState<string[]>([
-    'Visa',
-    'MasterCard',
-    'Discover',
-    'American Express',
-  ]);
+  const [bankOptions, setBankOptions] = useState<CardBank[]>([]);
+
+  const [brandOptions, setBrandOptions] = useState<CardBrand[]>([]);
 
   /* Card Add Flow
    * 1. Search for card using 6 digit number
@@ -52,10 +54,35 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
    * 4. Rewards will be found using a few details from card. Rewards review screen will show which will allow the user to enter rewards and see rewards already associated to that card. Send rewards to db
    *
    */
-  const findCard = (cardBin: number) => {
+  const findCard = async (cardBin: number) => {
     //Check db for card
     //found card will need to be set if found
-    const foundCard = {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Authorization', `bearer ${userToken}`);
+
+    const raw = {
+      card_bin: cardBin,
+    };
+
+    const response = await fetch(`${baseURL}cards`, {
+      method: 'GET',
+      headers: headers,
+    });
+    const content = await response.text();
+
+    console.log(content);
+
+    if (response.status === 200) {
+      reviewCard(JSON.parse(content));
+      setCardInDB(true);
+      return false;
+    } else {
+      return true;
+    }
+
+    /*const foundCard = {
       id: Math.random() * 100 + Cards.length, // not really unique - but fine for this example
       card_bank: 'Chase',
       card_bin: cardBin,
@@ -63,20 +90,19 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       card_level: 'Platinum Reserved',
       card_type: 'Credit',
       exp_date: '12/22',
-    } as Card;
-    if (foundCard === null) {
+    } as Card;*/
+    /*if (foundCard === null) {
       //Card was found in the db
-      reviewCard(foundCard);
-      return false;
+
     } else {
       //Card was not found in the db. Going to addFullForm
-      return true;
-    }
+
+    }*/
   };
 
   const reviewCard = (card: Card) => {
     //This step will be done in the backend. Just doing it now for temp
-    card.card_name = `${card.card_bank} ${card.card_level}`;
+    card.card_name = 'temp level';
     setNewCard(card);
     setCardForms(c => ({...c, Full: false}));
     setCardForms(c => ({...c, Review: true}));
@@ -84,6 +110,66 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   const addCard = () => {
     //add to db
+    //Two steps
+    //If cardInDb just link to user
+    //Else also add to db
+    const createNew = async () => {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      headers.append('Authorization', `bearer ${userToken}`);
+
+      const raw = {
+        card_name: newCard?.card_name,
+        card_bin: newCard?.card_bin,
+        card_bank_id: newCard?.card_bank_id,
+        card_brand_id: newCard?.card_brand_id,
+        card_level: newCard?.card_level,
+        card_type: newCard?.card_type,
+        card_country: 'United States',
+      };
+
+      const response = await fetch(`${baseURL}cards`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(raw),
+      });
+      const content = await response.text();
+
+      if (response.status === 200) {
+        setNewCard({
+          ...newCard,
+          card_name: JSON.parse(content).card_name,
+        } as Card);
+      }
+    };
+
+    const linkToUser = async () => {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      headers.append('Authorization', `bearer ${userToken}`);
+
+      const raw = {
+        card_id: newCard?.id,
+        exp_date: newCard?.exp_date,
+      };
+
+      const response = await fetch(`${baseURL}users/linkCard`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(raw),
+      });
+      const content = await response.text();
+
+      console.log(content);
+    };
+
+    if (!cardInDB) {
+      createNew();
+    }
+    linkToUser();
+
     setCards([...Cards, newCard as Card]);
     setNewCard(null);
     return true;
@@ -200,6 +286,42 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     getLocation();
   }, []);
 
+  useEffect(() => {
+    const fetchBanks = async () => {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      headers.append('Authorization', `bearer ${userToken}`);
+
+      const response = await fetch(`${baseURL}banks/all`, {
+        method: 'GET',
+        headers: headers,
+      });
+      const content = await response.text();
+
+      setBankOptions(JSON.parse(content).data);
+    };
+    const fetchBrands = async () => {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      headers.append('Authorization', `bearer ${userToken}`);
+
+      const response = await fetch(`${baseURL}brands/all`, {
+        method: 'GET',
+        headers: headers,
+      });
+      const content = await response.text();
+
+      setBrandOptions(JSON.parse(content).data);
+    };
+    if (userToken) {
+      fetchBanks();
+      fetchBrands();
+    }
+    setUpdatingDropdown(true);
+  }, [userToken]);
+
   return (
     <Context.Provider
       value={{
@@ -218,8 +340,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         setUpdatingDropdown,
         bankOptions,
         setBankOptions,
-        typeOptions,
-        setTypeOptions,
+        brandOptions,
+        setBrandOptions,
         CardForms,
         setCardForms,
         validateCardForm,

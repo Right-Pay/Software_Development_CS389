@@ -2,7 +2,9 @@ export interface Card {
   id?: number;
   card_bin: number;
   card_name?: string;
+  card_brand_id?: number;
   card_brand?: string;
+  card_bank_id?: number;
   card_bank?: string;
   card_type?: string;
   card_level?: string;
@@ -11,6 +13,17 @@ export interface Card {
   // used when returning a card linked to a user
   rewards?: Reward[];
   date_card_linked?: string;
+}
+
+export interface CardBrand {
+  id: number;
+  brand_name: string;
+}
+
+export interface CardBank {
+  id: number;
+  bank_name: string;
+  abbr: string;
 }
 
 export interface Reward {

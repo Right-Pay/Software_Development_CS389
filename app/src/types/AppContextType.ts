@@ -1,11 +1,18 @@
-import {Card, CardFormDetails, CardFormsType, Reward} from './CardType';
+import {
+  Card,
+  CardBank,
+  CardBrand,
+  CardFormDetails,
+  CardFormsType,
+  Reward,
+} from './CardType';
 import {Location} from './Location';
 
 export interface AppContext {
   Cards: Card[];
   newCard: Card | null;
   rewards: Reward[];
-  findCard: (_cardBin: number) => boolean;
+  findCard: (_cardBin: number) => Promise<boolean>;
   addCard: () => boolean;
   removeCard: (_Card: Card) => void;
   addNewReward: (_reward: Reward) => void;
@@ -15,10 +22,10 @@ export interface AppContext {
   setIsLoading: (_isLoading: boolean) => void;
   updatingDropdown: boolean;
   setUpdatingDropdown: (_updatingDropdown: boolean) => void;
-  bankOptions: string[];
-  setBankOptions: (_bankOptions: string[]) => void;
-  typeOptions: string[];
-  setTypeOptions: (_typeOptions: string[]) => void;
+  bankOptions: CardBank[];
+  setBankOptions: (_bankOptions: CardBank[]) => void;
+  brandOptions: CardBrand[];
+  setBrandOptions: (_brandOptions: CardBrand[]) => void;
   CardForms: CardFormsType;
   setCardForms: (_CardForms: CardFormsType) => void;
   validateCardForm: (_formDetails: CardFormDetails) => string[];
