@@ -7,8 +7,19 @@ const authorizationErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
   changeLanguage(req.headers['x-preferred-language'] as string);
   if (err.name === 'UnauthorizedError') {
     // string to lowercase
-    err.message = 'error.' + err.message.toLowerCase();
-    res.status(401).send({ message: i18n.t(err.message) || i18n.t('error.default'), success: false });
+    let message = 'error.unauthorized';
+    res.status(401).send({
+      message: i18n.t(message) || i18n.t('error.default'),
+      success: false,
+      data: {...err, message: err.message}
+    });
+  } else if(err.name === 'InvalidTokenError') {
+    let message = 'error.invalidAuthToken';
+    res.status(401).send({
+      message: i18n.t(message) || i18n.t('error.default'),
+      success: false,
+      data: {...err, message: err.message}
+    });
   } else {
       next(err);
   }

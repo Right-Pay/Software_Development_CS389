@@ -21,6 +21,7 @@
 
     "default": "An unexpected error occurred. Please try again or contact support.",
     "unauthorized": "You are not authorized to perform this action.",
+    "invalidAuthToken": "Invalid or expired auth token, please login again.",
     "missingFields": "Please fill in all required fields.",
     "notAllowedAtThisTime": "You are not allowed to perform this action at this time.",
     "invalidDate": "Please enter a valid date."
