@@ -136,8 +136,6 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     setDeleteCard(false);
   }, [currentViewedCard]);
 
-  console.log(Cards);
-
   return (
     <WrapperView>
       {AddCardFullForm()}

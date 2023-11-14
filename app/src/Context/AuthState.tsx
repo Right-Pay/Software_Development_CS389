@@ -99,7 +99,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       if (access_token) {
         setIsLoading(true);
         await getUser(access_token).then(result => {
-          console.log(result);
           let res = result as HttpResponse;
           if (res.success) {
             setUserToken(access_token);
@@ -362,28 +361,25 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setLang('en');
   }, []);
 
-  /*//Api Bypass. Delete this when done testing
-  const apiBypass: string | boolean = userToken
+  //Api Bypass. Delete this when done testing
+  /*const apiBypass: string | boolean = userToken
     ? false
     : Config.REACT_APP_API_BYPASS;
 
   useEffect(() => {
     const signInDummy = async () => {
-      //await signIn('JohnDoe@JohnDoe.com', 'JohnDoe1234!');
-      const {access_token} = (await signInAuth(
-        'JohnDoe@JohnDoe.com',
-        'JohnDoe1234!',
-      )) as tokenType;
-      setUserToken(access_token);
+      await signIn('JohnDoe@JohnDoe.com', 'JohnDoe1234!');
     };
-    if (false) {
-      setIsLoading(true);
-      signInDummy();
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+    if (userProfile.id === undefined) {
+      if (true) {
+        setIsLoading(true);
+        signInDummy();
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+      }
     }
-  }, [apiBypass]);*/
+  }, []);*/
 
   return (
     <AuthContext.Provider

@@ -67,7 +67,6 @@ const AddNewBankOption = (props: OptionsPropsType) => {
     };
   }, []);
 
-  //useEffect
   useEffect(() => {
     clearAuthErrors();
   }, [props.show]);

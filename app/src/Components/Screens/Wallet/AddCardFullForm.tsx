@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import {
   AddCFormOverlayView,
   FormButton,
@@ -17,6 +25,7 @@ import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import Consts from '../../../Helpers/Consts';
 import AddNewDropdownOption from './AddNewBankOption';
+import {Button} from 'react-native-paper';
 
 const AddCardFullForm = () => {
   //Context
@@ -53,6 +62,8 @@ const AddCardFullForm = () => {
     `${expirationMonth}/${expirationYear}`,
   );
 
+  const [filteredBankOptions, setFilteredBankOptions] = useState<string[]>([]);
+
   const [showFull, setShowFull] = useState<boolean>(false);
 
   //consts
@@ -62,8 +73,20 @@ const AddCardFullForm = () => {
   const [newBankOption, setNewBankOption] = useState<string>('');
 
   //onChange Methods
-  const onBankNameDropdownChange = (item: string) => {
+  const onBankNameChange = (item: string) => {
     setBankName(item);
+    if (item.length < 3) {
+      setFilteredBankOptions([]);
+      return;
+    }
+    const filter =
+      filteredBankOptions.length === 0
+        ? bankOptions
+            .filter(b => b.bank_name.includes(item))
+            .slice(0, 5)
+            .map(b => b.bank_name)
+        : filteredBankOptions.filter(b => b.includes(item)).slice(0, 5);
+    setFilteredBankOptions(filter);
   };
 
   const onBinChange = (bin: number) => {
@@ -138,7 +161,6 @@ const AddCardFullForm = () => {
     };
   }, []);
 
-  //useEffect
   useEffect(() => {
     if (newBankOption !== '') {
       setBankName(newBankOption);
@@ -190,14 +212,28 @@ const AddCardFullForm = () => {
                 onChange={event => setLevel(event.nativeEvent.text)}
                 value={level}
               />
-              <DropdownComponent
-                options={bankOptions.map(b => b.bank_name)}
-                placeholder={bankOptions[0].bank_name}
-                onDropdownChange={onBankNameDropdownChange}
-                mode={ModalMode}
-                dropdownStyle="m-2 w-2/3 h-auto z-40"
-                refresh={CardForms.AddBankOption}
+              <FormInputBox
+                placeholder="Bank Name"
+                placeholderTextColor="#AFAEAE"
+                onChange={event => onBankNameChange(event.nativeEvent.text)}
+                value={bankName}
+                className="mb-0"
               />
+              {filteredBankOptions.length > 0 && (
+                <View className="mb-2 w-2/3 border-2 rounded-xl">
+                  {filteredBankOptions.map(option => (
+                    <Pressable
+                      onPress={() => {
+                        setBankName(option);
+                        setFilteredBankOptions([]);
+                      }}
+                      className="p-2 cursor-pointer hover:bg-gray-200"
+                      key={option}>
+                      <Text>{option}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              )}
               {
                 <FinePrint
                   onPress={() => {

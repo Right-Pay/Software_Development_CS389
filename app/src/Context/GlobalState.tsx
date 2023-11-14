@@ -69,7 +69,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     const response = await fetch(`${baseURL}cards`, {
       method: 'GET',
       headers: headers,
-      body: JSON.stringify(raw),
     });
     const content = await response.text();
 
@@ -309,7 +308,18 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       });
       const content = await response.text();
 
-      setBankOptions(JSON.parse(content).data);
+      let set = new Set();
+      let arr: any = [];
+
+      JSON.parse(content).data.forEach((b: CardBank) => {
+        if (set.has(b.bank_name)) {
+          return;
+        }
+        arr.push(b);
+        set.add(b.bank_name);
+      });
+
+      setBankOptions(arr);
     };
     const fetchBrands = async () => {
       const headers = new Headers();
@@ -322,10 +332,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         headers: headers,
       });
       const content = await response.text();
-
-      setBrandOptions(JSON.parse(content).data);
+      setBrandOptions(Array.from(new Set(JSON.parse(content).data)));
     };
-    if (userToken) {
+    if (userToken && (bankOptions.length === 0 || brandOptions.length === 0)) {
       fetchBanks();
       fetchBrands();
       setCards(userProfile.cards.length > 0 ? userProfile.cards : []);

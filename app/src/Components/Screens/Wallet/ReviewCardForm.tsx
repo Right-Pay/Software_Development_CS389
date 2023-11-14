@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  View,
+} from 'react-native';
 import {
   AddCFormOverlayView,
   FormButton,
@@ -140,16 +147,14 @@ const ReviewCardForm = () => {
                   : 'Level'
               }
             />
-            <DropdownComponent
-              options={bankOptions.map(b => b.bank_name)}
-              placeholder={newCard.card_bank_name ?? bankOptions[0].bank_name}
-              onDropdownChange={event =>
-                (newCard.card_bank_id = bankOptions.find(
-                  b => b.bank_name === event,
-                )?.id)
+            <FormInputBox
+              placeholder="Bank Name"
+              placeholderTextColor="#AFAEAE"
+              onChange={event =>
+                setNewCard({...newCard, card_bank_name: event.nativeEvent.text})
               }
-              mode={ModalMode}
-              dropdownStyle="m-2 h-auto w-2/3"
+              value={newCard.card_bank_name}
+              className="mb-0"
             />
             <DropdownComponent
               options={brandOptions.map(b => b.brand_name)}
