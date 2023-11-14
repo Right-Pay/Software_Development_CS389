@@ -30,7 +30,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
     React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
-  }, []);
+  }, [clearAuthErrors]);
   return (
     <WrapperView>
       <Title>Sign Up for RightPay</Title>
