@@ -17,8 +17,19 @@ class CardController {
       success: true,
       data: {}
     };
-    const cardId: number = req.body.card_id;
-    const cardBin: number = req.body.card_bin;
+    if (req.query.hasOwnProperty('card_id') && Number.isNaN(Number(req.query.card_id))) {
+      response.success = false;
+      response.message = i18n.t('error.cardNotFound');
+      res.status(400).json(response);
+      return;
+    } else if (req.query.hasOwnProperty('card_bin') && Number.isNaN(Number(req.query.card_bin))) {
+      response.success = false;
+      response.message = i18n.t('error.cardNotFound');
+      res.status(400).json(response);
+      return;
+    }
+    const cardId: number = Number(req.query.card_id || 0);
+    const cardBin: number = Number(req.query.card_bin || 0);
     if (!cardId && !cardBin) {
       response.success = false;
       response.message = i18n.t('error.missingFields');

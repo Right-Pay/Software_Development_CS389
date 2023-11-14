@@ -166,13 +166,13 @@ Returns whether the card was unlinked or not in the data object (could be succes
 #### Get Card
 
 ```http
-  GET /api/cards
+  GET /api/cards?card_id|card_bin
 ```
 
-| Parameter   | Type     | Description                                                         |
-| :---------- | :------- | :------------------------------------------------------------------ |
-| `card_bin`  | `string` | **Either this or card_id required** First six digits of card to get |
-| `card_id`   | `number` | Card ID in DB                                                       |
+| Query Parameter | Type     | Description                                                         |
+| :-------------- | :------- | :------------------------------------------------------------------ |
+| `card_bin`      | `string` | **Either this or card_id required** First six digits of card to get |
+| `card_id`       | `number` | Card ID in DB                                                       |
 
 Returns Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
 
@@ -208,13 +208,13 @@ Used to delete a card. No user has access to do this atm
 #### Get Bank
 
 ```http
-  GET /api/banks
+  GET /api/banks?bank_name|bank_id
 ```
 
-| Parameter   | Type     | Description                                   |
-| :---------- | :------- | :-------------------------------------------- |
-| `bank_name` | `string` | **Either this or bank_id required** Bank name |
-| `bank_id`   | `number` | Bank ID in DB                                 |
+| Query Parameter | Type     | Description                                   |
+| :-------------- | :------- | :-------------------------------------------- |
+| `bank_name`     | `string` | **Either this or bank_id required** Bank name |
+| `bank_id`       | `number` | Bank ID in DB                                 |
 
 Returns Bank in format specified in [bankTypes.ts](./src/types/bankTypes.ts)
 
@@ -253,13 +253,13 @@ Used to delete a bank. No user has access to do this atm
 #### Get Brand
 
 ```http
-  GET /api/brands
+  GET /api/brands?brand_name|brand_id
 ```
 
-| Parameter    | Type     | Description                                     |
-| :----------- | :------- | :---------------------------------------------- |
-| `brand_name` | `string` | **Either this or brand_id required** Brand name |
-| `brand_id`   | `number` | Brand ID in DB                                  |
+| Query Parameter | Type     | Description                                     |
+| :-------------- | :------- | :---------------------------------------------- |
+| `brand_name`    | `string` | **Either this or brand_id required** Brand name |
+| `brand_id`      | `number` | Brand ID in DB                                  |
 
 Returns Brand in format specified in [brandTypes.ts](./src/types/brandTypes.ts)
 

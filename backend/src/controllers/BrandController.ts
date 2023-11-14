@@ -11,8 +11,14 @@ class BrandController {
       success: true,
       data: {}
     };
-    const brandId: number = req.body.brand_id;
-    const brandName: string = req.body.brand_name;
+    if (req.query.hasOwnProperty('brand_id') && Number.isNaN(Number(req.query.brand_id))) {
+      response.success = false;
+      response.message = i18n.t('error.brandNotFound');
+      res.status(400).json(response);
+      return;
+    }
+    const brandId: number = Number(req.query.brand_id || 0);
+    const brandName: string = String(req.query.brand_name || '');
     if (!brandId && !brandName) {
       response.success = false;
       response.message = i18n.t('error.missingFields');

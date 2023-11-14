@@ -11,8 +11,14 @@ class BankController {
       success: true,
       data: {}
     };
-    const bankId: number = req.body.bank_id;
-    const bankName: string = req.body.bank_name;
+    if (req.query.hasOwnProperty('bank_id') && Number.isNaN(Number(req.query.bank_id))) {
+      response.success = false;
+      response.message = i18n.t('error.bankNotFound');
+      res.status(400).json(response);
+      return;
+    }
+    const bankId: number = Number(req.query.bank_id || 0);
+    const bankName: string = String(req.query.bank_name || '');
     if (!bankId && !bankName) {
       response.success = false;
       response.message = i18n.t('error.missingFields');
