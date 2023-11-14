@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
+  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
   Text,
-  View,
 } from 'react-native';
 import {
   AddCFormOverlayView,
@@ -16,6 +16,8 @@ import {
   FormDateView,
   Title,
   FinePrint,
+  BankOptionsView,
+  BanksView,
 } from '../../../Helpers/StylizedComponents';
 import {Card} from '../../../types/CardType';
 import {AppContext} from '../../../types/AppContextType';
@@ -25,7 +27,6 @@ import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import Consts from '../../../Helpers/Consts';
 import AddNewDropdownOption from './AddNewBankOption';
-import {Button} from 'react-native-paper';
 
 const AddCardFullForm = () => {
   //Context
@@ -75,17 +76,13 @@ const AddCardFullForm = () => {
   //onChange Methods
   const onBankNameChange = (item: string) => {
     setBankName(item);
-    if (item.length < 3) {
+    if (item.length <= 3) {
       setFilteredBankOptions([]);
       return;
     }
-    const filter =
-      filteredBankOptions.length === 0
-        ? bankOptions
-            .filter(b => b.bank_name.includes(item))
-            .slice(0, 5)
-            .map(b => b.bank_name)
-        : filteredBankOptions.filter(b => b.includes(item)).slice(0, 5);
+    const filter = bankOptions
+      .filter(b => b.bank_name.toLowerCase().includes(item.toLowerCase()))
+      .map(b => b.bank_name);
     setFilteredBankOptions(filter);
   };
 
@@ -137,6 +134,17 @@ const AddCardFullForm = () => {
     clearAuthErrors();
     setShowFull(false);
   };
+
+  const renderBankOption = ({item}: {item: string}) => (
+    <Pressable
+      onPress={() => {
+        setBankName(item);
+        setFilteredBankOptions([]);
+      }}
+      className="p-2 cursor-pointer hover:bg-gray-200">
+      <Text className="text-black text-xl text-left">{item}</Text>
+    </Pressable>
+  );
 
   //Keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -195,7 +203,14 @@ const AddCardFullForm = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-        <AddCFormOverlayView className="flex-auto ">
+        <AddCFormOverlayView
+          className="flex-auto text-left"
+          onTouchEnd={() => {
+            if (filteredBankOptions.length > 0) {
+              Keyboard.dismiss();
+              setFilteredBankOptions([]);
+            }
+          }}>
           <Title>Enter Card Details</Title>
           <FormInputBox
             placeholder="First Six Digits"
@@ -212,37 +227,35 @@ const AddCardFullForm = () => {
                 onChange={event => setLevel(event.nativeEvent.text)}
                 value={level}
               />
-              <FormInputBox
-                placeholder="Bank Name"
-                placeholderTextColor="#AFAEAE"
-                onChange={event => onBankNameChange(event.nativeEvent.text)}
-                value={bankName}
-                className="mb-0"
-              />
-              {filteredBankOptions.length > 0 && (
-                <View className="mb-2 w-2/3 border-2 rounded-xl">
-                  {filteredBankOptions.map(option => (
-                    <Pressable
-                      onPress={() => {
-                        setBankName(option);
-                        setFilteredBankOptions([]);
-                      }}
-                      className="p-2 cursor-pointer hover:bg-gray-200"
-                      key={option}>
-                      <Text>{option}</Text>
-                    </Pressable>
-                  ))}
-                </View>
-              )}
-              {
-                <FinePrint
-                  onPress={() => {
-                    setUpdatingDropdown(true);
-                    setCardForms({...CardForms, AddBankOption: true});
-                  }}>
-                  Don't see your Bank? Click Here!
-                </FinePrint>
-              }
+              <BanksView>
+                <FormInputBox
+                  placeholder="Bank Name"
+                  placeholderTextColor="#AFAEAE"
+                  onChange={event => onBankNameChange(event.nativeEvent.text)}
+                  onPressOut={() => {
+                    onBankNameChange(bankName);
+                  }}
+                  value={bankName}
+                  className="mb-0 w-full border-0 rounded-none"
+                />
+                {filteredBankOptions.length > 0 && (
+                  <BankOptionsView>
+                    <FlatList
+                      data={filteredBankOptions}
+                      renderItem={renderBankOption}
+                      keyExtractor={item => item}
+                    />
+                  </BankOptionsView>
+                )}
+              </BanksView>
+              <FinePrint
+                onPress={() => {
+                  setUpdatingDropdown(true);
+                  setCardForms({...CardForms, AddBankOption: true});
+                }}
+                className="text-left">
+                Don't see your Bank? Click Here!
+              </FinePrint>
               <AddNewDropdownOption
                 setOption={setNewBankOption}
                 show={CardForms.AddBankOption}
@@ -252,14 +265,14 @@ const AddCardFullForm = () => {
                 placeholder={brandOptions[0].brand_name}
                 onDropdownChange={setCardBrand}
                 mode={ModalMode}
-                dropdownStyle="m-2 w-2/3 h-auto"
+                dropdownStyle="m-2 w-2/3 h-auto z-40"
               />
               <DropdownComponent
                 options={['Credit', 'Debit']}
                 placeholder="Credit"
                 onDropdownChange={setCardType}
                 mode={ModalMode}
-                dropdownStyle="m-2 w-2/3 h-auto"
+                dropdownStyle="m-2 w-2/3 h-auto z-40"
               />
               <FormDateView className="m-2 z-30">
                 <DropdownComponent

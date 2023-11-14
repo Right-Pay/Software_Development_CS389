@@ -362,10 +362,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }, []);
 
   //Api Bypass. Delete this when done testing
-  /*const apiBypass: string | boolean = userToken
-    ? false
-    : Config.REACT_APP_API_BYPASS;
-
+  /*
   useEffect(() => {
     const signInDummy = async () => {
       await signIn('JohnDoe@JohnDoe.com', 'JohnDoe1234!');

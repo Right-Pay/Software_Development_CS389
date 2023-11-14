@@ -1,14 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {
+  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
-  View,
+  Text,
 } from 'react-native';
 import {
   AddCFormOverlayView,
+  BankOptionsView,
+  BanksView,
   FormButton,
   FormButtonText,
   FormDateView,
@@ -47,6 +50,8 @@ const ReviewCardForm = () => {
     (i + parseInt(currentYear, 10)).toString(),
   );
 
+  const [filteredBankOptions, setFilteredBankOptions] = useState<string[]>([]);
+
   //Functions
   const closeModal = () => {
     setNewCardBin(0o0);
@@ -56,6 +61,23 @@ const ReviewCardForm = () => {
     });
   };
 
+  //renderers
+  const renderBankOption = ({item}: {item: string}) => (
+    <Pressable
+      onPress={() => {
+        setNewCard({
+          ...newCard,
+          card_bin: newCard?.card_bin as number,
+          card_bank_name: item,
+        });
+        setFilteredBankOptions([]);
+      }}
+      className="p-2 cursor-pointer hover:bg-gray-200">
+      <Text className="text-black text-xl text-left">{item}</Text>
+    </Pressable>
+  );
+
+  //handers
   const handleExpirationMonthChange = (month: string) => {
     const currentExpirationDate = newCard?.exp_date;
     const year = currentExpirationDate?.split('-')[1];
@@ -87,6 +109,22 @@ const ReviewCardForm = () => {
     Keyboard.dismiss();
     addCard();
     closeModal();
+  };
+
+  const onBankNameChange = (item: string) => {
+    setNewCard({
+      ...newCard,
+      card_bin: newCard?.card_bin as number,
+      card_bank_name: item,
+    });
+    if (item.length <= 3) {
+      setFilteredBankOptions([]);
+      return;
+    }
+    const filter = bankOptions
+      .filter(b => b.bank_name.toLowerCase().includes(item.toLowerCase()))
+      .map(b => b.bank_name);
+    setFilteredBankOptions(filter);
   };
 
   //Keyboard
@@ -147,15 +185,27 @@ const ReviewCardForm = () => {
                   : 'Level'
               }
             />
-            <FormInputBox
-              placeholder="Bank Name"
-              placeholderTextColor="#AFAEAE"
-              onChange={event =>
-                setNewCard({...newCard, card_bank_name: event.nativeEvent.text})
-              }
-              value={newCard.card_bank_name}
-              className="mb-0"
-            />
+            <BanksView>
+              <FormInputBox
+                placeholder="Bank Name"
+                placeholderTextColor="#AFAEAE"
+                onChange={event => onBankNameChange(event.nativeEvent.text)}
+                onPressOut={() => {
+                  onBankNameChange(newCard.card_bank_name ?? '');
+                }}
+                value={newCard.card_bank_name ?? ''}
+                className="mb-0 w-full border-0 rounded-none"
+              />
+              {filteredBankOptions.length > 0 && (
+                <BankOptionsView>
+                  <FlatList
+                    data={filteredBankOptions}
+                    renderItem={renderBankOption}
+                    keyExtractor={item => item}
+                  />
+                </BankOptionsView>
+              )}
+            </BanksView>
             <DropdownComponent
               options={brandOptions.map(b => b.brand_name)}
               placeholder={

@@ -108,3 +108,11 @@ export const FormDateView = styled(
   View,
   'flex flex-row justify-center w-3/4 mb-2',
 );
+export const BanksView = styled(
+  View,
+  'flex flex-col justify-center border-2 rounded-xl w-2/3 p-0 z-50 sticky',
+);
+export const BankOptionsView = styled(
+  View,
+  'mb-2 ml-0 w-full fixed max-h-48 border-t flex bg-light-green z-50',
+);
