@@ -14,6 +14,7 @@ import {
   GoogleMapsView,
   NearbyLocationScrollView,
   NearbyLocationSeperator,
+  Subtitle,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
@@ -38,8 +39,12 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   );
   const renderPlace = (place: Place) => {
     return (
-      <StyledView className="flex-1 border-2 border-b-0 flex-col place-items-center h-36 justify-center justify-items-center">
-        <Title>{place.displayName.text}</Title>
+      <StyledView className="flex-1 border-2 border-b-0 border-slate-200 flex-col place-items-center h-36 justify-center justify-items-center">
+        <Title className="text-lg">{place.displayName.text}</Title>
+        <Subtitle>
+          {place.primaryTypeDisplayName?.text || place.types[0] || ''}
+        </Subtitle>
+        <Subtitle>{place.distance} miles</Subtitle>
       </StyledView>
     );
   };
@@ -88,7 +93,7 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
         {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
       <NearbyLocationScrollView
-        className="absolute bottom-0 left-0 bg-white text-black z-50"
+        className="absolute bg-white rounded-t-xl bottom-0 left-0 text-black z-50"
         data={places}
         renderItem={({item}) => renderPlace(item as Place)}
         ItemSeparatorComponent={() => seperatorComponent}
