@@ -21,6 +21,7 @@
 
     "default": "Ocurrió un error inesperado. Por favor, inténtelo de nuevo o póngase en contacto con el soporte.",
     "unauthorized": "No está autorizado para realizar esta acción.",
+    "invalidAuthToken": "Token de autenticación no válido o caducado. Por favor inicie sesión nuevamente.",
     "missingFields": "Por favor, rellene todos los campos obligatorios.",
     "notAllowedAtThisTime": "No está permitido realizar esta acción en este momento.",
     "invalidDate": "La fecha introducida no es válida."
