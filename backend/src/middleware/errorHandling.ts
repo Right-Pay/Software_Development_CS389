@@ -34,8 +34,12 @@ const clientErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   changeLanguage(req.headers['x-preferred-language'] as string);
   if (req.xhr) {
     // string to lowercase
-    err.message = 'error.' + err.message.toLowerCase();
-    res.status(500).send({ message: i18n.t(err.message) || i18n.t('error.default'), success: false })
+    let message = 'error.' + err.message.toLowerCase();
+    res.status(500).send({
+      message: i18n.t(message) || i18n.t('error.default'),
+      success: false,
+      data: {...err, message: err.message}
+    })
   } else {
     next(err)
   }
@@ -45,8 +49,12 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (res.headersSent) {
     return next(err)
   }
-  res.status(500)
-  res.render('error', { error: err })
+  let message = 'error.' + err.message.toLowerCase();
+  res.status(500).send({
+    message: i18n.t(message) || i18n.t('error.default'),
+    success: false,
+    data: {...err, message: err.message}
+  })
 }
 
 const errorHandlers = [authorizationErrorHandler, logErrors, clientErrorHandler, errorHandler];
