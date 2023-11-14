@@ -62,20 +62,27 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     headers.append('Access-Control-Allow-Origin', '*');
     headers.append('Authorization', `bearer ${userToken}`);
 
-    const raw = {
-      card_bin: cardBin,
-    };
-    console.log(raw);
-    const response = await fetch(`${baseURL}cards`, {
+    const query = `?card_bin=${cardBin}`;
+
+    const response = await fetch(`${baseURL}cards${query}`, {
       method: 'GET',
       headers: headers,
     });
     const content = await response.text();
 
-    console.log(content, 'find card');
-
     if (response.status === 200) {
-      reviewCard(JSON.parse(content));
+      const card = JSON.parse(content).data;
+      const modifiedCard = {
+        ...card,
+        card_bank_name:
+          bankOptions.find(b => b.id === +card.card_bank_id)?.bank_name ?? '',
+        card_brand_name:
+          brandOptions.find(b => b.id === +card.card_brand_id)?.brand_name ??
+          '',
+        exp_date: '23-01',
+      } as Card;
+
+      reviewCard(modifiedCard);
       setCardInDB(true);
       return false;
     } else {
@@ -118,14 +125,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       const content = await response.text();
 
       const data = JSON.parse(content).data;
-      console.log(data.card_name);
       if (response.status === 201) {
         const card = {
           ...newCard,
           card_name: data.card_name,
           id: data.id,
         } as Card;
-        console.log(card, 'create new');
         await setNewCard(card);
 
         linkToUser(card);
@@ -137,7 +142,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       headers.append('Content-Type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
       headers.append('Authorization', `bearer ${userToken}`);
-
       const date = testExpirationDate(card.exp_date as string);
 
       const raw = {

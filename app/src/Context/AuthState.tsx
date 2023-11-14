@@ -362,7 +362,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   }, []);
 
   //Api Bypass. Delete this when done testing
-  /*
+
   useEffect(() => {
     const signInDummy = async () => {
       await signIn('JohnDoe@JohnDoe.com', 'JohnDoe1234!');
@@ -376,7 +376,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         }, 1000);
       }
     }
-  }, []);*/
+  }, []);
 
   return (
     <AuthContext.Provider

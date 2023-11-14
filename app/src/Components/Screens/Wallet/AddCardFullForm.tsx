@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -7,6 +7,7 @@ import {
   Platform,
   Pressable,
   Text,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   AddCFormOverlayView,
@@ -140,6 +141,7 @@ const AddCardFullForm = () => {
       onPress={() => {
         setBankName(item);
         setFilteredBankOptions([]);
+        Keyboard.dismiss();
       }}
       className="p-2 cursor-pointer hover:bg-gray-200">
       <Text className="text-black text-xl text-left">{item}</Text>
@@ -194,127 +196,136 @@ const AddCardFullForm = () => {
       transparent={false}
       visible={CardForms.Full}
       onRequestClose={closeModal}>
-      <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          flexDirection: 'column',
-        }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        enabled={isKeyboardVisible}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-        <AddCFormOverlayView
-          className="flex-auto text-left"
-          onTouchEnd={() => {
-            if (filteredBankOptions.length > 0) {
-              Keyboard.dismiss();
-              setFilteredBankOptions([]);
-            }
-          }}>
-          <Title>Enter Card Details</Title>
-          <FormInputBox
-            placeholder="First Six Digits"
-            placeholderTextColor="#AFAEAE"
-            value={newCardBin !== 0o0 ? newCardBin.toString() : ''}
-            maxLength={6}
-            onChange={event => onBinChange(+event.nativeEvent.text)}
-          />
-          {showFull && (
-            <>
-              <FormInputBox
-                placeholder="Level"
-                placeholderTextColor="#AFAEAE"
-                onChange={event => setLevel(event.nativeEvent.text)}
-                value={level}
-              />
-              <BanksView>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+          setFilteredBankOptions([]);
+        }}>
+        <KeyboardAvoidingView
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          enabled={isKeyboardVisible}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
+          <AddCFormOverlayView className="flex-auto text-left z-0">
+            <Title>Enter Card Details</Title>
+            <FormInputBox
+              placeholder="First Six Digits"
+              placeholderTextColor="#AFAEAE"
+              value={newCardBin !== 0o0 ? newCardBin.toString() : ''}
+              maxLength={6}
+              onChange={event => onBinChange(+event.nativeEvent.text)}
+            />
+            {showFull && (
+              <>
                 <FormInputBox
-                  placeholder="Bank Name"
+                  placeholder="Level"
                   placeholderTextColor="#AFAEAE"
-                  onChange={event => onBankNameChange(event.nativeEvent.text)}
-                  onPressOut={() => {
-                    onBankNameChange(bankName);
+                  onChange={event => setLevel(event.nativeEvent.text)}
+                  value={level}
+                />
+                <BanksView>
+                  <FormInputBox
+                    placeholder="Bank Name"
+                    placeholderTextColor="#AFAEAE"
+                    onChange={event => onBankNameChange(event.nativeEvent.text)}
+                    onPressOut={() => {
+                      if (filteredBankOptions.length >= 3) {
+                        const filter = bankOptions
+                          .filter(b =>
+                            b.bank_name
+                              .toLowerCase()
+                              .includes(bankName.toLowerCase()),
+                          )
+                          .map(b => b.bank_name);
+                        setFilteredBankOptions(filter);
+                      }
+                    }}
+                    value={bankName}
+                    className="mb-0 w-full border-0 rounded-none"
+                  />
+                  {filteredBankOptions.length > 0 && (
+                    <BankOptionsView>
+                      <FlatList
+                        data={filteredBankOptions}
+                        renderItem={renderBankOption}
+                        keyExtractor={item => item}
+                        keyboardShouldPersistTaps="handled"
+                      />
+                    </BankOptionsView>
+                  )}
+                </BanksView>
+                <FinePrint
+                  onPress={() => {
+                    setUpdatingDropdown(true);
+                    setCardForms({...CardForms, AddBankOption: true});
                   }}
-                  value={bankName}
-                  className="mb-0 w-full border-0 rounded-none"
-                />
-                {filteredBankOptions.length > 0 && (
-                  <BankOptionsView>
-                    <FlatList
-                      data={filteredBankOptions}
-                      renderItem={renderBankOption}
-                      keyExtractor={item => item}
-                    />
-                  </BankOptionsView>
-                )}
-              </BanksView>
-              <FinePrint
-                onPress={() => {
-                  setUpdatingDropdown(true);
-                  setCardForms({...CardForms, AddBankOption: true});
-                }}
-                className="text-left">
-                Don't see your Bank? Click Here!
-              </FinePrint>
-              <AddNewDropdownOption
-                setOption={setNewBankOption}
-                show={CardForms.AddBankOption}
-              />
-              <DropdownComponent
-                options={brandOptions.map(b => b.brand_name)}
-                placeholder={brandOptions[0].brand_name}
-                onDropdownChange={setCardBrand}
-                mode={ModalMode}
-                dropdownStyle="m-2 w-2/3 h-auto z-40"
-              />
-              <DropdownComponent
-                options={['Credit', 'Debit']}
-                placeholder="Credit"
-                onDropdownChange={setCardType}
-                mode={ModalMode}
-                dropdownStyle="m-2 w-2/3 h-auto z-40"
-              />
-              <FormDateView className="m-2 z-30">
-                <DropdownComponent
-                  options={[
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10',
-                    '11',
-                    '12',
-                  ]}
-                  placeholder="1"
-                  onDropdownChange={setExpirationMonth}
-                  mode={ModalMode}
-                  dropdownStyle="w-1/3 mr-4"
+                  className="text-left">
+                  Don't see your Bank? Click Here!
+                </FinePrint>
+                <AddNewDropdownOption
+                  setOption={setNewBankOption}
+                  show={CardForms.AddBankOption}
                 />
                 <DropdownComponent
-                  options={years}
-                  placeholder={currentYear}
-                  onDropdownChange={setExpirationYear}
+                  options={brandOptions.map(b => b.brand_name)}
+                  placeholder={brandOptions[0].brand_name}
+                  onDropdownChange={setCardBrand}
                   mode={ModalMode}
-                  dropdownStyle="w-1/3 ml-4"
+                  dropdownStyle="m-2 w-2/3 h-auto z-40"
                 />
-              </FormDateView>
-            </>
-          )}
+                <DropdownComponent
+                  options={['Credit', 'Debit']}
+                  placeholder="Credit"
+                  onDropdownChange={setCardType}
+                  mode={ModalMode}
+                  dropdownStyle="m-2 w-2/3 h-auto z-40"
+                />
+                <FormDateView className="m-2 z-30">
+                  <DropdownComponent
+                    options={[
+                      '1',
+                      '2',
+                      '3',
+                      '4',
+                      '5',
+                      '6',
+                      '7',
+                      '8',
+                      '9',
+                      '10',
+                      '11',
+                      '12',
+                    ]}
+                    placeholder="1"
+                    onDropdownChange={setExpirationMonth}
+                    mode={ModalMode}
+                    dropdownStyle="w-1/3 mr-4"
+                  />
+                  <DropdownComponent
+                    options={years}
+                    placeholder={currentYear}
+                    onDropdownChange={setExpirationYear}
+                    mode={ModalMode}
+                    dropdownStyle="w-1/3 ml-4"
+                  />
+                </FormDateView>
+              </>
+            )}
 
-          <FormButton onPress={handleSubmit} className="mt-1 z-0">
-            <FormButtonText>Submit</FormButtonText>
-          </FormButton>
-          <FormButton onPress={closeModal} className="z-0">
-            <FormButtonText>Close</FormButtonText>
-          </FormButton>
-          {AuthErrorComponent && <AuthErrorComponent />}
-        </AddCFormOverlayView>
-      </KeyboardAvoidingView>
+            <FormButton onPress={handleSubmit} className="mt-1 z-0">
+              <FormButtonText>Submit</FormButtonText>
+            </FormButton>
+            <FormButton onPress={closeModal} className="z-0">
+              <FormButtonText>Close</FormButtonText>
+            </FormButton>
+            {AuthErrorComponent && <AuthErrorComponent />}
+          </AddCFormOverlayView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
