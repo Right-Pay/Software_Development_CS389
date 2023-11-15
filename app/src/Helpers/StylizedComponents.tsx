@@ -3,6 +3,8 @@ import {TextInput, Text, View, Pressable, FlatList, Image} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import DropDownPicker from 'react-native-dropdown-picker';
 
+const StyledFlatList = styled(FlatList);
+
 export const WrapperView = styled(
   View,
   'flex-1 items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
@@ -115,4 +117,9 @@ export const BanksView = styled(
 export const BankOptionsView = styled(
   View,
   'mb-2 ml-0 w-full fixed max-h-48 border-t flex bg-light-green z-50',
+);
+export const NearbyLocationScrollView = styled(FlatList, 'w-full h-1/3');
+export const NearbyLocationSeperator = styled(
+  View,
+  'w-full h-4 border-l-2 border-r-2',
 );

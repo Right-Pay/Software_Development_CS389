@@ -33,7 +33,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   }, [clearAuthErrors]);
   return (
     <WrapperView>
-      <Title>Sign Up for RightPay</Title>
+      <Title className="mt-20">Sign Up for RightPay</Title>
       <LogoContainer>
         <Logo
           source={require('../../../Assets/RightPay-logo-light-transparent.png')}

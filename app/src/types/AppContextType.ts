@@ -6,7 +6,7 @@ import {
   CardFormsType,
   Reward,
 } from './CardType';
-import {Location} from './Location';
+import {Location, Place} from './Location';
 
 export interface AppContext {
   rewards: Reward[];
@@ -17,6 +17,7 @@ export interface AppContext {
   removeReward: (_reward: Reward) => void;
   location: Location;
   isLoading: boolean;
+  setIsLoading: (_isLoading: boolean) => void;
   bankOptions: CardBank[];
   setBankOptions: (_bankOptions: CardBank[]) => void;
   brandOptions: CardBrand[];
@@ -25,4 +26,8 @@ export interface AppContext {
   validateCardForm: (_formDetails: CardFormDetails) => string[];
   setNewCardBin: (_newCardBin: number) => void;
   newCardBin: number;
+  fetchPlaces: () => void;
+  places: Place[];
+  fetchAddress: () => void;
+  address: Place | undefined;
 }
