@@ -136,19 +136,35 @@ class UserController {
           res.status(500).json(response);
         }
       } else {
-        let newlyCreatedCard: Card = {} as Card;
+        let newCardId = -1;
         // trying to create new card using fields given
         // if it fails and it is a duplicate card, then just link user to existing card
         try {
-          newlyCreatedCard = await CardModelInstance.create(newCard);
+          const newlyCreatedCard = await CardModelInstance.create(newCard);
+          if (newlyCreatedCard) {
+            newCardId = newlyCreatedCard?.id || -1;
+          }
         } catch (error: any) {
           if (error.message === 'error.cardFound') {
-            newlyCreatedCard = {} as Card;
+            let existingCard: Card = {} as Card;
+            if (newCard.id) {
+              existingCard = await CardModelInstance.get(newCard.id) || {} as Card;
+            } else {
+              existingCard = await CardModelInstance.getByBin(newCard.card_bin) || {} as Card;
+            }
+            if (existingCard) {
+              newCardId = existingCard?.id || -1;
+            }
           } else {
             throw new Error(error.message);
           }
         }
-        const newCardId = newlyCreatedCard?.id || 0;
+        if (newCardId === -1) {
+          response.success = false;
+          response.message = i18n.t('error.default');
+          res.status(500).json(response);
+          return;
+        }
         const userLinked = await UserModel.link_card(userId, newCardId, expDate);
         if (userLinked) {
           response.data = userLinked;
