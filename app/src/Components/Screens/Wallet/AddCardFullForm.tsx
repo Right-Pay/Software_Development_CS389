@@ -238,23 +238,35 @@ const AddCardFullForm = () => {
   }, [bankSearch, filterBank]);
 
   const renderBinInput = () => {
+    const updateBin = (event: any) => {
+      if (editState === EditStates.Edit) {
+        EditStates.Add;
+      }
+      onBinChange(+event.nativeEvent.text);
+    };
     return (
       <FormInputBox
         placeholder="First Six Digits"
         placeholderTextColor="#AFAEAE"
         value={newCardBin !== 0o0 ? newCardBin.toString() : ''}
         maxLength={6}
-        onChange={event => onBinChange(+event.nativeEvent.text)}
+        onChange={updateBin}
       />
     );
   };
 
   const renderLevelInput = () => {
+    const updateLevel = (text: string) => {
+      if (editState === EditStates.Edit) {
+        EditStates.Add;
+      }
+      setCard({...card, card_level: text});
+    };
     return (
       <FormInputBox
         placeholder="Level"
         placeholderTextColor="#AFAEAE"
-        onChangeText={text => setCard({...card, card_level: text})}
+        onChangeText={updateLevel}
         value={card?.card_level || ''}
       />
     );
@@ -299,6 +311,12 @@ const AddCardFullForm = () => {
   };
 
   const renderBrandDropdown = () => {
+    const updateBrand = (event: any) => {
+      if (editState === EditStates.Edit) {
+        EditStates.Add;
+      }
+      setCard({...card, card_brand_id: Number(event)});
+    };
     return (
       <DropdownComponent
         options={brandOptions.map((b): OptionsProps => {
@@ -308,9 +326,7 @@ const AddCardFullForm = () => {
           };
         })}
         placeholder={card?.card_brand_name || 'Visa, JSB, etc...'}
-        onDropdownChange={event =>
-          setCard({...card, card_brand_id: Number(event)})
-        }
+        onDropdownChange={updateBrand}
         mode={ModalMode}
         dropdownStyle="m-2 w-2/3 h-auto z-40"
       />
@@ -318,6 +334,12 @@ const AddCardFullForm = () => {
   };
 
   const renderTypeDropdown = () => {
+    const updateType = (event: any) => {
+      if (editState === EditStates.Edit) {
+        EditStates.Add;
+      }
+      setCard({...card, card_type: event.toString()});
+    };
     return (
       <DropdownComponent
         options={[
@@ -331,9 +353,7 @@ const AddCardFullForm = () => {
           },
         ]}
         placeholder={card?.card_type || 'Credit or Debit'}
-        onDropdownChange={event =>
-          setCard({...card, card_type: event.toString()})
-        }
+        onDropdownChange={updateType}
         mode={ModalMode}
         dropdownStyle="m-2 w-2/3 h-auto z-40"
       />

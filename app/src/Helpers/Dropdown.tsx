@@ -34,6 +34,8 @@ const DropdownComponent = (props: DropdownProps) => {
         listMode={listMode}
         modalProps={{
           animationType: 'slide',
+          transparent: true,
+          presentationStyle: 'overFullScreen',
         }}
         modalContentContainerStyle={
           listMode === 'MODAL' ? styleSheet.modalContainer : {}
@@ -53,11 +55,15 @@ const DropdownComponent = (props: DropdownProps) => {
 
 const styleSheet = StyleSheet.create({
   modalContainer: {
-    backgroundColor: '#e6ffe3',
+    backgroundColor: '#fcfcfa',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    height: '33%',
   },
   listContainer: {
     width: '95%',
@@ -65,9 +71,8 @@ const styleSheet = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderStyle: 'solid',
-    borderWidth: 3,
-    borderColor: 'black',
-    borderRadius: 10,
+    borderBottomWidth: 1,
+    borderColor: 'gray',
     margin: 10,
   },
   modalLabel: {
