@@ -5,6 +5,8 @@ import { User } from '../types/userTypes';
 import i18n from '../config/i18n';
 import CardModelInstance from '../models/CardModel';
 import { Card } from '../types/cardTypes';
+import BankModelInstance from '../models/BankModel';
+import BrandModelInstance from '../models/BrandModel';
 
 class UserController {
   async getUser(req: Request, res: Response) {
@@ -137,6 +139,18 @@ class UserController {
         }
       } else {
         let newCardId = -1;
+        const bank = await BankModelInstance.get(newCard.card_bank_id);
+        const brand = await BrandModelInstance.get(newCard.card_brand_id);
+        if (!bank) {
+          throw new Error(i18n.t('error.bankNotFound'));
+        }
+        if (!brand) {
+          throw new Error(i18n.t('error.brandNotFound'));
+        }
+        if (!newCard.card_name) {
+          newCard.card_name = bank.bank_name + ' ' +
+            newCard.card_level;
+        }
         // trying to create new card using fields given
         // if it fails and it is a duplicate card, then just link user to existing card
         try {
