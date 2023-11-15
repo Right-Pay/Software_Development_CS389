@@ -13,12 +13,10 @@ import {
   GoogleMapsMarker,
   GoogleMapsView,
   NearbyLocationScrollView,
-  NearbyLocationSeperator,
-  Subtitle,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
-import {Text, View, useWindowDimensions} from 'react-native';
+import {Text, View} from 'react-native';
 import {styled} from 'nativewind';
 import {Place} from '../../../types/Location';
 const StyledView = styled(View);
@@ -33,10 +31,10 @@ type LocationScreenProps = CompositeScreenProps<
 
 const StlyizedText = styled(Text, 'text-lg text-dark-green');
 
-const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
+const LocationScreen: React.FC<LocationScreenProps> = () => {
   const {location, places} = React.useContext(Context) as AppContext;
 
-  const [currentViewedPlace, setCurrentViewedPlace] = React.useState<Place[]>(
+  const [currentViewPlace, setCurrentViewedPlace] = React.useState<Place[]>(
     [] as Place[],
   );
   const renderPlace = (place: Place) => {
@@ -71,6 +69,7 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
       (item: any) => item.item as Place,
     );
     setCurrentViewedPlace(check);
+    console.log(currentViewPlace);
   });
 
   const markerFactory = (title: string, description: string) => {
@@ -124,7 +123,7 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
           keyExtractor={item => (item as Place).id}
           snapToAlignment="start"
           decelerationRate={'fast'}
-          snapToInterval={82}
+          snapToInterval={66}
         />
       </StyledView>
     </WrapperView>
