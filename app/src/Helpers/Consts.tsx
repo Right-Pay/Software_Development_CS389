@@ -21,6 +21,7 @@ const AuthErrorMessages = {
   invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
   invalidDropdownOption: 'Invalid Dropdown Option',
   invalidCardLevel: 'Invalid Card Level\nName must be more then 3 characters',
+  undefined: 'Request failed, please try again later or contact support!',
 };
 
 enum CardFormEnum {

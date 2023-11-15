@@ -19,7 +19,7 @@ import AuthContext from './authContext';
 const baseURL = Config.REACT_APP_API_URL;
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
-  const {refreshAuth0Token, userToken, userProfile, addAuthError, authError} =
+  const {refreshAuth0Token, userToken, userProfile, addAuthError} =
     React.useContext(AuthContext) as AuthContextType;
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -34,12 +34,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     Rewards: false,
     AddBankOption: false,
   });
-  const [newCard, setNewCard] = React.useState<Card | null>(null);
   const [newCardBin, setNewCardBin] = React.useState<number>(0o0);
-  const [updatingDropdown, setUpdatingDropdown] =
-    React.useState<boolean>(false);
-
-  const [cardInDB, setCardInDB] = React.useState<boolean>(false);
 
   const [bankOptions, setBankOptions] = useState<CardBank[]>([]);
 
@@ -53,7 +48,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
    *
    */
 
-  const findCard = async (cardBin: number) => {
+  const findCard = async (
+    cardBin: number,
+    tryAgain: boolean,
+  ): Promise<Card | false> => {
+    setIsLoading(true);
     //Check db for card
     //found card will need to be set if found
     const headers = new Headers();
@@ -62,77 +61,75 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     headers.append('Authorization', `bearer ${userToken}`);
 
     const query = `?card_bin=${cardBin}`;
+    try {
+      const response = await fetch(`${baseURL}cards${query}`, {
+        method: 'GET',
+        headers: headers,
+      });
+      const content = await response.json();
 
-    const response = await fetch(`${baseURL}cards${query}`, {
-      method: 'GET',
-      headers: headers,
-    });
-    const content = await response.text();
+      if (content.data.code === 'invalid_token') {
+        await refreshAuth0Token();
+        if (tryAgain) {
+          setTimeout(() => {
+            findCard(cardBin, false);
+          }, 20);
+        }
+        setIsLoading(false);
+        return false;
+      }
 
-    if (
-      JSON.parse(content).data.code === 'invalid_token' &&
-      authError.indexOf(ErrorMessages.invalidToken) === -1
-    ) {
-      refreshAuth0Token();
-      addAuthError(ErrorMessages.invalidToken);
-      setTimeout(() => {
-        findCard(cardBin);
-      }, 1000);
-      return;
-    }
-
-    if (response.status === 200) {
-      const card = JSON.parse(content).data;
-      const modifiedCard = {
-        ...card,
-        card_bank_name:
-          bankOptions.find(b => b.id === +card.card_bank_id)?.bank_name ?? '',
-        card_brand_name:
-          brandOptions.find(b => b.id === +card.card_brand_id)?.brand_name ??
-          '',
-        exp_date: '23-01',
-      } as Card;
-      reviewCard(modifiedCard);
-      setCardInDB(true);
+      if (response.status === 200) {
+        const card = content.data;
+        const modifiedCard = {
+          ...card,
+          card_bank_name:
+            bankOptions.find(b => b.id === +card.card_bank_id)?.bank_name ?? '',
+          card_brand_name:
+            brandOptions.find(b => b.id === +card.card_brand_id)?.brand_name ??
+            '',
+          exp_date: '23-01',
+        } as Card;
+        setIsLoading(false);
+        return modifiedCard;
+      } else {
+        setIsLoading(false);
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+      addAuthError(ErrorMessages.undefined);
+      setIsLoading(false);
       return false;
-    } else {
-      return true;
     }
   };
 
-  const reviewCard = (card: Card) => {
-    setNewCard(card);
-    setCardForms(c => ({...c, Full: false}));
-    setCardForms(c => ({...c, Review: true}));
-  };
-
-  const addCard = () => {
-    const linkToUser = async (card: Card) => {
+  const linkCard = async (card: Card, new_card: boolean): Promise<boolean> => {
+    setIsLoading(true);
+    const linkToUser = async (tryAgain: boolean) => {
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
       headers.append('Authorization', `bearer ${userToken}`);
       const date = formatExpirationDate(card.exp_date as string);
 
-      const raw: linkCardBodyProps = cardInDB
+      const raw: linkCardBodyProps = new_card
         ? {
-            card_id: card?.id,
-          }
-        : {
             new_card: {
-              card_bin: newCard?.card_bin as number,
-              card_bank_id: newCard?.card_bank_id,
-              card_brand_id: newCard?.card_brand_id,
-              card_level: newCard?.card_level,
-              card_type: newCard?.card_type,
+              card_bin: card?.card_bin as number,
+              card_bank_id: card?.card_bank_id,
+              card_brand_id: card?.card_brand_id,
+              card_level: card?.card_level,
+              card_type: card?.card_type,
               card_country: 'United States',
               exp_date: date,
             },
+          }
+        : {
+            card_id: card?.id,
           };
 
       raw.exp_date = date;
-
-      console.log(raw, 'raw');
 
       try {
         const response = await fetch(`${baseURL}users/linkCard`, {
@@ -141,37 +138,45 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           body: JSON.stringify(raw),
         });
 
-        const content = await response.text();
+        const content = await response.json();
         //check
-        if (
-          JSON.parse(content).data.code === 'invalid_token' &&
-          authError.indexOf(ErrorMessages.invalidToken) === -1
-        ) {
-          refreshAuth0Token();
-          addAuthError(ErrorMessages.invalidToken);
-          setTimeout(() => {
-            linkToUser(card);
-          }, 1000);
-          return;
+        if (content.data.code === 'invalid_token') {
+          await refreshAuth0Token();
+          if (tryAgain) {
+            setTimeout(() => {
+              linkToUser(false);
+            }, 20);
+          }
+          return false;
+        }
+        if (!content.success) {
+          return false;
         }
         setNewCardBin(0o0);
         setCardForms({
           ...CardForms,
           Review: false,
+          Full: false,
         });
-        userProfile.cards.push(JSON.parse(content).data as Card);
+        userProfile.cards.push(content.data as Card);
+        return true;
       } catch (e) {
         console.log(e);
+        addAuthError(ErrorMessages.undefined);
       }
     };
 
-    linkToUser(newCard as Card);
-    setNewCard(null);
+    let success = await linkToUser(true);
+    if (!success) {
+      return false;
+    }
+    setIsLoading(false);
     return true;
   };
 
-  const unlinkCard = (card: Card) => {
-    const unlinkToUser = async () => {
+  const unlinkCard = async (card: Card): Promise<Boolean> => {
+    setIsLoading(true);
+    const unlinkToUser = async (tryAgain: boolean) => {
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
@@ -187,31 +192,35 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           headers: headers,
           body: JSON.stringify(raw),
         });
-        const content = await response.text();
-        if (
-          JSON.parse(content).data.code === 'invalid_token' &&
-          authError.indexOf(ErrorMessages.invalidToken) === -1
-        ) {
-          refreshAuth0Token();
-          addAuthError(ErrorMessages.invalidToken);
-          setTimeout(() => {
-            unlinkToUser();
-          }, 1000);
-          return;
+        const content = await response.json();
+        if (content.data.code === 'invalid_token') {
+          await refreshAuth0Token();
+          if (tryAgain) {
+            setTimeout(() => {
+              unlinkToUser(false);
+            }, 20);
+          }
+          return false;
         }
+        return content.success;
       } catch (e) {
         console.log(e);
+        addAuthError(ErrorMessages.undefined);
+        return false;
       }
     };
-    unlinkToUser();
-
+    let success = await unlinkToUser(false);
     userProfile.cards = userProfile.cards.filter(c => c.id !== card.id);
+    setIsLoading(false);
+    return success;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const addNewReward = (cardReward: Reward) => {
     //Do something here
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const removeReward = (CardReward: Reward) => {
     //Do something here
   };
@@ -307,7 +316,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     }
   };
 
-  const getLocation = () => {
+  const getLocation = useCallback(() => {
     const result = requestLocationPermission();
     result.then(res => {
       if (res) {
@@ -330,11 +339,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         );
       }
     });
-  };
+  }, []);
 
   useEffect(() => {
     getLocation();
-  }, []);
+  }, [getLocation]);
 
   const fetchBanks = useCallback(async () => {
     const headers = new Headers();
@@ -346,12 +355,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       method: 'GET',
       headers: headers,
     });
-    const content = await response.text();
+    const content = await response.json();
 
     let set = new Set();
     let arr: any = [];
 
-    JSON.parse(content).data.forEach((b: CardBank) => {
+    content.data.forEach((b: CardBank) => {
       if (set.has(b.bank_name)) {
         return;
       }
@@ -372,8 +381,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       method: 'GET',
       headers: headers,
     });
-    const content = await response.text();
-    setBrandOptions(Array.from(new Set(JSON.parse(content).data)));
+    const content = await response.json();
+    setBrandOptions(Array.from(new Set(content.data)));
   }, [userToken]);
 
   useEffect(() => {
@@ -381,35 +390,27 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       fetchBanks();
       fetchBrands();
     }
-    setUpdatingDropdown(true);
   }, [fetchBanks, fetchBrands, userToken]);
 
   return (
     <Context.Provider
       value={{
-        newCard,
         rewards,
         findCard,
-        addCard,
+        linkCard,
         unlinkCard,
         addNewReward,
         removeReward,
         location,
         isLoading,
-        setIsLoading,
-        updatingDropdown,
-        setUpdatingDropdown,
         bankOptions,
         setBankOptions,
         brandOptions,
-        setBrandOptions,
         CardForms,
         setCardForms,
         validateCardForm,
-        setNewCard,
         newCardBin,
         setNewCardBin,
-        reviewCard,
       }}>
       {children}
     </Context.Provider>

@@ -30,7 +30,6 @@ import Context from '../../../Context/context';
 import {Card, Reward} from '../../../types/CardType';
 import {Dimensions} from 'react-native';
 import AddCardFullForm from './AddCardFullForm';
-import ReviewCardForm from './ReviewCardForm';
 import Consts from '../../../Helpers/Consts';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
@@ -55,6 +54,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
   //helpers
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getCardRewards = (CardId: number) => [];
 
   //components
@@ -145,7 +145,6 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   return (
     <WrapperView>
       {AddCardFullForm()}
-      {ReviewCardForm()}
       <Title className="mt-10">Wallet</Title>
       <CardListView>
         <CardList

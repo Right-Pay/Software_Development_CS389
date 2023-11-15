@@ -11,159 +11,30 @@ import {
 } from 'react-native';
 import {
   AddCFormOverlayView,
-  BankOptionsView,
-  BanksView,
   FormButton,
   FormButtonText,
-  FormDateView,
   FormInputBox,
+  FormDateView,
   Title,
+  FinePrint,
+  BankOptionsView,
+  BanksView,
 } from '../../../Helpers/StylizedComponents';
+import {Card, CardBank} from '../../../types/CardType';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
-import Consts from '../../../Helpers/Consts';
 import DropdownComponent from '../../../Helpers/Dropdown';
-import AuthErrorComponent from '../../../Helpers/AuthErrorComponent';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
-import {CardBank} from '../../../types/CardType';
+import Consts from '../../../Helpers/Consts';
+import AddNewDropdownOption from './AddNewBankOption';
+import AuthErrorComponent from '../../../Helpers/AuthErrorComponent';
 
 const ReviewCardForm = () => {
   //Context
-  const {addAuthError} = React.useContext(authContext) as AuthContextType;
-
-  const {
-    addCard,
-    newCard,
-    bankOptions,
-    brandOptions,
-    CardForms,
-    setCardForms,
-    setNewCard,
-    validateCardForm,
-    setNewCardBin,
-  } = React.useContext(Context) as AppContext;
-
-  //Constants
-  const ModalMode = Consts.DropdownListModes.MODAL;
-
-  const currentYear = new Date().getFullYear().toString().split('20')[1];
-  const years = Array.from(Array(6).keys()).map(i =>
-    (i + parseInt(currentYear, 10)).toString(),
-  );
-
-  const [bankSearch, setBankSearch] = useState<string>('');
-
   const [filteredBankOptions, setFilteredBankOptions] = useState<CardBank[]>(
     [],
   );
-
-  //Functions
-  const closeModal = () => {
-    setNewCardBin(0o0);
-    setCardForms({
-      ...CardForms,
-      Review: false,
-    });
-  };
-
-  //renderers
-  const renderBankOption = ({item}: {item: CardBank}) => (
-    <Pressable
-      onPress={() => {
-        if (newCard) {
-          newCard.card_bank_id = item.id;
-        }
-        setBankSearch(item.bank_name);
-        setFilteredBankOptions([]);
-        Keyboard.dismiss();
-      }}
-      className="p-2 cursor-pointer hover:bg-gray-200">
-      <Text className="text-black text-xl text-left">{item.bank_name}</Text>
-    </Pressable>
-  );
-
-  //handlers
-  const handleExpirationMonthChange = (month: string) => {
-    const currentExpirationDate = newCard?.exp_date;
-    const year = currentExpirationDate?.split('-')[0];
-    if (currentExpirationDate) {
-      setNewCard({...newCard, exp_date: `${year}-${month}`});
-    }
-  };
-
-  const handleExpirationYearChange = (year: string) => {
-    const currentExpirationDate = newCard?.exp_date;
-    const month = currentExpirationDate?.split('-')[1];
-    if (currentExpirationDate) {
-      setNewCard({...newCard, exp_date: `${year}-${month}`});
-    }
-  };
-
-  const handleSubmit = () => {
-    if (!newCard) {
-      return;
-    }
-    const errors = validateCardForm({
-      bankName: bankOptions.find(b => b.id === newCard.card_bank_id)?.bank_name,
-      level: newCard.card_level,
-    });
-    if (errors.length > 0) {
-      errors.forEach(error => addAuthError(error));
-      return;
-    }
-    Keyboard.dismiss();
-    addCard();
-  };
-
-  const filterBank = useCallback(
-    (item: string) => {
-      if (item.length <= 3) {
-        setFilteredBankOptions([]);
-        return;
-      }
-      const filter = [
-        ...bankOptions.filter(b =>
-          b.bank_name.toLowerCase().startsWith(item.toLowerCase()),
-        ),
-        ...bankOptions.filter(
-          b =>
-            !b.bank_name.toLowerCase().startsWith(item.toLowerCase()) &&
-            b.bank_name.toLowerCase().includes(item.toLowerCase()),
-        ),
-      ];
-
-      setFilteredBankOptions(filter);
-    },
-    [bankOptions],
-  );
-
-  //Keyboard
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    filterBank(bankSearch);
-  }, [bankSearch, filterBank]);
 
   return (
     <Modal
