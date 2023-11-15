@@ -7,12 +7,10 @@ import type {
   HomeNavigationRoutesType,
   ProfileNavigationRoutesType,
   CompanyNavigationRoutesType,
-  SearchNavigationRoutesType,
   LocationNavigationRoutesType,
   NavigationRoutesType,
+  WalletNavigationRoutesType,
 } from '../types/NavigationRoutesType';
-import SearchScreen from '../Components/Screens/Search/Search';
-import SearchSettingsScreen from '../Components/Screens/Search/SearchSettings';
 import LocationScreen from '../Components/Screens/Location/Location';
 import ProfileSettings from '../Components/Screens/Profile/ProfileSettings';
 import Context from '../Context/context';
@@ -26,11 +24,12 @@ import type {
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
 import LocationSettings from '../Components/Screens/Location/LocationSettings';
+import WalletScreen from '../Components/Screens/Wallet/Wallet';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
 const CompanyStack = createNativeStackNavigator<CompanyNavigationRoutesType>();
-const SearchStack = createNativeStackNavigator<SearchNavigationRoutesType>();
+const WalletStack = createNativeStackNavigator<WalletNavigationRoutesType>();
 const LocationStack =
   createNativeStackNavigator<LocationNavigationRoutesType>();
 
@@ -117,24 +116,15 @@ const CompanyStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   );
 };
 
-const SearchStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
-  const {address} = React.useContext(Context) as AppContext;
+const WalletStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   React.useLayoutEffect(
-    () => hideTabBar(navigation, route, 'SearchScreen'),
+    () => hideTabBar(navigation, route, 'WalletScreen'),
     [navigation, route],
   );
   return (
-    <SearchStack.Navigator
-      screenOptions={{
-        ...screenOptionStyle,
-        headerTitle: address ? address.displayName.text : '',
-      }}>
-      <SearchStack.Screen name="SearchScreen" component={SearchScreen} />
-      <SearchStack.Screen
-        name="SearchSettingsScreen"
-        component={SearchSettingsScreen}
-      />
-    </SearchStack.Navigator>
+    <WalletStack.Navigator screenOptions={screenOptionStyle}>
+      <WalletStack.Screen name="WalletScreen" component={WalletScreen} />
+    </WalletStack.Navigator>
   );
 };
 
@@ -163,6 +153,6 @@ export {
   HomeStackNavigator,
   ProfileStackNavigator,
   CompanyStackNavigator,
-  SearchStackNavigator,
+  WalletStackNavigator,
   LocationStackNavigator,
 };

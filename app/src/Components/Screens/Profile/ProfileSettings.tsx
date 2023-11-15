@@ -38,7 +38,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
       <Subtitle>State: {userProfile.state}</Subtitle>
       <Subtitle>Zip: {userProfile.zip}</Subtitle>
       <MainButton>
-        <MainButtonText>Edit Credit Cards</MainButtonText>
+        <MainButtonText>Edit Cards</MainButtonText>
       </MainButton>
 
       <MainButton onPress={() => navigation.goBack()}>

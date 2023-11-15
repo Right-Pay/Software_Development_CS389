@@ -22,6 +22,7 @@ export interface AuthContextType {
   checkValidEmail: (_email: string) => boolean;
   checkValidPassword: (_password: string) => boolean;
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
+  refreshAuth0Token: () => void;
 }
 
 export interface TokenType {

@@ -1,6 +1,4 @@
 import React from 'react';
-import Context from '../../../Context/context';
-import type {AppContext} from '../../../types/AppContextType';
 import type {PropsWithChildren} from 'react';
 import type {
   ProfileNavigationRoutesType,
@@ -12,11 +10,11 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import {
   MainButtonText,
   MainButton,
+  Title,
+  WrapperView,
   ProfileList,
   ProfileView,
   Subtitle,
-  Title,
-  WrapperView,
 } from '../../../Helpers/StylizedComponents';
 
 type ProfileScreenProps = CompositeScreenProps<
@@ -26,8 +24,6 @@ type ProfileScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
-  const {creditCards} = React.useContext(Context) as AppContext;
-
   return (
     <WrapperView>
       <Title className="mt-20">Profile Screen</Title>

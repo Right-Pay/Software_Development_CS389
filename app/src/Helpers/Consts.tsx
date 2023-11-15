@@ -1,4 +1,5 @@
 import ConstsType from '../types/ConstsType';
+import {Card, Reward} from '../types/CardType';
 
 const AuthErrorMessages = {
   invalidEmail: 'Invalid Email',
@@ -14,7 +15,60 @@ const AuthErrorMessages = {
   errorChangingPassword: 'Error Changing Password',
   sentRestEmail: 'Check Your Email for Further Instructions',
   invalidToken: 'Invalid Token\nPlease Contact Support',
+  invalidCardName:
+    'Invalid  Card Name\nName must be more then 10 characters\nName must only contain letters',
+  invalidCardBin: 'Invalid Card Number\nMust be 6 digits',
+  invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
+  invalidDropdownOption: 'Invalid Dropdown Option',
+  invalidCardLevel: 'Invalid Card Level\nName must be more then 3 characters',
+  undefined: 'Request failed, please try again later or contact support!',
 };
+
+enum CardFormEnum {
+  Search = 0,
+  Full = 1,
+  Review = 2,
+  Rewards = 3,
+  AddOption = 4,
+  Off = 5,
+}
+
+const DropdownListModes = {
+  DEFAULT: 'DEFAULT',
+  FLATLIST: 'FLATLIST',
+  SCROLLVIEW: 'SCROLLVIEW',
+  MODAL: 'MODAL',
+};
+
+const addCard: Card = {
+  card_name: 'Add',
+  id: -1,
+  card_bin: 0o0,
+};
+
+//Dummy Data for development
+const dummyCards: Card[] = [
+  {
+    id: 1,
+    card_bin: 123456,
+    card_name: 'BofA Cash Back Rewards',
+    card_bank_name: 'Bank of America',
+    exp_date: '12/24',
+    card_brand_name: 'Visa',
+    card_level: 'Freedom Unlimited',
+    card_type: 'Credit',
+  },
+  {
+    id: 2,
+    card_bin: 234567,
+    card_name: 'Chase Freedom Unlimited',
+    card_bank_name: 'Chase',
+    exp_date: '11/25',
+    card_brand_name: 'MasterCard',
+    card_level: 'Freedom Unlimited',
+    card_type: 'Credit',
+  },
+];
 
 const dummyProfile = {
   //Need to change this with an api call
@@ -28,12 +82,23 @@ const dummyProfile = {
   state: 'CA',
   zip: '12345',
   subscribed: true,
+  cards: dummyCards,
   //password: 'JohnDoe1234!',
 };
 
+const dummyCardRewards: Reward[] = [];
+
+const cardItemSeparatorWidth = 48;
+
 const Consts: ConstsType = {
+  CardFormEnum: CardFormEnum,
+  DropdownListModes: DropdownListModes,
   authErrorMessages: AuthErrorMessages,
   dummyProfile: dummyProfile,
+  dummyCards: dummyCards,
+  dummyCardRewards: dummyCardRewards,
+  cardItemSeparatorWidth,
+  addCard,
 };
 
 export default Consts;

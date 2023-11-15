@@ -90,7 +90,6 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
   return (
     <WrapperView>
       <Title className="mt-20">This is the location screen</Title>
-
       <GoogleMapsView
         initialRegion={{
           latitude: location.latitude,

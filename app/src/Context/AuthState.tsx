@@ -5,7 +5,7 @@ import {Profile} from '../types/ProfileType';
 import {HttpResponse} from '../types/HttpResponse';
 import GlobalState from './GlobalState';
 import AuthErrorComponent from '../Helpers/AuthErrorComponent';
-import ConstsType from '../Helpers/Consts';
+import Consts from '../Helpers/Consts';
 import Config from 'react-native-config';
 import {TokenType} from '../types/AuthContextType';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -21,7 +21,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
   const auth0ClientId = Config.REACT_APP_AUTH0_CLIENT_ID;
   const auth0Audience = Config.REACT_APP_AUTH0_AUDIENCE;
-  const ErrorMessages = ConstsType.authErrorMessages;
+  const ErrorMessages = Consts.authErrorMessages;
 
   const resetVariables = async () => {
     setUserToken(null);
@@ -115,7 +115,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return await fetch(`${auth0URL}/oauth/token`, requestOptions)
       .then(response => response.json())
       .then(async result => {
-        console.log(result);
         switch (result.error) {
           case 'invalid_grant':
             addAuthError(ErrorMessages.userNotFound);
@@ -191,7 +190,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         scope: 'offline_access',
       }).toString(),
     };
-
     return await fetch(`${auth0URL}/oauth/token`, requestOptions)
       .then(response => response.json())
       .then(async result => {
@@ -280,7 +278,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
               setUserToken(null);
               await removeAuth0Token();
               setUserProfile({} as Profile);
-              console.log(res.message);
               addAuthError(res.message as string);
             }
           },
@@ -471,6 +468,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkValidPassword,
         checkEqualPasswords,
         AuthErrorComponent,
+        refreshAuth0Token,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>
