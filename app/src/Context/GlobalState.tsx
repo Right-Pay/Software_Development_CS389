@@ -145,7 +145,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       Math.acos(
         sinLat1 * sinLat2 + cosLat1 * cosLat2 * Math.cos(lonDifference),
       ) * earthRadius;
-    return Math.round(distance * 10) / 10;
+    return Math.round(distance * 100) / 100;
   };
 
   const fetchPlaces = async () => {

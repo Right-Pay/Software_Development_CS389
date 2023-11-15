@@ -34,14 +34,17 @@ const StlyizedText = styled(Text, 'text-lg text-dark-green');
 const LocationScreen: React.FC<LocationScreenProps> = () => {
   const {location, places} = React.useContext(Context) as AppContext;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentViewPlace, setCurrentViewedPlace] = React.useState<Place[]>(
     [] as Place[],
   );
   const renderPlace = (place: Place) => {
     return (
-      <StyledView className="py-2 flex-1 bg-white flex-col h-16 w-full">
+      <StyledView className="py-2 flex-1 bg-white flex-col h-20 w-full">
         <StyledView className="flex-1 flex-row place-content-between w-full">
-          <StlyizedText className="font-bold pl-4 text-xl w-3/4 text-left">
+          <StlyizedText
+            numberOfLines={1}
+            className="font-bold pl-4 text-xl w-3/4 text-left">
             {place.displayName.text}
           </StlyizedText>
           <StlyizedText className="text-gray-400 w-1/4 text-md text-right pr-4">
@@ -49,11 +52,11 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
           </StlyizedText>
         </StyledView>
         <StyledView className="flex-1 flex-row place-content-between w-full">
-          <StlyizedText className="pl-4 text-xl w-3/4 text-left">
+          <StlyizedText className="pl-4 text-lg w-3/4 text-left">
             {place.primaryTypeDisplayName?.text || place.types[0] || ''}
           </StlyizedText>
-          <StlyizedText className="text-gray-400 w-1/4 text-md text-right pr-4">
-            {place.distance} mi
+          <StlyizedText className="text-gray-400 w-1/4 text-sm self-center text-right pr-4">
+            See Rewards
           </StlyizedText>
         </StyledView>
       </StyledView>
@@ -69,7 +72,6 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
       (item: any) => item.item as Place,
     );
     setCurrentViewedPlace(check);
-    console.log(currentViewPlace);
   });
 
   const markerFactory = (title: string, description: string) => {
@@ -123,7 +125,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
           keyExtractor={item => (item as Place).id}
           snapToAlignment="start"
           decelerationRate={'fast'}
-          snapToInterval={66}
+          snapToInterval={82}
         />
       </StyledView>
     </WrapperView>
