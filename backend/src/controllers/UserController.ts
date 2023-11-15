@@ -5,6 +5,8 @@ import { User } from '../types/userTypes';
 import i18n from '../config/i18n';
 import CardModelInstance from '../models/CardModel';
 import { Card } from '../types/cardTypes';
+import BankModelInstance from '../models/BankModel';
+import BrandModelInstance from '../models/BrandModel';
 
 class UserController {
   async getUser(req: Request, res: Response) {
@@ -136,6 +138,18 @@ class UserController {
           res.status(500).json(response);
         }
       } else {
+        const bank = await BankModelInstance.get(newCard.card_bank_id);
+        const brand = await BrandModelInstance.get(newCard.card_brand_id);
+        if (!bank) {
+          throw new Error(i18n.t('error.bankNotFound'));
+        }
+        if (!brand) {
+          throw new Error(i18n.t('error.brandNotFound'));
+        }
+        if (!newCard) {
+          newCard.card_name = bank.bank_name + ' ' +
+            newCard.card_level;
+        }
         const newlyCreatedCard: Card = await CardModelInstance.create(newCard);
         const newCardId = newlyCreatedCard.id || 0;
         const userLinked = await UserModel.link_card(userId, newCardId, expDate);

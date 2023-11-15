@@ -58,6 +58,11 @@ yarn --cwd "~/stack/projects/" build
 pm2 restart 1
 ```
 
+Or
+```bash
+~./rebuild-prod
+```
+
 ## Run Locally
 
 Install dependencies
