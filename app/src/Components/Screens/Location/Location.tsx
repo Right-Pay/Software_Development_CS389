@@ -18,7 +18,7 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
-import {View, useWindowDimensions} from 'react-native';
+import {Text, View, useWindowDimensions} from 'react-native';
 import {styled} from 'nativewind';
 import {Place} from '../../../types/Location';
 const StyledView = styled(View);
@@ -31,6 +31,8 @@ type LocationScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
+const StlyizedText = styled(Text, 'text-lg font-bold text-dark-green');
+
 const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   const {location, places} = React.useContext(Context) as AppContext;
 
@@ -39,17 +41,23 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   );
   const renderPlace = (place: Place) => {
     return (
-      <StyledView className="flex-1 border-2 border-b-0 border-slate-200 flex-col place-items-center h-36 justify-center justify-items-center">
-        <Title className="text-lg">{place.displayName.text}</Title>
-        <Subtitle>
-          {place.primaryTypeDisplayName?.text || place.types[0] || ''}
-        </Subtitle>
-        <Subtitle>{place.distance} miles</Subtitle>
+      <StyledView>
+        <StyledView className="flex bg-white flex-col h-20">
+          <StlyizedText className="pl-5 text-left text-lg">
+            {place.displayName.text}
+          </StlyizedText>
+          {/* <Subtitle>
+            {place.primaryTypeDisplayName?.text || place.types[0] || ''}
+          </Subtitle>
+          <Subtitle>{place.distance} miles</Subtitle> */}
+        </StyledView>
       </StyledView>
     );
   };
 
-  const seperatorComponent = <NearbyLocationSeperator />;
+  const seperatorComponent = (
+    <StyledView className="w-full h-0.5 bg-slate-200" />
+  );
 
   const onViewRef = useRef((viewableItems: any) => {
     const check: Place[] = viewableItems.viewableItems.map(
@@ -92,19 +100,26 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
         provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
         {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
-      <NearbyLocationScrollView
-        className="absolute bg-white rounded-t-xl bottom-0 left-0 text-black z-50"
-        data={places}
-        renderItem={({item}) => renderPlace(item as Place)}
-        ItemSeparatorComponent={() => seperatorComponent}
-        showsHorizontalScrollIndicator={false}
-        horizontal={false}
-        onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
-        keyExtractor={item => (item as Place).id}
-        snapToAlignment="start"
-        decelerationRate={'fast'}
-        snapToInterval={160}
-      />
+      <StyledView className="absolute bottom-0 left-0 w-full h-1/3">
+        <StyledView className="rounded-t-xl h-10 border-b-2 border-slate-200 bg-white">
+          <StlyizedText className="text-center pt-1">
+            Nearby Locations
+          </StlyizedText>
+        </StyledView>
+        <NearbyLocationScrollView
+          className="rounded-xl text-black z-50"
+          data={places}
+          renderItem={({item}) => renderPlace(item as Place)}
+          ItemSeparatorComponent={() => seperatorComponent}
+          showsHorizontalScrollIndicator={false}
+          horizontal={false}
+          onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
+          keyExtractor={item => (item as Place).id}
+          snapToAlignment="start"
+          decelerationRate={'fast'}
+          snapToInterval={82}
+        />
+      </StyledView>
     </WrapperView>
   ); //add button up here^^ between view and mapview <Button
   //title="Settings"
