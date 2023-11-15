@@ -146,7 +146,7 @@ class UserController {
         if (!brand) {
           throw new Error(i18n.t('error.brandNotFound'));
         }
-        if (!newCard) {
+        if (!newCard.card_name) {
           newCard.card_name = bank.bank_name + ' ' +
             newCard.card_level;
         }
