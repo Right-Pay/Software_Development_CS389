@@ -139,6 +139,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         });
 
         const content = await response.json();
+        console.log(content);
         //check
         if (content.data.code === 'invalid_token') {
           await refreshAuth0Token();
@@ -245,7 +246,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   function testBankName(bankName: string) {
-    const regex: RegExp = /^[a-zA-Z0-9 &,.]{4,}$/;
+    const regex: RegExp = /^[a-zA-Z &,.]{4,}$/;
     return regex.test(bankName);
   }
 
