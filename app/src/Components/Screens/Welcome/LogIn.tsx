@@ -28,7 +28,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   ) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
-  }, []);
+  }, [clearAuthErrors]);
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   return (
