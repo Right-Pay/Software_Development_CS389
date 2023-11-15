@@ -102,7 +102,7 @@ export const RewardsView = styled(
 );
 export const Dropdown = styled(
   DropDownPicker,
-  'text-xl text-black h-12 rounded-xl border-2 border-slate-200 bg-light-green',
+  'text-xl text-black h-12 rounded-xl border-2 bg-light-green',
 );
 export const FormDateView = styled(
   View,

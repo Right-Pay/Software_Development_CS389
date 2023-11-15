@@ -175,7 +175,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         addAuthError(ErrorMessages.undefined);
       }
     };
-
     let success = await linkToUser(true);
     if (!success) {
       return false;
@@ -246,7 +245,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   }
 
   function testBankName(bankName: string) {
-    const regex: RegExp = /^[a-zA-Z ]{3,}$/;
+    const regex: RegExp = /^[a-zA-Z0-9 &,.]{4,}$/;
     return regex.test(bankName);
   }
 
@@ -288,7 +287,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     }
     if (formDetails.bankName !== undefined) {
       if (!testBankName(formDetails.bankName as string)) {
-        errors.push(ErrorMessages.invalidCardBankName);
+        errors.push(ErrorMessages.invalidBankName);
       }
     }
     if (formDetails.level !== undefined) {

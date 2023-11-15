@@ -239,9 +239,9 @@ const AddCardFullForm = () => {
 
   const renderBinInput = () => {
     const updateBin = (event: any) => {
-      if (editState === EditStates.Edit) {
+      /*if (editState === EditStates.Edit) {
         setEditState(EditStates.Add);
-      }
+      }*/
       onBinChange(+event.nativeEvent.text);
     };
     return (
@@ -257,9 +257,6 @@ const AddCardFullForm = () => {
 
   const renderLevelInput = () => {
     const updateLevel = (text: string) => {
-      if (editState === EditStates.Edit) {
-        setEditState(EditStates.Add);
-      }
       setCard({...card, card_level: text});
     };
     return (
@@ -312,9 +309,6 @@ const AddCardFullForm = () => {
 
   const renderBrandDropdown = () => {
     const updateBrand = (event: any) => {
-      if (editState === EditStates.Edit) {
-        setEditState(EditStates.Add);
-      }
       setCard({...card, card_brand_id: Number(event)});
     };
     return (
@@ -335,9 +329,6 @@ const AddCardFullForm = () => {
 
   const renderTypeDropdown = () => {
     const updateType = (event: any) => {
-      if (editState === EditStates.Edit) {
-        setEditState(EditStates.Add);
-      }
       setCard({...card, card_type: event.toString()});
     };
     return (
