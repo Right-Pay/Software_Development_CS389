@@ -33,7 +33,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
   return (
     <WrapperView>
-      <Title>Forgot your Password for RightPay?</Title>
+      <Title className="mt-20">Forgot your Password for RightPay?</Title>
       <LogoContainer>
         <Logo
           source={require('../../../Assets/RightPay-logo-light-transparent.png')}

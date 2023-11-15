@@ -1,5 +1,5 @@
 import {CreditCard} from './CreditCardType';
-import {Location} from './Location';
+import {Location, Place} from './Location';
 
 export interface AppContext {
   creditCards: CreditCard[];
@@ -8,4 +8,8 @@ export interface AppContext {
   location: Location;
   isLoading: boolean;
   setIsLoading: (_isLoading: boolean) => void;
+  fetchPlaces: () => void;
+  places: Place[];
+  fetchAddress: () => void;
+  address: Place | undefined;
 }
