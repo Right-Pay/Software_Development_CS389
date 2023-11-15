@@ -117,7 +117,6 @@ const AddCardFullForm = () => {
     clearAuthErrors();
     Keyboard.dismiss();
     if (EditStates.Edit === editState || EditStates.Add === editState) {
-      console.log(card);
       // link card, if new pass whole card, if edit pass card id
       const cardDetails = {
         cardBin: card?.card_bin,
@@ -168,7 +167,6 @@ const AddCardFullForm = () => {
           Number(card?.card_bank_id) !== bank_id
         ) {
           setEditState(EditStates.Add);
-          console.log('Switch to add state bank press');
         }
         if (card) {
           card.card_bank_id = bank_id;
@@ -324,7 +322,6 @@ const AddCardFullForm = () => {
       if (isNaN(brand_id)) {
         return;
       }
-      console.log(brand_id);
       if (
         editState === EditStates.Edit &&
         Number(card.card_brand_id) !== brand_id
@@ -351,7 +348,6 @@ const AddCardFullForm = () => {
 
   const renderTypeDropdown = () => {
     const updateType = (event: any) => {
-      console.log(event);
       if (
         editState === EditStates.Edit &&
         card.card_type !== event.toString()
