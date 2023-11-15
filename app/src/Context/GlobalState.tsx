@@ -330,7 +330,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     }
   };
 
-  const fetchAddress = async () => {
+  const fetchAddress = useCallback(async () => {
     var myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append(
@@ -376,7 +376,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     });
     //console.log(resultAddress[0].displayName);
     setAddress(resultAddress[0]);
-  };
+  }, [location]);
 
   const calculateDistanceLatLong = (
     location1: PlaceLocation,
@@ -404,7 +404,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return Math.round(distance * 100) / 100;
   };
 
-  const fetchPlaces = async () => {
+  const fetchPlaces = useCallback(async () => {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
     headers.append(
@@ -490,9 +490,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       });
     console.log(resultPlaces);
     setPlaces(resultPlaces);
-  };
+  }, [location]);
 
-  const getLocation = () => {
+  const getLocation = useCallback(() => {
     const result = requestLocationPermission();
     result.then(res => {
       if (res) {
@@ -571,7 +571,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   useEffect(() => {
     fetchPlaces();
     fetchAddress();
-  }, [location]);
+  }, [fetchAddress, fetchPlaces, location]);
 
   return (
     <Context.Provider

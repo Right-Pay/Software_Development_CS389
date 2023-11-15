@@ -38,7 +38,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
       <Subtitle>State: {userProfile.state}</Subtitle>
       <Subtitle>Zip: {userProfile.zip}</Subtitle>
       <MainButton>
-        <MainButtonText>Edit Cards</MainButtonText>
+        <MainButtonText
+          onPress={() =>
+            navigation.navigate('WalletStack', {screen: 'WalletScreen'})
+          }>
+          Edit Cards
+        </MainButtonText>
       </MainButton>
 
       <MainButton onPress={() => navigation.goBack()}>

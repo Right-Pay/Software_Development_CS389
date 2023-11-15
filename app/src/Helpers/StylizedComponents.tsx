@@ -3,6 +3,7 @@ import {TextInput, Text, View, Pressable, FlatList, Image} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import DropDownPicker from 'react-native-dropdown-picker';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledFlatList = styled(FlatList);
 
 export const WrapperView = styled(
