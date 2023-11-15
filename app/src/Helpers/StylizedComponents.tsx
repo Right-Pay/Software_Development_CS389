@@ -28,11 +28,11 @@ export const AuthButtonText = styled(
 );
 export const FormInputBox = styled(
   TextInput,
-  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green bg-transparent',
+  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-slate-600 bg-light-green bg-transparent',
 );
 export const FormButton = styled(
   Pressable,
-  'flex items-center justify-center fixed m-2 text-xl text-black h-9 w-5/12 rounded-xl bg-dark-green',
+  'flex items-center justify-center fixed m-2 text-xl text-black h-9 w-5/12 rounded-xl border-slate-600 bg-dark-green',
 );
 export const FormButtonText = styled(
   Text,
@@ -102,7 +102,7 @@ export const RewardsView = styled(
 );
 export const Dropdown = styled(
   DropDownPicker,
-  'text-xl text-black h-12 rounded-xl border-2 bg-light-green',
+  'text-xl text-black h-12 rounded-xl border-2 border-slate-600 bg-light-green',
 );
 export const FormDateView = styled(
   View,
@@ -110,7 +110,7 @@ export const FormDateView = styled(
 );
 export const BanksView = styled(
   View,
-  'flex flex-col justify-center border-2 rounded-xl w-2/3 p-0 z-50 sticky',
+  'flex flex-col justify-center border-2 border-slate-600 rounded-xl w-2/3 p-0 z-50 sticky',
 );
 export const BankOptionsView = styled(
   View,
