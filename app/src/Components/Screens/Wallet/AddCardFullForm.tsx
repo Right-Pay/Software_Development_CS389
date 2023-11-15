@@ -42,8 +42,6 @@ const AddCardFullForm = () => {
     CardForms,
     setCardForms,
     validateCardForm,
-    setNewCardBin,
-    newCardBin,
     findCard,
   } = React.useContext(Context) as AppContext;
 
@@ -98,15 +96,6 @@ const AddCardFullForm = () => {
     [bankOptions],
   );
 
-  const onBinChange = (bin: number) => {
-    if (isNaN(bin)) {
-      addAuthError(Consts.authErrorMessages.invalidCardBin);
-      return;
-    }
-    removeAuthError(Consts.authErrorMessages.invalidCardBin);
-    setNewCardBin(bin);
-  };
-
   //handlers
   const handleExpirationMonthChange = (month: string) => {
     const currentExpirationDate = card?.exp_date;
@@ -128,8 +117,10 @@ const AddCardFullForm = () => {
     clearAuthErrors();
     Keyboard.dismiss();
     if (EditStates.Edit === editState || EditStates.Add === editState) {
+      console.log(card);
       // link card, if new pass whole card, if edit pass card id
       const cardDetails = {
+        cardBin: card?.card_bin,
         bankName: card?.card_bank_name,
         level: card?.card_level,
       };
@@ -139,10 +130,11 @@ const AddCardFullForm = () => {
         return;
       }
       // if add state, pass true to new card bool
-      await linkCard(card, EditStates.Add === editState);
-      setBankSearch('');
+      if (await linkCard(card, EditStates.Add === editState)) {
+        closeModal();
+      }
     } else {
-      const searchForCard = await findCard(+newCardBin as number, true);
+      const searchForCard = await findCard(card.card_bin as number, true);
       if (searchForCard) {
         searchForCard.exp_date = '23-01';
         setCard(searchForCard);
@@ -150,10 +142,7 @@ const AddCardFullForm = () => {
         setFilteredBankOptions([]);
         setEditState(EditStates.Edit);
       } else {
-        setCard({
-          card_bin: newCardBin,
-          exp_date: '23-01',
-        });
+        setCard({...card, exp_date: '23-01'});
         setEditState(EditStates.Add);
       }
     }
@@ -163,7 +152,8 @@ const AddCardFullForm = () => {
 
   const closeModal = () => {
     setCardForms({...CardForms, Full: false});
-    setNewCardBin(0o0);
+    setCard({} as Card);
+    setBankSearch('');
     clearAuthErrors();
     setEditState(EditStates.Bin);
   };
@@ -171,9 +161,18 @@ const AddCardFullForm = () => {
   const renderBankOption = ({item}: {item: CardBank}) => (
     <Pressable
       onPress={() => {
+        let bank_id = Number(item.id);
+        let bank_name = item.bank_name;
+        if (
+          editState === EditStates.Edit &&
+          Number(card?.card_bank_id) !== bank_id
+        ) {
+          setEditState(EditStates.Add);
+          console.log('Switch to add state bank press');
+        }
         if (card) {
-          card.card_bank_id = item.id;
-          card.card_bank_name = item.bank_name;
+          card.card_bank_id = bank_id;
+          card.card_bank_name = bank_name;
         }
         setBankSearch(item.bank_name);
         setFilteredBankOptions([]);
@@ -239,16 +238,24 @@ const AddCardFullForm = () => {
 
   const renderBinInput = () => {
     const updateBin = (event: any) => {
-      /*if (editState === EditStates.Edit) {
+      let bin = Number(event.nativeEvent.text);
+      if (editState === EditStates.Edit && Number(card.card_bin) !== bin) {
         setEditState(EditStates.Add);
-      }*/
-      onBinChange(+event.nativeEvent.text);
+      }
+
+      if (isNaN(bin)) {
+        addAuthError(Consts.authErrorMessages.invalidCardBin);
+        return;
+      }
+
+      removeAuthError(Consts.authErrorMessages.invalidCardBin);
+      setCard({...card, card_bin: bin});
     };
     return (
       <FormInputBox
         placeholder="First Six Digits"
         placeholderTextColor="#AFAEAE"
-        value={newCardBin !== 0o0 ? newCardBin.toString() : ''}
+        value={card.card_bin ? card.card_bin.toString() : ''}
         maxLength={6}
         onChange={updateBin}
       />
@@ -257,6 +264,9 @@ const AddCardFullForm = () => {
 
   const renderLevelInput = () => {
     const updateLevel = (text: string) => {
+      if (editState === EditStates.Edit && card.card_level !== text) {
+        setEditState(EditStates.Add);
+      }
       setCard({...card, card_level: text});
     };
     return (
@@ -309,7 +319,19 @@ const AddCardFullForm = () => {
 
   const renderBrandDropdown = () => {
     const updateBrand = (event: any) => {
-      setCard({...card, card_brand_id: Number(event)});
+      let brand_id = Number(event);
+      let brand_name = brandOptions.find(b => b.id === brand_id)?.brand_name;
+      if (isNaN(brand_id)) {
+        return;
+      }
+      console.log(brand_id);
+      if (
+        editState === EditStates.Edit &&
+        Number(card.card_brand_id) !== brand_id
+      ) {
+        setEditState(EditStates.Add);
+      }
+      setCard({...card, card_brand_id: brand_id, card_brand_name: brand_name});
     };
     return (
       <DropdownComponent
@@ -329,6 +351,13 @@ const AddCardFullForm = () => {
 
   const renderTypeDropdown = () => {
     const updateType = (event: any) => {
+      console.log(event);
+      if (
+        editState === EditStates.Edit &&
+        card.card_type !== event.toString()
+      ) {
+        setEditState(EditStates.Add);
+      }
       setCard({...card, card_type: event.toString()});
     };
     return (

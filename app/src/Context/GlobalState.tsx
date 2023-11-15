@@ -239,9 +239,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return regex.test(cardName);
   }
 
-  function testCardBin() {
+  function testCardBin(cardBin: number) {
     const regex: RegExp = /^[0-9]{6}$/;
-    return regex.test(newCardBin.toString());
+    return regex.test(cardBin.toString());
   }
 
   function testBankName(bankName: string) {
@@ -277,8 +277,10 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   function validateCardForm(formDetails: CardFormDetails) {
     const errors: string[] = [];
-    if (!testCardBin()) {
-      errors.push(ErrorMessages.invalidCardBin);
+    if (formDetails.cardBin !== undefined) {
+      if (!testCardBin(Number(formDetails.cardBin))) {
+        errors.push(ErrorMessages.invalidCardBin);
+      }
     }
     if (formDetails.cardName !== undefined) {
       if (!testCardName(formDetails.cardName as string)) {

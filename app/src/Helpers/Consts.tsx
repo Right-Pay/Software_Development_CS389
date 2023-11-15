@@ -17,7 +17,7 @@ const AuthErrorMessages = {
   invalidToken: 'Invalid Token\nPlease Contact Support',
   invalidCardName:
     'Invalid  Card Name\nName must be more then 10 characters\nName must only contain letters',
-  invalidCardBin: 'Invalid  Card Number\nMust be 6 digits',
+  invalidCardBin: 'Invalid Card Number\nMust be 6 digits',
   invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
   invalidDropdownOption: 'Invalid Dropdown Option',
   invalidCardLevel: 'Invalid Card Level\nName must be more then 3 characters',
