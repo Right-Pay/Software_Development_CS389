@@ -167,12 +167,30 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return true;
   };
 
-  const addNewReward = (cardReward: Reward) => {
-    //Do something here
+  const removeCard = (card: Card) => {
+    const unlinkToUser = async () => {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      headers.append('Authorization', `bearer ${userToken}`);
+
+      const raw = {
+        card_id: card?.id,
+      };
+
+      const response = await fetch(`${baseURL}users/unlinkCard`, {
+        method: 'DELETE',
+        headers: headers,
+        body: JSON.stringify(raw),
+      });
+      const content = await response.text();
+    };
+    unlinkToUser();
+    setCards(Cards.filter(c => c.id !== card.id));
   };
 
-  const removeCard = (card: Card) => {
-    setCards(Cards.filter(c => c.id !== card.id));
+  const addNewReward = (cardReward: Reward) => {
+    //Do something here
   };
 
   const removeReward = (CardReward: Reward) => {
