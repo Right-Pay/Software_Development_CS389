@@ -63,9 +63,9 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
     );
   };
 
-  const seperatorComponent = (
-    <StyledView className="w-full h-0.5 bg-slate-200" />
-  );
+  const seperatorComponent: React.FC = () => {
+    return <StyledView className="w-full h-0.5 bg-slate-200" />;
+  };
 
   const onViewRef = useRef((viewableItems: any) => {
     const check: Place[] = viewableItems.viewableItems.map(
@@ -107,17 +107,17 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
         {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
-      <StyledView className="absolute bottom-0 left-0 w-full h-1/3">
+      <StyledView className="absolute bottom-0 left-0 w-full h-1/3 bg-white rounded-t-xl">
         <StyledView className="rounded-t-xl h-10 border-b-2 border-slate-200 bg-white">
           <StlyizedText className="text-center pt-1">
             Nearby Locations
           </StlyizedText>
         </StyledView>
         <NearbyLocationScrollView
-          className="rounded-xl text-black z-50"
+          className="text-black z-50"
           data={places}
           renderItem={({item}) => renderPlace(item as Place)}
-          ItemSeparatorComponent={() => seperatorComponent}
+          ItemSeparatorComponent={seperatorComponent}
           showsHorizontalScrollIndicator={false}
           horizontal={false}
           onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
