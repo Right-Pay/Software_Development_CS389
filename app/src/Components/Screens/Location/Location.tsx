@@ -31,7 +31,7 @@ type LocationScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const StlyizedText = styled(Text, 'text-lg font-bold text-dark-green');
+const StlyizedText = styled(Text, 'text-lg text-dark-green');
 
 const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   const {location, places} = React.useContext(Context) as AppContext;
@@ -41,15 +41,22 @@ const LocationScreen: React.FC<LocationScreenProps> = ({navigation}) => {
   );
   const renderPlace = (place: Place) => {
     return (
-      <StyledView>
-        <StyledView className="flex bg-white flex-col h-20">
-          <StlyizedText className="pl-5 text-left text-lg">
+      <StyledView className="py-2 flex-1 bg-white flex-col h-16 w-full">
+        <StyledView className="flex-1 flex-row place-content-between w-full">
+          <StlyizedText className="font-bold pl-4 text-xl w-3/4 text-left">
             {place.displayName.text}
           </StlyizedText>
-          {/* <Subtitle>
+          <StlyizedText className="text-gray-400 w-1/4 text-md text-right pr-4">
+            {place.distance} mi
+          </StlyizedText>
+        </StyledView>
+        <StyledView className="flex-1 flex-row place-content-between w-full">
+          <StlyizedText className="pl-4 text-xl w-3/4 text-left">
             {place.primaryTypeDisplayName?.text || place.types[0] || ''}
-          </Subtitle>
-          <Subtitle>{place.distance} miles</Subtitle> */}
+          </StlyizedText>
+          <StlyizedText className="text-gray-400 w-1/4 text-md text-right pr-4">
+            {place.distance} mi
+          </StlyizedText>
         </StyledView>
       </StyledView>
     );
