@@ -84,9 +84,7 @@ class CardController {
       }
       if (!cardData.card_name) {
         cardData.card_name = bank.bank_name + ' ' +
-          brand.brand_name + ' ' +
-          cardData.card_level + ' ' +
-          cardData.card_type + ' ';
+          cardData.card_level;
       }
       const newCard = await CardModel.create(cardData);
       response.data = newCard;

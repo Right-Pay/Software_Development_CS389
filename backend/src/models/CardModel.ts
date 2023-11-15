@@ -9,7 +9,7 @@ export class CardModel {
     try {
       const client = await dbPool.connect();
       const cardCheck = await this.getByBin(card.card_bin);
-      if (cardCheck) {
+      if (cardCheck && cardCheck.card_bin === card.card_bin && cardCheck.card_name === card.card_name && cardCheck.card_brand_id === card.card_brand_id && cardCheck.card_bank_id === card.card_bank_id && cardCheck.card_type === card.card_type && cardCheck.card_level === card.card_level && cardCheck.card_country === card.card_country) {
         throw new Error('error.cardFound');
       }
       const sql = 'INSERT INTO rp_cards (card_bin, card_name, card_brand_id, card_bank_id, card_type, card_level, card_country) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
