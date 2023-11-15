@@ -154,7 +154,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
               : [Consts.addCard]
           }
           showsHorizontalScrollIndicator={false}
-          keyExtractor={item => (item as Card).card_bin.toString()}
+          keyExtractor={item => (item as Card).id?.toString() || '0'}
           renderItem={({item}) => renderCard(item as Card)}
           horizontal={true}
           ItemSeparatorComponent={itemSeparatorComponent}

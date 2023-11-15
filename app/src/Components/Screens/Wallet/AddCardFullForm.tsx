@@ -289,7 +289,7 @@ const AddCardFullForm = () => {
             defaultValue={card?.card_bank_name}
             className="mb-0 w-full border-0 rounded-none"
           />
-          {filteredBankOptions.length > 0 && (
+          {filteredBankOptions.length > 0 && isKeyboardVisible && (
             <BankOptionsView>
               <FlatList
                 data={filteredBankOptions}
@@ -341,7 +341,7 @@ const AddCardFullForm = () => {
         placeholder={card?.card_brand_name || 'Visa, JSB, etc...'}
         onDropdownChange={updateBrand}
         mode={ModalMode}
-        dropdownStyle="m-2 w-2/3 h-auto z-40"
+        dropdownStyle="m-2 w-2/3 h-auto z-40 border-slate-600"
       />
     );
   };
