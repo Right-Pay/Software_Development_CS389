@@ -158,7 +158,17 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           Review: false,
           Full: false,
         });
-        userProfile.cards.push(content.data as Card);
+        const retCard = content.data as Card;
+        const cardWithBankAndBrand = {
+          ...retCard,
+          card_bank_name:
+            bankOptions.find(b => b.id === +(retCard.card_bank_id as number))
+              ?.bank_name ?? '',
+          card_brand_name:
+            brandOptions.find(b => b.id === +(retCard.card_brand_id as number))
+              ?.brand_name ?? '',
+        } as Card;
+        userProfile.cards.push(cardWithBankAndBrand);
         return true;
       } catch (e) {
         console.log(e);

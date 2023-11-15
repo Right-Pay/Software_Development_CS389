@@ -301,7 +301,7 @@ const AddCardFullForm = () => {
           }}
           className="text-left">
           Don't see your Bank? Click Here!
-        </FinePrint> 
+        </FinePrint>
         <AddNewDropdownOption
           setOption={setNewBankOption}
           show={CardForms.AddBankOption}
