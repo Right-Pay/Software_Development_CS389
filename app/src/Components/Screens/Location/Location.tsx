@@ -63,9 +63,9 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
     );
   };
 
-  const seperatorComponent = (
-    <StyledView className="w-full h-0.5 bg-slate-200" />
-  );
+  const seperatorComponent: React.FC = () => {
+    return <StyledView className="w-full h-0.5 bg-slate-200" />;
+  };
 
   const onViewRef = useRef((viewableItems: any) => {
     const check: Place[] = viewableItems.viewableItems.map(
@@ -117,7 +117,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
           className="text-black z-50"
           data={places}
           renderItem={({item}) => renderPlace(item as Place)}
-          ItemSeparatorComponent={() => seperatorComponent}
+          ItemSeparatorComponent={seperatorComponent}
           showsHorizontalScrollIndicator={false}
           horizontal={false}
           onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
