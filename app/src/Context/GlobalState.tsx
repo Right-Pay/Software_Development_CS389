@@ -19,9 +19,8 @@ import AuthContext from './authContext';
 const baseURL = Config.REACT_APP_API_URL;
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
-  const {refreshAuth0Token, userToken, userProfile} = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
+  const {refreshAuth0Token, userToken, userProfile, addAuthError, authError} =
+    React.useContext(AuthContext) as AuthContextType;
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
@@ -70,6 +69,18 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     });
     const content = await response.text();
 
+    if (
+      JSON.parse(content).data.code === 'invalid_token' &&
+      authError.indexOf(ErrorMessages.invalidToken) === -1
+    ) {
+      refreshAuth0Token();
+      addAuthError(ErrorMessages.invalidToken);
+      setTimeout(() => {
+        findCard(cardBin);
+      }, 1000);
+      return;
+    }
+
     if (response.status === 200) {
       const card = JSON.parse(content).data;
       const modifiedCard = {
@@ -81,7 +92,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           '',
         exp_date: '23-01',
       } as Card;
-      console.log(modifiedCard);
       reviewCard(modifiedCard);
       setCardInDB(true);
       return false;
@@ -124,13 +134,35 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
       console.log(raw, 'raw');
 
-      const response = await fetch(`${baseURL}users/linkCard`, {
-        method: 'PUT',
-        headers: headers,
-        body: JSON.stringify(raw),
-      });
-      const content = await response.text();
-      userProfile.cards.push(JSON.parse(content).data as Card);
+      try {
+        const response = await fetch(`${baseURL}users/linkCard`, {
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify(raw),
+        });
+
+        const content = await response.text();
+        //check
+        if (
+          JSON.parse(content).data.code === 'invalid_token' &&
+          authError.indexOf(ErrorMessages.invalidToken) === -1
+        ) {
+          refreshAuth0Token();
+          addAuthError(ErrorMessages.invalidToken);
+          setTimeout(() => {
+            linkToUser(card);
+          }, 1000);
+          return;
+        }
+        setNewCardBin(0o0);
+        setCardForms({
+          ...CardForms,
+          Review: false,
+        });
+        userProfile.cards.push(JSON.parse(content).data as Card);
+      } catch (e) {
+        console.log(e);
+      }
     };
 
     linkToUser(newCard as Card);
@@ -149,12 +181,27 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         card_id: card?.id,
       };
 
-      const response = await fetch(`${baseURL}users/unlinkCard`, {
-        method: 'DELETE',
-        headers: headers,
-        body: JSON.stringify(raw),
-      });
-      const content = await response.text();
+      try {
+        const response = await fetch(`${baseURL}users/unlinkCard`, {
+          method: 'DELETE',
+          headers: headers,
+          body: JSON.stringify(raw),
+        });
+        const content = await response.text();
+        if (
+          JSON.parse(content).data.code === 'invalid_token' &&
+          authError.indexOf(ErrorMessages.invalidToken) === -1
+        ) {
+          refreshAuth0Token();
+          addAuthError(ErrorMessages.invalidToken);
+          setTimeout(() => {
+            unlinkToUser();
+          }, 1000);
+          return;
+        }
+      } catch (e) {
+        console.log(e);
+      }
     };
     unlinkToUser();
 

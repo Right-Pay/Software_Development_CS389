@@ -114,7 +114,6 @@ const ReviewCardForm = () => {
     }
     Keyboard.dismiss();
     addCard();
-    closeModal();
   };
 
   const filterBank = useCallback(
