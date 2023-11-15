@@ -136,8 +136,19 @@ class UserController {
           res.status(500).json(response);
         }
       } else {
-        const newlyCreatedCard: Card = await CardModelInstance.create(newCard);
-        const newCardId = newlyCreatedCard.id || 0;
+        let newlyCreatedCard: Card = {} as Card;
+        // trying to create new card using fields given
+        // if it fails and it is a duplicate card, then just link user to existing card
+        try {
+          newlyCreatedCard = await CardModelInstance.create(newCard);
+        } catch (error: any) {
+          if (error.message === 'error.cardFound') {
+            newlyCreatedCard = {} as Card;
+          } else {
+            throw new Error(error.message);
+          }
+        }
+        const newCardId = newlyCreatedCard?.id || 0;
         const userLinked = await UserModel.link_card(userId, newCardId, expDate);
         if (userLinked) {
           response.data = userLinked;
