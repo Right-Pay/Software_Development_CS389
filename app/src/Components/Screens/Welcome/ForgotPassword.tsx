@@ -23,12 +23,13 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {clearAuthErrors, resetPassword, AuthErrorComponent, resetVariables} =
-    React.useContext(AuthContext) as AuthContextType;
+  const {clearAuthErrors, resetPassword, AuthErrorComponent} = React.useContext(
+    AuthContext,
+  ) as AuthContextType;
   const [email, setEmail] = React.useState<string>('');
   useEffect(() => {
     clearAuthErrors();
-  }, []);
+  }, [clearAuthErrors]);
 
   return (
     <WrapperView>
@@ -48,7 +49,6 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         onPress={() => {
           resetPassword(email);
           setTimeout(() => {
-            resetVariables();
             navigation.navigate('Login');
           }, 3000);
         }}>

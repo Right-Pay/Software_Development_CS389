@@ -17,6 +17,9 @@ router.post("/", checkJwt, async (req: Request, res: Response) => {
   }
 });
 
+// Link User to Card
+router.put("/linkCard", checkJwt, async (req: Request, res: Response) => await UserController.linkUserToCard(req, res))
+
 // Update User
 router.put("/", checkJwt, (req: Request, res: Response) => {
   const auth = req.auth;
@@ -38,5 +41,7 @@ router.delete("/", checkJwt, async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error', sucess: false });
   }
 });
+
+router.delete("/unlinkCard", checkJwt, async (req: Request, res: Response) => await UserController.unlinkUserFromCard(req, res))
 
 export default router;

@@ -9,8 +9,6 @@ const dbConfig = {
   port: 5432, // Default PostgreSQL port
 };
 
-console.log(dbConfig);
-
 // Create and export the PostgreSQL pool
 const dbPool = new Pool(dbConfig)
 
