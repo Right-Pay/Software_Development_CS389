@@ -141,9 +141,13 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         });
 
         const content = await response.json();
-        console.log(content);
         //check
-        if (content.data.code === 'invalid_token') {
+        if (
+          content &&
+          content.data &&
+          content.data.code &&
+          content.data.code === 'invalid_token'
+        ) {
           await refreshAuth0Token();
           if (tryAgain) {
             setTimeout(() => {
@@ -374,7 +378,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         id: index.toString(),
       } as Place;
     });
-    //console.log(resultAddress[0].displayName);
+
     setAddress(resultAddress[0]);
   }, [location]);
 
@@ -385,8 +389,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     const toRadians = (degrees: number): number => {
       return degrees * (Math.PI / 180);
     };
-    //console.log(location1);
-    //console.log(location2);
+
     const earthRadius = 3958.8;
     const lat1 = location1.latitude;
     const lat2 = location2.latitude;
@@ -488,7 +491,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           id: index.toString(),
         } as Place;
       });
-    console.log(resultPlaces);
+
     setPlaces(resultPlaces);
   }, [location]);
 
