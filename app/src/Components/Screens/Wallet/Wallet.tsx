@@ -4,6 +4,7 @@ import type {
   WalletNavigationRoutesType,
   NavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import {View, Text, FlatList} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
@@ -13,14 +14,11 @@ import {
   AddCardView,
   CardButton,
   CardItemSeperator,
-  CardList,
-  CardListView,
   CardText,
   CardView,
   DeleteCardButton,
   RewardsView,
   SecondaryAddCardView,
-  SecondaryCardView,
   Subtitle,
   Title,
   WrapperView,
@@ -33,12 +31,17 @@ import AddCardFullForm from './AddCardFullForm';
 import Consts from '../../../Helpers/Consts';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
+import {styled} from 'nativewind';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;
+
+const StyledView = styled(View);
+const StyledList = styled(FlatList);
+// const StyledText = styled(Text, 'text-lg text-dark-green');
 
 const WalletScreen: React.FC<WalletScreenProps> = () => {
   const {unlinkCard, setCardForms, CardForms} = React.useContext(
@@ -74,17 +77,22 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     }
     return (
       <CardView>
-        <SecondaryCardView>
+        <StyledView className="flex-1 flex-col w-11/12 h-full justify-center items-center bg-dark-green rounded-xl">
           <CardButton
             onLongPress={() => handleCardPress()}
-            className={deleteCard ? 'opacity-50 ' : 'opacity-100'}>
-            <CardText className="text-center font-bold truncate">
-              {item.card_name}
-            </CardText>
-            <CardText>{`Card Type: ${item.card_type}`}</CardText>
-            <CardText>{`Card Brand: ${item.card_brand_name}`}</CardText>
-            <CardText>{`Bank Name: ${item.card_bank_name}`}</CardText>
-            <CardText>{`Card Bin: ${item.card_bin}`}</CardText>
+            className={deleteCard ? 'opacity-50' : 'opacity-100'}>
+            <StyledView className="flex-1 flex-col">
+              <StyledView className="text-center">
+                <CardText className="text-center font-bold truncate">
+                  {item.card_name}
+                </CardText>
+              </StyledView>
+              <StyledView className="flex-1 flex-row justify-start">
+                <CardText>{`${item.card_bin}`}</CardText>
+                {/* <CardText>{`Card Type: ${item.card_type}`}</CardText>
+                <CardText>{`Card Brand: ${item.card_brand_name}`}</CardText> */}
+              </StyledView>
+            </StyledView>
           </CardButton>
           {deleteCard && (
             <DeleteCardButton
@@ -101,7 +109,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
               </CardText>
             </DeleteCardButton>
           )}
-        </SecondaryCardView>
+        </StyledView>
       </CardView>
     );
   };
@@ -146,8 +154,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     <WrapperView>
       {AddCardFullForm()}
       <Title className="mt-10">Wallet</Title>
-      <CardListView>
-        <CardList
+      <View className="aspect-video mt-10 w-full">
+        <StyledList
+          className="w-full"
           data={
             userProfile.cards
               ? [...userProfile.cards, Consts.addCard]
@@ -163,10 +172,10 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
             Dimensions.get('window').width + Consts.cardItemSeparatorWidth
           } //Change 48 based on width of CardItemSeperator width
         />
-      </CardListView>
-      <CardListView className="h-2/6 justify-center items-center">
-        <CardList
-          className=" text-center w-3/4 p-2"
+      </View>
+      <View className="aspect-video mt-10 w-full justify-center items-center">
+        <FlatList
+          className="w-full text-center w-3/4 p-2"
           data={[]} //This will need to be done
           ListHeaderComponent={
             currentViewedCard.filter(i => i.id === -1).length === 0 ? (
@@ -178,7 +187,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           renderItem={({item}) => renderReward(item as Reward)}
           ItemSeparatorComponent={itemSeparatorComponent}
         />
-      </CardListView>
+      </View>
     </WrapperView>
   );
 };

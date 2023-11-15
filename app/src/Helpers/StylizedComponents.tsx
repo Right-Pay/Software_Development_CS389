@@ -63,16 +63,16 @@ export const LogoContainer = styled(
   'flex-col justify-center items-center h-1/2 w-1/2',
 );
 export const CardList = styled(FlatList, 'w-full');
-export const CardListView = styled(View, 'h-1/2 mt-10 w-full');
+export const CardListView = styled(View, 'aspect-video mt-10 w-full');
 export const CardView = styled(
   View,
   'h-full w-screen flex flex-col items-center justify-center',
 );
 export const SecondaryCardView = styled(
   View,
-  'flex-1 flex-col w-11/12 h-full justify-center items-center bg-dark-green rounded-xl border-4',
+  'flex-1 flex-col w-11/12 h-full justify-center items-center bg-dark-green rounded-xl',
 );
-export const CardButton = styled(Pressable, 'w-full h-full p-8');
+export const CardButton = styled(Pressable, 'w-full h-full p-2');
 export const DeleteCardButton = styled(
   Pressable,
   'w-full h-full absolute top-0 left-0 flex bg-red-500 rounded-xl opacity-75 justify-center items-center',
@@ -86,7 +86,7 @@ export const AddCardView = styled(
 );
 export const SecondaryAddCardView = styled(
   View,
-  'rounded-xl bg-dark-green p-8 border-4 w-11/12 h-full justify-center items-center',
+  'rounded-xl bg-dark-green p-8 w-11/12 h-full justify-center items-center',
 );
 export const AddCardButton = styled(
   Pressable,
