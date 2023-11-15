@@ -74,6 +74,7 @@ const ReviewCardForm = () => {
         if (newCard) {
           newCard.card_bank_id = item.id;
         }
+        setBankSearch(item.bank_name);
         setFilteredBankOptions([]);
         Keyboard.dismiss();
       }}

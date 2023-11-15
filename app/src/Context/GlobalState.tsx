@@ -53,6 +53,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
    * 4. Rewards will be found using a few details from card. Rewards review screen will show which will allow the user to enter rewards and see rewards already associated to that card. Send rewards to db
    *
    */
+
   const findCard = async (cardBin: number) => {
     //Check db for card
     //found card will need to be set if found
@@ -80,7 +81,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           '',
         exp_date: '23-01',
       } as Card;
-
+      console.log(modifiedCard);
       reviewCard(modifiedCard);
       setCardInDB(true);
       return false;
@@ -121,7 +122,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
       raw.exp_date = date;
 
-      console.log(raw);
+      console.log(raw, 'raw');
 
       const response = await fetch(`${baseURL}users/linkCard`, {
         method: 'PUT',
@@ -129,11 +130,10 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         body: JSON.stringify(raw),
       });
       const content = await response.text();
-      console.log(content);
+      userProfile.cards.push(JSON.parse(content).data as Card);
     };
 
     linkToUser(newCard as Card);
-    userProfile.cards.push(newCard as Card);
     setNewCard(null);
     return true;
   };

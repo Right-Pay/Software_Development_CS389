@@ -355,23 +355,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     setLang('en');
   }, []);
 
-  //Api Bypass. Delete this when done testing
-
-  useEffect(() => {
-    const signInDummy = async () => {
-      await signIn('JohnDoe@JohnDoe.com', 'JohnDoe1234!');
-    };
-    if (userProfile.id === undefined) {
-      if (true) {
-        setIsLoading(true);
-        signInDummy();
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-      }
-    }
-  }, []);
-
   return (
     <AuthContext.Provider
       value={{

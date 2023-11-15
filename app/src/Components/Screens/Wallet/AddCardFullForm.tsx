@@ -119,7 +119,6 @@ const AddCardFullForm = () => {
     setExpirationDate(`${expirationYear}-${expirationMonth}`);
     const cardDetails = showFull ? {bankName: bank.bank_name, level} : {};
     const errors = validateCardForm(cardDetails);
-    console.log(cardDetails);
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
@@ -136,21 +135,19 @@ const AddCardFullForm = () => {
       };
       reviewCard(newCard);
       setShowFull(false);
+      setBankSearch('');
+      setLevel('');
+      setCardBrand('visa');
+      setCardType('Credit');
+      setExpirationMonth('1');
+      setExpirationYear(currentYear);
+      setBank({bank_name: '', id: 0, abbr: ''});
     } else {
       const searchForCard = async () => {
         setShowFull(await findCard(+newCardBin as number));
       };
       searchForCard();
     }
-
-    setNewCardBin(0o0);
-    setBankSearch('');
-    setLevel('');
-    setCardBrand('visa');
-    setCardType('Credit');
-    setExpirationMonth('1');
-    setExpirationYear(currentYear);
-    setBank({bank_name: '', id: 0, abbr: ''});
   };
 
   const closeModal = () => {
@@ -164,6 +161,7 @@ const AddCardFullForm = () => {
     <Pressable
       onPress={() => {
         setBank(item);
+        setBankSearch(item.bank_name);
         setFilteredBankOptions([]);
         Keyboard.dismiss();
       }}
