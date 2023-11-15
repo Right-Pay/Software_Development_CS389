@@ -11,14 +11,12 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import {
   AddCardButton,
   AddCardIcon,
-  AddCardView,
   CardButton,
   CardItemSeperator,
   CardText,
   CardView,
   DeleteCardButton,
   RewardsView,
-  SecondaryAddCardView,
   Subtitle,
   Title,
   WrapperView,
@@ -62,15 +60,35 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   //components
   const addNewCardComponent = () => (
-    <AddCardView>
-      <SecondaryAddCardView>
-        <CardText className="text-center opacity-100">Add New Card</CardText>
-        <AddCardButton onPress={handleAddPress}>
-          <AddCardIcon source={require('../../../Assets/AddSign.png')} />
-        </AddCardButton>
-      </SecondaryAddCardView>
-    </AddCardView>
+    <CardView>
+      <StyledView className="flex-1 flex-col w-11/12 h-full items-center justify-center bg-dark-green rounded-xl">
+        <Text className="text-3xl text-white text-center font-bold pb-8">
+          Add New Card
+        </Text>
+        <StyledView>
+          <AddCardButton onPress={handleAddPress}>
+            <AddCardIcon source={require('../../../Assets/AddSign.png')} />
+          </AddCardButton>
+        </StyledView>
+      </StyledView>
+    </CardView>
   );
+
+  const formatBin = (bin: string) => {
+    return (
+      bin
+        .replace(/\s/g, '')
+        .replace(/(\d{4})/g, '$1 ')
+        .trim() + '** **** ****'
+    );
+  };
+
+  const formatExpirationDate = (expDate: string) => {
+    // exp date is in YYYY-MM-DDT00:00:00 format
+    expDate = expDate.split('T')[0].replace(/-/g, '');
+    return expDate.slice(4, 6) + '/' + expDate.slice(2, 4);
+  };
+
   const renderCard = (item: Card) => {
     if (item.card_name === 'Add') {
       return addNewCardComponent();
@@ -81,16 +99,27 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           <CardButton
             onLongPress={() => handleCardPress()}
             className={deleteCard ? 'opacity-50' : 'opacity-100'}>
-            <StyledView className="flex-1 flex-col">
+            <StyledView className="relative flex-1 flex-col h-full">
               <StyledView className="text-center">
                 <CardText className="text-center font-bold truncate">
                   {item.card_name}
                 </CardText>
               </StyledView>
-              <StyledView className="flex-1 flex-row justify-start">
-                <CardText>{`${item.card_bin}`}</CardText>
-                {/* <CardText>{`Card Type: ${item.card_type}`}</CardText>
-                <CardText>{`Card Brand: ${item.card_brand_name}`}</CardText> */}
+              <StyledView className="absolute bottom-0 left-2 flex-1 flex-col">
+                <Text className="text-lg text-white">
+                  {formatBin(item?.card_bin.toString())}
+                </Text>
+                <Text className="text-xs text-white text-left">
+                  {formatExpirationDate(item?.exp_date || '')}
+                </Text>
+              </StyledView>
+              <StyledView className="absolute bottom-0 right-2 flex-1 flex-col">
+                <Text className="text-lg text-white">
+                  {item.card_brand_name}
+                </Text>
+                <Text className="text-xs text-white text-right">
+                  {item.card_type}
+                </Text>
               </StyledView>
             </StyledView>
           </CardButton>

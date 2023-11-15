@@ -90,7 +90,7 @@ export const SecondaryAddCardView = styled(
 );
 export const AddCardButton = styled(
   Pressable,
-  'w-40 h-40 items-center justify-center',
+  'w-20 h-20 items-center justify-center',
 );
 export const AddCFormOverlayView = styled(
   View,
