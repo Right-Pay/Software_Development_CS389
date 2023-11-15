@@ -207,12 +207,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             setIsLoading(false);
             if (res.success) {
               setUserToken(res.data.auth_token);
-              const cards = res.data.cards;
-              setUserProfile({
-                ...res.data,
-                cards: cards,
-              });
-
               clearAuthErrors();
             } else {
               setUserToken(null);

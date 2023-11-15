@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -26,6 +26,7 @@ import DropdownComponent from '../../../Helpers/Dropdown';
 import AuthErrorComponent from '../../../Helpers/AuthErrorComponent';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
+import {CardBank} from '../../../types/CardType';
 
 const ReviewCardForm = () => {
   //Context
@@ -51,7 +52,11 @@ const ReviewCardForm = () => {
     (i + parseInt(currentYear, 10)).toString(),
   );
 
-  const [filteredBankOptions, setFilteredBankOptions] = useState<string[]>([]);
+  const [bankSearch, setBankSearch] = useState<string>('');
+
+  const [filteredBankOptions, setFilteredBankOptions] = useState<CardBank[]>(
+    [],
+  );
 
   //Functions
   const closeModal = () => {
@@ -63,22 +68,21 @@ const ReviewCardForm = () => {
   };
 
   //renderers
-  const renderBankOption = ({item}: {item: string}) => (
+  const renderBankOption = ({item}: {item: CardBank}) => (
     <Pressable
       onPress={() => {
-        setNewCard({
-          ...newCard,
-          card_bin: newCard?.card_bin as number,
-          card_bank_name: item,
-        });
+        if (newCard) {
+          newCard.card_bank_id = item.id;
+        }
         setFilteredBankOptions([]);
+        Keyboard.dismiss();
       }}
       className="p-2 cursor-pointer hover:bg-gray-200">
-      <Text className="text-black text-xl text-left">{item}</Text>
+      <Text className="text-black text-xl text-left">{item.bank_name}</Text>
     </Pressable>
   );
 
-  //handers
+  //handlers
   const handleExpirationMonthChange = (month: string) => {
     const currentExpirationDate = newCard?.exp_date;
     const year = currentExpirationDate?.split('-')[0];
@@ -112,20 +116,27 @@ const ReviewCardForm = () => {
     closeModal();
   };
 
-  const onBankNameChange = (item: string) => {
-    if (newCard) {
-      newCard.card_bank_name = item;
-    }
+  const filterBank = useCallback(
+    (item: string) => {
+      if (item.length <= 3) {
+        setFilteredBankOptions([]);
+        return;
+      }
+      const filter = [
+        ...bankOptions.filter(b =>
+          b.bank_name.toLowerCase().startsWith(item.toLowerCase()),
+        ),
+        ...bankOptions.filter(
+          b =>
+            !b.bank_name.toLowerCase().startsWith(item.toLowerCase()) &&
+            b.bank_name.toLowerCase().includes(item.toLowerCase()),
+        ),
+      ];
 
-    if (item.length <= 3) {
-      setFilteredBankOptions([]);
-      return;
-    }
-    const filter = bankOptions
-      .filter(b => b.bank_name.toLowerCase().includes(item.toLowerCase()))
-      .map(b => b.bank_name);
-    setFilteredBankOptions(filter);
-  };
+      setFilteredBankOptions(filter);
+    },
+    [bankOptions],
+  );
 
   //Keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -149,6 +160,10 @@ const ReviewCardForm = () => {
       keyboardDidShowListener.remove();
     };
   }, []);
+
+  useEffect(() => {
+    filterBank(bankSearch);
+  }, [bankSearch, filterBank]);
 
   return (
     <Modal
@@ -198,11 +213,13 @@ const ReviewCardForm = () => {
                 <FormInputBox
                   placeholder="Bank Name"
                   placeholderTextColor="#AFAEAE"
-                  onChange={event => onBankNameChange(event.nativeEvent.text)}
-                  onPressOut={() => {
-                    onBankNameChange(newCard.card_bank_name ?? '');
-                  }}
-                  value={newCard.card_bank_name ?? ''}
+                  onChange={event => setBankSearch(event.nativeEvent.text)}
+                  defaultValue={
+                    bankOptions.find(
+                      b => b.id === +(newCard?.card_bank_id ?? 0),
+                    )?.bank_name ?? ''
+                  }
+                  //value={bankSearch}
                   className="mb-0 w-full border-0 rounded-none"
                 />
                 {filteredBankOptions.length > 0 && (
@@ -210,7 +227,8 @@ const ReviewCardForm = () => {
                     <FlatList
                       data={filteredBankOptions}
                       renderItem={renderBankOption}
-                      keyExtractor={item => item}
+                      keyExtractor={item => item.id.toString()}
+                      keyboardShouldPersistTaps="handled"
                     />
                   </BankOptionsView>
                 )}

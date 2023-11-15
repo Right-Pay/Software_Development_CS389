@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
 import {
@@ -26,7 +26,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [location, setLocation] = useState<Location>({} as Location);
 
-  const [Cards, setCards] = React.useState<Card[]>([]);
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
 
@@ -97,57 +96,32 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const addCard = () => {
-    //add to db
-    //Two steps
-    //If cardInDb just link to user
-    //Else also add to db
-    const createNew = async () => {
-      const headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      headers.append('Access-Control-Allow-Origin', '*');
-      headers.append('Authorization', `bearer ${userToken}`);
-
-      const raw = {
-        card_name: newCard?.card_name,
-        card_bin: newCard?.card_bin,
-        card_bank_id: newCard?.card_bank_id,
-        card_brand_id: newCard?.card_brand_id,
-        card_level: newCard?.card_level,
-        card_type: newCard?.card_type,
-        card_country: 'United States',
-      };
-
-      const response = await fetch(`${baseURL}cards`, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(raw),
-      });
-      const content = await response.text();
-
-      const data = JSON.parse(content).data;
-      if (response.status === 201) {
-        const card = {
-          ...newCard,
-          card_name: data.card_name,
-          id: data.id,
-        } as Card;
-        await setNewCard(card);
-
-        linkToUser(card);
-      }
-    };
-
     const linkToUser = async (card: Card) => {
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
       headers.append('Authorization', `bearer ${userToken}`);
-      const date = testExpirationDate(card.exp_date as string);
+      const date = formatExpirationDate(card.exp_date as string);
 
-      const raw = {
-        card_id: card?.id,
-        exp_date: date,
-      };
+      const raw: linkCardBodyProps = cardInDB
+        ? {
+            card_id: card?.id,
+          }
+        : {
+            new_card: {
+              card_bin: newCard?.card_bin as number,
+              card_bank_id: newCard?.card_bank_id,
+              card_brand_id: newCard?.card_brand_id,
+              card_level: newCard?.card_level,
+              card_type: newCard?.card_type,
+              card_country: 'United States',
+              exp_date: date,
+            },
+          };
+
+      raw.exp_date = date;
+
+      console.log(raw);
 
       const response = await fetch(`${baseURL}users/linkCard`, {
         method: 'PUT',
@@ -155,19 +129,16 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         body: JSON.stringify(raw),
       });
       const content = await response.text();
+      console.log(content);
     };
 
-    if (!cardInDB) {
-      createNew();
-    } else {
-      linkToUser(newCard as Card);
-    }
-    setCards([...Cards, newCard as Card]);
+    linkToUser(newCard as Card);
+    userProfile.cards.push(newCard as Card);
     setNewCard(null);
     return true;
   };
 
-  const removeCard = (card: Card) => {
+  const unlinkCard = (card: Card) => {
     const unlinkToUser = async () => {
       const headers = new Headers();
       headers.append('Content-Type', 'application/json');
@@ -186,7 +157,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       const content = await response.text();
     };
     unlinkToUser();
-    setCards(Cards.filter(c => c.id !== card.id));
+
+    userProfile.cards = userProfile.cards.filter(c => c.id !== card.id);
   };
 
   const addNewReward = (cardReward: Reward) => {
@@ -217,7 +189,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return regex.test(level);
   }
 
-  function testExpirationDate(expirationDate: string) {
+  function formatExpirationDate(expirationDate: string) {
     const date = expirationDate.split('-');
     let year = date[0];
     let month = date[1];
@@ -317,62 +289,62 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     getLocation();
   }, []);
 
+  const fetchBanks = useCallback(async () => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Authorization', `bearer ${userToken}`);
+
+    const response = await fetch(`${baseURL}banks/all`, {
+      method: 'GET',
+      headers: headers,
+    });
+    const content = await response.text();
+
+    let set = new Set();
+    let arr: any = [];
+
+    JSON.parse(content).data.forEach((b: CardBank) => {
+      if (set.has(b.bank_name)) {
+        return;
+      }
+      arr.push(b);
+      set.add(b.bank_name);
+    });
+
+    setBankOptions(arr);
+  }, [userToken]);
+
+  const fetchBrands = useCallback(async () => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Authorization', `bearer ${userToken}`);
+
+    const response = await fetch(`${baseURL}brands/all`, {
+      method: 'GET',
+      headers: headers,
+    });
+    const content = await response.text();
+    setBrandOptions(Array.from(new Set(JSON.parse(content).data)));
+  }, [userToken]);
+
   useEffect(() => {
-    const fetchBanks = async () => {
-      const headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      headers.append('Access-Control-Allow-Origin', '*');
-      headers.append('Authorization', `bearer ${userToken}`);
-
-      const response = await fetch(`${baseURL}banks/all`, {
-        method: 'GET',
-        headers: headers,
-      });
-      const content = await response.text();
-
-      let set = new Set();
-      let arr: any = [];
-
-      JSON.parse(content).data.forEach((b: CardBank) => {
-        if (set.has(b.bank_name)) {
-          return;
-        }
-        arr.push(b);
-        set.add(b.bank_name);
-      });
-
-      setBankOptions(arr);
-    };
-    const fetchBrands = async () => {
-      const headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      headers.append('Access-Control-Allow-Origin', '*');
-      headers.append('Authorization', `bearer ${userToken}`);
-
-      const response = await fetch(`${baseURL}brands/all`, {
-        method: 'GET',
-        headers: headers,
-      });
-      const content = await response.text();
-      setBrandOptions(Array.from(new Set(JSON.parse(content).data)));
-    };
-    if (userToken && (bankOptions.length === 0 || brandOptions.length === 0)) {
+    if (userToken) {
       fetchBanks();
       fetchBrands();
-      setCards(userProfile.cards.length > 0 ? userProfile.cards : []);
     }
     setUpdatingDropdown(true);
-  }, [userProfile]);
+  }, [fetchBanks, fetchBrands, userToken]);
 
   return (
     <Context.Provider
       value={{
-        Cards,
         newCard,
         rewards,
         findCard,
         addCard,
-        removeCard,
+        unlinkCard,
         addNewReward,
         removeReward,
         location,
@@ -398,3 +370,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 };
 
 export default GlobalState;
+
+interface linkCardBodyProps {
+  new_card?: Card;
+  card_id?: number;
+  exp_date?: string;
+}

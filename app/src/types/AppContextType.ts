@@ -9,12 +9,11 @@ import {
 import {Location} from './Location';
 
 export interface AppContext {
-  Cards: Card[];
   newCard: Card | null;
   rewards: Reward[];
   findCard: (_cardBin: number) => Promise<boolean>;
   addCard: () => boolean;
-  removeCard: (_Card: Card) => void;
+  unlinkCard: (_Card: Card) => void;
   addNewReward: (_reward: Reward) => void;
   removeReward: (_reward: Reward) => void;
   location: Location;

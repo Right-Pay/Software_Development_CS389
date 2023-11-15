@@ -32,6 +32,8 @@ import {Dimensions} from 'react-native';
 import AddCardFullForm from './AddCardFullForm';
 import ReviewCardForm from './ReviewCardForm';
 import Consts from '../../../Helpers/Consts';
+import authContext from '../../../Context/authContext';
+import {AuthContextType} from '../../../types/AuthContextType';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -40,11 +42,15 @@ type WalletScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const WalletScreen: React.FC<WalletScreenProps> = () => {
-  const {Cards, removeCard, setCardForms, CardForms} = React.useContext(
+  const {unlinkCard, setCardForms, CardForms} = React.useContext(
     Context,
   ) as AppContext;
+  const {userProfile} = React.useContext(authContext) as AuthContextType;
+
   const [currentViewedCard, setCurrentViewedCard] = React.useState<Card[]>(
-    Cards && Cards.length > 0 ? [Cards[0]] : [Consts.addCard],
+    userProfile.cards && userProfile.cards.length > 0
+      ? [userProfile.cards[0]]
+      : [Consts.addCard],
   );
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
@@ -118,7 +124,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   const handleDelete = () => {
     setDeleteCard(false);
-    removeCard(currentViewedCard[0]);
+    unlinkCard(currentViewedCard[0]);
   };
 
   const handleAddPress = () => {
@@ -143,7 +149,11 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
       <Title className="mt-10">Wallet</Title>
       <CardListView>
         <CardList
-          data={Cards ? [...Cards, Consts.addCard] : [Consts.addCard]}
+          data={
+            userProfile.cards
+              ? [...userProfile.cards, Consts.addCard]
+              : [Consts.addCard]
+          }
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => (item as Card).card_bin.toString()}
           renderItem={({item}) => renderCard(item as Card)}

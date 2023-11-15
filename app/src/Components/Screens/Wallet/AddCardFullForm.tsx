@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -20,7 +20,7 @@ import {
   BankOptionsView,
   BanksView,
 } from '../../../Helpers/StylizedComponents';
-import {Card} from '../../../types/CardType';
+import {Card, CardBank} from '../../../types/CardType';
 import {AppContext} from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import DropdownComponent from '../../../Helpers/Dropdown';
@@ -49,7 +49,12 @@ const AddCardFullForm = () => {
   } = React.useContext(Context) as AppContext;
 
   //card stuff
-  const [bankName, setBankName] = React.useState<string>('');
+  const [bankSearch, setBankSearch] = React.useState<string>('');
+  const [bank, setBank] = React.useState<CardBank>({
+    bank_name: '',
+    id: 0,
+    abbr: '',
+  } as CardBank);
   const [level, setLevel] = React.useState<string>('');
   const [cardBrand, setCardBrand] = React.useState<string>('visa');
   const [cardType, setCardType] = React.useState<string>('Credit');
@@ -64,7 +69,9 @@ const AddCardFullForm = () => {
     `${expirationMonth}/${expirationYear}`,
   );
 
-  const [filteredBankOptions, setFilteredBankOptions] = useState<string[]>([]);
+  const [filteredBankOptions, setFilteredBankOptions] = useState<CardBank[]>(
+    [],
+  );
 
   const [showFull, setShowFull] = useState<boolean>(false);
 
@@ -75,17 +82,27 @@ const AddCardFullForm = () => {
   const [newBankOption, setNewBankOption] = useState<string>('');
 
   //onChange Methods
-  const onBankNameChange = (item: string) => {
-    setBankName(item);
-    if (item.length <= 3) {
-      setFilteredBankOptions([]);
-      return;
-    }
-    const filter = bankOptions
-      .filter(b => b.bank_name.toLowerCase().includes(item.toLowerCase()))
-      .map(b => b.bank_name);
-    setFilteredBankOptions(filter);
-  };
+  const filterBank = useCallback(
+    (item: string) => {
+      if (item.length <= 3) {
+        setFilteredBankOptions([]);
+        return;
+      }
+      const filter = [
+        ...bankOptions.filter(b =>
+          b.bank_name.toLowerCase().startsWith(item.toLowerCase()),
+        ),
+        ...bankOptions.filter(
+          b =>
+            !b.bank_name.toLowerCase().startsWith(item.toLowerCase()) &&
+            b.bank_name.toLowerCase().includes(item.toLowerCase()),
+        ),
+      ];
+
+      setFilteredBankOptions(filter);
+    },
+    [bankOptions],
+  );
 
   const onBinChange = (bin: number) => {
     if (isNaN(bin)) {
@@ -100,8 +117,9 @@ const AddCardFullForm = () => {
   const handleSubmit = () => {
     clearAuthErrors();
     setExpirationDate(`${expirationYear}-${expirationMonth}`);
-    const cardDetails = showFull ? {bankName, level} : {};
+    const cardDetails = showFull ? {bankName: bank.bank_name, level} : {};
     const errors = validateCardForm(cardDetails);
+    console.log(cardDetails);
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
@@ -111,14 +129,11 @@ const AddCardFullForm = () => {
       const newCard: Card = {
         card_bin: newCardBin,
         exp_date: expirationDate,
-        card_bank_name: bankName,
-        card_bank_id: bankOptions.find(b => b.bank_name === bankName)?.id,
-        card_brand_name: cardBrand,
+        card_bank_id: bank.id,
         card_brand_id: brandOptions.find(b => b.brand_name === cardBrand)?.id,
         card_type: cardType,
         card_level: level,
       };
-      setCardForms({...CardForms, Full: false});
       reviewCard(newCard);
       setShowFull(false);
     } else {
@@ -127,6 +142,15 @@ const AddCardFullForm = () => {
       };
       searchForCard();
     }
+
+    setNewCardBin(0o0);
+    setBankSearch('');
+    setLevel('');
+    setCardBrand('visa');
+    setCardType('Credit');
+    setExpirationMonth('1');
+    setExpirationYear(currentYear);
+    setBank({bank_name: '', id: 0, abbr: ''});
   };
 
   const closeModal = () => {
@@ -136,15 +160,15 @@ const AddCardFullForm = () => {
     setShowFull(false);
   };
 
-  const renderBankOption = ({item}: {item: string}) => (
+  const renderBankOption = ({item}: {item: CardBank}) => (
     <Pressable
       onPress={() => {
-        setBankName(item);
+        setBank(item);
         setFilteredBankOptions([]);
         Keyboard.dismiss();
       }}
       className="p-2 cursor-pointer hover:bg-gray-200">
-      <Text className="text-black text-xl text-left">{item}</Text>
+      <Text className="text-black text-xl text-left">{item.bank_name}</Text>
     </Pressable>
   );
 
@@ -173,14 +197,17 @@ const AddCardFullForm = () => {
 
   useEffect(() => {
     if (newBankOption !== '') {
-      setBankName(newBankOption);
+      const newBank = {
+        id: bankOptions.length + 1,
+        bank_name: newBankOption,
+        abbr: newBankOption.substring(0, 3),
+      };
+
+      setBank(newBank);
+
       setBankOptions([
         ...bankOptions.slice(0, -1),
-        {
-          id: bankOptions.length + 1,
-          bank_name: newBankOption,
-          abbr: newBankOption.substring(0, 3),
-        },
+        newBank,
         bankOptions.slice(-1)[0],
       ]);
     }
@@ -189,6 +216,10 @@ const AddCardFullForm = () => {
   useEffect(() => {
     clearAuthErrors();
   }, [CardForms.Full]);
+
+  useEffect(() => {
+    filterBank(bankSearch);
+  }, [bankSearch, filterBank]);
 
   return (
     <Modal
@@ -231,20 +262,8 @@ const AddCardFullForm = () => {
                   <FormInputBox
                     placeholder="Bank Name"
                     placeholderTextColor="#AFAEAE"
-                    onChange={event => onBankNameChange(event.nativeEvent.text)}
-                    onPressOut={() => {
-                      if (filteredBankOptions.length >= 3) {
-                        const filter = bankOptions
-                          .filter(b =>
-                            b.bank_name
-                              .toLowerCase()
-                              .includes(bankName.toLowerCase()),
-                          )
-                          .map(b => b.bank_name);
-                        setFilteredBankOptions(filter);
-                      }
-                    }}
-                    value={bankName}
+                    onChange={event => setBankSearch(event.nativeEvent.text)}
+                    value={bankSearch}
                     className="mb-0 w-full border-0 rounded-none"
                   />
                   {filteredBankOptions.length > 0 && (
@@ -252,7 +271,7 @@ const AddCardFullForm = () => {
                       <FlatList
                         data={filteredBankOptions}
                         renderItem={renderBankOption}
-                        keyExtractor={item => item}
+                        keyExtractor={item => item.id.toString()}
                         keyboardShouldPersistTaps="handled"
                       />
                     </BankOptionsView>
