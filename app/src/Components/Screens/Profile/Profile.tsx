@@ -12,9 +12,6 @@ import {
   MainButton,
   Title,
   WrapperView,
-  ProfileList,
-  ProfileView,
-  Subtitle,
 } from '../../../Helpers/StylizedComponents';
 
 type ProfileScreenProps = CompositeScreenProps<
@@ -27,19 +24,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title className="mt-20">Profile Screen</Title>
-      <ProfileList
-        data={creditCards}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => {
-          return (
-            <ProfileView>
-              <Subtitle>Credit Card {index}:</Subtitle>
-              <Subtitle>Card Number: {item.cardNumber}</Subtitle>
-              <Subtitle>Card Type: {item.cardType}</Subtitle>
-            </ProfileView>
-          );
-        }}
-      />
       <MainButton
         onPress={() =>
           navigation.navigate('HomeStack', {screen: 'HomeScreen'})

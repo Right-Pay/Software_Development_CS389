@@ -20,6 +20,7 @@ const DropdownComponent = (props: DropdownProps) => {
     if (props.options) {
       setItems(props.options);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.refresh]);
 
   return (
