@@ -95,7 +95,6 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     }
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshAuth0Token = async () => {
     if (!refreshToken) {
       addAuthError(ErrorMessages.invalidToken);
