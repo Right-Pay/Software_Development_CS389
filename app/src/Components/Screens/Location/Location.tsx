@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import type {PropsWithChildren} from 'react';
 import type {
   LocationNavigationRoutesType,
@@ -12,9 +12,14 @@ import {AppContext} from '../../../types/AppContextType';
 import {
   GoogleMapsMarker,
   GoogleMapsView,
+  NearbyLocationScrollView,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
+import {Text, View} from 'react-native';
+import {styled} from 'nativewind';
+import {Place} from '../../../types/Location';
+const StyledView = styled(View);
 import {Platform} from 'react-native';
 import {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 
@@ -24,15 +29,57 @@ type LocationScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
+const StlyizedText = styled(Text, 'text-lg text-dark-green');
+
 const LocationScreen: React.FC<LocationScreenProps> = () => {
-  const {location} = React.useContext(Context) as AppContext;
+  const {location, places} = React.useContext(Context) as AppContext;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [currentViewPlace, setCurrentViewedPlace] = React.useState<Place[]>(
+    [] as Place[],
+  );
+  const renderPlace = (place: Place) => {
+    return (
+      <StyledView className="py-2 flex-1 bg-white flex-col h-20 w-full">
+        <StyledView className="flex-1 flex-row place-content-between w-full">
+          <StlyizedText
+            numberOfLines={1}
+            className="font-bold pl-4 text-xl w-3/4 text-left">
+            {place.displayName.text}
+          </StlyizedText>
+          <StlyizedText className="text-gray-400 w-1/4 text-md text-right pr-4">
+            {place.distance} mi
+          </StlyizedText>
+        </StyledView>
+        <StyledView className="flex-1 flex-row place-content-between w-full">
+          <StlyizedText className="pl-4 text-lg w-3/4 text-left">
+            {place.primaryTypeDisplayName?.text || place.types[0] || ''}
+          </StlyizedText>
+          <StlyizedText className="text-gray-400 w-1/4 text-sm self-center text-right pr-4">
+            See Rewards
+          </StlyizedText>
+        </StyledView>
+      </StyledView>
+    );
+  };
+
+  const seperatorComponent: React.FC = () => {
+    return <StyledView className="w-full h-0.5 bg-slate-200" />;
+  };
+
+  const onViewRef = useRef((viewableItems: any) => {
+    const check: Place[] = viewableItems.viewableItems.map(
+      (item: any) => item.item as Place,
+    );
+    setCurrentViewedPlace(check);
+  });
 
   const markerFactory = (title: string, description: string) => {
     return (
       <GoogleMapsMarker
         coordinate={{
-          latitude: location.latitude ?? 0,
-          longitude: location.longitude ?? 0,
+          latitude: location.latitude,
+          longitude: location.longitude,
         }}
         title={title}
         description={description}
@@ -42,17 +89,17 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
 
   return (
     <WrapperView>
-      <Title>This is the location screen</Title>
+      <Title className="mt-20">This is the location screen</Title>
       <GoogleMapsView
         initialRegion={{
-          latitude: location.latitude ?? 0,
-          longitude: location.longitude ?? 0,
+          latitude: location.latitude,
+          longitude: location.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
         region={{
-          latitude: location.latitude ?? 0,
-          longitude: location.longitude ?? 0,
+          latitude: location.latitude,
+          longitude: location.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -60,6 +107,26 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
         {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
+      <StyledView className="absolute bottom-0 left-0 w-full h-1/3 bg-white rounded-t-xl">
+        <StyledView className="rounded-t-xl h-10 border-b-2 border-slate-200 bg-white">
+          <StlyizedText className="text-center pt-1">
+            Nearby Locations
+          </StlyizedText>
+        </StyledView>
+        <NearbyLocationScrollView
+          className="text-black z-50"
+          data={places}
+          renderItem={({item}) => renderPlace(item as Place)}
+          ItemSeparatorComponent={seperatorComponent}
+          showsHorizontalScrollIndicator={false}
+          horizontal={false}
+          onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
+          keyExtractor={item => (item as Place).id}
+          snapToAlignment="start"
+          decelerationRate={'fast'}
+          snapToInterval={82}
+        />
+      </StyledView>
     </WrapperView>
   ); //add button up here^^ between view and mapview <Button
   //title="Settings"

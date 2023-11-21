@@ -30,10 +30,10 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
     React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
-  }, []);
+  }, [clearAuthErrors]);
   return (
     <WrapperView>
-      <Title>Sign Up for RightPay</Title>
+      <Title className="mt-20">Sign Up for RightPay</Title>
       <LogoContainer>
         <Logo
           source={require('../../../Assets/RightPay-logo-light-transparent.png')}

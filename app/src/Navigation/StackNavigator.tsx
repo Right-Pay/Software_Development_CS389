@@ -7,14 +7,15 @@ import type {
   HomeNavigationRoutesType,
   ProfileNavigationRoutesType,
   CompanyNavigationRoutesType,
-  SearchNavigationRoutesType,
   LocationNavigationRoutesType,
   NavigationRoutesType,
+  WalletNavigationRoutesType,
 } from '../types/NavigationRoutesType';
-import SearchScreen from '../Components/Screens/Search/Search';
 import SettingsScreen from '../Components/Screens/Profile/Settings/Settings';
 import LocationScreen from '../Components/Screens/Location/Location';
 import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSettings';
+import Context from '../Context/context';
+import {AppContext} from '../types/AppContextType';
 import {
   getFocusedRouteNameFromRoute,
   RouteProp,
@@ -26,11 +27,12 @@ import type {
 import LocationSettings from '../Components/Screens/Profile/Settings/LocationSettings';
 import NotificationSettingsScreen from '../Components/Screens/Profile/Settings/NotificationSettings';
 import CreditCardSettings from '../Components/Screens/Profile/Settings/CreditCardSettings';
+import WalletScreen from '../Components/Screens/Wallet/Wallet';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
 const CompanyStack = createNativeStackNavigator<CompanyNavigationRoutesType>();
-const SearchStack = createNativeStackNavigator<SearchNavigationRoutesType>();
+const WalletStack = createNativeStackNavigator<WalletNavigationRoutesType>();
 const LocationStack =
   createNativeStackNavigator<LocationNavigationRoutesType>();
 
@@ -59,14 +61,19 @@ type StackProps = BottomTabScreenProps<NavigationRoutesType> &
   PropsWithChildren;
 
 const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {address} = React.useContext(Context) as AppContext;
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'HomeScreen'),
     [navigation, route],
   );
+
   return (
     <HomeStack.Navigator
       initialRouteName="HomeScreen"
-      screenOptions={screenOptionStyle}>
+      screenOptions={{
+        ...screenOptionStyle,
+        headerTitle: address ? address.displayName.text : '',
+      }}>
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}
@@ -77,6 +84,7 @@ const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 };
 
 const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {address} = React.useContext(Context) as AppContext;
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'ProfileScreen'),
     [navigation, route],
@@ -84,7 +92,10 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   return (
     <ProfileStack.Navigator
       initialRouteName="ProfileScreen"
-      screenOptions={screenOptionStyle}>
+      screenOptions={{
+        ...screenOptionStyle,
+        headerTitle: address ? address.displayName.text : '',
+      }}>
       <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <ProfileStack.Screen name="ProfileSettings" component={ProfileSettings} />
       <ProfileStack.Screen name="SettingsScreen" component={SettingsScreen} />
@@ -105,36 +116,46 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 };
 
 const CompanyStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {address} = React.useContext(Context) as AppContext;
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'CompanyScreen'),
     [navigation, route],
   );
   return (
-    <CompanyStack.Navigator screenOptions={screenOptionStyle}>
+    <CompanyStack.Navigator
+      screenOptions={{
+        ...screenOptionStyle,
+        headerTitle: address ? address.displayName.text : '',
+      }}>
       <CompanyStack.Screen name="CompanyScreen" component={CompanyScreen} />
     </CompanyStack.Navigator>
   );
 };
 
-const SearchStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+const WalletStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   React.useLayoutEffect(
-    () => hideTabBar(navigation, route, 'SearchScreen'),
+    () => hideTabBar(navigation, route, 'WalletScreen'),
     [navigation, route],
   );
   return (
-    <SearchStack.Navigator screenOptions={screenOptionStyle}>
-      <SearchStack.Screen name="SearchScreen" component={SearchScreen} />
-    </SearchStack.Navigator>
+    <WalletStack.Navigator screenOptions={screenOptionStyle}>
+      <WalletStack.Screen name="WalletScreen" component={WalletScreen} />
+    </WalletStack.Navigator>
   );
 };
 
 const LocationStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {address} = React.useContext(Context) as AppContext;
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'LocationScreen'),
     [navigation, route],
   );
   return (
-    <LocationStack.Navigator screenOptions={screenOptionStyle}>
+    <LocationStack.Navigator
+      screenOptions={{
+        ...screenOptionStyle,
+        headerTitle: address ? address.displayName.text : '',
+      }}>
       <LocationStack.Screen name="LocationScreen" component={LocationScreen} />
     </LocationStack.Navigator>
   );
@@ -144,6 +165,6 @@ export {
   HomeStackNavigator,
   ProfileStackNavigator,
   CompanyStackNavigator,
-  SearchStackNavigator,
+  WalletStackNavigator,
   LocationStackNavigator,
 };

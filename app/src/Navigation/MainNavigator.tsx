@@ -9,8 +9,6 @@ import AuthContext from '../Context/authContext';
 import {AuthContextType} from '../types/AuthContextType';
 import {WelcomeNavigationRoutesType} from '../types/NavigationRoutesType';
 import BottomTabNavigator from './TabNavigator';
-import Config from 'react-native-config';
-import Consts from '../Helpers/Consts';
 
 const WelcomeStack = createNativeStackNavigator<WelcomeNavigationRoutesType>();
 
@@ -38,7 +36,6 @@ const MainNavigator: React.FC<PropsWithChildren> = () => {
   const {isLoading, userToken} = React.useContext(
     AuthContext,
   ) as AuthContextType;
-
   if (isLoading) {
     return <SplashScreen />;
   }

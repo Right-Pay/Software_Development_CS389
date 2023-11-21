@@ -24,7 +24,7 @@ type LocationSettingsProps = CompositeScreenProps<
 const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
   return (
     <WrapperView>
-      <Title>This is the location setttings</Title>
+      <Title className="mt-20">This is the location setttings</Title>
       <Subtitle>
         You will be able to turn off and on your location here.
       </Subtitle>

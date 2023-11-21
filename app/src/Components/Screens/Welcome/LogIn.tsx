@@ -28,12 +28,12 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
   ) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
-  }, []);
+  }, [clearAuthErrors]);
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   return (
     <WrapperView>
-      <Title>Log In to Your RightPay Account</Title>
+      <Title className="mt-20">Log In to Your RightPay Account</Title>
       <LogoContainer>
         <Logo
           source={require('../../../Assets/RightPay-logo-light-transparent.png')}

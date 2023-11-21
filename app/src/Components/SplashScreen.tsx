@@ -5,8 +5,8 @@ import {Title, WrapperView} from '../Helpers/StylizedComponents';
 const SplashScreen: React.FC<PropsWithChildren> = () => {
   return (
     <WrapperView>
-      <Title>Welcome to RightPay</Title>
-      <Title>Loading...</Title>
+      <Title className="mt-20">Welcome to RightPay</Title>
+      <Title className="mt-20">Loading...</Title>
     </WrapperView>
   );
 };

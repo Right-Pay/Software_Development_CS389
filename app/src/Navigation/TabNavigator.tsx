@@ -5,10 +5,10 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {
   HomeStackNavigator,
-  CompanyStackNavigator,
   ProfileStackNavigator,
-  SearchStackNavigator,
   LocationStackNavigator,
+  WalletStackNavigator,
+  CompanyStackNavigator,
 } from './StackNavigator';
 import {NavigationRoutesType} from '../types/NavigationRoutesType';
 
@@ -46,9 +46,9 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         options={tabOptions('Company')}
       />
       <Tab.Screen
-        name="SearchStack"
-        component={SearchStackNavigator}
-        options={tabOptions('Search')}
+        name="WalletStack"
+        component={WalletStackNavigator}
+        options={tabOptions('Wallet')}
       />
       <Tab.Screen
         name="LocationStack"
