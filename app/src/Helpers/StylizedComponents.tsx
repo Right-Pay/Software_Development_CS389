@@ -75,7 +75,7 @@ export const SettingsView = styled(
   View,
   'flex-1 flex-col border-t-2 w-full h-1/4 mt-4 mb-4 p-5 items-center space-between justify-center',
 );
-export const SettingsScroll = styled(ScrollView, 'w-full h-full border-2 mb-0');
+export const KeyboardAvoidingScroll = styled(ScrollView, 'w-full h-full mb-0');
 export const SettingsSubtitle = ProfileSubtitle;
 export const SettingsInputBox = styled(
   TextInput,

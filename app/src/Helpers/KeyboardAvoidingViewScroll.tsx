@@ -2,7 +2,7 @@ import {PropsWithChildren, useContext, useEffect, useRef} from 'react';
 import {ScrollView} from 'react-native';
 import context from '../Context/context';
 import {AppContext} from '../types/AppContextType';
-import {SettingsScroll} from './StylizedComponents';
+import {KeyboardAvoidingScroll} from './StylizedComponents';
 import React from 'react';
 
 const KeyboardAvoidingViewScroll = ({children}: PropsWithChildren) => {
@@ -16,12 +16,12 @@ const KeyboardAvoidingViewScroll = ({children}: PropsWithChildren) => {
       [isKeyboardVisible];
   });
   return (
-    <SettingsScroll
+    <KeyboardAvoidingScroll
       keyboardShouldPersistTaps="always"
       ref={scrollViewRef}
-      contentContainerStyle={{alignItems: 'center'}}>
+      contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}>
       {children}
-    </SettingsScroll>
+    </KeyboardAvoidingScroll>
   );
 };
 
