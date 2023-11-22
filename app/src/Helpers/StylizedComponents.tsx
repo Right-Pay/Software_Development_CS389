@@ -9,7 +9,7 @@ export const WrapperView = styled(
 );
 export const Title = styled(
   Text,
-  'text-3xl text-4xl pl-10 pr-10 text-center font-bold text-dark-green',
+  'text-4xl pl-10 pr-10 text-center font-bold text-dark-green',
 );
 export const Subtitle = styled(Text, 'text-xl text-center text-dark-green');
 export const FinePrint = styled(Text, 'text-sm text-black');
@@ -27,7 +27,7 @@ export const AuthButtonText = styled(Text, 'text-xl text-light-green');
 
 export const FormInputBox = styled(
   TextInput,
-  'px-2 py-1 m-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green',
+  'px-2 py-1 m-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-dark-green bg-light-green',
 );
 export const FormButton = styled(
   Pressable,
@@ -45,16 +45,14 @@ export const MainButtonText = styled(
   Text,
   'text-center text-xl text-dark-green',
 );
-
 export const GoogleMapsView = styled(
   MapView,
   'absolute top-0 left-0 right-0 bottom-0',
 );
 export const GoogleMapsMarker = styled(Marker);
-export const ProfileList = styled(FlatList, '');
 export const ProfileView = styled(
   View,
-  'flex-1 flex-col ml-20 mr-20 border-t-2 w-full mt-4 p-5 items-center',
+  'flex-1 flex-col border-t-2 w-full h-1/4 mt-4 mb-4 p-5 items-center space-between justify-center',
 );
 export const ProfileSubtitle = styled(
   Subtitle,
@@ -65,11 +63,12 @@ export const LogoContainer = styled(
   View,
   'flex-col justify-center items-center h-1/2 w-1/2',
 );
-export const SettingsView = styled(
-  View,
-  'flex-1 flex-col ml-20 mr-20 border-t-2 w-full mt-4 p-5',
-);
+export const SettingsView = ProfileView;
 export const SettingsSubtitle = ProfileSubtitle;
+export const SettingsInputBox = styled(
+  TextInput,
+  'px-2 py-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-dark-green bg-light-green',
+);
 export const CardList = styled(FlatList, 'w-full');
 export const CardListView = styled(View, 'aspect-video mt-10 w-full');
 export const CardView = styled(

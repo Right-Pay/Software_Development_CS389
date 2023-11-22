@@ -468,6 +468,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkEqualPasswords,
         AuthErrorComponent,
         refreshAuth0Token,
+        setUserProfile,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>
