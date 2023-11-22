@@ -9,7 +9,7 @@ import {
   CardBank,
   CardBrand,
 } from '../types/CardType';
-import {PermissionsAndroid, Platform} from 'react-native';
+import {Keyboard, PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import Consts from '../Helpers/Consts';
 import Config from 'react-native-config';
@@ -576,6 +576,28 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     fetchAddress();
   }, [fetchAddress, fetchPlaces, location]);
 
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
     <Context.Provider
       value={{
@@ -600,6 +622,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         places,
         fetchAddress,
         address,
+        isKeyboardVisible,
       }}>
       {children}
     </Context.Provider>

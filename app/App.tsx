@@ -11,7 +11,6 @@ import {
 import AuthState from './src/Context/AuthState';
 import {KeyboardAvoidingView, Platform} from 'react-native';
 import {Keyboard} from 'react-native';
-import {styled} from 'nativewind';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);

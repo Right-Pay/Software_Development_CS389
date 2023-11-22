@@ -30,4 +30,5 @@ export interface AppContext {
   places: Place[];
   fetchAddress: () => void;
   address: Place | undefined;
+  isKeyboardVisible: boolean;
 }

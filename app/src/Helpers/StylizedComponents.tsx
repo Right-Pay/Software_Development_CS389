@@ -1,11 +1,19 @@
 import {styled} from 'nativewind';
-import {TextInput, Text, View, Pressable, FlatList, Image} from 'react-native';
+import {
+  TextInput,
+  Text,
+  View,
+  Pressable,
+  FlatList,
+  Image,
+  ScrollView,
+} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export const WrapperView = styled(
   View,
-  'flex-1 items-center h-full overflow-y-scroll justify-center space-between bg-light-green pb-12',
+  'flex-1 items-center h-full overflow-y-scroll space-between bg-light-green pb-12',
 );
 export const Title = styled(
   Text,
@@ -63,7 +71,11 @@ export const LogoContainer = styled(
   View,
   'flex-col justify-center items-center h-1/2 w-1/2',
 );
-export const SettingsView = ProfileView;
+export const SettingsView = styled(
+  View,
+  'flex-1 flex-col border-t-2 w-full h-1/4 mt-4 mb-4 p-5 items-center space-between justify-center',
+);
+export const SettingsScroll = styled(ScrollView, 'w-full h-full border-2 mb-0');
 export const SettingsSubtitle = ProfileSubtitle;
 export const SettingsInputBox = styled(
   TextInput,

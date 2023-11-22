@@ -417,6 +417,26 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return password === repeatedPassword && checkValidPassword(password);
   }
 
+  function checkValidUsername(username: string): boolean {
+    const usernameRegex = /^[a-zA-Z0-9._-]{3,}$/;
+    const test = username.length > 0 && usernameRegex.test(username);
+    if (!test) {
+      addAuthError(ErrorMessages.invalidUsername);
+      return false;
+    }
+    return test;
+  }
+
+  function checkValidPhone(phone: string): boolean {
+    const phoneRegex = /^\+?(\d{1,3})?[- .]?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}$/;
+    const test = phone.length > 0 && phoneRegex.test(phone);
+    if (!test) {
+      addAuthError(ErrorMessages.invalidPhone);
+      return false;
+    }
+    return test;
+  }
+
   useEffect(() => {
     async function loadFromStorage() {
       setIsLoading(true);
@@ -466,6 +486,8 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkValidEmail,
         checkValidPassword,
         checkEqualPasswords,
+        checkValidUsername,
+        checkValidPhone,
         AuthErrorComponent,
         refreshAuth0Token,
         setUserProfile,
