@@ -94,6 +94,13 @@ const dummyCardRewards: Reward[] = [];
 
 const cardItemSeparatorWidth = 48;
 
+const settingsText = {
+  saved: 'Saved Successfully',
+  title: 'Profile Settings',
+  noChanges: 'Nothing to Save',
+  save: 'Save',
+};
+
 const Consts: ConstsType = {
   CardFormEnum: CardFormEnum,
   DropdownListModes: DropdownListModes,
@@ -103,6 +110,7 @@ const Consts: ConstsType = {
   dummyCardRewards: dummyCardRewards,
   cardItemSeparatorWidth,
   addCard,
+  settingsText: settingsText,
 };
 
 export default Consts;

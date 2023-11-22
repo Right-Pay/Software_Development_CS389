@@ -1,5 +1,5 @@
 import {PropsWithChildren, useContext, useEffect, useRef} from 'react';
-import {ScrollView, View} from 'react-native';
+import {ScrollView} from 'react-native';
 import context from '../Context/context';
 import {AppContext} from '../types/AppContextType';
 import {KeyboardAvoidingScroll} from './StylizedComponents';
