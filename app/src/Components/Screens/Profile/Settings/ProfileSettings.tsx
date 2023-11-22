@@ -65,6 +65,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
     fieldsToRender.forEach(field => {
       const key = field as keyof typeof formData;
       if (checkForChanges(key, formData[key])) {
+        //validation function here
+        //Update db here
         setUserProfile({...userProfile, [key]: formData[key]});
       }
     });
