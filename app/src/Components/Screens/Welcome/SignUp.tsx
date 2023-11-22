@@ -13,6 +13,8 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
+import KeyboardAvoidingViewScroll from '../../../Helpers/KeyboardAvoidingViewScroll';
+import {View} from 'react-native';
 
 type SignUpScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -33,43 +35,47 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   }, [clearAuthErrors]);
   return (
     <WrapperView>
-      <Title className="mt-20">Sign Up for RightPay</Title>
-      <LogoContainer>
-        <Logo
-          source={require('../../../Assets/RightPay-logo-light-transparent.png')}
-        />
-      </LogoContainer>
-      <AuthInputBox
-        placeholder="Email"
-        placeholderTextColor={'black'}
-        onChange={event => setEmail(event.nativeEvent.text)}
-      />
-      <AuthInputBox
-        placeholder="Username"
-        placeholderTextColor={'black'}
-        onChange={event => setUsername(event.nativeEvent.text)}
-      />
-      <AuthInputBox
-        placeholder="Password"
-        placeholderTextColor={'black'}
-        secureTextEntry={true}
-        onChange={event => setPassword(event.nativeEvent.text)}
-      />
-      <AuthInputBox
-        placeholder="Repeat Password"
-        placeholderTextColor={'black'}
-        secureTextEntry={true}
-        onChange={event => setRepeatedPassword(event.nativeEvent.text)}
-      />
-      {AuthErrorComponent && <AuthErrorComponent />}
-      <AuthButton
-        onPress={async () => {
-          await signUp(email, username, password, repeatedPassword);
-          userToken && navigation.navigate('Login');
-        }}>
-        <AuthButtonText>Sign Up</AuthButtonText>
-      </AuthButton>
-      {userToken && <Title>'You have successfully signed up'</Title>}
+      <KeyboardAvoidingViewScroll>
+        <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
+          <Title className="mt-20">Sign Up for RightPay</Title>
+          <LogoContainer>
+            <Logo
+              source={require('../../../Assets/RightPay-logo-light-transparent.png')}
+            />
+          </LogoContainer>
+          <AuthInputBox
+            placeholder="Email"
+            placeholderTextColor={'black'}
+            onChange={event => setEmail(event.nativeEvent.text)}
+          />
+          <AuthInputBox
+            placeholder="Username"
+            placeholderTextColor={'black'}
+            onChange={event => setUsername(event.nativeEvent.text)}
+          />
+          <AuthInputBox
+            placeholder="Password"
+            placeholderTextColor={'black'}
+            secureTextEntry={true}
+            onChange={event => setPassword(event.nativeEvent.text)}
+          />
+          <AuthInputBox
+            placeholder="Repeat Password"
+            placeholderTextColor={'black'}
+            secureTextEntry={true}
+            onChange={event => setRepeatedPassword(event.nativeEvent.text)}
+          />
+          {AuthErrorComponent && <AuthErrorComponent />}
+          <AuthButton
+            onPress={async () => {
+              await signUp(email, username, password, repeatedPassword);
+              userToken && navigation.navigate('Login');
+            }}>
+            <AuthButtonText>Sign Up</AuthButtonText>
+          </AuthButton>
+          {userToken && <Title>'You have successfully signed up'</Title>}
+        </View>
+      </KeyboardAvoidingViewScroll>
     </WrapperView>
   );
 };

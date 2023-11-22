@@ -13,7 +13,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 export const WrapperView = styled(
   View,
-  'flex-1 items-center h-full overflow-y-scroll space-between bg-light-green pb-12',
+  'flex-1 items-center h-full overflow-y-scroll space-between bg-light-green pb-12 justify-center',
 );
 export const Title = styled(
   Text,
@@ -69,13 +69,16 @@ export const ProfileSubtitle = styled(
 export const Logo = styled(Image, 'scale-15');
 export const LogoContainer = styled(
   View,
-  'flex-col justify-center items-center h-1/2 w-1/2',
+  'flex-col justify-center items-center h-1/3 w-1/2',
 );
 export const SettingsView = styled(
   View,
   'flex-1 flex-col border-t-2 w-full h-1/4 mt-4 mb-4 p-5 items-center space-between justify-center',
 );
-export const KeyboardAvoidingScroll = styled(ScrollView, 'w-full h-full mb-0');
+export const KeyboardAvoidingScroll = styled(
+  ScrollView,
+  'w-screen h-screen mb-0',
+);
 export const SettingsSubtitle = ProfileSubtitle;
 export const SettingsInputBox = styled(
   TextInput,

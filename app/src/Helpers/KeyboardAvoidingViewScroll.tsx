@@ -1,5 +1,5 @@
 import {PropsWithChildren, useContext, useEffect, useRef} from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import context from '../Context/context';
 import {AppContext} from '../types/AppContextType';
 import {KeyboardAvoidingScroll} from './StylizedComponents';
@@ -19,7 +19,10 @@ const KeyboardAvoidingViewScroll = ({children}: PropsWithChildren) => {
     <KeyboardAvoidingScroll
       keyboardShouldPersistTaps="always"
       ref={scrollViewRef}
-      contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}>
+      contentContainerStyle={{
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
       {children}
     </KeyboardAvoidingScroll>
   );
