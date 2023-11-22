@@ -8,8 +8,8 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {
-  SettingsList,
-  SettingsNavText,
+  SettingsSubtitle,
+  SettingsView,
   Subtitle,
   Title,
   WrapperView,
@@ -24,7 +24,7 @@ type SettingsScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation} ) => {
+const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
   const {userProfile} = React.useContext(authContext) as AuthContextType;
 
   const settingsPages: navSettingType[] = [
@@ -66,23 +66,21 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation} ) => {
   };
   const renderSettingsNav = (item: navSettingType) => {
     return (
-      <SettingsNavText onPress={() => handleSettingsNavPress(item.route)}>
+      <SettingsSubtitle
+        onPress={() => handleSettingsNavPress(item.route)}
+        key={item.name}>
         {item.name}
-      </SettingsNavText>
+      </SettingsSubtitle>
     );
   };
 
   return (
     <WrapperView>
-      <Title className="absolute inset-x-0 top-0">Settings</Title>
-      <Subtitle className="absolute inset-x-0 top-20">
-        {userProfile.username}
-      </Subtitle>
-      <SettingsList
-        data={settingsPages}
-        renderItem={({item}) => renderSettingsNav(item as navSettingType)}
-        keyExtractor={item => (item as navSettingType).name}
-      />
+      <Title className="top-10">Settings</Title>
+      <Subtitle className="top-10 mb-10">{userProfile.username}</Subtitle>
+      <SettingsView>
+        {settingsPages.map(s => renderSettingsNav(s))}
+      </SettingsView>
     </WrapperView>
   );
 };

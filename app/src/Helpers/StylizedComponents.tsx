@@ -54,21 +54,22 @@ export const GoogleMapsMarker = styled(Marker);
 export const ProfileList = styled(FlatList, '');
 export const ProfileView = styled(
   View,
-  'flex-1 flex-col ml-20 mr-20 border-b-1 border-b-gray-500',
+  'flex-1 flex-col ml-20 mr-20 border-t-2 w-full mt-4 p-5 items-center',
+);
+export const ProfileSubtitle = styled(
+  Subtitle,
+  'text-2xl text-dark-green m-2 font-bold',
 );
 export const Logo = styled(Image, 'scale-15');
 export const LogoContainer = styled(
   View,
   'flex-col justify-center items-center h-1/2 w-1/2',
 );
-export const SettingsList = styled(
-  FlatList,
-  'flex-1 w-full p-6 border-t-4 border-dark-green mt-5 h-2/3 absolute bg-light-green',
+export const SettingsView = styled(
+  View,
+  'flex-1 flex-col ml-20 mr-20 border-t-2 w-full mt-4 p-5',
 );
-export const SettingsNavText = styled(
-  Text,
-  'text-2xl text-dark-green m-2 font-bold',
-);
+export const SettingsSubtitle = ProfileSubtitle;
 export const CardList = styled(FlatList, 'w-full');
 export const CardListView = styled(View, 'aspect-video mt-10 w-full');
 export const CardView = styled(

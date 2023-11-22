@@ -10,9 +10,10 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import {
   MainButtonText,
   MainButton,
-  Subtitle,
   Title,
   WrapperView,
+  ProfileView,
+  ProfileSubtitle,
 } from '../../../Helpers/StylizedComponents';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
@@ -28,14 +29,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
 
   return (
     <WrapperView>
-      <Title className="absolute inset-x-0 top-0">Profile Screen</Title>
-      <Subtitle>Username: {userProfile.username}</Subtitle>
-      <Subtitle>Email: {userProfile.email}</Subtitle>
-      <Subtitle>Phone: {userProfile.phone}</Subtitle>
-      <Subtitle>Address: {userProfile.address}</Subtitle>
-      <Subtitle>City: {userProfile.city}</Subtitle>
-      <Subtitle>State: {userProfile.state}</Subtitle>
-      <Subtitle>Zip: {userProfile.zip}</Subtitle>
+      <Title className="top-10 mb-10">Profile Screen</Title>
+      <ProfileView>
+        <ProfileSubtitle>Username: {userProfile.username}</ProfileSubtitle>
+        <ProfileSubtitle>Email: {userProfile.email}</ProfileSubtitle>
+        <ProfileSubtitle>Phone: {userProfile.phone}</ProfileSubtitle>
+      </ProfileView>
       <MainButton
         onPress={() =>
           navigation.navigate('HomeStack', {screen: 'HomeScreen'})
