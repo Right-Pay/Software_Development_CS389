@@ -38,14 +38,17 @@ const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
 
   const checkLocationPermission = async () => {
     const permission = await requestLocationPermission();
+    console.log('permission: ', permission);
+    console.log(on);
     setOn(permission);
     await updateLocation();
   };
 
   useEffect(() => {
-    if (appStateVisible === 'active') {
-      checkLocationPermission();
-    }
+    //if (appStateVisible === 'active') {
+    checkLocationPermission();
+    //}
+    console.log('appStateVisible: ', appStateVisible);
   }, [appStateVisible]);
 
   return (
@@ -56,9 +59,6 @@ const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
           <Switch
             value={on}
             onValueChange={toggleSwitch}
-            disabled={false}
-            activeText={'On'}
-            inActiveText={'Off'}
             circleSize={30}
             barHeight={40}
             backgroundActive={'#4d654e'}
