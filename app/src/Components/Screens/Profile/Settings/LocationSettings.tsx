@@ -14,6 +14,7 @@ import {
   Title,
   WrapperView,
 } from '../../../../Helpers/StylizedComponents';
+import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
 
 type LocationSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'LocationSettings'>,
@@ -23,15 +24,14 @@ type LocationSettingsProps = CompositeScreenProps<
 
 const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
   return (
-    <WrapperView>
-      <Title className="mt-20">This is the location setttings</Title>
-      <Subtitle>
-        You will be able to turn off and on your location here.
-      </Subtitle>
+    <WrapperView className="pb-0">
+      <KeyboardAvoidingViewScroll>
+        <Title className="mt-20">This is the location setttings</Title>
 
-      <MainButton onPress={() => navigation.goBack()}>
-        <MainButtonText>Go back</MainButtonText>
-      </MainButton>
+        <MainButton onPress={() => navigation.goBack()}>
+          <MainButtonText>Go back</MainButtonText>
+        </MainButton>
+      </KeyboardAvoidingViewScroll>
     </WrapperView>
   );
 };

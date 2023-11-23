@@ -102,6 +102,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
               formData[key] = userProfile[key];
             }
           }
+          //Update user profile in db
           setUserProfile({...userProfile, [key]: formData[key]});
           setSaved(true);
           setEditing(false);
