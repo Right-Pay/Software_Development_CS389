@@ -160,7 +160,12 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           if (res.success) {
             setUserToken(access_token);
             await storeAuth0Token(access_token);
-            setUserProfile(res.data as Profile);
+            const profile = res.data as Profile;
+            const cards = profile.cards.sort((a, b) => {
+              return a.card_bin > b.card_bin ? 1 : -1;
+            });
+            profile.cards = cards;
+            setUserProfile(profile);
             clearAuthErrors();
           } else {
             setUserToken(null);
@@ -271,7 +276,12 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             if (res.success) {
               setUserToken(access_token);
               await storeAuth0Token(access_token);
-              setUserProfile(res.data as Profile);
+              const profile = res.data as Profile;
+              const cards = profile.cards.sort((a, b) => {
+                return a.card_bin > b.card_bin ? 1 : -1;
+              });
+              profile.cards = cards;
+              setUserProfile(profile);
               clearAuthErrors();
             } else {
               setUserToken(null);
@@ -448,7 +458,12 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           await getUser(result.access_token).then(async userResult => {
             let res = userResult as HttpResponse;
             if (res.success) {
-              setUserProfile(res.data as Profile);
+              const profile = res.data as Profile;
+              const cards = profile.cards.sort((a, b) => {
+                return a.card_bin > b.card_bin ? 1 : -1;
+              });
+              profile.cards = cards;
+              setUserProfile(profile);
               clearAuthErrors();
             } else {
               setUserToken(null);

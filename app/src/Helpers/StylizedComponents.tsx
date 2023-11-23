@@ -143,3 +143,8 @@ export const NearbyLocationSeperator = styled(
   View,
   'w-full h-4 border-l-2 border-r-2',
 );
+export const SettingsCardList = styled(View, 'flex-1 flex-col w-full h-full');
+export const SettingsCardView = styled(
+  View,
+  'flex-auto flex-col mt-10 p-3 h-60 justify-start overflow-hidden rounded-xl',
+);
