@@ -335,6 +335,20 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const fetchAddress = useCallback(async () => {
+    const permission = await requestLocationPermission();
+    if (permission === false) {
+      setAddress({
+        businessStatus: 'OPERATIONAL',
+        displayName: {text: 'Location Permission Denied', languageCode: ''},
+        location: {longitude: 0, latitude: 0},
+        primaryType: 'restaurant',
+        primaryTypeDisplayName: {text: 'Restaurant', languageCode: ''},
+        types: ['Restaurant'],
+        readableType: 'Restaurant',
+        id: '0',
+      });
+      return;
+    }
     var myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append(
@@ -408,6 +422,22 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const fetchPlaces = useCallback(async () => {
+    const permission = await requestLocationPermission();
+    if (permission === false) {
+      setPlaces([
+        {
+          businessStatus: 'OPERATIONAL',
+          displayName: {text: 'Location Permission Denied', languageCode: ''},
+          location: {longitude: 0, latitude: 0},
+          primaryType: 'restaurant',
+          primaryTypeDisplayName: {text: 'Restaurant', languageCode: ''},
+          types: ['Restaurant'],
+          readableType: 'Restaurant',
+          id: '0',
+        },
+      ]);
+      return;
+    }
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
     headers.append(
@@ -525,8 +555,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           altitude: 0,
           accuracy: 0,
         } as Location);
-        fetchPlaces();
-        fetchAddress();
       }
     });
   }, []);
@@ -545,8 +573,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
               altitude: coords.altitude,
               accuracy: coords.accuracy,
             } as Location);
-            fetchPlaces();
-            fetchAddress();
           },
           error => {
             // See error code charts below.
@@ -568,8 +594,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           altitude: 0,
           accuracy: 0,
         } as Location);
-        fetchPlaces();
-        fetchAddress();
       }
     });
     setIsLoading(false);
