@@ -26,6 +26,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [location, setLocation] = useState<Location>({} as Location);
   const [places, setPlaces] = useState<Place[]>([] as Place[]);
   const [address, setAddress] = useState<Place | undefined>(undefined);
+  const [locationGrantType, setLocationGrantType] = useState<string>('denied');
 
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
@@ -307,13 +308,13 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     return errors;
   }
 
-  const requestLocationPermission = async () => {
+  const requestLocationPermission = useCallback(async () => {
     try {
-      let granted = 'false';
       if (Platform.OS === 'ios') {
-        granted = await Geolocation.requestAuthorization('whenInUse');
+        const grant = await Geolocation.requestAuthorization('whenInUse');
+        setLocationGrantType(grant);
       } else {
-        granted = await PermissionsAndroid.request(
+        const grant = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
             title: 'Geolocation Permission',
@@ -323,8 +324,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
             buttonPositive: 'OK',
           },
         );
+        setLocationGrantType(grant);
       }
-      if (granted === 'denied') {
+      if (locationGrantType === 'denied') {
         return false;
       } else {
         return true;
@@ -332,7 +334,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     } catch (err) {
       return false;
     }
-  };
+  }, [locationGrantType]);
 
   const fetchAddress = useCallback(async () => {
     const permission = await requestLocationPermission();
@@ -394,7 +396,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     });
 
     setAddress(resultAddress[0]);
-  }, [location]);
+  }, [location, requestLocationPermission]);
 
   const calculateDistanceLatLong = (
     location1: PlaceLocation,
@@ -523,7 +525,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       });
 
     setPlaces(resultPlaces);
-  }, [location]);
+  }, [location, requestLocationPermission]);
 
   const getLocation = useCallback(() => {
     const result = requestLocationPermission();
@@ -557,9 +559,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         } as Location);
       }
     });
-  }, []);
+  }, [requestLocationPermission]);
 
-  const updateLocation = () => {
+  const updateLocation = useCallback(() => {
     setIsLoading(true);
     const result = requestLocationPermission();
     result.then(res => {
@@ -597,7 +599,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
       }
     });
     setIsLoading(false);
-  };
+  }, [requestLocationPermission]);
 
   useEffect(() => {
     getLocation();

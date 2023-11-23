@@ -73,7 +73,7 @@ export const LogoContainer = styled(
 );
 export const SettingsView = styled(
   View,
-  'flex-1 flex-col border-t-2 w-full h-1/4 mt-4 mb-4 p-5 items-center space-between justify-center',
+  'flex-1 flex-col border-t-2 w-full h-1/4 mt-4 mb-4 p-5 items-center space-between',
 );
 export const KeyboardAvoidingScroll = styled(
   ScrollView,

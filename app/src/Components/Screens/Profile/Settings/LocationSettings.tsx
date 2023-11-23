@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {Linking} from 'react-native';
 import type {
@@ -15,6 +15,7 @@ import {
   WrapperView,
   SettingsView,
   SettingsSubtitle,
+  Subtitle,
 } from '../../../../Helpers/StylizedComponents';
 import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
 import {Switch} from 'react-native-switch';
@@ -36,26 +37,27 @@ const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
     await Linking.openSettings();
   };
 
-  const checkLocationPermission = async () => {
+  const checkLocationPermission = useCallback(async () => {
     const permission = await requestLocationPermission();
-    console.log('permission: ', permission);
-    console.log(on);
     setOn(permission);
     await updateLocation();
-  };
+  }, [requestLocationPermission, updateLocation]);
 
   useEffect(() => {
     //if (appStateVisible === 'active') {
     checkLocationPermission();
     //}
-    console.log('appStateVisible: ', appStateVisible);
-  }, [appStateVisible]);
+  }, [appStateVisible, checkLocationPermission]);
 
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <Title className="mt-10">Location Settings</Title>
         <SettingsView>
+          <SettingsSubtitle className="mb-6">
+            Your location is used to determine nearby companies and which card
+            to suggest you use
+          </SettingsSubtitle>
           <Switch
             value={on}
             onValueChange={toggleSwitch}
@@ -74,13 +76,10 @@ const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
             switchWidthMultiplier={4} // multiplied by the `circleSize` prop to calculate total width of the Switch
             switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
           />
-          <SettingsSubtitle className="mb-3">
+          <Subtitle className="mb-3">
             {on ? 'Location Services On' : 'Location Services Off'}
-          </SettingsSubtitle>
+          </Subtitle>
         </SettingsView>
-        <MainButton onPress={() => navigation.goBack()}>
-          <MainButtonText>Go back</MainButtonText>
-        </MainButton>
       </KeyboardAvoidingViewScroll>
     </WrapperView>
   );
