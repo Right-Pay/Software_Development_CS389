@@ -40,19 +40,13 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({navigation}) => {
     await Linking.openSettings();
   };
 
-  const checkLocationPermission = useCallback(async () => {
-    await requestLocationPermission().then(permission => {
-      setLocationServicesOn(permission);
-    });
-
-    await updateLocation();
-  }, [requestLocationPermission, updateLocation]);
-
   useEffect(() => {
     if (appStateVisible === 'active') {
-      checkLocationPermission();
+      requestLocationPermission().then(permission => {
+        setLocationServicesOn(permission);
+      });
     }
-  }, [appStateVisible, checkLocationPermission]);
+  }, [appStateVisible, requestLocationPermission]);
 
   return (
     <WrapperView className="pb-0">

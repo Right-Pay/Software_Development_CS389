@@ -1,6 +1,7 @@
 import React, {
   PropsWithChildren,
   useCallback,
+  useContext,
   useEffect,
   useState,
 } from 'react';
@@ -8,12 +9,15 @@ import LocationContext from './locationContext';
 import {Location, Place, PlaceLocation} from '../types/Location';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import context from './context';
+import {AppContext} from '../types/AppContextType';
 
 const LocationState: React.FC<PropsWithChildren> = ({children}) => {
   const [location, setLocation] = useState<Location>({} as Location);
   const [places, setPlaces] = useState<Place[]>([]);
   const [address, setAddress] = useState<Place | undefined>(undefined);
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
+  const {appStateVisible} = useContext(context) as AppContext;
 
   const requestLocationPermission = useCallback(async () => {
     try {
@@ -236,7 +240,6 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
       Geolocation.getCurrentPosition(
         position => {
           const coords = position.coords;
-          console.log(coords);
           setLocation({
             latitude: coords.latitude,
             longitude: coords.longitude,
@@ -308,6 +311,12 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
     fetchPlaces();
     fetchAddress();
   }, [fetchAddress, fetchPlaces, location]);
+
+  useEffect(() => {
+    if (appStateVisible === 'active') {
+      updateLocation();
+    }
+  }, [updateLocation]);
 
   return (
     <LocationContext.Provider
