@@ -13,6 +13,8 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
+import KeyboardAvoidingViewScroll from '../../../Helpers/KeyboardAvoidingViewScroll';
+import {View} from 'react-native';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -32,28 +34,32 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   }, [clearAuthErrors]);
 
   return (
-    <WrapperView>
-      <Title className="mt-20">Forgot your Password for RightPay?</Title>
-      <LogoContainer>
-        <Logo
-          source={require('../../../Assets/RightPay-logo-light-transparent.png')}
-        />
-      </LogoContainer>
-      <AuthInputBox
-        placeholder="Email Address"
-        placeholderTextColor={'black'}
-        onChange={event => setEmail(event.nativeEvent.text)}
-      />
-      {AuthErrorComponent && <AuthErrorComponent />}
-      <AuthButton
-        onPress={() => {
-          resetPassword(email);
-          setTimeout(() => {
-            navigation.navigate('Login');
-          }, 3000);
-        }}>
-        <AuthButtonText>Reset Password</AuthButtonText>
-      </AuthButton>
+    <WrapperView className="pb-0">
+      <KeyboardAvoidingViewScroll>
+        <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
+          <Title className="mt-20">Forgot your Password for RightPay?</Title>
+          <LogoContainer>
+            <Logo
+              source={require('../../../Assets/RightPay-logo-light-transparent.png')}
+            />
+          </LogoContainer>
+          <AuthInputBox
+            placeholder="Email Address"
+            placeholderTextColor={'black'}
+            onChange={event => setEmail(event.nativeEvent.text)}
+          />
+          <AuthButton
+            onPress={() => {
+              resetPassword(email);
+              setTimeout(() => {
+                navigation.navigate('Login');
+              }, 3000);
+            }}>
+            <AuthButtonText>Reset Password</AuthButtonText>
+          </AuthButton>
+          {AuthErrorComponent && <AuthErrorComponent />}
+        </View>
+      </KeyboardAvoidingViewScroll>
     </WrapperView>
   );
 };

@@ -38,6 +38,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
   const [currentViewPlace, setCurrentViewedPlace] = React.useState<Place[]>(
     [] as Place[],
   );
+
   const renderPlace = (place: Place) => {
     return (
       <StyledView className="py-2 flex-1 bg-white flex-col h-20 w-full">

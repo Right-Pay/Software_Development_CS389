@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import Context from './context';
 import {
@@ -9,7 +9,7 @@ import {
   CardBank,
   CardBrand,
 } from '../types/CardType';
-import {Keyboard, PermissionsAndroid, Platform} from 'react-native';
+import {AppState, Keyboard, PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import Consts from '../Helpers/Consts';
 import Config from 'react-native-config';
@@ -309,11 +309,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   const requestLocationPermission = async () => {
     try {
+      let granted = 'false';
       if (Platform.OS === 'ios') {
-        Geolocation.requestAuthorization('whenInUse');
-        return true;
+        granted = await Geolocation.requestAuthorization('whenInUse');
       } else {
-        const granted = await PermissionsAndroid.request(
+        granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
             title: 'Geolocation Permission',
@@ -323,11 +323,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
             buttonPositive: 'OK',
           },
         );
-        if (granted === 'granted') {
-          return true;
-        } else {
-          return false;
-        }
+      }
+      if (granted === 'denied') {
+        return false;
+      } else {
+        return true;
       }
     } catch (err) {
       return false;
@@ -502,6 +502,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         Geolocation.getCurrentPosition(
           position => {
             const coords = position.coords;
+            console.log(coords);
             setLocation({
               latitude: coords.latitude,
               longitude: coords.longitude,
@@ -516,9 +517,63 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
           },
           {enableHighAccuracy: true, timeout: 15000, maximumAge: 1},
         );
+      } else {
+        //Basic location
+        setLocation({
+          latitude: 0,
+          longitude: 0,
+          altitude: 0,
+          accuracy: 0,
+        } as Location);
+        fetchPlaces();
+        fetchAddress();
       }
     });
   }, []);
+
+  const updateLocation = () => {
+    setIsLoading(true);
+    const result = requestLocationPermission();
+    result.then(res => {
+      if (res) {
+        Geolocation.getCurrentPosition(
+          position => {
+            const coords = position.coords;
+            setLocation({
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              altitude: coords.altitude,
+              accuracy: coords.accuracy,
+            } as Location);
+            fetchPlaces();
+            fetchAddress();
+          },
+          error => {
+            // See error code charts below.
+            setLocation({
+              latitude: 0,
+              longitude: 0,
+              altitude: 0,
+              accuracy: 0,
+            } as Location);
+            console.log(error.code, error.message);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 1},
+        );
+      } else {
+        //Basic location
+        setLocation({
+          latitude: 0,
+          longitude: 0,
+          altitude: 0,
+          accuracy: 0,
+        } as Location);
+        fetchPlaces();
+        fetchAddress();
+      }
+    });
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     getLocation();
@@ -598,6 +653,20 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
     };
   }, []);
 
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  useEffect(() => {
+    const handler = AppState.addEventListener('change', nextAppState => {
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+    });
+
+    return () => {
+      handler.remove();
+    };
+  }, []);
+
   return (
     <Context.Provider
       value={{
@@ -623,6 +692,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         fetchAddress,
         address,
         isKeyboardVisible,
+        requestLocationPermission,
+        appStateVisible,
+        updateLocation,
       }}>
       {children}
     </Context.Provider>

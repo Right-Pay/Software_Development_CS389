@@ -58,13 +58,13 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
             onPress={() => navigation.navigate('ForgotPassword')}>
             <FinePrint>Forgot Password?</FinePrint>
           </FinePrintButton>
-          {AuthErrorComponent && <AuthErrorComponent />}
           <AuthButton
             onPress={() => {
               signIn(email, password);
             }}>
             <AuthButtonText>Log In</AuthButtonText>
           </AuthButton>
+          {AuthErrorComponent && <AuthErrorComponent />}
         </View>
       </KeyboardAvoidingViewScroll>
     </WrapperView>

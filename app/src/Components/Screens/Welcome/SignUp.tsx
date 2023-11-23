@@ -34,7 +34,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
     clearAuthErrors();
   }, [clearAuthErrors]);
   return (
-    <WrapperView>
+    <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
           <Title className="mt-20">Sign Up for RightPay</Title>
@@ -65,7 +65,6 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
             secureTextEntry={true}
             onChange={event => setRepeatedPassword(event.nativeEvent.text)}
           />
-          {AuthErrorComponent && <AuthErrorComponent />}
           <AuthButton
             onPress={async () => {
               await signUp(email, username, password, repeatedPassword);
@@ -74,6 +73,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
             <AuthButtonText>Sign Up</AuthButtonText>
           </AuthButton>
           {userToken && <Title>'You have successfully signed up'</Title>}
+          {AuthErrorComponent && <AuthErrorComponent />}
         </View>
       </KeyboardAvoidingViewScroll>
     </WrapperView>

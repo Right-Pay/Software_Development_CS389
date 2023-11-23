@@ -31,4 +31,7 @@ export interface AppContext {
   fetchAddress: () => void;
   address: Place | undefined;
   isKeyboardVisible: boolean;
+  requestLocationPermission: () => Promise<boolean>;
+  appStateVisible: string;
+  updateLocation: () => void;
 }
