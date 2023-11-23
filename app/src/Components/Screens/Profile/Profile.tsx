@@ -30,17 +30,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title className="top-10 mb-10">Profile Screen</Title>
-      <ProfileView>
+      <ProfileView className="justify-start">
         <ProfileSubtitle>Username: {userProfile.username}</ProfileSubtitle>
         <ProfileSubtitle>Email: {userProfile.email}</ProfileSubtitle>
         <ProfileSubtitle>Phone: {userProfile.phone}</ProfileSubtitle>
       </ProfileView>
-      <MainButton
-        onPress={() =>
-          navigation.navigate('HomeStack', {screen: 'HomeScreen'})
-        }>
-        <MainButtonText>Go Home</MainButtonText>
-      </MainButton>
+
       <MainButton onPress={() => navigation.navigate('SettingsScreen')}>
         <MainButtonText>Settings</MainButtonText>
       </MainButton>

@@ -27,8 +27,7 @@ export type ProfileNavigationRoutesType = {
   ProfileScreen: undefined;
   ProfileSettings: undefined;
   SettingsScreen: undefined;
-  LocationSettings: undefined;
-  NotificationSettings: undefined;
+  GeneralSettings: undefined;
   CreditCardSettings: undefined;
 };
 

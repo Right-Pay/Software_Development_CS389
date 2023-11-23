@@ -14,8 +14,6 @@ import type {
 import SettingsScreen from '../Components/Screens/Profile/Settings/Settings';
 import LocationScreen from '../Components/Screens/Location/Location';
 import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSettings';
-import Context from '../Context/context';
-import {AppContext} from '../types/AppContextType';
 import {
   getFocusedRouteNameFromRoute,
   RouteProp,
@@ -24,10 +22,11 @@ import type {
   BottomTabNavigationProp,
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
-import LocationSettings from '../Components/Screens/Profile/Settings/LocationSettings';
-import NotificationSettingsScreen from '../Components/Screens/Profile/Settings/NotificationSettings';
+import GeneralSettings from '../Components/Screens/Profile/Settings/GeneralSettings';
 import CreditCardSettings from '../Components/Screens/Profile/Settings/CreditCardSettings';
 import WalletScreen from '../Components/Screens/Wallet/Wallet';
+import locationContext from '../Context/locationContext';
+import {LocationContext} from '../types/LocationContextType';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
@@ -61,7 +60,8 @@ type StackProps = BottomTabScreenProps<NavigationRoutesType> &
   PropsWithChildren;
 
 const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
-  const {address} = React.useContext(Context) as AppContext;
+  const {address} = React.useContext(locationContext) as LocationContext;
+
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'HomeScreen'),
     [navigation, route],
@@ -84,7 +84,7 @@ const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 };
 
 const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
-  const {address} = React.useContext(Context) as AppContext;
+  const {address} = React.useContext(locationContext) as LocationContext;
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'ProfileScreen'),
     [navigation, route],
@@ -99,14 +99,7 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
       <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <ProfileStack.Screen name="ProfileSettings" component={ProfileSettings} />
       <ProfileStack.Screen name="SettingsScreen" component={SettingsScreen} />
-      <ProfileStack.Screen
-        name="LocationSettings"
-        component={LocationSettings}
-      />
-      <ProfileStack.Screen
-        name="NotificationSettings"
-        component={NotificationSettingsScreen}
-      />
+      <ProfileStack.Screen name="GeneralSettings" component={GeneralSettings} />
       <ProfileStack.Screen
         name="CreditCardSettings"
         component={CreditCardSettings}
@@ -116,7 +109,7 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 };
 
 const CompanyStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
-  const {address} = React.useContext(Context) as AppContext;
+  const {address} = React.useContext(locationContext) as LocationContext;
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'CompanyScreen'),
     [navigation, route],
@@ -145,7 +138,7 @@ const WalletStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 };
 
 const LocationStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
-  const {address} = React.useContext(Context) as AppContext;
+  const {address} = React.useContext(locationContext) as LocationContext;
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'LocationScreen'),
     [navigation, route],

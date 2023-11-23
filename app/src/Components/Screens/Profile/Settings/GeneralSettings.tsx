@@ -9,58 +9,63 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {
-  MainButtonText,
-  MainButton,
   Title,
   WrapperView,
   SettingsView,
-  SettingsSubtitle,
   Subtitle,
+  MainButton,
+  MainButtonText,
 } from '../../../../Helpers/StylizedComponents';
 import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
 import {Switch} from 'react-native-switch';
 import context from '../../../../Context/context';
 import {AppContext} from '../../../../types/AppContextType';
+import locationContext from '../../../../Context/locationContext';
+import {LocationContext} from '../../../../types/LocationContextType';
 
-type LocationSettingsProps = CompositeScreenProps<
-  NativeStackScreenProps<ProfileNavigationRoutesType, 'LocationSettings'>,
+type GeneralSettingsProps = CompositeScreenProps<
+  NativeStackScreenProps<ProfileNavigationRoutesType, 'GeneralSettings'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;
 
-const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
-  const {requestLocationPermission, appStateVisible, updateLocation} =
-    useContext(context) as AppContext;
-  const [on, setOn] = React.useState<boolean>(false);
+const GeneralSettings: React.FC<GeneralSettingsProps> = ({navigation}) => {
+  const {appStateVisible} = useContext(context) as AppContext;
+  const {requestLocationPermission, updateLocation, locationGrantType} =
+    useContext(locationContext) as LocationContext;
+  const [locationServicesOn, setLocationServicesOn] =
+    React.useState<boolean>(locationGrantType);
 
-  const toggleSwitch = async () => {
+  const navigateToSettings = async () => {
     await Linking.openSettings();
   };
 
   const checkLocationPermission = useCallback(async () => {
-    const permission = await requestLocationPermission();
-    setOn(permission);
+    await requestLocationPermission().then(permission => {
+      setLocationServicesOn(permission);
+    });
+
     await updateLocation();
   }, [requestLocationPermission, updateLocation]);
 
   useEffect(() => {
-    //if (appStateVisible === 'active') {
-    checkLocationPermission();
-    //}
+    if (appStateVisible === 'active') {
+      checkLocationPermission();
+    }
   }, [appStateVisible, checkLocationPermission]);
 
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <Title className="mt-10">Location Settings</Title>
+        <Title className="mt-10">General Settings</Title>
         <SettingsView>
-          <SettingsSubtitle className="mb-6">
+          <Subtitle className="mb-3">
             Your location is used to determine nearby companies and which card
             to suggest you use
-          </SettingsSubtitle>
+          </Subtitle>
           <Switch
-            value={on}
-            onValueChange={toggleSwitch}
+            value={locationServicesOn}
+            onValueChange={navigateToSettings}
             circleSize={30}
             barHeight={40}
             backgroundActive={'#4d654e'}
@@ -77,12 +82,17 @@ const LocationSettings: React.FC<LocationSettingsProps> = ({navigation}) => {
             switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
           />
           <Subtitle className="mb-3">
-            {on ? 'Location Services On' : 'Location Services Off'}
+            {locationServicesOn
+              ? 'Location Services On'
+              : 'Location Services Off'}
           </Subtitle>
+          <MainButton onPress={() => navigateToSettings()}>
+            <MainButtonText>Location Network</MainButtonText>
+          </MainButton>
         </SettingsView>
       </KeyboardAvoidingViewScroll>
     </WrapperView>
   );
 };
 
-export default LocationSettings;
+export default GeneralSettings;

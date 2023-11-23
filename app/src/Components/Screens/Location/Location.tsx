@@ -7,8 +7,6 @@ import type {
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
-import Context from '../../../Context/context';
-import {AppContext} from '../../../types/AppContextType';
 import {
   GoogleMapsMarker,
   GoogleMapsView,
@@ -22,6 +20,8 @@ import {Place} from '../../../types/Location';
 const StyledView = styled(View);
 import {Platform} from 'react-native';
 import {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
+import locationContext from '../../../Context/locationContext';
+import {LocationContext} from '../../../types/LocationContextType';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -32,7 +32,9 @@ type LocationScreenProps = CompositeScreenProps<
 const StlyizedText = styled(Text, 'text-lg text-dark-green');
 
 const LocationScreen: React.FC<LocationScreenProps> = () => {
-  const {location, places} = React.useContext(Context) as AppContext;
+  const {location, places} = React.useContext(
+    locationContext,
+  ) as LocationContext;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentViewPlace, setCurrentViewedPlace] = React.useState<Place[]>(
@@ -130,9 +132,6 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
       </StyledView>
     </WrapperView>
   ); //add button up here^^ between view and mapview <Button
-  //title="Settings"
-  //onPress={() => navigation.navigate('LocationSettings')}
-  ///>
 };
 
 const mapStyle = [

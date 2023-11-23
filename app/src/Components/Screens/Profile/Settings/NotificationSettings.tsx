@@ -10,7 +10,6 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import {
   SettingsSubtitle,
   SettingsView,
-  Subtitle,
   Title,
   WrapperView,
 } from '../../../../Helpers/StylizedComponents';

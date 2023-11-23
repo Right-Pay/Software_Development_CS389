@@ -33,12 +33,8 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
       route: 'ProfileSettings',
     },
     {
-      name: 'Location Settings',
-      route: 'LocationSettings',
-    },
-    {
-      name: 'Notification Settings',
-      route: 'NotificationSettings',
+      name: 'General Settings',
+      route: 'GeneralSettings',
     },
     {
       name: 'Credit Card Settings',
@@ -51,11 +47,8 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
       case 'ProfileSettings':
         navigation.navigate('ProfileSettings');
         break;
-      case 'LocationSettings':
-        navigation.navigate('LocationSettings');
-        break;
-      case 'NotificationSettings':
-        navigation.navigate('NotificationSettings');
+      case 'GeneralSettings':
+        navigation.navigate('GeneralSettings');
         break;
       case 'CreditCardSettings':
         navigation.navigate('CreditCardSettings');
