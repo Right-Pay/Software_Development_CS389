@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {Linking} from 'react-native';
 import type {
@@ -29,10 +29,11 @@ type GeneralSettingsProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const GeneralSettings: React.FC<GeneralSettingsProps> = ({navigation}) => {
+const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   const {appStateVisible} = useContext(context) as AppContext;
-  const {requestLocationPermission, updateLocation, locationGrantType} =
-    useContext(locationContext) as LocationContext;
+  const {requestLocationPermission, locationGrantType} = useContext(
+    locationContext,
+  ) as LocationContext;
   const [locationServicesOn, setLocationServicesOn] =
     React.useState<boolean>(locationGrantType);
 
@@ -64,9 +65,15 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({navigation}) => {
             barHeight={40}
             backgroundActive={'#4d654e'}
             backgroundInactive={'#e6ffe3'}
-            containerStyle={{borderWidth: 2, borderColor: '#4d654e'}}
+            // eslint-disable-next-line react-native/no-inline-styles
+            containerStyle={{
+              borderWidth: 2,
+              borderColor: '#4d654e',
+              margin: 10,
+            }}
             circleActiveColor={'#e6ffe3'}
             circleInActiveColor={'#4d654e'}
+            // eslint-disable-next-line react-native/no-inline-styles
             innerCircleStyle={{alignItems: 'center', justifyContent: 'center'}} // style for inner animated circle for what you (may) be rendering inside the circle
             renderActiveText={false}
             renderInActiveText={false}
@@ -81,7 +88,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({navigation}) => {
               : 'Location Services Off'}
           </Subtitle>
           <MainButton onPress={() => navigateToSettings()}>
-            <MainButtonText>Location Network</MainButtonText>
+            <MainButtonText>More Settings</MainButtonText>
           </MainButton>
         </SettingsView>
       </KeyboardAvoidingViewScroll>

@@ -17,6 +17,7 @@ import {
 import {navSettingType} from '../../../../types/SettingsType';
 import authContext from '../../../../Context/authContext';
 import {AuthContextType} from '../../../../types/AuthContextType';
+import {View} from 'react-native';
 
 type SettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'SettingsScreen'>,
@@ -57,13 +58,15 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
         break;
     }
   };
-  const renderSettingsNav = (item: navSettingType) => {
+  const renderSettingsNav = (setting: navSettingType, key: number) => {
     return (
-      <SettingsSubtitle
-        onPress={() => handleSettingsNavPress(item.route)}
-        key={item.name}>
-        {item.name}
-      </SettingsSubtitle>
+      <View key={key} className={'w-screen pl-4 justify-center h-1/6'}>
+        <SettingsSubtitle
+          onPress={() => handleSettingsNavPress(setting.route)}
+          className="text-left">
+          {setting.name}
+        </SettingsSubtitle>
+      </View>
     );
   };
 
@@ -71,8 +74,10 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
     <WrapperView>
       <Title className="top-10">Settings</Title>
       <Subtitle className="top-10 mb-10">{userProfile.username}</Subtitle>
-      <SettingsView>
-        {settingsPages.map(s => renderSettingsNav(s))}
+      <SettingsView className="left-0 divide-dark-green divide-solid divide-y-2 height-screen pt-0">
+        {settingsPages.map((setting, index) =>
+          renderSettingsNav(setting, index),
+        )}
       </SettingsView>
     </WrapperView>
   );
