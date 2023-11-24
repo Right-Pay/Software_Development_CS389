@@ -28,7 +28,7 @@ export type ProfileNavigationRoutesType = {
   ProfileSettings: undefined;
   SettingsScreen: undefined;
   GeneralSettings: undefined;
-  CreditCardSettings: undefined;
+  CardSettings: undefined;
 };
 
 export type CompanyNavigationRoutesType = {

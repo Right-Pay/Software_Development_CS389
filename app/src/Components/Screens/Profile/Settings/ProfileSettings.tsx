@@ -143,7 +143,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
     userProfile && (
       <WrapperView className="pb-0">
         <KeyboardAvoidingViewScroll>
-          <Title className="mt-10 mb-3">{text.title}</Title>
+          <Title className="mt-10 mb-3">{text.profileTitle}</Title>
           {saved && <ProfileSubtitle>{text.saved}</ProfileSubtitle>}
           <SettingsView>
             {fieldsToRender.map((key, index) => renderProfileField(key, index))}

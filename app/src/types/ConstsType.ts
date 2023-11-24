@@ -10,7 +10,7 @@ interface DropdownListModesType {
 }
 
 interface SettingsTextType {
-  [key: string]: string;
+  [key: string]: string | hashType;
 }
 
 export default interface ConstsType {
@@ -24,3 +24,7 @@ export default interface ConstsType {
   addCard: Card;
   settingsText: SettingsTextType;
 };
+
+export interface hashType {
+  [key: string]: string;
+}

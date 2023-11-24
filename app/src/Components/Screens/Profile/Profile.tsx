@@ -17,6 +17,7 @@ import {
 } from '../../../Helpers/StylizedComponents';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
+import Consts from '../../../Helpers/Consts';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,
@@ -28,6 +29,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
   const {userProfile, signOut} = React.useContext(
     authContext,
   ) as AuthContextType;
+
+  const text = Consts.settingsText;
+
   const cardCount = userProfile.cards.length;
   const rewardCount =
     userProfile.cards
@@ -38,26 +42,32 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
     <WrapperView>
       <Title className="top-10 mb-10">Profile</Title>
       <ProfileView className="justify-start">
-        <ProfileSubtitle>Username: {userProfile.username}</ProfileSubtitle>
-        <ProfileSubtitle>Email: {userProfile.email}</ProfileSubtitle>
         <ProfileSubtitle>
-          Phone: {userProfile.phone ?? '(###)###-####'}
+          {text.username}: {userProfile.username}
+        </ProfileSubtitle>
+        <ProfileSubtitle>
+          {text.email}: {userProfile.email}
+        </ProfileSubtitle>
+        <ProfileSubtitle>
+          {text.phone}: {userProfile.phone ?? '(###)###-####'}
         </ProfileSubtitle>
         <ProfileSubtitle className="mt-20">
-          You have {cardCount} card
-          {cardCount > 1 ? 's' : ''}
+          {text.youHave} {cardCount} card
+          {cardCount > 1 ? text.s : ''}
         </ProfileSubtitle>
         <ProfileSubtitle>
-          {`You have ${rewardCount} reward${rewardCount !== 1 ? 's' : ''}`}
+          {`${text.youHave} ${rewardCount} reward${
+            rewardCount !== 1 ? text.s : ''
+          }`}
         </ProfileSubtitle>
       </ProfileView>
       <MainButton
         onPress={() => navigation.navigate('SettingsScreen')}
         className="absolute top-0 right-0">
-        <MainButtonText>Settings</MainButtonText>
+        <MainButtonText>{text.settingsTitle}</MainButtonText>
       </MainButton>
       <MainButton className="absolute top-0 left-0" onPress={() => signOut()}>
-        <MainButtonText>Logout</MainButtonText>
+        <MainButtonText>{text.logout}</MainButtonText>
       </MainButton>
     </WrapperView>
   );

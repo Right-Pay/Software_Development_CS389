@@ -1,4 +1,4 @@
-import ConstsType from '../types/ConstsType';
+import ConstsType, {hashType} from '../types/ConstsType';
 import {Card, Reward} from '../types/CardType';
 
 const AuthErrorMessages = {
@@ -96,9 +96,33 @@ const cardItemSeparatorWidth = 48;
 
 const settingsText = {
   saved: 'Saved Successfully',
-  title: 'Profile Settings',
+  profileTitle: 'Profile Settings',
   noChanges: 'Nothing to Save',
   save: 'Save',
+  settingsTitle: 'Settings',
+  username: 'Username',
+  email: 'Email',
+  phone: 'Phone',
+  youHave: 'You have',
+  card: 'card',
+  s: 's',
+  logout: 'Logout',
+  general: 'General Settings',
+  locationDescription:
+    'Your location is used to determine nearby companies and which card to suggest you use',
+  locationServices: 'Location Services',
+  on: 'On',
+  off: 'Off',
+  more: 'More Settings',
+  confirm: 'Are You Sure?',
+  cancel: 'Cancel',
+  cardTitle: 'Card Settings',
+  delete: 'Delete',
+  routes: {
+    profileSettings: 'Profile Settings',
+    generalSettings: 'General Settings',
+    cardSettings: 'Card Settings',
+  } as hashType,
 };
 
 const Consts: ConstsType = {

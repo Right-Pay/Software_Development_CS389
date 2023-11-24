@@ -22,6 +22,7 @@ import context from '../../../../Context/context';
 import {AppContext} from '../../../../types/AppContextType';
 import locationContext from '../../../../Context/locationContext';
 import {LocationContext} from '../../../../types/LocationContextType';
+import Consts from '../../../../Helpers/Consts';
 
 type GeneralSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'GeneralSettings'>,
@@ -34,6 +35,9 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   const {requestLocationPermission, locationGrantType} = useContext(
     locationContext,
   ) as LocationContext;
+
+  const text = Consts.settingsText;
+
   const [locationServicesOn, setLocationServicesOn] =
     React.useState<boolean>(locationGrantType);
 
@@ -52,12 +56,9 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <Title className="mt-10">General Settings</Title>
+        <Title className="mt-10">{text.general}</Title>
         <SettingsView>
-          <Subtitle className="mb-3">
-            Your location is used to determine nearby companies and which card
-            to suggest you use
-          </Subtitle>
+          <Subtitle className="mb-3">{text.locationDescription}</Subtitle>
           <Switch
             value={locationServicesOn}
             onValueChange={navigateToSettings}
@@ -84,11 +85,11 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
           />
           <Subtitle className="mb-3">
             {locationServicesOn
-              ? 'Location Services On'
-              : 'Location Services Off'}
+              ? `${text.locationServices} ${text.on}`
+              : `${text.locationServices} ${text.off}`}
           </Subtitle>
           <MainButton onPress={() => navigateToSettings()}>
-            <MainButtonText>More Settings</MainButtonText>
+            <MainButtonText>{text.more}</MainButtonText>
           </MainButton>
         </SettingsView>
       </KeyboardAvoidingViewScroll>

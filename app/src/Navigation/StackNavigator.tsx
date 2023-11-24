@@ -23,10 +23,10 @@ import type {
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
 import GeneralSettings from '../Components/Screens/Profile/Settings/GeneralSettings';
-import CreditCardSettings from '../Components/Screens/Profile/Settings/CreditCardSettings';
 import WalletScreen from '../Components/Screens/Wallet/Wallet';
 import locationContext from '../Context/locationContext';
 import {LocationContext} from '../types/LocationContextType';
+import CardSettings from '../Components/Screens/Profile/Settings/CardSettings';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
@@ -100,10 +100,7 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
       <ProfileStack.Screen name="ProfileSettings" component={ProfileSettings} />
       <ProfileStack.Screen name="SettingsScreen" component={SettingsScreen} />
       <ProfileStack.Screen name="GeneralSettings" component={GeneralSettings} />
-      <ProfileStack.Screen
-        name="CreditCardSettings"
-        component={CreditCardSettings}
-      />
+      <ProfileStack.Screen name="CardSettings" component={CardSettings} />
     </ProfileStack.Navigator>
   );
 };

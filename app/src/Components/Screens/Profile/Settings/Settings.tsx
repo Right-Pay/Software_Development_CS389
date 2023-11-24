@@ -18,6 +18,8 @@ import {navSettingType} from '../../../../types/SettingsType';
 import authContext from '../../../../Context/authContext';
 import {AuthContextType} from '../../../../types/AuthContextType';
 import {View} from 'react-native';
+import Consts from '../../../../Helpers/Consts';
+import {hashType} from '../../../../types/ConstsType';
 
 type SettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'SettingsScreen'>,
@@ -28,18 +30,22 @@ type SettingsScreenProps = CompositeScreenProps<
 const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
   const {userProfile} = React.useContext(authContext) as AuthContextType;
 
+  const text = Consts.settingsText;
+
+  const routes = text.routes as hashType;
+
   const settingsPages: navSettingType[] = [
     {
-      name: 'Profile Settings',
-      route: 'ProfileSettings',
+      name: routes.profileSettings,
+      route: routes.profileSettings.replaceAll(' ', ''),
     },
     {
-      name: 'General Settings',
-      route: 'GeneralSettings',
+      name: routes.generalSettings,
+      route: routes.generalSettings.replaceAll(' ', ''),
     },
     {
-      name: 'Credit Card Settings',
-      route: 'CreditCardSettings',
+      name: routes.cardSettings,
+      route: routes.cardSettings.replaceAll(' ', ''),
     },
   ];
 
@@ -51,8 +57,8 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
       case 'GeneralSettings':
         navigation.navigate('GeneralSettings');
         break;
-      case 'CreditCardSettings':
-        navigation.navigate('CreditCardSettings');
+      case 'CardSettings':
+        navigation.navigate('CardSettings');
         break;
       default:
         break;
@@ -72,7 +78,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
 
   return (
     <WrapperView>
-      <Title className="top-10">Settings</Title>
+      <Title className="top-10">{text.settingsTitle}</Title>
       <Subtitle className="top-10 mb-10">{userProfile.username}</Subtitle>
       <SettingsView className="left-0 divide-dark-green divide-solid divide-y-2 height-screen pt-0">
         {settingsPages.map((setting, index) =>
