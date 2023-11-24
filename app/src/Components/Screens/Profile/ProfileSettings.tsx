@@ -29,7 +29,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title className="mt-20">Profile Screen</Title>
-      <Subtitle>Hello, you will soon be able to edit these!</Subtitle>
       <Subtitle>Username: {userProfile.username}</Subtitle>
       <Subtitle>Email: {userProfile.email}</Subtitle>
       <Subtitle>Phone: {userProfile.phone}</Subtitle>
