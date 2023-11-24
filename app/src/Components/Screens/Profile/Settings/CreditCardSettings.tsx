@@ -23,7 +23,7 @@ import {AppContext} from '../../../../types/AppContextType';
 import authContext from '../../../../Context/authContext';
 import {AuthContextType} from '../../../../types/AuthContextType';
 import {Card} from '../../../../types/CardType';
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {View} from 'react-native';
 
 type CreditCardSettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'CreditCardSettings'>,
@@ -31,9 +31,7 @@ type CreditCardSettingsScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const CreditCardSettings: React.FC<CreditCardSettingsScreenProps> = ({
-  navigation,
-}) => {
+const CreditCardSettings: React.FC<CreditCardSettingsScreenProps> = () => {
   const {cards} = (React.useContext(authContext) as AuthContextType)
     .userProfile;
   const {unlinkCard} = React.useContext(context) as AppContext;
