@@ -25,7 +25,7 @@ export interface AuthContextType {
   checkValidUsername: (_username: string) => boolean;
   checkValidPhone: (_phone: string) => boolean;
   refreshAuth0Token: () => void;
-  setUserProfile: (_userProfile: Profile) => void;
+  updateUserProfile: (_newProfile: Profile) => void;
 }
 
 export interface TokenType {

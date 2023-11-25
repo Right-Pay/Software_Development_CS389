@@ -24,7 +24,6 @@ import authContext from '../../../../Context/authContext';
 import {AuthContextType} from '../../../../types/AuthContextType';
 import {Card} from '../../../../types/CardType';
 import {View} from 'react-native';
-import Consts from '../../../../Helpers/Consts';
 
 type CardSettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'CardSettings'>,
@@ -36,8 +35,6 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
   const {cards} = (React.useContext(authContext) as AuthContextType)
     .userProfile;
   const {unlinkCard} = React.useContext(context) as AppContext;
-
-  const text = Consts.settingsText;
 
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
@@ -60,7 +57,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
                   setConfirmDelete(false);
                 }}>
                 <MainButtonText className="text-white">
-                  {text.confirm}
+                  Are you sure?
                 </MainButtonText>
               </MainButton>
               <MainButton
@@ -68,9 +65,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
                 onPress={() => {
                   setConfirmDelete(false);
                 }}>
-                <MainButtonText className="text-white">
-                  {text.cancel}
-                </MainButtonText>
+                <MainButtonText className="text-white">Cancel</MainButtonText>
               </MainButton>
             </>
           ) : (
@@ -78,9 +73,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
               <MainButton
                 className="self-start w-fit bg-red-500 border-dark-green pl-6 pr-6"
                 onPress={() => setConfirmDelete(true)}>
-                <MainButtonText className="text-white">
-                  {text.delete}
-                </MainButtonText>
+                <MainButtonText className="text-white">Delete</MainButtonText>
               </MainButton>
               <MainButton className="self-end w-fit bg-dark-green border-dark-green pl-6 pr-6 opacity-50">
                 <MainButtonText className="text-white">
@@ -97,7 +90,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <Title className="mt-10">{text.cardTitle}</Title>
+        <Title className="mt-10">Card Settings</Title>
         <SettingsView>
           <SettingsCardList>
             {cards.map((card, index) => renderCard(card, index))}

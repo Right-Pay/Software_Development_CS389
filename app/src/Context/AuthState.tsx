@@ -160,12 +160,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           if (res.success) {
             setUserToken(access_token);
             await storeAuth0Token(access_token);
-            const profile = res.data as Profile;
-            const cards = profile.cards.sort((a, b) => {
-              return a.card_bin > b.card_bin ? 1 : -1;
-            });
-            profile.cards = cards;
-            setUserProfile(profile);
+            setUserProfile(res.data as Profile);
             clearAuthErrors();
           } else {
             setUserToken(null);
@@ -244,6 +239,34 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     [ErrorMessages.errorGettingUser, baseURL, lang],
   );
 
+  const updateUserProfile = async (newUserProfile: Profile) => {
+    console.log(newUserProfile);
+    setUserProfile(newUserProfile);
+    // We need to do this what is here is temporary
+
+    //refreshUserProfile();
+  };
+
+  const refreshUserProfile = async () => {
+    if (!userToken) {
+      // need to replace with refresh token logic,
+      addAuthError(ErrorMessages.invalidToken);
+      return false;
+    }
+    await getUser(userToken).then(async result => {
+      let res = result as HttpResponse;
+      if (res.success) {
+        setUserProfile(res.data as Profile);
+        clearAuthErrors();
+      } else {
+        setUserToken(null);
+        await removeAuth0Token();
+        setUserProfile({} as Profile);
+        addAuthError(res.message as string);
+      }
+    });
+  };
+
   const signUp = async (
     email: string,
     username: string,
@@ -276,12 +299,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
             if (res.success) {
               setUserToken(access_token);
               await storeAuth0Token(access_token);
-              const profile = res.data as Profile;
-              const cards = profile.cards.sort((a, b) => {
-                return a.card_bin > b.card_bin ? 1 : -1;
-              });
-              profile.cards = cards;
-              setUserProfile(profile);
+              setUserProfile(res.data as Profile);
               clearAuthErrors();
             } else {
               setUserToken(null);
@@ -458,12 +476,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
           await getUser(result.access_token).then(async userResult => {
             let res = userResult as HttpResponse;
             if (res.success) {
-              const profile = res.data as Profile;
-              const cards = profile.cards.sort((a, b) => {
-                return a.card_bin > b.card_bin ? 1 : -1;
-              });
-              profile.cards = cards;
-              setUserProfile(profile);
+              setUserProfile(res.data as Profile);
               clearAuthErrors();
             } else {
               setUserToken(null);
@@ -505,7 +518,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkValidPhone,
         AuthErrorComponent,
         refreshAuth0Token,
-        setUserProfile,
+        updateUserProfile,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>

@@ -17,7 +17,6 @@ import {
 } from '../../../Helpers/StylizedComponents';
 import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
-import Consts from '../../../Helpers/Consts';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,
@@ -30,8 +29,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
     authContext,
   ) as AuthContextType;
 
-  const text = Consts.settingsText;
-
   const cardCount = userProfile.cards.length;
   const rewardCount =
     userProfile.cards
@@ -42,32 +39,26 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
     <WrapperView>
       <Title className="top-10 mb-10">Profile</Title>
       <ProfileView className="justify-start">
-        <ProfileSubtitle>
-          {text.username}: {userProfile.username}
-        </ProfileSubtitle>
-        <ProfileSubtitle>
-          {text.email}: {userProfile.email}
-        </ProfileSubtitle>
-        <ProfileSubtitle>
-          {text.phone}: {userProfile.phone ?? '(###)###-####'}
-        </ProfileSubtitle>
+        <ProfileSubtitle>Username: {userProfile.username}</ProfileSubtitle>
+        <ProfileSubtitle>Email: {userProfile.email}</ProfileSubtitle>
+        {userProfile.phone && userProfile.phone.length > 0 ? (
+          <ProfileSubtitle>{`Phone: ${userProfile.phone}`}</ProfileSubtitle>
+        ) : null}
         <ProfileSubtitle className="mt-20">
-          {text.youHave} {cardCount} card
-          {cardCount > 1 ? text.s : ''}
+          You have {cardCount} card
+          {cardCount > 1 ? 's' : ''}
         </ProfileSubtitle>
         <ProfileSubtitle>
-          {`${text.youHave} ${rewardCount} reward${
-            rewardCount !== 1 ? text.s : ''
-          }`}
+          {`You have ${rewardCount} reward${rewardCount !== 1 ? 's' : ''}`}
         </ProfileSubtitle>
       </ProfileView>
       <MainButton
         onPress={() => navigation.navigate('SettingsScreen')}
         className="absolute top-0 right-0">
-        <MainButtonText>{text.settingsTitle}</MainButtonText>
+        <MainButtonText>Settings</MainButtonText>
       </MainButton>
       <MainButton className="absolute top-0 left-0" onPress={() => signOut()}>
-        <MainButtonText>{text.logout}</MainButtonText>
+        <MainButtonText>Logout</MainButtonText>
       </MainButton>
     </WrapperView>
   );

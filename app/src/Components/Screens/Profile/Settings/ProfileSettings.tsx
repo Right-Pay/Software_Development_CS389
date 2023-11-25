@@ -22,6 +22,7 @@ import {AuthContextType} from '../../../../types/AuthContextType';
 import AuthErrorComponent from '../../../../Helpers/AuthErrorComponent';
 import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
 import Consts from '../../../../Helpers/Consts';
+import {Profile} from '../../../../types/ProfileType';
 
 type ProfileSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileSettings'>,
@@ -32,23 +33,29 @@ type ProfileSettingsProps = CompositeScreenProps<
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
   const {
     userProfile,
-    setUserProfile,
     checkValidEmail,
     checkValidPhone,
     checkValidUsername,
     clearAuthErrors,
     addAuthError,
+    updateUserProfile,
   } = useContext(authContext) as AuthContextType;
 
-  const text = Consts.settingsText;
   const ErrorMessages = Consts.authErrorMessages;
 
   const fieldsToRender = ['username', 'email', 'phone'];
-  const [formData, setFormData] = useState({
-    username: userProfile.username,
-    email: userProfile.email,
-    phone: userProfile.phone,
-  });
+
+  enum sectionEnum {
+    username = 0,
+    email = 1,
+    phone = 2,
+  }
+
+  const [updateSection] = useState([
+    userProfile.username,
+    userProfile.email,
+    userProfile.phone ?? '',
+  ]); //Check if the section has been updated array
 
   const [saved, setSaved] = useState(false); //Check if the form has been saved
 
@@ -56,6 +63,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
 
   //Render the input box for each field
   const renderProfileField = (field: string, index: number) => {
+    const value =
+      updateSection[index] && updateSection[index].length > 0
+        ? updateSection[index]
+        : '';
     const capitalizedField = field.charAt(0).toUpperCase() + field.slice(1);
     //field is the key of the object from userProfile which will be extracted
     return (
@@ -63,54 +74,65 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
         className="w-2/3 text-left ml-auto mr-auto mt-3 mb-3 h-12"
         placeholder={capitalizedField}
         placeholderTextColor={'grey'}
-        value={formData[field as keyof typeof formData]}
-        onChange={e =>
-          onChange(field as keyof typeof formData, e.nativeEvent.text)
-        }
+        value={value}
+        onChange={e => onChange(index, e.nativeEvent.text)}
         key={index}
       />
     );
   };
 
   //Update the form data when the user types
-  const onChange = (key: keyof typeof formData, value: string) => {
+  const onChange = (index: number, value: string) => {
     setEditing(true);
     if (saved) {
       setSaved(false);
     }
     clearAuthErrors();
-    setFormData({...formData, [key]: value});
+    updateSection[index] = value;
+  };
+
+  const resetUpdateSection = (newProfile: Profile) => {
+    //The reason I am doing this is to reflect the changes in the form since userProfile won't update fast enough in the db
+    //This is a temporary solution and will probably be removed in the future and changed when the full backend is finished
+    updateSection[sectionEnum.username] = newProfile.username;
+    updateSection[sectionEnum.email] = newProfile.email;
+    updateSection[sectionEnum.phone] = newProfile.phone ?? '';
   };
 
   //Save the form data when the user clicks save
   const handleSave = () => {
-    fieldsToRender.forEach(field => {
-      const key = field as keyof typeof formData;
-      //Check if the field has been changed and is not empty
-      if (
-        formData[key] !== userProfile[key] &&
-        formData[key] !== '' &&
-        editing
-      ) {
-        if (validate(key)) {
-          if (key === 'phone') {
-            const formattedNumber = formatPhoneNumber(formData[key]);
+    let updated = false;
+    if (editing) {
+      updateSection.forEach((section: string, index: number) => {
+        if (section.length > 0 && validate(index)) {
+          if ((index = sectionEnum.phone)) {
+            const formattedNumber = formatPhoneNumber(updateSection[index]);
             if (formattedNumber) {
-              formData[key] = formattedNumber;
+              updateSection[index] = formattedNumber;
             } else {
               addAuthError(ErrorMessages.invalidPhone);
-              formData[key] = userProfile[key];
+              setSaved(false);
+              return;
             }
           }
-          //Update user profile in db
-          setUserProfile({...userProfile, [key]: formData[key]});
-          setSaved(true);
-          setEditing(false);
+          updated = true;
         } else {
           setSaved(false);
         }
+      });
+      if (updated) {
+        const newUserProfile = {
+          ...userProfile,
+          username: updateSection[sectionEnum.username],
+          email: updateSection[sectionEnum.email],
+          phone: updateSection[sectionEnum.phone],
+        };
+        updateUserProfile(newUserProfile);
+        resetUpdateSection(newUserProfile);
+        setSaved(true);
       }
-    });
+      setEditing(false);
+    }
   };
 
   //Format the phone number to be (xxx)xxx-xxxx
@@ -126,14 +148,14 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
   };
 
   //Validate the form data
-  const validate = (key: keyof typeof formData) => {
-    switch (key) {
-      case 'username':
-        return checkValidUsername(formData[key]);
-      case 'email':
-        return checkValidEmail(formData[key]);
-      case 'phone':
-        return checkValidPhone(formData[key]);
+  const validate = (index: number) => {
+    switch (index) {
+      case sectionEnum.username:
+        return checkValidUsername(updateSection[sectionEnum.username]);
+      case sectionEnum.email:
+        return checkValidEmail(updateSection[sectionEnum.email]);
+      case sectionEnum.phone:
+        return checkValidPhone(updateSection[sectionEnum.phone]);
       default:
         return false;
     }
@@ -143,18 +165,18 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
     userProfile && (
       <WrapperView className="pb-0">
         <KeyboardAvoidingViewScroll>
-          <Title className="mt-10 mb-3">{text.profileTitle}</Title>
-          {saved && <ProfileSubtitle>{text.saved}</ProfileSubtitle>}
+          <Title className="mt-10 mb-3">Profile Settings</Title>
+          {saved && <ProfileSubtitle>Profile Updated</ProfileSubtitle>}
           <SettingsView>
             {fieldsToRender.map((key, index) => renderProfileField(key, index))}
           </SettingsView>
           {editing ? (
             <MainButton className="w-1/3 mb-3" onPress={handleSave}>
-              <MainButtonText>{text.save}</MainButtonText>
+              <MainButtonText>Save</MainButtonText>
             </MainButton>
           ) : (
             <SettingsSubtitle className="mb-3">
-              {text.noChanges}
+              No changes made
             </SettingsSubtitle>
           )}
           {AuthErrorComponent && <AuthErrorComponent />}

@@ -9,10 +9,6 @@ interface DropdownListModesType {
   [key: string]: string;
 }
 
-interface SettingsTextType {
-  [key: string]: string | hashType;
-}
-
 export default interface ConstsType {
   CardFormEnum: any;
   authErrorMessages: AuthErrorMessagesType;
@@ -22,9 +18,4 @@ export default interface ConstsType {
   dummyCardRewards: any[];
   cardItemSeparatorWidth: number;
   addCard: Card;
-  settingsText: SettingsTextType;
 };
-
-export interface hashType {
-  [key: string]: string;
-}
