@@ -11,7 +11,6 @@ import {
   CompanyStackNavigator,
 } from './StackNavigator';
 import {NavigationRoutesType} from '../types/NavigationRoutesType';
-import {View} from 'react-native';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
