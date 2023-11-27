@@ -10,8 +10,6 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import AuthContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import {
-  MainButtonText,
-  MainButton,
   Subtitle,
   Title,
   WrapperView,
