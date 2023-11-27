@@ -240,14 +240,39 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   );
 
   const updateUserProfile = async (newUserProfile: Profile) => {
-    console.log('User Profile Was Updated in Front End To: ', newUserProfile);
-    setUserProfile(newUserProfile);
+    //setUserProfile(newUserProfile);
     // We need to do this what is here is temporary
-
-    //refreshUserProfile();
+    const headers = {
+      authorization: `Bearer ${userToken as string}`,
+      'X-Preferred-Language': lang,
+      'Content-Type': 'application/json',
+    };
+    const body = {
+      username: newUserProfile.username,
+      phone: newUserProfile.phone,
+    };
+    console.log(JSON.stringify(body));
+    await fetch(`${baseURL}users`, {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(body),
+    })
+      .then(async res => {
+        res.json().then(result => {
+          console.log(result);
+        });
+        if (res.status === 200) {
+          await refreshUserProfile();
+        } else {
+          addAuthError(ErrorMessages.errorUpdatingUser);
+        }
+      })
+      .catch(() => {
+        console.log('error');
+        addAuthError(ErrorMessages.errorUpdatingUser);
+      });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshUserProfile = async () => {
     if (!userToken) {
       // need to replace with refresh token logic,

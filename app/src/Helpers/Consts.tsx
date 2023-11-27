@@ -26,6 +26,7 @@ const AuthErrorMessages = {
     'Invalid Username\nUsername must be more then 3 characters\nUsername must only contain letters',
   invalidPhone:
     'Invalid Phone Number\nMust be 10 digits in any acceptable phone number format',
+  errorUpdatingUser: 'Error Updating User',
 };
 
 enum CardFormEnum {

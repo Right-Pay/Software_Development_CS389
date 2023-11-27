@@ -33,7 +33,7 @@ type ProfileSettingsProps = CompositeScreenProps<
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
   const {
     userProfile,
-    checkValidEmail,
+    //checkValidEmail,
     checkValidPhone,
     checkValidUsername,
     clearAuthErrors,
@@ -43,17 +43,17 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
 
   const ErrorMessages = Consts.authErrorMessages;
 
-  const fieldsToRender = ['username', 'email', 'phone'];
+  const fieldsToRender = ['username', /*'email',*/ 'phone'];
 
   enum sectionEnum {
     username = 0,
-    email = 1,
-    phone = 2,
+    //email = 1,
+    phone = 1, //2,
   }
 
   const [updateSection] = useState([
     userProfile.username,
-    userProfile.email,
+    //userProfile.email,
     userProfile.phone ?? '',
   ]); //Check if the section has been updated array
 
@@ -95,7 +95,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
     //The reason I am doing this is to reflect the changes in the form since userProfile won't update fast enough in the db
     //This is a temporary solution and will probably be removed in the future and changed when the full backend is finished
     updateSection[sectionEnum.username] = newProfile.username;
-    updateSection[sectionEnum.email] = newProfile.email;
+    //updateSection[sectionEnum.email] = newProfile.email; Reason is Auth0 and we are lazy
     updateSection[sectionEnum.phone] = newProfile.phone ?? '';
   };
 
@@ -124,7 +124,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
         const newUserProfile = {
           ...userProfile,
           username: updateSection[sectionEnum.username],
-          email: updateSection[sectionEnum.email],
+          //email: updateSection[sectionEnum.email],  Reason is Auth0 and we are lazy
           phone: updateSection[sectionEnum.phone],
         };
         updateUserProfile(newUserProfile);
@@ -152,8 +152,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
     switch (index) {
       case sectionEnum.username:
         return checkValidUsername(updateSection[sectionEnum.username]);
-      case sectionEnum.email:
-        return checkValidEmail(updateSection[sectionEnum.email]);
+      /*case sectionEnum.email:
+        return checkValidEmail(updateSection[sectionEnum.email]); Reason is Auth0 and we are lazy */
       case sectionEnum.phone:
         return checkValidPhone(updateSection[sectionEnum.phone]);
       default:
