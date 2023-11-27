@@ -34,6 +34,7 @@ const RightPayApp = () => {
       keyboardDidShowListener.remove();
     };
   }, []);
+
   return (
     <AuthState>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
@@ -43,6 +44,7 @@ const RightPayApp = () => {
               flex: 1,
               justifyContent: 'center',
               flexDirection: 'column',
+              zIndex: 0,
             }}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             enabled={isKeyboardVisible}
