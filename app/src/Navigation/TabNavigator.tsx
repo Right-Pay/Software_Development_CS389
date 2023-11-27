@@ -8,7 +8,6 @@ import {
   ProfileStackNavigator,
   LocationStackNavigator,
   WalletStackNavigator,
-  CompanyStackNavigator,
 } from './StackNavigator';
 import {NavigationRoutesType} from '../types/NavigationRoutesType';
 
@@ -40,11 +39,11 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         component={HomeStackNavigator}
         options={tabOptions('Home')}
       />
-      <Tab.Screen
+      {/* {<Tab.Screen
         name="CompanyStack"
         component={CompanyStackNavigator}
         options={tabOptions('Company')}
-      />
+      />} */}
       <Tab.Screen
         name="WalletStack"
         component={WalletStackNavigator}
