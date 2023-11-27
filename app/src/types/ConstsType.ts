@@ -1,18 +1,14 @@
 import {Card} from './CardType';
 import {Profile} from './ProfileType';
 
-interface AuthErrorMessagesType {
-  [key: string]: string;
-}
-
-interface DropdownListModesType {
+interface hashType {
   [key: string]: string;
 }
 
 export default interface ConstsType {
   CardFormEnum: any;
-  authErrorMessages: AuthErrorMessagesType;
-  DropdownListModes: DropdownListModesType;
+  authErrorMessages: hashType;
+  DropdownListModes: hashType;
   dummyProfile: Profile;
   dummyCards: Card[];
   dummyCardRewards: any[];
