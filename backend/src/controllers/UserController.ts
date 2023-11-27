@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import UserModel from '../models/UserModel';
-import { IJsonResponse } from '../types/jsonResponse';
-import { User } from '../types/userTypes';
 import i18n from '../config/i18n';
-import CardModelInstance from '../models/CardModel';
-import { Card } from '../types/cardTypes';
 import BankModelInstance from '../models/BankModel';
 import BrandModelInstance from '../models/BrandModel';
+import CardModelInstance from '../models/CardModel';
+import UserModel from '../models/UserModel';
+import { Card } from '../types/cardTypes';
+import { IJsonResponse } from '../types/jsonResponse';
+import { User } from '../types/userTypes';
 
 class UserController {
   async getUser(req: Request, res: Response) {
@@ -66,6 +66,45 @@ class UserController {
       const newUser = await UserModel.create(userData);
       response.data = newUser;
       res.status(201).json(response);
+    } catch (error: any) {
+      response.success = false;
+      response.message = error.message;
+      response.data = {};
+      res.status(500).json(response);
+    }
+    return response;
+  }
+
+  async updateUser(req: Request, res: Response) {
+    const response: IJsonResponse = {
+      message: 'TLX API - Update User',
+      success: true,
+      data: {}
+    };
+    const userData = req.body as User;
+    if (!req.auth?.payload.sub) {
+      response.success = false;
+      response.message = i18n.t('error.default');
+      res.status(401).json(response);
+      return;
+    }
+    userData.auth_id = req.auth?.payload.sub;
+    if (!userData.username) {
+      response.success = false;
+      response.message = i18n.t('error.missingFields');
+      res.status(400).json(response);
+      return;
+    }
+    try {
+      const userUpdated = await UserModel.update(userData);
+      if (userUpdated) {
+        response.data = userUpdated;
+        res.json(response);
+      } else {
+        response.success = false;
+        response.message = i18n.t('error.userNotFound');
+        res.status(404).json(response);
+      }
     } catch (error: any) {
       response.success = false;
       response.message = error.message;
