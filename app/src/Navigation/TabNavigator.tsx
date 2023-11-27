@@ -8,7 +8,6 @@ import {
   ProfileStackNavigator,
   LocationStackNavigator,
   WalletStackNavigator,
-  CompanyStackNavigator,
 } from './StackNavigator';
 import {NavigationRoutesType} from '../types/NavigationRoutesType';
 
