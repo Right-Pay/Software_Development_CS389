@@ -39,8 +39,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
     <WrapperView>
       <Title className="top-10 mb-10">Profile</Title>
       <ProfileView className="justify-start">
-        <ProfileSubtitle>Username: {userProfile.username}</ProfileSubtitle>
-        <ProfileSubtitle>Email: {userProfile.email}</ProfileSubtitle>
+        <ProfileSubtitle numberOfLines={1}>
+          Username: {userProfile.username}
+        </ProfileSubtitle>
+        <ProfileSubtitle numberOfLines={1}>
+          Email: {userProfile.email}
+        </ProfileSubtitle>
         {userProfile.phone && userProfile.phone.length > 0 ? (
           <ProfileSubtitle>{`Phone: ${userProfile.phone}`}</ProfileSubtitle>
         ) : null}

@@ -105,7 +105,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({navigation}) => {
     if (editing) {
       updateSection.forEach((section: string, index: number) => {
         if (section.length > 0 && validate(index)) {
-          if ((index = sectionEnum.phone)) {
+          if (index === sectionEnum.phone) {
             const formattedNumber = formatPhoneNumber(updateSection[index]);
             if (formattedNumber) {
               updateSection[index] = formattedNumber;

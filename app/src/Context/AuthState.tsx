@@ -240,13 +240,14 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   );
 
   const updateUserProfile = async (newUserProfile: Profile) => {
-    console.log(newUserProfile);
+    console.log('User Profile Was Updated in Front End To: ', newUserProfile);
     setUserProfile(newUserProfile);
     // We need to do this what is here is temporary
 
     //refreshUserProfile();
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshUserProfile = async () => {
     if (!userToken) {
       // need to replace with refresh token logic,

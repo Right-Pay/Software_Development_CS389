@@ -73,7 +73,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <Title className="top-10">Settings</Title>
-      <Subtitle className="top-10 mb-10">{userProfile.username}</Subtitle>
+      <Subtitle className="top-10 mb-10 ml-5 mr-5" numberOfLines={1}>
+        {userProfile.username}
+      </Subtitle>
       <SettingsView className="left-0 divide-dark-green divide-solid divide-y-2 height-screen pt-0">
         {settingsPages.map((setting, index) =>
           renderSettingsNav(setting, index),
