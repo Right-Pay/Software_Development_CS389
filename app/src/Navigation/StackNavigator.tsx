@@ -17,6 +17,7 @@ import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSetti
 import {
   getFocusedRouteNameFromRoute,
   RouteProp,
+  useRoute,
 } from '@react-navigation/native';
 import type {
   BottomTabNavigationProp,
@@ -27,6 +28,7 @@ import WalletScreen from '../Components/Screens/Wallet/Wallet';
 import locationContext from '../Context/locationContext';
 import {LocationContext} from '../types/LocationContextType';
 import CardSettings from '../Components/Screens/Profile/Settings/CardSettings';
+import {ScreenStackHeaderLeftView} from 'react-native-screens';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
@@ -89,14 +91,19 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
     () => hideTabBar(navigation, route, 'ProfileScreen'),
     [navigation, route],
   );
+
   return (
     <ProfileStack.Navigator
       initialRouteName="ProfileScreen"
       screenOptions={{
         ...screenOptionStyle,
-        headerTitle: address ? address.displayName.text : '',
+        headerTitle: 'Settings',
       }}>
-      <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <ProfileStack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{headerTitle: address ? address.displayName.text : ''}}
+      />
       <ProfileStack.Screen name="ProfileSettings" component={ProfileSettings} />
       <ProfileStack.Screen name="SettingsScreen" component={SettingsScreen} />
       <ProfileStack.Screen name="GeneralSettings" component={GeneralSettings} />
@@ -123,12 +130,17 @@ const CompanyStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 };
 
 const WalletStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {address} = React.useContext(locationContext) as LocationContext;
   React.useLayoutEffect(
-    () => hideTabBar(navigation, route, 'WalletScreen'),
+    () => hideTabBar(navigation, route, 'ProfileScreen'),
     [navigation, route],
   );
   return (
-    <WalletStack.Navigator screenOptions={screenOptionStyle}>
+    <WalletStack.Navigator
+      screenOptions={{
+        ...screenOptionStyle,
+        headerTitle: address ? address.displayName.text : '',
+      }}>
       <WalletStack.Screen name="WalletScreen" component={WalletScreen} />
     </WalletStack.Navigator>
   );
