@@ -6,6 +6,7 @@
     "userCardNotLinked": "¡La tarjeta no pudo ser vinculada al usuario!",
     "userCardAlreadyLinked": "¡La tarjeta ya está vinculada al usuario!",
     "userCardNotUnlinked": "¡La tarjeta no pudo ser desvinculada del usuario!",
+    "userNotUpdated": "¡El usuario no pudo ser actualizado!",
 
     "bankNotFound": "¡El banco no existe!",
     "bankFound": "¡El banco ya existe!",

@@ -1,13 +1,13 @@
 // generate a user model that will be used to interact with the database
 import { dbPool } from "../config/config";
-import { User } from "../types/userTypes";
 import i18n from '../config/i18n';
-import { Card, Reward } from "../types/cardTypes";
-import CardModelInstance from "./CardModel";
 import { Bank } from "../types/bankTypes";
-import BankModelInstance from "./BankModel";
 import { Brand } from "../types/brandTypes";
+import { Card } from "../types/cardTypes";
+import { User } from "../types/userTypes";
+import BankModelInstance from "./BankModel";
 import BrandModelInstance from "./BrandModel";
+import CardModelInstance from "./CardModel";
 
 export class UserModel {
 
@@ -66,6 +66,28 @@ export class UserModel {
       } else {
         return null;
       }
+    } catch (err: any) {
+      console.log('DB Error', err);
+      const userFriendlyError = i18n.t([err.message, 'error.default']);
+      throw new Error(userFriendlyError);
+    }
+  }
+
+  async update(user: User): Promise<User> {
+    try {
+      const client = await dbPool.connect();
+      const userCheck = await this.get(user.auth_id);
+      if (userCheck === null) {
+        throw new Error('error.userNotFound');
+      }
+      const sql = 'UPDATE rp_users SET username = $1, phone = $2 WHERE auth_id = $3 RETURNING *';
+      const values = [user.username, user.phone, user.auth_id];
+      const result = await client.query(sql, values);
+      if (!result.rows.length) {
+        throw new Error('error.userNotUpdated');
+      }
+      client.release();
+      return result.rows[0];
     } catch (err: any) {
       console.log('DB Error', err);
       const userFriendlyError = i18n.t([err.message, 'error.default']);

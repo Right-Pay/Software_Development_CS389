@@ -10,8 +10,6 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import AuthContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
 import {
-  MainButtonText,
-  MainButton,
   Subtitle,
   Title,
   WrapperView,
@@ -23,24 +21,13 @@ type HomeScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
-  const {signOut, userProfile} = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
+const HomeScreen: React.FC<HomeScreenProps> = () => {
+  const {userProfile} = React.useContext(AuthContext) as AuthContextType;
 
   return (
     <WrapperView>
       <Title className="mt-20">Home Screen</Title>
       <Subtitle>Hello {userProfile.username}</Subtitle>
-      <MainButton
-        onPress={() =>
-          navigation.navigate('ProfileStack', {screen: 'ProfileScreen'})
-        }>
-        <MainButtonText>Go to Profile</MainButtonText>
-      </MainButton>
-      <MainButton onPress={() => signOut()}>
-        <MainButtonText>Logout</MainButtonText>
-      </MainButton>
     </WrapperView>
   );
 };

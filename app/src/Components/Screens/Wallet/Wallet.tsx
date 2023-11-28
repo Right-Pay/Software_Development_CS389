@@ -101,7 +101,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
             className={deleteCard ? 'opacity-50' : 'opacity-100'}>
             <StyledView className="relative flex-1 flex-col h-full">
               <StyledView className="text-center">
-                <CardText className="text-left font-bold truncate px-2">
+                <CardText
+                  className="text-left font-bold truncate px-2"
+                  numberOfLines={2}>
                   {item.card_name}
                 </CardText>
               </StyledView>
