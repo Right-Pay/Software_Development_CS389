@@ -8,8 +8,6 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import {
-  MainButtonText,
-  MainButton,
   Title,
   WrapperView,
   ProfileView,
@@ -24,10 +22,8 @@ type ProfileScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
-  const {userProfile, signOut} = React.useContext(
-    authContext,
-  ) as AuthContextType;
+const ProfileScreen: React.FC<ProfileScreenProps> = () => {
+  const {userProfile} = React.useContext(authContext) as AuthContextType;
 
   const cardCount = userProfile.cards.length;
   const rewardCount =
@@ -39,7 +35,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
     <WrapperView>
       <Title className="top-10 mb-10">Profile</Title>
       <ProfileView className="justify-start">
-        <ProfileSubtitle numberOfLines={1}>
+        <ProfileSubtitle numberOfLines={1} className="mt-10">
           Username: {userProfile.username}
         </ProfileSubtitle>
         <ProfileSubtitle numberOfLines={1}>
@@ -56,14 +52,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
           {`You have ${rewardCount} reward${rewardCount !== 1 ? 's' : ''}`}
         </ProfileSubtitle>
       </ProfileView>
-      <MainButton
-        onPress={() => navigation.navigate('SettingsScreen')}
-        className="absolute top-0 right-0">
-        <MainButtonText>Settings</MainButtonText>
-      </MainButton>
-      <MainButton className="absolute top-0 left-0" onPress={() => signOut()}>
-        <MainButtonText>Logout</MainButtonText>
-      </MainButton>
     </WrapperView>
   );
 };

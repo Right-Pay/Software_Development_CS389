@@ -11,7 +11,6 @@ import type {
   NavigationRoutesType,
   WalletNavigationRoutesType,
 } from '../types/NavigationRoutesType';
-import SettingsScreen from '../Components/Screens/Profile/Settings/Settings';
 import LocationScreen from '../Components/Screens/Location/Location';
 import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSettings';
 import {
@@ -81,7 +80,7 @@ const ProfileStackNavigator: React.FC<StackProps> = props => {
   const {navigation, route} = props;
 
   React.useLayoutEffect(
-    () => hideTabBar(navigation, route, ''),
+    () => hideTabBar(navigation, route, 'ProfileScreen'),
     [navigation, route],
   );
 
@@ -105,7 +104,6 @@ const ProfileStackNavigator: React.FC<StackProps> = props => {
           name="ProfileSettings"
           component={ProfileSettings}
         />
-        <ProfileStack.Screen name="SettingsScreen" component={SettingsScreen} />
         <ProfileStack.Screen
           name="GeneralSettings"
           component={GeneralSettings}

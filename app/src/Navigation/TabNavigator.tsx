@@ -58,9 +58,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       <Tab.Screen
         name="ProfileStack"
         component={ProfileStackNavigator}
-        options={{
-          tabBarButton: () => null,
-        }}
+        options={tabOptions('Profile')}
       />
     </Tab.Navigator>
   );

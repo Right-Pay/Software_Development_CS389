@@ -26,7 +26,6 @@ export type HomeNavigationRoutesType = {
 export type ProfileNavigationRoutesType = {
   ProfileScreen: undefined;
   ProfileSettings: undefined;
-  SettingsScreen: undefined;
   GeneralSettings: undefined;
   CardSettings: undefined;
 };

@@ -26,4 +26,6 @@ export interface AppContext {
   newCardBin: number;
   isKeyboardVisible: boolean;
   appStateVisible: string;
+  setShowMoreSettings: (_showMoreSettings: boolean) => void;
+  showMoreSettings: boolean;
 }
