@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import React, { PropsWithChildren } from 'react';
+import { useColorScheme } from 'react-native';
 import Icon from 'react-native-ionicons';
 import { NavigationRoutesType } from '../types/NavigationRoutesType';
 import {
@@ -50,15 +51,21 @@ const tabBarIconFilter = (
 };
 
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
+
+  const lightColor = '#Ffffff';
+  const darkColor = '#272727';
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveBackgroundColor: '#e6ffe3',
-        tabBarActiveTintColor: '#4d654e',
-        tabBarInactiveBackgroundColor: '#4d654e',
-        tabBarInactiveTintColor: '#e6ffe3',
+        tabBarActiveBackgroundColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
+        tabBarActiveTintColor: isDarkTheme ? darkColor : lightColor,
+        tabBarInactiveBackgroundColor: isDarkTheme ? darkColor : lightColor,
+        tabBarInactiveTintColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
         tabBarIcon: ({color, size}) => tabBarIconFilter({color, size}, route),
         tabBarAccessibilityLabel: route.name,
         tabBarHideOnKeyboard: true,
