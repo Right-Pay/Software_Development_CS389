@@ -83,7 +83,7 @@ const SettingsPopup = (props: any, name: string) => {
       }}>
       <TouchableWithoutFeedback onPress={() => setShowMoreSettings(false)}>
         <View className="flex-1 flex-col justify-end items-center w-full h-1/2">
-          <View className="h-1/2 w-full border-2 rounded-t-3xl bg-dark-green p-6 items-center">
+          <View className="h-1/2 w-full border-t-2 rounded-t-3xl border-slate-500 bg-dark-green p-6 items-center">
             <Title className="text-center text-light-green">Settings</Title>
             <SettingsView className="left-0 height-full pt-0 w-screen border-0">
               {settingsPages.map((setting, index) =>

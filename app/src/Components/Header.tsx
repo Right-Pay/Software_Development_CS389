@@ -16,11 +16,11 @@ const TopBar = (props: any, stackName?: string): header => {
   const showMoreButton = () => {
     return (
       <Pressable
-        className="flex-1 flex-col justify-center items-center text-center"
+        className="flex-1 flex-col justify-center items-center text-center w-1/6 m-0 overflow-visible"
         onPress={() => {
           setShowMoreSettings(!showMoreSettings);
         }}>
-        <Text className="text-5xl text-light-green p-0">...</Text>
+        <Text className="text-base text-light-green p-0 m-0">...</Text>
       </Pressable>
     );
   };
@@ -41,12 +41,14 @@ const TopBar = (props: any, stackName?: string): header => {
   return {
     header: () => {
       return (
-        <View className="flex flex-row justify-between items-center w-screen h-24 bg-dark-green pl-8 pr-8 pt-6 border-b-3 border-slate-600">
-          <Text
-            className="text-xl font-bold text-light-green w-5/6"
-            numberOfLines={1}>
-            {address ? address.displayName.text : ''}
-          </Text>
+        <View className="flex flex-row items-center w-screen h-24 bg-dark-green pl-6 pr-2 pt-6 border-b-3 border-slate-600">
+          <View className="w-5/6">
+            <Text
+              className="text-xl font-bold text-light-green w-full"
+              numberOfLines={1}>
+              {address ? address.displayName.text : ''}
+            </Text>
+          </View>
           {stackName === 'SettingsStack' ? backButton() : showMoreButton()}
           {SettingsPopup(props, props.route.key)}
         </View>
