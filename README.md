@@ -46,6 +46,10 @@ pod install
 cd ..
 ```
 
+## Ion Icons
+
+Follow these instructions: https://aboutreact.com/react-native-ionicons/
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file

@@ -25,13 +25,12 @@ const tabOptions = (label: string) => {
 };
 
 type TabBarType = {
-  focused: boolean;
   color: string;
   size: number;
 };
 
 const tabBarIconFilter = (
-  {focused, color, size}: TabBarType,
+  {color, size}: TabBarType,
   route: RouteProp<NavigationRoutesType, keyof NavigationRoutesType>,
 ) => {
   let iconName = 'home';
@@ -55,14 +54,14 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         headerShown: false,
-        tabBarLabelStyle: {fontSize: 12, fontWeight: 'bold'},
+        tabBarShowLabel: false,
         tabBarActiveBackgroundColor: '#e6ffe3',
         tabBarActiveTintColor: '#4d654e',
         tabBarInactiveBackgroundColor: '#4d654e',
         tabBarInactiveTintColor: '#e6ffe3',
-        tabBarIcon: ({focused, color, size}) =>
-          tabBarIconFilter({focused, color, size}, route),
-        //tabBarStyle: {shadowColor: 'red'},
+        tabBarIcon: ({color, size}) => tabBarIconFilter({color, size}, route),
+        tabBarAccessibilityLabel: route.name,
+        tabBarHideOnKeyboard: true,
       })}>
       <Tab.Screen
         name="HomeStack"
