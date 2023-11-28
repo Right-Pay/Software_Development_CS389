@@ -32,6 +32,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         tabBarActiveTintColor: '#4d654e',
         tabBarInactiveBackgroundColor: '#4d654e',
         tabBarInactiveTintColor: '#e6ffe3',
+
         //tabBarStyle: {shadowColor: 'red'},
       }}>
       <Tab.Screen
@@ -57,7 +58,9 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       <Tab.Screen
         name="ProfileStack"
         component={ProfileStackNavigator}
-        options={tabOptions('Profile')}
+        options={{
+          tabBarButton: () => null,
+        }}
       />
     </Tab.Navigator>
   );
