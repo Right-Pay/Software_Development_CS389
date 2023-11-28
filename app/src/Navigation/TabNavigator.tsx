@@ -1,15 +1,18 @@
-import React, {PropsWithChildren} from 'react';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import {RouteProp} from '@react-navigation/native';
+import React, {PropsWithChildren} from 'react';
+import {useColorScheme} from 'react-native';
+import Icon from 'react-native-ionicons';
+import {NavigationRoutesType} from '../types/NavigationRoutesType';
 import {
   HomeStackNavigator,
-  ProfileStackNavigator,
   LocationStackNavigator,
+  ProfileStackNavigator,
   WalletStackNavigator,
 } from './StackNavigator';
-import {NavigationRoutesType} from '../types/NavigationRoutesType';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
@@ -22,19 +25,51 @@ const tabOptions = (label: string) => {
   return options;
 };
 
+type TabBarType = {
+  color: string;
+  size: number;
+};
+
+const tabBarIconFilter = (
+  {color, size}: TabBarType,
+  route: RouteProp<NavigationRoutesType, keyof NavigationRoutesType>,
+) => {
+  let iconName = 'home';
+
+  if (route.name === 'HomeStack') {
+    iconName = 'home';
+  } else if (route.name === 'ProfileStack') {
+    iconName = 'person';
+  } else if (route.name === 'WalletStack') {
+    iconName = 'wallet';
+  } else if (route.name === 'LocationStack') {
+    iconName = 'pin';
+  }
+
+  // You can return any component that you like here!
+  return <Icon name={iconName} size={size} color={color} />;
+};
+
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
+
+  const lightColor = '#Ffffff';
+  const darkColor = '#272727';
+
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({route}) => ({
         headerShown: false,
-        tabBarLabelStyle: {fontSize: 12, fontWeight: 'bold'},
-        tabBarActiveBackgroundColor: '#e6ffe3',
-        tabBarActiveTintColor: '#4d654e',
-        tabBarInactiveBackgroundColor: '#4d654e',
-        tabBarInactiveTintColor: '#e6ffe3',
-
-        //tabBarStyle: {shadowColor: 'red'},
-      }}>
+        tabBarShowLabel: false,
+        tabBarActiveBackgroundColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
+        tabBarActiveTintColor: isDarkTheme ? darkColor : lightColor,
+        tabBarInactiveBackgroundColor: isDarkTheme ? darkColor : lightColor,
+        tabBarInactiveTintColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
+        tabBarIcon: ({color, size}) => tabBarIconFilter({color, size}, route),
+        tabBarAccessibilityLabel: route.name,
+        tabBarHideOnKeyboard: true,
+      })}>
       <Tab.Screen
         name="HomeStack"
         component={HomeStackNavigator}
