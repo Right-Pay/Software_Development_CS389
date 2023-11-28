@@ -1,5 +1,5 @@
 import ConstsType from '../types/ConstsType';
-import {Card, Reward} from '../types/CardType';
+import { Card, Reward } from '../types/CardType';
 
 const AuthErrorMessages = {
   invalidEmail: 'Invalid Email',

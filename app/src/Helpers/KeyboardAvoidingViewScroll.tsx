@@ -1,13 +1,13 @@
-import {PropsWithChildren, useContext, useEffect, useRef} from 'react';
-import {ScrollView} from 'react-native';
+import { PropsWithChildren, useContext, useEffect, useRef } from 'react';
+import { ScrollView } from 'react-native';
 import context from '../Context/context';
-import {AppContext} from '../types/AppContextType';
-import {KeyboardAvoidingScroll} from './StylizedComponents';
+import { AppContext } from '../types/AppContextType';
+import { KeyboardAvoidingScroll } from './StylizedComponents';
 import React from 'react';
 
-const KeyboardAvoidingViewScroll = ({children}: PropsWithChildren) => {
+const KeyboardAvoidingViewScroll = ({ children }: PropsWithChildren) => {
   const scrollViewRef = useRef<ScrollView>(null);
-  const {isKeyboardVisible} = useContext(context) as AppContext;
+  const { isKeyboardVisible } = useContext(context) as AppContext;
 
   useEffect(() => {
     setTimeout(() => {

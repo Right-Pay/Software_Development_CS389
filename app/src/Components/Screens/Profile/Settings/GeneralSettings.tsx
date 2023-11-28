@@ -1,13 +1,13 @@
-import React, {useContext, useEffect} from 'react';
-import type {PropsWithChildren} from 'react';
-import {Linking} from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import type { PropsWithChildren } from 'react';
+import { Linking } from 'react-native';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import type {CompositeScreenProps} from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
 import {
   Title,
   WrapperView,
@@ -17,11 +17,11 @@ import {
   MainButtonText,
 } from '../../../../Helpers/StylizedComponents';
 import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
-import {Switch} from 'react-native-switch';
+import { Switch } from 'react-native-switch';
 import context from '../../../../Context/context';
-import {AppContext} from '../../../../types/AppContextType';
+import { AppContext } from '../../../../types/AppContextType';
 import locationContext from '../../../../Context/locationContext';
-import {LocationContext} from '../../../../types/LocationContextType';
+import { LocationContext } from '../../../../types/LocationContextType';
 
 type GeneralSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'GeneralSettings'>,
@@ -30,8 +30,8 @@ type GeneralSettingsProps = CompositeScreenProps<
   PropsWithChildren;
 
 const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
-  const {appStateVisible} = useContext(context) as AppContext;
-  const {requestLocationPermission, locationGrantType} = useContext(
+  const { appStateVisible } = useContext(context) as AppContext;
+  const { requestLocationPermission, locationGrantType } = useContext(
     locationContext,
   ) as LocationContext;
 
@@ -75,7 +75,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
             circleActiveColor={'#e6ffe3'}
             circleInActiveColor={'#4d654e'}
             // eslint-disable-next-line react-native/no-inline-styles
-            innerCircleStyle={{alignItems: 'center', justifyContent: 'center'}} // style for inner animated circle for what you (may) be rendering inside the circle
+            innerCircleStyle={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }} // style for inner animated circle for what you (may) be rendering inside the circle
             renderActiveText={false}
             renderInActiveText={false}
             switchLeftPx={0.8} // denominator for logic when sliding to TRUE position. Higher number = more space from RIGHT of the circle to END of the slider

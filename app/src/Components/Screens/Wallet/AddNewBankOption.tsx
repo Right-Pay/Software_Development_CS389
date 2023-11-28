@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Keyboard, KeyboardAvoidingView, Modal, Platform } from 'react-native';
 import {
   AddCFormOverlayView,
   FormButton,
@@ -7,18 +7,17 @@ import {
   FormInputBox,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import {AppContext} from '../../../types/AppContextType';
+import { AppContext } from '../../../types/AppContextType';
 import Context from '../../../Context/context';
 import authContext from '../../../Context/authContext';
-import {AuthContextType} from '../../../types/AuthContextType';
-import {OptionsPropsType} from '../../../Helpers/Dropdown';
+import { AuthContextType } from '../../../types/AuthContextType';
+import { OptionsPropsType } from '../../../Helpers/Dropdown';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
-  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
-    authContext,
-  ) as AuthContextType;
-  const {setUpdatingDropdown, validateCardForm, setCardForms, CardForms} =
+  const { addAuthError, clearAuthErrors, AuthErrorComponent } =
+    React.useContext(authContext) as AuthContextType;
+  const { setUpdatingDropdown, validateCardForm, setCardForms, CardForms } =
     React.useContext(Context) as AppContext;
 
   //options state
@@ -27,20 +26,20 @@ const AddNewBankOption = (props: OptionsPropsType) => {
   //handlers
   const handleSubmit = () => {
     clearAuthErrors();
-    const errors = validateCardForm({bankName: newOption});
+    const errors = validateCardForm({ bankName: newOption });
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     } else {
       setUpdatingDropdown(true);
-      setCardForms({...CardForms, AddBankOption: false});
+      setCardForms({ ...CardForms, AddBankOption: false });
       props.setOption(newOption);
     }
   };
 
   const closeModal = () => {
     setUpdatingDropdown(true);
-    setCardForms({...CardForms, AddBankOption: false});
+    setCardForms({ ...CardForms, AddBankOption: false });
     clearAuthErrors();
   };
 

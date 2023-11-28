@@ -1,5 +1,5 @@
-import {CompositeNavigationProp} from '@react-navigation/native';
-import {PropsWithChildren} from 'react';
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { PropsWithChildren } from 'react';
 
 type ComponentPropType = {
   navigation: CompositeNavigationProp<any, any> | null;

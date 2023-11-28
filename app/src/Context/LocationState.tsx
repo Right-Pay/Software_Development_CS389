@@ -6,18 +6,18 @@ import React, {
   useState,
 } from 'react';
 import LocationContext from './locationContext';
-import {Location, Place, PlaceLocation} from '../types/Location';
-import {PermissionsAndroid, Platform} from 'react-native';
+import { Location, Place, PlaceLocation } from '../types/Location';
+import { PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import context from './context';
-import {AppContext} from '../types/AppContextType';
+import { AppContext } from '../types/AppContextType';
 
-const LocationState: React.FC<PropsWithChildren> = ({children}) => {
+const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [location, setLocation] = useState<Location>({} as Location);
   const [places, setPlaces] = useState<Place[]>([]);
   const [address, setAddress] = useState<Place | undefined>(undefined);
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
-  const {appStateVisible} = useContext(context) as AppContext;
+  const { appStateVisible } = useContext(context) as AppContext;
 
   const requestLocationPermission = useCallback(async () => {
     try {
@@ -48,10 +48,10 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
     if (locationGrantType === false) {
       setAddress({
         businessStatus: 'OPERATIONAL',
-        displayName: {text: 'Location Permission Denied', languageCode: ''},
-        location: {longitude: 0, latitude: 0},
+        displayName: { text: 'Location Permission Denied', languageCode: '' },
+        location: { longitude: 0, latitude: 0 },
         primaryType: 'restaurant',
-        primaryTypeDisplayName: {text: 'Restaurant', languageCode: ''},
+        primaryTypeDisplayName: { text: 'Restaurant', languageCode: '' },
         types: ['Restaurant'],
         readableType: 'Restaurant',
         id: '0',
@@ -136,10 +136,10 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
       setPlaces([
         {
           businessStatus: 'OPERATIONAL',
-          displayName: {text: 'Location Permission Denied', languageCode: ''},
-          location: {longitude: 0, latitude: 0},
+          displayName: { text: 'Location Permission Denied', languageCode: '' },
+          location: { longitude: 0, latitude: 0 },
           primaryType: 'restaurant',
-          primaryTypeDisplayName: {text: 'Restaurant', languageCode: ''},
+          primaryTypeDisplayName: { text: 'Restaurant', languageCode: '' },
           types: ['Restaurant'],
           readableType: 'Restaurant',
           id: '0',
@@ -252,7 +252,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
           setLocation({} as Location);
           console.log(error.code, error.message);
         },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 1},
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 1 },
       );
     } else {
       //Basic location
@@ -289,7 +289,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
             } as Location);
             console.log(error.code, error.message);
           },
-          {enableHighAccuracy: true, timeout: 15000, maximumAge: 1},
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 1 },
         );
       } else {
         //Basic location

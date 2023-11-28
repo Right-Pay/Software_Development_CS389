@@ -1,4 +1,4 @@
-import {styled} from 'nativewind';
+import { styled } from 'nativewind';
 import {
   TextInput,
   Text,
@@ -8,7 +8,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 //Component Wrappers

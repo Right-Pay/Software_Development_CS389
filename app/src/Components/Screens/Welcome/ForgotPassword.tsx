@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
-import type {PropsWithChildren} from 'react';
-import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AuthContextType} from '../../../types/AuthContextType';
+import React, { useEffect } from 'react';
+import type { PropsWithChildren } from 'react';
+import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AuthContextType } from '../../../types/AuthContextType';
 import AuthContext from '../../../Context/authContext';
 import {
   AuthButton,
@@ -14,7 +14,7 @@ import {
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
 import KeyboardAvoidingViewScroll from '../../../Helpers/KeyboardAvoidingViewScroll';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -25,9 +25,8 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const {clearAuthErrors, resetPassword, AuthErrorComponent} = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
+  const { clearAuthErrors, resetPassword, AuthErrorComponent } =
+    React.useContext(AuthContext) as AuthContextType;
   const [email, setEmail] = React.useState<string>('');
   useEffect(() => {
     clearAuthErrors();

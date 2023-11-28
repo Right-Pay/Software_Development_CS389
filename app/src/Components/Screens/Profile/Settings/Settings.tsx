@@ -1,12 +1,12 @@
 import React from 'react';
-import type {PropsWithChildren} from 'react';
+import type { PropsWithChildren } from 'react';
 import type {
   ProfileNavigationRoutesType,
   NavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import type {CompositeScreenProps} from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
 import {
   SettingsSubtitle,
   SettingsView,
@@ -14,10 +14,10 @@ import {
   Title,
   WrapperView,
 } from '../../../../Helpers/StylizedComponents';
-import {navSettingType} from '../../../../types/SettingsType';
+import { navSettingType } from '../../../../types/SettingsType';
 import authContext from '../../../../Context/authContext';
-import {AuthContextType} from '../../../../types/AuthContextType';
-import {View} from 'react-native';
+import { AuthContextType } from '../../../../types/AuthContextType';
+import { View } from 'react-native';
 
 type SettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'SettingsScreen'>,
@@ -25,8 +25,8 @@ type SettingsScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
-  const {userProfile} = React.useContext(authContext) as AuthContextType;
+const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
+  const { userProfile } = React.useContext(authContext) as AuthContextType;
 
   const settingsPages: navSettingType[] = [
     {

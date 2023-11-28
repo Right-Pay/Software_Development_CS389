@@ -1,16 +1,16 @@
 import 'react-native-dotenv';
 import 'react-native-config';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 // import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import MainNavigator from './src/Navigation/MainNavigator';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
 import AuthState from './src/Context/AuthState';
-import {KeyboardAvoidingView, Platform} from 'react-native';
-import {Keyboard} from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
+import { Keyboard } from 'react-native';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);

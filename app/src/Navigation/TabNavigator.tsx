@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator<NavigationRoutesType>();
 const tabOptions = (label: string) => {
   const options: BottomTabNavigationOptions = {
     tabBarLabel: label,
-    tabBarIconStyle: {color: 'green'},
+    tabBarIconStyle: { color: 'green' },
   };
 
   return options;
@@ -31,7 +31,7 @@ type TabBarType = {
 };
 
 const tabBarIconFilter = (
-  {color, size}: TabBarType,
+  { color, size }: TabBarType,
   route: RouteProp<NavigationRoutesType, keyof NavigationRoutesType>,
 ) => {
   let iconName = 'home';
@@ -59,14 +59,15 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveBackgroundColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
         tabBarActiveTintColor: isDarkTheme ? darkColor : lightColor,
         tabBarInactiveBackgroundColor: isDarkTheme ? darkColor : lightColor,
         tabBarInactiveTintColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
-        tabBarIcon: ({color, size}) => tabBarIconFilter({color, size}, route),
+        tabBarIcon: ({ color, size }) =>
+          tabBarIconFilter({ color, size }, route),
         tabBarAccessibilityLabel: route.name,
         tabBarHideOnKeyboard: true,
       })}>

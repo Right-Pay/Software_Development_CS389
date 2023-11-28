@@ -1,16 +1,16 @@
-import React, {useCallback, useEffect} from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useCallback, useEffect } from 'react';
+import type { PropsWithChildren } from 'react';
 import AuthContext from './authContext';
-import {Profile} from '../types/ProfileType';
-import {HttpResponse} from '../types/HttpResponse';
+import { Profile } from '../types/ProfileType';
+import { HttpResponse } from '../types/HttpResponse';
 import GlobalState from './GlobalState';
 import AuthErrorComponent from '../Helpers/AuthErrorComponent';
 import Consts from '../Helpers/Consts';
 import Config from 'react-native-config';
-import {TokenType} from '../types/AuthContextType';
+import { TokenType } from '../types/AuthContextType';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-const AuthState: React.FC<PropsWithChildren> = ({children}) => {
+const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
@@ -145,7 +145,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
     } else {
-      const {access_token, refresh_token} = (await signInAuth(
+      const { access_token, refresh_token } = (await signInAuth(
         email,
         password,
       )) as TokenType;
@@ -309,7 +309,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     } else if (!checkEqualPasswords(password, repeatedPassword)) {
       addAuthError(ErrorMessages.passwordsDoNotMatch);
     } else {
-      const {access_token}: TokenType = (await createNewAuth0User(
+      const { access_token }: TokenType = (await createNewAuth0User(
         email,
         password,
         username,

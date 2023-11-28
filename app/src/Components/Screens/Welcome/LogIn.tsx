@@ -1,9 +1,9 @@
-import React, {useEffect} from 'react';
-import type {PropsWithChildren} from 'react';
-import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, { useEffect } from 'react';
+import type { PropsWithChildren } from 'react';
+import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AuthContext from '../../../Context/authContext';
-import {AuthContextType} from '../../../types/AuthContextType';
+import { AuthContextType } from '../../../types/AuthContextType';
 import {
   Title,
   AuthInputBox,
@@ -16,7 +16,7 @@ import {
   AuthButtonText,
 } from '../../../Helpers/StylizedComponents';
 import KeyboardAvoidingViewScroll from '../../../Helpers/KeyboardAvoidingViewScroll';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
 type LogInScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -24,8 +24,8 @@ type LogInScreenProps = NativeStackScreenProps<
 > &
   PropsWithChildren;
 
-const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
-  const {clearAuthErrors, AuthErrorComponent, signIn} = React.useContext(
+const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
+  const { clearAuthErrors, AuthErrorComponent, signIn } = React.useContext(
     AuthContext,
   ) as AuthContextType;
   useEffect(() => {
