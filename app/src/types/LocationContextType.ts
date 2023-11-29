@@ -8,5 +8,6 @@ export interface LocationContext {
   address: Place | undefined;
   requestLocationPermission: () => Promise<boolean>;
   updateLocation: () => void;
+  locationLoading: boolean;
   locationGrantType: boolean;
 }
