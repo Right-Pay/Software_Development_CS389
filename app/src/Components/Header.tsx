@@ -6,6 +6,7 @@ import {LocationContext} from '../types/LocationContextType';
 import {AppContext} from '../types/AppContextType';
 import context from '../Context/context';
 import SettingsPopup from './Screens/Profile/Settings/Settings';
+import Icon from 'react-native-ionicons';
 
 const TopBar = (props: any, stackName?: string): header => {
   const {address} = React.useContext(locationContext) as LocationContext;
@@ -20,7 +21,7 @@ const TopBar = (props: any, stackName?: string): header => {
         onPress={() => {
           setShowMoreSettings(!showMoreSettings);
         }}>
-        <Text className="text-base text-light-green p-0 m-0">...</Text>
+        <Icon name="menu" color="#Ffffff" />
       </Pressable>
     );
   };
@@ -41,8 +42,8 @@ const TopBar = (props: any, stackName?: string): header => {
   return {
     header: () => {
       return (
-        <View className="flex flex-row items-center w-screen h-24 bg-dark-green pl-6 pr-2 pt-6 border-b-3 border-slate-600">
-          <View className="w-5/6">
+        <View className="flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600">
+          <View className="w-5/6 pl-6">
             <Text
               className="text-xl font-bold text-light-green w-full"
               numberOfLines={1}>

@@ -17,6 +17,7 @@
     "generate": "node ./tools/generate.js"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "https://github.com/gorhom/react-native-bottom-sheet",
     "@radix-ui/react-icons": "^1.3.0",
     "@react-navigation/bottom-tabs": "^6.5.9",
     "@react-navigation/material-bottom-tabs": "^6.2.17",

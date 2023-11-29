@@ -1,15 +1,16 @@
-import React from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {
   SettingsSubtitle,
   SettingsView,
-  Title,
 } from '../../../../Helpers/StylizedComponents';
 import {navSettingType} from '../../../../types/SettingsType';
-import {Modal, TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableWithoutFeedback, View} from 'react-native';
 import context from '../../../../Context/context';
 import {AppContext} from '../../../../types/AppContextType';
 import authContext from '../../../../Context/authContext';
 import {AuthContextType} from '../../../../types/AuthContextType';
+import Icon from 'react-native-ionicons';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const SettingsPopup = (props: any, name: string) => {
   const {setShowMoreSettings, showMoreSettings} = React.useContext(
@@ -20,15 +21,15 @@ const SettingsPopup = (props: any, name: string) => {
 
   const settingsPages: navSettingType[] = [
     {
-      name: 'Profile Settings',
-      route: 'ProfileSettings',
-    },
-    {
-      name: 'General Settings',
+      name: 'Settings',
       route: 'GeneralSettings',
     },
     {
-      name: 'Card Settings',
+      name: 'Account Information',
+      route: 'ProfileSettings',
+    },
+    {
+      name: 'Cards',
       route: 'CardSettings',
     },
     {
@@ -57,34 +58,54 @@ const SettingsPopup = (props: any, name: string) => {
         break;
     }
   };
+
+  const getIcon = (settingName: string) => {
+    switch (settingName) {
+      case 'Account Information':
+        return 'person';
+      case 'Settings':
+        return 'settings';
+      case 'Cards':
+        return 'card';
+      case 'Sign Out':
+        return 'log-out';
+      default:
+        return 'menu';
+    }
+  };
+
   const renderSettingsNav = (setting: navSettingType, key: number) => {
     return (
-      <View key={key} className={'w-screen pl-4 justify-center h-1/4'}>
+      <View
+        key={key}
+        className={'flex-1 flex-row w-screen pl-4 items-center h-auto'}>
+        <Icon name={getIcon(setting.name).toString()} color="#4d654e" />
         <SettingsSubtitle
           onPress={() => handleSettingsNavPress(setting.route)}
-          className="text-left text-light-green">
+          className="text-left text-lg text-dark-green">
           {setting.name}
         </SettingsSubtitle>
       </View>
     );
   };
 
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
   return (
-    <Modal
-      animationType="slide"
-      visible={
-        name === props.navigation.getState().history.slice(-1)[0].key &&
-        showMoreSettings
-      }
-      onRequestClose={() => setShowMoreSettings(false)}
-      transparent={true}
-      style={{
-        margin: 0,
-      }}>
-      <TouchableWithoutFeedback onPress={() => setShowMoreSettings(false)}>
-        <View className="flex-1 flex-col justify-end items-center w-full h-1/2">
-          <View className="h-1/2 w-full border-t-2 rounded-t-3xl border-slate-500 bg-dark-green p-6 items-center">
-            <Title className="text-center text-light-green">Settings</Title>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={1}
+      snapPoints={snapPoints}
+      onChange={handleSheetChanges}>
+      <TouchableWithoutFeedback onPress={() => handleSheetChanges(1)}>
+        <View className="flex-1 w-full h-2/3">
+          <View className="mt-auto h-1/3 w-full rounded-t-2xl bg-white pt-2 items-center opacity-100">
             <SettingsView className="left-0 height-full pt-0 w-screen border-0">
               {settingsPages.map((setting, index) =>
                 renderSettingsNav(setting, index),
@@ -93,8 +114,9 @@ const SettingsPopup = (props: any, name: string) => {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </Modal>
+    </BottomSheet>
   );
 };
 
 export default SettingsPopup;
+//setShowMoreSettings(false)
