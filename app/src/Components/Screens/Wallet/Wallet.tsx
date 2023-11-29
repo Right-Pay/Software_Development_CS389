@@ -19,8 +19,8 @@ import {
   RewardsView,
   Subtitle,
   Title,
-  WrapperView,
 } from '../../../Helpers/StylizedComponents';
+import WrapperView from '../../../Helpers/WrapperView';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { Card, Reward } from '../../../types/CardType';
@@ -41,10 +41,10 @@ const StyledList = styled(FlatList);
 // const StyledText = styled(Text, 'text-lg text-dark-green');
 
 const WalletScreen: React.FC<WalletScreenProps> = () => {
-  const { unlinkCard, setCardForms, CardForms } = React.useContext(
+  const {unlinkCard, setCardForms, CardForms} = React.useContext(
     Context,
   ) as AppContext;
-  const { userProfile } = React.useContext(authContext) as AuthContextType;
+  const {userProfile} = React.useContext(authContext) as AuthContextType;
 
   const [currentViewedCard, setCurrentViewedCard] = React.useState<Card[]>(
     userProfile.cards && userProfile.cards.length > 0
@@ -166,7 +166,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   };
 
   const handleAddPress = () => {
-    setCardForms({ ...CardForms, Full: true });
+    setCardForms({...CardForms, Full: true});
   };
 
   type Info = {
@@ -197,7 +197,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           }
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => (item as Card).id?.toString() || '0'}
-          renderItem={({ item }) => renderCard(item as Card)}
+          renderItem={({item}) => renderCard(item as Card)}
           horizontal={true}
           ItemSeparatorComponent={itemSeparatorComponent}
           onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
@@ -217,7 +217,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           }
           showsVerticalScrollIndicator={true}
           keyExtractor={item => (item as Reward).reward_name.toString()}
-          renderItem={({ item }) => renderReward(item as Reward)}
+          renderItem={({item}) => renderReward(item as Reward)}
           ItemSeparatorComponent={itemSeparatorComponent}
         />
       </View>

@@ -1,21 +1,17 @@
 import { styled } from 'nativewind';
 import {
-  TextInput,
-  Text,
-  View,
-  Pressable,
   FlatList,
   Image,
+  Pressable,
   ScrollView,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
 import DropDownPicker from 'react-native-dropdown-picker';
+import MapView, { Marker } from 'react-native-maps';
 
 //Component Wrappers
-export const WrapperView = styled(
-  View,
-  'flex-1 items-center h-full overflow-y-scroll space-between bg-light-green pb-12 justify-center',
-);
 export const KeyboardAvoidingScroll = styled(
   ScrollView,
   'w-screen h-screen mb-0',
@@ -36,7 +32,7 @@ export const AuthButton = styled(
 );
 export const AuthInputBox = styled(
   TextInput,
-  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-black bg-light-green bg-transparent',
+  'px-2 py-1 m-1 text-xl text-left content-center justify-center text-black h-auto w-2/3 rounded-xl border-2 border-black bg-white bg-transparent',
 );
 
 export const AuthButtonText = styled(Text, 'text-xl text-light-green');
@@ -44,7 +40,7 @@ export const AuthButtonText = styled(Text, 'text-xl text-light-green');
 //Form Components
 export const FormInputBox = styled(
   TextInput,
-  'px-2 py-1 m-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-dark-green bg-light-green',
+  'px-2 py-1 m-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-dark-green bg-white',
 );
 export const FormButton = styled(
   Pressable,
@@ -93,7 +89,7 @@ export const SettingsView = styled(
 export const SettingsSubtitle = ProfileSubtitle;
 export const SettingsInputBox = styled(
   TextInput,
-  'px-2 py-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-dark-green bg-light-green',
+  'px-2 py-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-dark-green bg-white',
 );
 export const SettingsCardList = styled(View, 'flex-1 flex-col w-full h-full');
 export const SettingsCardView = styled(
@@ -135,7 +131,7 @@ export const AddCardButton = styled(
 );
 export const AddCFormOverlayView = styled(
   View,
-  'justify-center items-center bg-light-green',
+  'justify-center items-center bg-light dark:bg-dark',
 );
 export const BanksView = styled(
   View,
@@ -143,7 +139,7 @@ export const BanksView = styled(
 );
 export const BankOptionsView = styled(
   View,
-  'mb-2 ml-0 w-full fixed max-h-48 border-t flex bg-light-green z-50',
+  'mb-2 ml-0 w-full fixed max-h-48 border-t flex bg-white z-50',
 );
 
 //Rewards components
@@ -174,5 +170,5 @@ export const MainButtonText = styled(
 //MISC.
 export const Dropdown = styled(
   DropDownPicker,
-  'text-xl text-black h-12 rounded-xl border-2 border-slate-600 bg-light-green',
+  'text-xl text-black h-12 rounded-xl border-2 border-slate-600 bg-white',
 );

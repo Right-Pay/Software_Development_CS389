@@ -6,6 +6,7 @@ import { RouteProp } from '@react-navigation/native';
 import React, { PropsWithChildren } from 'react';
 import { useColorScheme } from 'react-native';
 import Icon from 'react-native-ionicons';
+import { darkColors, lightColors } from '../Helpers/Colors';
 import { NavigationRoutesType } from '../types/NavigationRoutesType';
 import {
   HomeStackNavigator,
@@ -19,7 +20,7 @@ const Tab = createBottomTabNavigator<NavigationRoutesType>();
 const tabOptions = (label: string) => {
   const options: BottomTabNavigationOptions = {
     tabBarLabel: label,
-    tabBarIconStyle: { color: 'green' },
+    tabBarIconStyle: {color: 'green'},
   };
 
   return options;
@@ -31,7 +32,7 @@ type TabBarType = {
 };
 
 const tabBarIconFilter = (
-  { color, size }: TabBarType,
+  {color, size}: TabBarType,
   route: RouteProp<NavigationRoutesType, keyof NavigationRoutesType>,
 ) => {
   let iconName = 'home';
@@ -53,21 +54,18 @@ const tabBarIconFilter = (
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-
-  const lightColor = '#Ffffff';
-  const darkColor = '#272727';
+  const colors = isDarkTheme ? darkColors : lightColors;
 
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={({route}) => ({
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveBackgroundColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
-        tabBarActiveTintColor: isDarkTheme ? darkColor : lightColor,
-        tabBarInactiveBackgroundColor: isDarkTheme ? darkColor : lightColor,
-        tabBarInactiveTintColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
-        tabBarIcon: ({ color, size }) =>
-          tabBarIconFilter({ color, size }, route),
+        tabBarActiveBackgroundColor: colors.primary,
+        tabBarActiveTintColor: colors.secondary,
+        tabBarInactiveBackgroundColor: colors.secondary,
+        tabBarInactiveTintColor: colors.primary,
+        tabBarIcon: ({color, size}) => tabBarIconFilter({color, size}, route),
         tabBarAccessibilityLabel: route.name,
         tabBarHideOnKeyboard: true,
       })}>

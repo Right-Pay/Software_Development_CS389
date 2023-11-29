@@ -1,22 +1,22 @@
-import React from 'react';
-import type { PropsWithChildren } from 'react';
-import type {
-  ProfileNavigationRoutesType,
-  NavigationRoutesType,
-} from '../../../types/NavigationRoutesType';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
-import {
-  MainButtonText,
-  MainButton,
-  Title,
-  WrapperView,
-  ProfileView,
-  ProfileSubtitle,
-} from '../../../Helpers/StylizedComponents';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
 import authContext from '../../../Context/authContext';
+import {
+  MainButton,
+  MainButtonText,
+  ProfileSubtitle,
+  ProfileView,
+  Title,
+} from '../../../Helpers/StylizedComponents';
+import WrapperView from '../../../Helpers/WrapperView';
 import { AuthContextType } from '../../../types/AuthContextType';
+import type {
+  NavigationRoutesType,
+  ProfileNavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,
@@ -24,8 +24,8 @@ type ProfileScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
-  const { userProfile, signOut } = React.useContext(
+const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
+  const {userProfile, signOut} = React.useContext(
     authContext,
   ) as AuthContextType;
 

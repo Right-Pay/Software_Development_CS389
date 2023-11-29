@@ -1,8 +1,9 @@
-import React from 'react';
-import type { PropsWithChildren } from 'react';
-import type { CompanyNavigationRoutesType } from '../../../types/NavigationRoutesType';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Title, WrapperView } from '../../../Helpers/StylizedComponents';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
+import { Title } from '../../../Helpers/StylizedComponents';
+import WrapperView from '../../../Helpers/WrapperView';
+import type { CompanyNavigationRoutesType } from '../../../types/NavigationRoutesType';
 
 type CompanyScreenProps = NativeStackScreenProps<
   CompanyNavigationRoutesType,

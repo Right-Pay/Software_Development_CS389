@@ -1,27 +1,28 @@
-import React, { useContext, useEffect } from 'react';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
-import { Linking } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { Linking, useColorScheme } from 'react-native';
+import { Switch } from 'react-native-switch';
+import context from '../../../../Context/context';
+import locationContext from '../../../../Context/locationContext';
+import { darkColors, lightColors } from '../../../../Helpers/Colors';
+import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
+import {
+  MainButton,
+  MainButtonText,
+  SettingsView,
+  Subtitle,
+  Title,
+} from '../../../../Helpers/StylizedComponents';
+import WrapperView from '../../../../Helpers/WrapperView';
+import { AppContext } from '../../../../types/AppContextType';
+import { LocationContext } from '../../../../types/LocationContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { CompositeScreenProps } from '@react-navigation/native';
-import {
-  Title,
-  WrapperView,
-  SettingsView,
-  Subtitle,
-  MainButton,
-  MainButtonText,
-} from '../../../../Helpers/StylizedComponents';
-import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
-import { Switch } from 'react-native-switch';
-import context from '../../../../Context/context';
-import { AppContext } from '../../../../types/AppContextType';
-import locationContext from '../../../../Context/locationContext';
-import { LocationContext } from '../../../../types/LocationContextType';
 
 type GeneralSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'GeneralSettings'>,
@@ -30,10 +31,13 @@ type GeneralSettingsProps = CompositeScreenProps<
   PropsWithChildren;
 
 const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
-  const { appStateVisible } = useContext(context) as AppContext;
-  const { requestLocationPermission, locationGrantType } = useContext(
+  const {appStateVisible} = useContext(context) as AppContext;
+  const {requestLocationPermission, locationGrantType} = useContext(
     locationContext,
   ) as LocationContext;
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
+  const colors = isDarkTheme ? darkColors : lightColors;
 
   const [locationServicesOn, setLocationServicesOn] =
     React.useState<boolean>(locationGrantType);
@@ -64,16 +68,16 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
             onValueChange={navigateToSettings}
             circleSize={30}
             barHeight={40}
-            backgroundActive={'#4d654e'}
-            backgroundInactive={'#e6ffe3'}
+            backgroundActive={colors.primary}
+            backgroundInactive={colors.secondary}
             // eslint-disable-next-line react-native/no-inline-styles
             containerStyle={{
               borderWidth: 2,
-              borderColor: '#4d654e',
+              borderColor: colors.primary,
               margin: 10,
             }}
-            circleActiveColor={'#e6ffe3'}
-            circleInActiveColor={'#4d654e'}
+            circleActiveColor={colors.secondary}
+            circleInActiveColor={colors.primary}
             // eslint-disable-next-line react-native/no-inline-styles
             innerCircleStyle={{
               alignItems: 'center',

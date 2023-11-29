@@ -15,8 +15,8 @@ import {
   SettingsSubtitle,
   SettingsView,
   Title,
-  WrapperView,
 } from '../../../../Helpers/StylizedComponents';
+import WrapperView from '../../../../Helpers/WrapperView';
 import { AuthContextType } from '../../../../types/AuthContextType';
 import type {
   NavigationRoutesType,

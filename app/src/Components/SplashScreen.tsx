@@ -1,6 +1,7 @@
-import React from 'react';
 import type { PropsWithChildren } from 'react';
-import { Title, WrapperView } from '../Helpers/StylizedComponents';
+import React from 'react';
+import { Title } from '../Helpers/StylizedComponents';
+import WrapperView from '../Helpers/WrapperView';
 
 const SplashScreen: React.FC<PropsWithChildren> = () => {
   return (

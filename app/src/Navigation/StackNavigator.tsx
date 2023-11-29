@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { PropsWithChildren } from 'react';
+import { useColorScheme } from 'react-native';
 import CompanyScreen from '../Components/Screens/Company/Company';
 import HomeScreen from '../Components/Screens/Home/Home';
 import LocationScreen from '../Components/Screens/Location/Location';
@@ -18,6 +19,7 @@ import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSetti
 import SettingsScreen from '../Components/Screens/Profile/Settings/Settings';
 import WalletScreen from '../Components/Screens/Wallet/Wallet';
 import locationContext from '../Context/locationContext';
+import { darkColors, lightColors } from '../Helpers/Colors';
 import { LocationContext } from '../types/LocationContextType';
 import type {
   CompanyNavigationRoutesType,
@@ -34,14 +36,6 @@ const CompanyStack = createNativeStackNavigator<CompanyNavigationRoutesType>();
 const WalletStack = createNativeStackNavigator<WalletNavigationRoutesType>();
 const LocationStack =
   createNativeStackNavigator<LocationNavigationRoutesType>();
-
-const screenOptionStyle = {
-  headerStyle: {
-    backgroundColor: '#4d654e',
-  },
-  headerTintColor: '#e6ffe3',
-  headerBackTitle: 'Back',
-};
 
 const hideTabBar = (
   navigation: BottomTabNavigationProp<NavigationRoutesType>,
@@ -61,6 +55,17 @@ type StackProps = BottomTabScreenProps<NavigationRoutesType> &
 
 const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
+  const colors = isDarkTheme ? darkColors : lightColors;
+
+  const screenOptionStyle = {
+    headerStyle: {
+      backgroundColor: colors.secondary,
+    },
+    headerTintColor: colors.primary,
+    headerBackTitle: 'Back',
+  };
 
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'HomeScreen'),
@@ -85,6 +90,17 @@ const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 
 const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
+  const colors = isDarkTheme ? darkColors : lightColors;
+
+  const screenOptionStyle = {
+    headerStyle: {
+      backgroundColor: colors.secondary,
+    },
+    headerTintColor: colors.primary,
+    headerBackTitle: 'Back',
+  };
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'ProfileScreen'),
     [navigation, route],
@@ -112,6 +128,17 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 
 const CompanyStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
+  const colors = isDarkTheme ? darkColors : lightColors;
+
+  const screenOptionStyle = {
+    headerStyle: {
+      backgroundColor: colors.secondary,
+    },
+    headerTintColor: colors.primary,
+    headerBackTitle: 'Back',
+  };
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'CompanyScreen'),
     [navigation, route],
@@ -129,6 +156,17 @@ const CompanyStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 
 const WalletStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
+  const colors = isDarkTheme ? darkColors : lightColors;
+
+  const screenOptionStyle = {
+    headerStyle: {
+      backgroundColor: colors.secondary,
+    },
+    headerTintColor: colors.primary,
+    headerBackTitle: 'Back',
+  };
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'ProfileScreen'),
     [navigation, route],
@@ -146,6 +184,17 @@ const WalletStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 
 const LocationStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
+  const colors = isDarkTheme ? darkColors : lightColors;
+
+  const screenOptionStyle = {
+    headerStyle: {
+      backgroundColor: colors.secondary,
+    },
+    headerTintColor: colors.primary,
+    headerBackTitle: 'Back',
+  };
   React.useLayoutEffect(
     () => hideTabBar(navigation, route, 'LocationScreen'),
     [navigation, route],
@@ -162,6 +211,10 @@ const LocationStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
 };
 
 export {
-  CompanyStackNavigator, HomeStackNavigator, LocationStackNavigator, ProfileStackNavigator, WalletStackNavigator
+  CompanyStackNavigator,
+  HomeStackNavigator,
+  LocationStackNavigator,
+  ProfileStackNavigator,
+  WalletStackNavigator
 };
 

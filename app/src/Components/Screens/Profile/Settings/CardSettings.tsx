@@ -1,12 +1,12 @@
-import React from 'react';
-import type { PropsWithChildren } from 'react';
-import type {
-  ProfileNavigationRoutesType,
-  NavigationRoutesType,
-} from '../../../../types/NavigationRoutesType';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
+import { View } from 'react-native';
+import authContext from '../../../../Context/authContext';
+import context from '../../../../Context/context';
+import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
 import {
   MainButton,
   MainButtonText,
@@ -15,15 +15,15 @@ import {
   SettingsSubtitle,
   SettingsView,
   Title,
-  WrapperView,
 } from '../../../../Helpers/StylizedComponents';
-import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
-import context from '../../../../Context/context';
+import WrapperView from '../../../../Helpers/WrapperView';
 import { AppContext } from '../../../../types/AppContextType';
-import authContext from '../../../../Context/authContext';
 import { AuthContextType } from '../../../../types/AuthContextType';
 import { Card } from '../../../../types/CardType';
-import { View } from 'react-native';
+import type {
+  NavigationRoutesType,
+  ProfileNavigationRoutesType,
+} from '../../../../types/NavigationRoutesType';
 
 type CardSettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'CardSettings'>,
@@ -32,9 +32,9 @@ type CardSettingsScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const CardSettings: React.FC<CardSettingsScreenProps> = () => {
-  const { cards } = (React.useContext(authContext) as AuthContextType)
+  const {cards} = (React.useContext(authContext) as AuthContextType)
     .userProfile;
-  const { unlinkCard } = React.useContext(context) as AppContext;
+  const {unlinkCard} = React.useContext(context) as AppContext;
 
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 

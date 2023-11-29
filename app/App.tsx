@@ -3,11 +3,13 @@ import 'react-native-config';
 import 'react-native-dotenv';
 // import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { useColorScheme } from 'nativewind';
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  useColorScheme as useNativeColorScheme,
 } from 'react-native';
 import {
   SafeAreaProvider,
@@ -18,6 +20,18 @@ import MainNavigator from './src/Navigation/MainNavigator';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const {colorScheme, setColorScheme} = useColorScheme();
+  const theme = useNativeColorScheme();
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      setColorScheme('dark');
+      console.log('dark theme');
+    } else {
+      setColorScheme('light');
+      console.log('light theme');
+    }
+  }, [theme, setColorScheme]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
