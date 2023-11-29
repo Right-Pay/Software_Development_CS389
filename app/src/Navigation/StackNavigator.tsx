@@ -1,30 +1,30 @@
-import React, {PropsWithChildren} from 'react';
-import HomeScreen from '../Components/Screens/Home/Home';
-import ProfileScreen from '../Components/Screens/Profile/Profile';
-import CompanyScreen from '../Components/Screens/Company/Company';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import type {
-  HomeNavigationRoutesType,
-  ProfileNavigationRoutesType,
-  CompanyNavigationRoutesType,
-  LocationNavigationRoutesType,
-  NavigationRoutesType,
-  WalletNavigationRoutesType,
-} from '../types/NavigationRoutesType';
-import LocationScreen from '../Components/Screens/Location/Location';
-import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSettings';
-import {
-  getFocusedRouteNameFromRoute,
-  RouteProp,
-} from '@react-navigation/native';
 import type {
   BottomTabNavigationProp,
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
-import GeneralSettings from '../Components/Screens/Profile/Settings/GeneralSettings';
-import WalletScreen from '../Components/Screens/Wallet/Wallet';
-import CardSettings from '../Components/Screens/Profile/Settings/CardSettings';
+import {
+  RouteProp,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, {PropsWithChildren} from 'react';
 import TopBar from '../Components/Header';
+import CompanyScreen from '../Components/Screens/Company/Company';
+import HomeScreen from '../Components/Screens/Home/Home';
+import LocationScreen from '../Components/Screens/Location/Location';
+import ProfileScreen from '../Components/Screens/Profile/Profile';
+import CardSettings from '../Components/Screens/Profile/Settings/CardSettings';
+import GeneralSettings from '../Components/Screens/Profile/Settings/GeneralSettings';
+import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSettings';
+import WalletScreen from '../Components/Screens/Wallet/Wallet';
+import type {
+  CompanyNavigationRoutesType,
+  HomeNavigationRoutesType,
+  LocationNavigationRoutesType,
+  NavigationRoutesType,
+  ProfileNavigationRoutesType,
+  WalletNavigationRoutesType,
+} from '../types/NavigationRoutesType';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
@@ -178,9 +178,9 @@ const LocationStackNavigator: React.FC<StackProps> = props => {
 };
 
 export {
-  HomeStackNavigator,
-  ProfileStackNavigator,
   CompanyStackNavigator,
-  WalletStackNavigator,
+  HomeStackNavigator,
   LocationStackNavigator,
+  ProfileStackNavigator,
+  WalletStackNavigator,
 };

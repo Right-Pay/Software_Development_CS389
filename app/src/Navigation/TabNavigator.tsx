@@ -1,3 +1,4 @@
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -5,13 +6,16 @@ import {
 import {RouteProp} from '@react-navigation/native';
 import React, {
   PropsWithChildren,
+  useCallback,
   useEffect,
   useMemo,
-  useCallback,
   useRef,
 } from 'react';
-import {useColorScheme, StyleSheet} from 'react-native';
+import {StyleSheet, useColorScheme} from 'react-native';
 import Icon from 'react-native-ionicons';
+import SettingsBottomSheet from '../Components/Screens/Profile/Settings/SettingsBottomSheet';
+import context from '../Context/context';
+import {AppContext, BottomSheetTypes} from '../types/AppContextType';
 import {NavigationRoutesType} from '../types/NavigationRoutesType';
 import {
   HomeStackNavigator,
@@ -19,9 +23,6 @@ import {
   ProfileStackNavigator,
   WalletStackNavigator,
 } from './StackNavigator';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import context from '../Context/context';
-import {AppContext} from '../types/AppContextType';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
@@ -71,12 +72,12 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
 
   const snapPoints = useMemo(() => ['25%'], []);
 
-  const handlePresentModalPress = useCallback(() => {
+  const presentModal = useCallback(() => {
     bottomSheetModalRef.current?.present();
     bottomSheetModalRef.current?.snapToIndex(0);
   }, [bottomSheetModalRef]);
 
-  const handleModalClose = useCallback(() => {
+  const handleModalDismiss = useCallback(() => {
     setShowBottomSheetModal(false);
   }, [setShowBottomSheetModal]);
 
@@ -91,15 +92,26 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
     [setShowBottomSheetModal],
   );
 
+  const getBottomSheetModal = useCallback(() => {
+    if (bottomSheetModal) {
+      if (bottomSheetModal.type === BottomSheetTypes.SETTINGS) {
+        return <SettingsBottomSheet />;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }, [bottomSheetModal]);
+
   useEffect(() => {
     if (showBottomSheetModal) {
-      handlePresentModalPress();
+      presentModal();
       console.log('showBottomSheetModal');
     } else if (!showBottomSheetModal) {
       bottomSheetModalRef.current?.close();
-      console.log('showBottomSheetModal');
     }
-  }, [handlePresentModalPress, handleModalClose, showBottomSheetModal]);
+  }, [presentModal, showBottomSheetModal]);
 
   return (
     <>
@@ -145,9 +157,9 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         ref={bottomSheetModalRef}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
-        onDismiss={handleModalClose}
+        onDismiss={handleModalDismiss}
         backgroundStyle={styles.modalBackground}>
-        {bottomSheetModal}
+        {getBottomSheetModal()}
       </BottomSheetModal>
     </>
   );
@@ -155,7 +167,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
 
 const styles = StyleSheet.create({
   modalBackground: {
-    opacity: 0.5,
+    opacity: 1,
   },
 });
 

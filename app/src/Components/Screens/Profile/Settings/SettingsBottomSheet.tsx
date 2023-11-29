@@ -1,16 +1,17 @@
-import React from 'react';
-import {SettingsSubtitle} from '../../../../Helpers/StylizedComponents';
-import {navSettingType} from '../../../../types/SettingsType';
+import {useBottomSheetModal} from '@gorhom/bottom-sheet';
+import {useNavigation} from '@react-navigation/native';
+import React, {PropsWithChildren} from 'react';
 import {View} from 'react-native';
-import authContext from '../../../../Context/authContext';
-import {AuthContextType} from '../../../../types/AuthContextType';
 import Icon from 'react-native-ionicons';
-import {NativeStackHeaderProps} from '@react-navigation/native-stack';
+import authContext from '../../../../Context/authContext';
+import {SettingsSubtitle} from '../../../../Helpers/StylizedComponents';
+import {AuthContextType} from '../../../../types/AuthContextType';
+import {navSettingType} from '../../../../types/SettingsType';
 
-const SettingsBottomSheet: React.FC<NativeStackHeaderProps> = ({
-  navigation,
-}) => {
-  // const {signOut} = React.useContext(authContext) as AuthContextType;
+const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
+  const {signOut} = React.useContext(authContext) as AuthContextType;
+  const {dismiss} = useBottomSheetModal();
+  const navigation = useNavigation();
 
   const settingsPages: navSettingType[] = [
     {
@@ -32,18 +33,21 @@ const SettingsBottomSheet: React.FC<NativeStackHeaderProps> = ({
   ];
 
   const handleSettingsNavPress = (route: string) => {
+    dismiss();
     switch (route) {
       case 'ProfileSettings':
         navigation.navigate('ProfileStack', {screen: 'ProfileSettings'});
         break;
       case 'GeneralSettings':
-        navigation.navigate('ProfileStack', {screen: 'GeneralSettings'});
+        navigation.navigate('ProfileStack', {
+          screen: 'GeneralSettings',
+        });
         break;
       case 'CardSettings':
         navigation.navigate('ProfileStack', {screen: 'CardSettings'});
         break;
       case 'SignOut':
-        // signOut();
+        signOut();
         break;
       default:
         break;
@@ -70,7 +74,9 @@ const SettingsBottomSheet: React.FC<NativeStackHeaderProps> = ({
       <View
         key={key}
         className={'flex-1 flex-row w-screen pl-4 items-center h-auto'}>
-        <Icon name={getIcon(setting.name).toString()} color="#4d654e" />
+        <View className="w-8 text-center">
+          <Icon name={getIcon(setting.name).toString()} color="#4d654e" />
+        </View>
         <SettingsSubtitle
           onPress={() => handleSettingsNavPress(setting.route)}
           className="text-left text-lg text-dark-green">
@@ -82,9 +88,7 @@ const SettingsBottomSheet: React.FC<NativeStackHeaderProps> = ({
 
   return (
     <View className="flex-1 w-full h-full">
-      {/* <View className="flex-1 mt-4 p-5 items-center space-between"> */}
       {settingsPages.map((setting, index) => renderSettingsNav(setting, index))}
-      {/* </View> */}
     </View>
   );
 };
