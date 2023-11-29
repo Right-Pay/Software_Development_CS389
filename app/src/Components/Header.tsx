@@ -1,61 +1,66 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Pressable, Text, View} from 'react-native';
-import {header} from '../types/header';
 import locationContext from '../Context/locationContext';
 import {LocationContext} from '../types/LocationContextType';
-import {AppContext} from '../types/AppContextType';
-import context from '../Context/context';
-import SettingsPopup from './Screens/Profile/Settings/Settings';
+import SettingsBottomSheet from './Screens/Profile/Settings/SettingsBottomSheet';
 import Icon from 'react-native-ionicons';
+import context from '../Context/context';
+import {AppContext} from '../types/AppContextType';
+import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 
-const TopBar = (props: any, stackName?: string): header => {
+const TopBar: React.FC<NativeStackHeaderProps> = ({
+  navigation,
+  route,
+  ...props
+}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
-  const {setShowMoreSettings, showMoreSettings} = React.useContext(
+  const {setBottomSheetModal, setShowBottomSheetModal} = React.useContext(
     context,
   ) as AppContext;
 
-  const showMoreButton = () => {
+  const handlePresentModalPress = useCallback(() => {
+    console.log('handlePresentModalPress');
+    setBottomSheetModal(SettingsBottomSheet({...props, navigation, route}));
+    setShowBottomSheetModal(true);
+  }, [navigation, props, route, setBottomSheetModal, setShowBottomSheetModal]);
+
+  const showMoreButton = useCallback(() => {
     return (
       <Pressable
         className="flex-1 flex-col justify-center items-center text-center w-1/6 m-0 overflow-visible"
         onPress={() => {
-          setShowMoreSettings(!showMoreSettings);
+          handlePresentModalPress();
         }}>
         <Icon name="menu" color="#Ffffff" />
       </Pressable>
     );
-  };
+  }, [handlePresentModalPress]);
 
-  const backButton = () => {
+  const backButton = useCallback(() => {
     return (
       <Pressable
         className="flex-1 flex-col justify-center items-center text-center"
         onPress={
           () =>
-            props.navigation.goBack() /*I have not figured out how to go back to last page. It only goes to HomeStack*/
+            navigation.goBack() /*I have not figured out how to go back to last page. It only goes to HomeStack*/
         }>
         <Text className="text-xl text-light-green p-0">Back</Text>
       </Pressable>
     );
-  };
+  }, [navigation]);
 
-  return {
-    header: () => {
-      return (
-        <View className="flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600">
-          <View className="w-5/6 pl-6">
-            <Text
-              className="text-xl font-bold text-light-green w-full"
-              numberOfLines={1}>
-              {address ? address.displayName.text : ''}
-            </Text>
-          </View>
-          {stackName === 'SettingsStack' ? backButton() : showMoreButton()}
-          {SettingsPopup(props, props.route.key)}
-        </View>
-      );
-    },
-  };
+  return (
+    <View className="flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600">
+      <View className="w-5/6 pl-6">
+        <Text
+          className="text-xl font-bold text-light-green w-full"
+          numberOfLines={1}>
+          {address ? address.displayName.text : ''}
+        </Text>
+      </View>
+      {route.name === 'SettingsStack' ? backButton() : showMoreButton()}
+    </View>
+  );
 };
 
 export default TopBar;

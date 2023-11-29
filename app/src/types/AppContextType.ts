@@ -26,6 +26,8 @@ export interface AppContext {
   newCardBin: number;
   isKeyboardVisible: boolean;
   appStateVisible: string;
-  setShowMoreSettings: (_showMoreSettings: boolean) => void;
-  showMoreSettings: boolean;
+  setShowBottomSheetModal: (_showBottomSheetModal: boolean) => void;
+  showBottomSheetModal: boolean;
+  setBottomSheetModal: (_bottomSheetModal: React.ReactNode) => void;
+  bottomSheetModal: React.ReactNode;
 }

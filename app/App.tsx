@@ -12,6 +12,7 @@ import {
 import AuthState from './src/Context/AuthState';
 import {KeyboardAvoidingView, Platform} from 'react-native';
 import {Keyboard} from 'react-native';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -51,7 +52,9 @@ const RightPayApp = () => {
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               enabled={isKeyboardVisible}
               keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-              <MainNavigator />
+              <BottomSheetModalProvider>
+                <MainNavigator />
+              </BottomSheetModalProvider>
             </KeyboardAvoidingView>
           </NavigationContainer>
         </GestureHandlerRootView>

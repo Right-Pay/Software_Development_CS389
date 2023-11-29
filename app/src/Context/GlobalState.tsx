@@ -26,7 +26,10 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
 
-  const [showMoreSettings, setShowMoreSettings] = useState<boolean>(false);
+  const [showBottomSheetModal, setShowBottomSheetModal] =
+    useState<boolean>(false);
+  const [bottomSheetModal, setBottomSheetModal] =
+    useState<React.ReactNode>(null);
 
   const [CardForms, setCardForms] = useState<CardFormsType>({
     Full: false,
@@ -409,8 +412,10 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         setNewCardBin,
         isKeyboardVisible,
         appStateVisible,
-        setShowMoreSettings,
-        showMoreSettings,
+        setShowBottomSheetModal,
+        showBottomSheetModal,
+        setBottomSheetModal,
+        bottomSheetModal,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>

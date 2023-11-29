@@ -66,7 +66,10 @@ const HomeStackNavigator: React.FC<StackProps> = props => {
   return (
     <HomeStack.Navigator
       initialRouteName="HomeScreen"
-      screenOptions={{...screenOptionStyle, header: TopBar(props).header}}>
+      screenOptions={{
+        ...screenOptionStyle,
+        header: headerProps => TopBar(headerProps),
+      }}>
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}
@@ -87,18 +90,21 @@ const ProfileStackNavigator: React.FC<StackProps> = props => {
   return (
     <ProfileStack.Navigator
       initialRouteName="ProfileScreen"
-      screenOptions={{...screenOptionStyle, header: TopBar(props).header}}>
+      screenOptions={{
+        ...screenOptionStyle,
+        header: headerProps => TopBar(headerProps),
+      }}>
       <ProfileStack.Group
         screenOptions={{
           ...screenOptionStyle,
-          header: TopBar(props, 'ProfileStack').header,
+          header: headerProps => TopBar(headerProps),
         }}>
         <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
       </ProfileStack.Group>
       <ProfileStack.Group
         screenOptions={{
           ...screenOptionStyle,
-          header: TopBar(props, 'SettingsStack').header,
+          header: headerProps => TopBar(headerProps),
         }}>
         <ProfileStack.Screen
           name="ProfileSettings"
@@ -124,7 +130,10 @@ const CompanyStackNavigator: React.FC<StackProps> = props => {
   return (
     <CompanyStack.Navigator
       initialRouteName="CompanyScreen"
-      screenOptions={{...screenOptionStyle, header: TopBar(props).header}}>
+      screenOptions={{
+        ...screenOptionStyle,
+        header: headerProps => TopBar(headerProps),
+      }}>
       <CompanyStack.Screen name="CompanyScreen" component={CompanyScreen} />
     </CompanyStack.Navigator>
   );
@@ -140,7 +149,10 @@ const WalletStackNavigator: React.FC<StackProps> = props => {
   return (
     <WalletStack.Navigator
       initialRouteName="WalletScreen"
-      screenOptions={{...screenOptionStyle, header: TopBar(props).header}}>
+      screenOptions={{
+        ...screenOptionStyle,
+        header: headerProps => TopBar(headerProps),
+      }}>
       <WalletStack.Screen name="WalletScreen" component={WalletScreen} />
     </WalletStack.Navigator>
   );
@@ -156,7 +168,10 @@ const LocationStackNavigator: React.FC<StackProps> = props => {
   return (
     <LocationStack.Navigator
       initialRouteName="LocationScreen"
-      screenOptions={{...screenOptionStyle, header: TopBar(props).header}}>
+      screenOptions={{
+        ...screenOptionStyle,
+        header: headerProps => TopBar(headerProps),
+      }}>
       <LocationStack.Screen name="LocationScreen" component={LocationScreen} />
     </LocationStack.Navigator>
   );
