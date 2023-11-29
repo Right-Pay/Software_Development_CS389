@@ -1,7 +1,6 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import checkJwt from '../middleware/authenticationMiddleware';
-import { IJsonResponse } from '../types/jsonResponse';
+import { Request, Response, Router } from 'express';
 import UserController from '../controllers/UserController';
+import checkJwt from '../middleware/authenticationMiddleware';
 
 const router = Router();
 
@@ -21,17 +20,7 @@ router.post("/", checkJwt, async (req: Request, res: Response) => {
 router.put("/linkCard", checkJwt, async (req: Request, res: Response) => await UserController.linkUserToCard(req, res))
 
 // Update User
-router.put("/", checkJwt, (req: Request, res: Response) => {
-  const auth = req.auth;
-  const token = auth?.token; // The raw JWT token
-  const data = req.body;
-  const response: IJsonResponse = {
-    message: "TLX API - Update User " + data.username + " " + auth?.payload.sub,
-    success: true,
-    data: auth
-  };
-  res.json(response);
-});
+router.put("/", checkJwt, async (req: Request, res: Response) => await UserController.updateUser(req, res))
 
 // Delete User
 router.delete("/", checkJwt, async (req: Request, res: Response) => {

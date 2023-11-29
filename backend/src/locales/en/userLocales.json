@@ -6,6 +6,7 @@
     "userCardNotLinked": "Card could not be linked!",
     "userCardAlreadyLinked": "Card is already linked!",
     "userCardNotUnlinked": "Card could not be unlinked!",
+    "userNotUpdated": "User could not be updated!",
 
     "bankNotFound": "Bank does not exist!",
     "bankFound": "Bank already exists!",

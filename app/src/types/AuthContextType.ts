@@ -22,7 +22,10 @@ export interface AuthContextType {
   checkValidEmail: (_email: string) => boolean;
   checkValidPassword: (_password: string) => boolean;
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
+  checkValidUsername: (_username: string) => boolean;
+  checkValidPhone: (_phone: string) => boolean;
   refreshAuth0Token: () => void;
+  updateUserProfile: (_newProfile: Profile) => void;
 }
 
 export interface TokenType {

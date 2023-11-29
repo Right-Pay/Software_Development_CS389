@@ -125,6 +125,20 @@ Returns User's Profile in format specified in [userTypes.ts](./src/types/userTyp
 
 Returns User's Created Profile in format specified in [userTypes.ts](./src/types/userTypes.ts)
 
+#### Update User
+
+```http
+  PUT /api/users
+```
+
+| Parameter   | Type     | Description                       |
+| :---------- | :------- | :-------------------------------- |
+| `username`  | `string` | **Required** Display name of user |
+| `phone`     | `string` | Phone number of user, not needed  |
+
+
+Returns User's Updated Profile in format specified in [userTypes.ts](./src/types/userTypes.ts)
+
 #### Link Card
 
 ```http

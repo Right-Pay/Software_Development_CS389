@@ -316,7 +316,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
     if (appStateVisible === 'active') {
       updateLocation();
     }
-  }, [appStateVisible, updateLocation]);
+  }, [updateLocation, appStateVisible]);
 
   return (
     <LocationContext.Provider

@@ -239,6 +239,60 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     [ErrorMessages.errorGettingUser, baseURL, lang],
   );
 
+  const updateUserProfile = async (newUserProfile: Profile) => {
+    //setUserProfile(newUserProfile);
+    // We need to do this what is here is temporary
+    const headers = {
+      authorization: `Bearer ${userToken as string}`,
+      'X-Preferred-Language': lang,
+      'Content-Type': 'application/json',
+    };
+    const body = {
+      username: newUserProfile.username,
+      phone: newUserProfile.phone,
+    };
+    console.log(JSON.stringify(body));
+    await fetch(`${baseURL}users`, {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(body),
+    })
+      .then(async res => {
+        res.json().then(result => {
+          console.log(result);
+        });
+        if (res.status === 200) {
+          await refreshUserProfile();
+        } else {
+          addAuthError(ErrorMessages.errorUpdatingUser);
+        }
+      })
+      .catch(() => {
+        console.log('error');
+        addAuthError(ErrorMessages.errorUpdatingUser);
+      });
+  };
+
+  const refreshUserProfile = async () => {
+    if (!userToken) {
+      // need to replace with refresh token logic,
+      addAuthError(ErrorMessages.invalidToken);
+      return false;
+    }
+    await getUser(userToken).then(async result => {
+      let res = result as HttpResponse;
+      if (res.success) {
+        setUserProfile(res.data as Profile);
+        clearAuthErrors();
+      } else {
+        setUserToken(null);
+        await removeAuth0Token();
+        setUserProfile({} as Profile);
+        addAuthError(res.message as string);
+      }
+    });
+  };
+
   const signUp = async (
     email: string,
     username: string,
@@ -417,6 +471,26 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     return password === repeatedPassword && checkValidPassword(password);
   }
 
+  function checkValidUsername(username: string): boolean {
+    const usernameRegex = /^[a-zA-Z0-9._-]{3,}$/;
+    const test = username.length > 0 && usernameRegex.test(username);
+    if (!test) {
+      addAuthError(ErrorMessages.invalidUsername);
+      return false;
+    }
+    return test;
+  }
+
+  function checkValidPhone(phone: string): boolean {
+    const phoneRegex = /^\+?(\d{1,3})?[- .]?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}$/;
+    const test = phone.length > 0 && phoneRegex.test(phone);
+    if (!test) {
+      addAuthError(ErrorMessages.invalidPhone);
+      return false;
+    }
+    return test;
+  }
+
   useEffect(() => {
     async function loadFromStorage() {
       setIsLoading(true);
@@ -466,8 +540,11 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         checkValidEmail,
         checkValidPassword,
         checkEqualPasswords,
+        checkValidUsername,
+        checkValidPhone,
         AuthErrorComponent,
         refreshAuth0Token,
+        updateUserProfile,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>

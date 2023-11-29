@@ -22,6 +22,11 @@ const AuthErrorMessages = {
   invalidDropdownOption: 'Invalid Dropdown Option',
   invalidCardLevel: 'Invalid Card Level\nName must be more then 3 characters',
   undefined: 'Request failed, please try again later or contact support!',
+  invalidUsername:
+    'Invalid Username\nUsername must be more then 3 characters\nUsername must only contain letters',
+  invalidPhone:
+    'Invalid Phone Number\nMust be 10 digits in any acceptable phone number format',
+  errorUpdatingUser: 'Error Updating User',
 };
 
 enum CardFormEnum {
