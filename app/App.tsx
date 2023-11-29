@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 // import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import MainNavigator from './src/Navigation/MainNavigator';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -38,20 +39,22 @@ const RightPayApp = () => {
   return (
     <AuthState>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <NavigationContainer>
-          <KeyboardAvoidingView
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              flexDirection: 'column',
-              zIndex: 0,
-            }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            enabled={isKeyboardVisible}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-            <MainNavigator />
-          </KeyboardAvoidingView>
-        </NavigationContainer>
+        <GestureHandlerRootView style={{flex: 1}}>
+          <NavigationContainer>
+            <KeyboardAvoidingView
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                flexDirection: 'column',
+                zIndex: 0,
+              }}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              enabled={isKeyboardVisible}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
+              <MainNavigator />
+            </KeyboardAvoidingView>
+          </NavigationContainer>
+        </GestureHandlerRootView>
       </SafeAreaProvider>
     </AuthState>
   );
