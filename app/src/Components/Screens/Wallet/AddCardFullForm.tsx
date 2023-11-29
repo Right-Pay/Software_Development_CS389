@@ -160,8 +160,8 @@ const AddCardFullForm = () => {
   const renderBankOption = ({ item }: { item: CardBank }) => (
     <Pressable
       onPress={() => {
-        let bank_id = Number(item.id);
-        let bank_name = item.bank_name;
+        const bank_id = Number(item.id);
+        const bank_name = item.bank_name;
         if (
           editState === EditStates.Edit &&
           Number(card?.card_bank_id) !== bank_id
@@ -236,7 +236,7 @@ const AddCardFullForm = () => {
 
   const renderBinInput = () => {
     const updateBin = (event: any) => {
-      let bin = Number(event.nativeEvent.text);
+      const bin = Number(event.nativeEvent.text);
       if (editState === EditStates.Edit && Number(card.card_bin) !== bin) {
         setEditState(EditStates.Add);
       }
@@ -317,8 +317,8 @@ const AddCardFullForm = () => {
 
   const renderBrandDropdown = () => {
     const updateBrand = (event: any) => {
-      let brand_id = Number(event);
-      let brand_name = brandOptions.find(b => b.id === brand_id)?.brand_name;
+      const brand_id = Number(event);
+      const brand_name = brandOptions.find(b => b.id === brand_id)?.brand_name;
       if (isNaN(brand_id)) {
         return;
       }

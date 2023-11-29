@@ -178,7 +178,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         addAuthError(ErrorMessages.undefined);
       }
     };
-    let success = await linkToUser(true);
+    const success = await linkToUser(true);
     if (!success) {
       return false;
     }
@@ -186,7 +186,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     return true;
   };
 
-  const unlinkCard = async (card: Card): Promise<Boolean> => {
+  const unlinkCard = async (card: Card): Promise<boolean> => {
     setIsLoading(true);
     const unlinkToUser = async (tryAgain: boolean) => {
       const headers = new Headers();
@@ -221,7 +221,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         return false;
       }
     };
-    let success = await unlinkToUser(false);
+    const success = await unlinkToUser(false);
     userProfile.cards = userProfile.cards.filter(c => c.id !== card.id);
     setIsLoading(false);
     return success;
@@ -238,22 +238,22 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   function testCardName(cardName: string) {
-    const regex: RegExp = /^[a-zA-Z ]{10,}$/;
+    const regex = /^[a-zA-Z ]{10,}$/;
     return regex.test(cardName);
   }
 
   function testCardBin(cardBin: number) {
-    const regex: RegExp = /^[0-9]{6}$/;
+    const regex = /^[0-9]{6}$/;
     return regex.test(cardBin.toString());
   }
 
   function testBankName(bankName: string) {
-    const regex: RegExp = /^[a-zA-Z &,.]{4,}$/;
+    const regex = /^[a-zA-Z &,.]{4,}$/;
     return regex.test(bankName);
   }
 
   function testLevel(level: string) {
-    const regex: RegExp = /^[a-zA-Z ]{3,}$/;
+    const regex = /^[a-zA-Z ]{3,}$/;
     return regex.test(level);
   }
 
@@ -315,8 +315,8 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     });
     const content = await response.json();
 
-    let set = new Set();
-    let arr: any = [];
+    const set = new Set();
+    const arr: any = [];
 
     content.data.forEach((b: CardBank) => {
       if (set.has(b.bank_name)) {

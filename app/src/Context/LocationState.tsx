@@ -58,7 +58,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       });
       return;
     }
-    var myHeaders = new Headers();
+    const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append(
       'X-Goog-FieldMask',
@@ -69,7 +69,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       'AIzaSyDSQqzE6cXDeUCWEquYC4PPCCpk9KRJiw8',
     );
 
-    var raw = JSON.stringify({
+    const raw = JSON.stringify({
       excludedTypes: ['parking'],
       maxResultCount: 1,
       rankPreference: 'DISTANCE',
@@ -147,7 +147,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       ]);
       return;
     }
-    var headers = new Headers();
+    const headers = new Headers();
     headers.append('Content-Type', 'application/json');
     headers.append(
       'X-Goog-FieldMask',
@@ -155,7 +155,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     );
     headers.append('X-Goog-Api-Key', 'AIzaSyDSQqzE6cXDeUCWEquYC4PPCCpk9KRJiw8');
 
-    var placesTypes = {
+    const placesTypes = {
       restaurant: 'Restaurant',
       museum: 'Museum',
       movie_theater: 'Movie Theater',
@@ -168,7 +168,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       rest_stop: 'Rest Stop',
     };
 
-    var raw = JSON.stringify({
+    const raw = JSON.stringify({
       includedTypes: Object.keys(placesTypes),
       maxResultCount: 20,
       rankPreference: 'DISTANCE',
@@ -210,7 +210,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
             text: placesTypes[place.types[0] as keyof typeof placesTypes],
           };
         } else if (!place.hasOwnProperty('primaryType')) {
-          let type = place.types[0];
+          const type = place.types[0];
           let displayName = '';
           type.split('_').forEach(name => {
             displayName +=

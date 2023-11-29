@@ -137,8 +137,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ navigation }) => {
 
   //Format the phone number to be (xxx)xxx-xxxx
   const formatPhoneNumber = (phoneNumber: string): string | null => {
-    const regex: RegExp =
-      /^\+?(\d{1,3})?[- .]?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}$/;
+    const regex = /^\+?(\d{1,3})?[- .]?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}$/;
     const match: RegExpExecArray | null = regex.exec(phoneNumber);
     if (match) {
       const digits = match[0].replace(/\D/g, '');
