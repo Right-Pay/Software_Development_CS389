@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import type { PropsWithChildren } from 'react';
-import type {
-  WalletNavigationRoutesType,
-  NavigationRoutesType,
-} from '../../../types/NavigationRoutesType';
-import { View, Text, FlatList } from 'react-native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { styled } from 'nativewind';
+import type { PropsWithChildren } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Dimensions, FlatList, Text, View, ViewToken } from 'react-native';
+import authContext from '../../../Context/authContext';
+import Context from '../../../Context/context';
+import Consts from '../../../Helpers/Consts';
 import {
   AddCardButton,
   AddCardIcon,
@@ -22,14 +22,13 @@ import {
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
-import Context from '../../../Context/context';
-import { Card, Reward } from '../../../types/CardType';
-import { Dimensions } from 'react-native';
-import AddCardFullForm from './AddCardFullForm';
-import Consts from '../../../Helpers/Consts';
-import authContext from '../../../Context/authContext';
 import { AuthContextType } from '../../../types/AuthContextType';
-import { styled } from 'nativewind';
+import { Card, Reward } from '../../../types/CardType';
+import type {
+  NavigationRoutesType,
+  WalletNavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
+import AddCardFullForm from './AddCardFullForm';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -170,10 +169,13 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     setCardForms({ ...CardForms, Full: true });
   };
 
-  const onViewRef = useRef((viewableItems: any) => {
-    const check: Card[] = viewableItems.viewableItems.map(
-      (item: any) => item.item as Card,
-    );
+  type Info = {
+    viewableItems: ViewToken[];
+    changed: ViewToken[];
+  };
+
+  const onViewRef = useRef((info: Info) => {
+    const check: Card[] = info.viewableItems.map(item => item.item as Card);
     setCurrentViewedCard(check);
   });
 

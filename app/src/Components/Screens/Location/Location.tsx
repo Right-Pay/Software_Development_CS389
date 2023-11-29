@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
-import type { PropsWithChildren } from 'react';
-import type {
-  LocationNavigationRoutesType,
-  NavigationRoutesType,
-} from '../../../types/NavigationRoutesType';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { styled } from 'nativewind';
+import type { PropsWithChildren } from 'react';
+import React, { useRef } from 'react';
+import { Platform, Text, View, ViewToken } from 'react-native';
+import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
+import locationContext from '../../../Context/locationContext';
 import {
   GoogleMapsMarker,
   GoogleMapsView,
@@ -14,14 +14,13 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
-import { Text, View } from 'react-native';
-import { styled } from 'nativewind';
 import { Place } from '../../../types/Location';
-const StyledView = styled(View);
-import { Platform } from 'react-native';
-import { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
-import locationContext from '../../../Context/locationContext';
 import { LocationContext } from '../../../types/LocationContextType';
+import type {
+  LocationNavigationRoutesType,
+  NavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
+const StyledView = styled(View);
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -70,10 +69,13 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
     return <StyledView className="w-full h-0.5 bg-slate-200" />;
   };
 
-  const onViewRef = useRef((viewableItems: any) => {
-    const check: Place[] = viewableItems.viewableItems.map(
-      (item: any) => item.item as Place,
-    );
+  type Info = {
+    viewableItems: ViewToken[];
+    changed: ViewToken[];
+  };
+
+  const onViewRef = useRef((info: Info) => {
+    const check: Place[] = info.viewableItems.map(item => item.item as Place);
     setCurrentViewedPlace(check);
   });
 

@@ -5,7 +5,7 @@ interface hashType {
   [key: string]: string;
 }
 
-export default interface ConstsType {
+interface ConstsType {
   CardFormEnum: any;
   authErrorMessages: hashType;
   DropdownListModes: hashType;
@@ -14,4 +14,6 @@ export default interface ConstsType {
   dummyCardRewards: any[];
   cardItemSeparatorWidth: number;
   addCard: Card;
-};
+}
+
+export default ConstsType;

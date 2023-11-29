@@ -4,30 +4,32 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Modal,
+  NativeSyntheticEvent,
   Platform,
   Pressable,
   StyleSheet,
   Text,
+  TextInputChangeEventData,
   TouchableWithoutFeedback,
 } from 'react-native';
+import authContext from '../../../Context/authContext';
+import Context from '../../../Context/context';
+import Consts from '../../../Helpers/Consts';
+import DropdownComponent, { OptionsProps } from '../../../Helpers/Dropdown';
 import {
   AddCFormOverlayView,
-  FormButton,
-  FormButtonText,
-  FormInputBox,
-  FormDateView,
-  Title,
   // FinePrint,
   BankOptionsView,
   BanksView,
+  FormButton,
+  FormButtonText,
+  FormDateView,
+  FormInputBox,
+  Title,
 } from '../../../Helpers/StylizedComponents';
-import { Card, CardBank } from '../../../types/CardType';
 import { AppContext } from '../../../types/AppContextType';
-import Context from '../../../Context/context';
-import DropdownComponent, { OptionsProps } from '../../../Helpers/Dropdown';
-import authContext from '../../../Context/authContext';
 import { AuthContextType } from '../../../types/AuthContextType';
-import Consts from '../../../Helpers/Consts';
+import { Card, CardBank } from '../../../types/CardType';
 // import AddNewDropdownOption from './AddNewBankOption';
 
 const AddCardFullForm = () => {
@@ -235,7 +237,9 @@ const AddCardFullForm = () => {
   }, [bankSearch, filterBank]);
 
   const renderBinInput = () => {
-    const updateBin = (event: any) => {
+    const updateBin = (
+      event: NativeSyntheticEvent<TextInputChangeEventData>,
+    ) => {
       const bin = Number(event.nativeEvent.text);
       if (editState === EditStates.Edit && Number(card.card_bin) !== bin) {
         setEditState(EditStates.Add);
@@ -316,7 +320,7 @@ const AddCardFullForm = () => {
   };
 
   const renderBrandDropdown = () => {
-    const updateBrand = (event: any) => {
+    const updateBrand = (event: string) => {
       const brand_id = Number(event);
       const brand_name = brandOptions.find(b => b.id === brand_id)?.brand_name;
       if (isNaN(brand_id)) {
@@ -351,14 +355,11 @@ const AddCardFullForm = () => {
   };
 
   const renderTypeDropdown = () => {
-    const updateType = (event: any) => {
-      if (
-        editState === EditStates.Edit &&
-        card.card_type !== event.toString()
-      ) {
+    const updateType = (event: string) => {
+      if (editState === EditStates.Edit && card.card_type !== event) {
         setEditState(EditStates.Add);
       }
-      setCard({ ...card, card_type: event.toString() });
+      setCard({ ...card, card_type: event });
     };
     return (
       <DropdownComponent

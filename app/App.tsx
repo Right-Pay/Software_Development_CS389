@@ -1,16 +1,20 @@
-import 'react-native-dotenv';
-import 'react-native-config';
 import React, { useEffect, useState } from 'react';
+import 'react-native-config';
+import 'react-native-dotenv';
 // import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import MainNavigator from './src/Navigation/MainNavigator';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
 import AuthState from './src/Context/AuthState';
-import { KeyboardAvoidingView, Platform } from 'react-native';
-import { Keyboard } from 'react-native';
+import MainNavigator from './src/Navigation/MainNavigator';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -40,12 +44,7 @@ const RightPayApp = () => {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <NavigationContainer>
           <KeyboardAvoidingView
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              flexDirection: 'column',
-              zIndex: 0,
-            }}
+            style={styles.keyboardAvoidingView}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             enabled={isKeyboardVisible}
             keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
@@ -56,5 +55,14 @@ const RightPayApp = () => {
     </AuthState>
   );
 };
+
+const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'column',
+    zIndex: 0,
+  },
+});
 
 export default RightPayApp;

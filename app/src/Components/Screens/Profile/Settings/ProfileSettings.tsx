@@ -1,27 +1,27 @@
-import React, { useContext, useState } from 'react';
-import type { PropsWithChildren } from 'react';
-import type {
-  ProfileNavigationRoutesType,
-  NavigationRoutesType,
-} from '../../../../types/NavigationRoutesType';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { PropsWithChildren } from 'react';
+import React, { useContext, useState } from 'react';
+import authContext from '../../../../Context/authContext';
+import AuthErrorComponent from '../../../../Helpers/AuthErrorComponent';
+import Consts from '../../../../Helpers/Consts';
+import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
 import {
-  MainButtonText,
   MainButton,
-  WrapperView,
-  Title,
+  MainButtonText,
   ProfileSubtitle,
   SettingsInputBox,
-  SettingsView,
   SettingsSubtitle,
+  SettingsView,
+  Title,
+  WrapperView,
 } from '../../../../Helpers/StylizedComponents';
-import authContext from '../../../../Context/authContext';
 import { AuthContextType } from '../../../../types/AuthContextType';
-import AuthErrorComponent from '../../../../Helpers/AuthErrorComponent';
-import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
-import Consts from '../../../../Helpers/Consts';
+import type {
+  NavigationRoutesType,
+  ProfileNavigationRoutesType,
+} from '../../../../types/NavigationRoutesType';
 import { Profile } from '../../../../types/ProfileType';
 
 type ProfileSettingsProps = CompositeScreenProps<
@@ -30,7 +30,7 @@ type ProfileSettingsProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const ProfileSettings: React.FC<ProfileSettingsProps> = ({ navigation }) => {
+const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
   const {
     userProfile,
     //checkValidEmail,

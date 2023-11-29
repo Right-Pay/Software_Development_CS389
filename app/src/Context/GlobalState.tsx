@@ -1,20 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { PropsWithChildren } from 'react';
-import Context from './context';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { AppState, Keyboard } from 'react-native';
+import Config from 'react-native-config';
+import Consts from '../Helpers/Consts';
+import { AuthContextType } from '../types/AuthContextType';
 import {
-  CardFormDetails,
-  CardFormsType,
   Card,
-  Reward,
   CardBank,
   CardBrand,
+  CardFormDetails,
+  CardFormsType,
+  Reward,
 } from '../types/CardType';
-import { AppState, Keyboard } from 'react-native';
-import Consts from '../Helpers/Consts';
-import Config from 'react-native-config';
-import { AuthContextType } from '../types/AuthContextType';
-import AuthContext from './authContext';
 import LocationState from './LocationState';
+import AuthContext from './authContext';
+import Context from './context';
 const baseURL = Config.REACT_APP_API_URL;
 
 const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
@@ -316,7 +316,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     const content = await response.json();
 
     const set = new Set();
-    const arr: any = [];
+    const arr: CardBank[] = [];
 
     content.data.forEach((b: CardBank) => {
       if (set.has(b.bank_name)) {
