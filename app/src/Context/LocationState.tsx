@@ -18,6 +18,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
   const [address, setAddress] = useState<Place | undefined>(undefined);
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
   const {appStateVisible} = useContext(context) as AppContext;
+  const [locationLoading, setLocationLoading] = useState<boolean>(false);
 
   const requestLocationPermission = useCallback(async () => {
     try {
@@ -131,6 +132,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const fetchPlaces = useCallback(async () => {
+    setLocationLoading(true);
     await requestLocationPermission();
     if (locationGrantType === false) {
       setPlaces([
@@ -232,6 +234,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
       });
 
     setPlaces(resultPlaces);
+    setLocationLoading(false);
   }, [location, requestLocationPermission, locationGrantType]);
 
   const getLocation = useCallback(async () => {
@@ -266,6 +269,8 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
   }, [requestLocationPermission, locationGrantType]);
 
   const updateLocation = useCallback(() => {
+    setPlaces([]);
+    setLocationLoading(true);
     const result = requestLocationPermission();
     result.then(res => {
       if (res) {
@@ -300,6 +305,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
           accuracy: 0,
         } as Location);
       }
+      setLocationLoading(false);
     });
   }, [requestLocationPermission]);
 
@@ -329,6 +335,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
         requestLocationPermission,
         updateLocation,
         locationGrantType,
+        locationLoading,
       }}>
       {children}
     </LocationContext.Provider>

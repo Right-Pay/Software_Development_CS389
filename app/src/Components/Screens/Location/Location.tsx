@@ -14,14 +14,14 @@ import {
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
-import {Text, View} from 'react-native';
+import {Text, View, Pressable} from 'react-native';
 import {styled} from 'nativewind';
 import {Place} from '../../../types/Location';
-const StyledView = styled(View);
 import {Platform} from 'react-native';
 import {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 import locationContext from '../../../Context/locationContext';
 import {LocationContext} from '../../../types/LocationContextType';
+import Icon from 'react-native-ionicons';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -30,9 +30,10 @@ type LocationScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const StlyizedText = styled(Text, 'text-lg text-dark-green');
+const StyledView = styled(View);
 
 const LocationScreen: React.FC<LocationScreenProps> = () => {
-  const {location, places} = React.useContext(
+  const {location, places, updateLocation, locationLoading} = React.useContext(
     locationContext,
   ) as LocationContext;
 
@@ -110,11 +111,19 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
         {markerFactory('test marker', 'test description')}
       </GoogleMapsView>
-      <StyledView className="absolute bottom-0 left-0 w-full h-1/3 bg-white rounded-t-xl">
-        <StyledView className="rounded-t-xl h-10 border-b-2 border-slate-200 bg-white">
-          <StlyizedText className="text-center pt-1">
+      <StyledView className="flex-1 absolute bottom-0 left-0 w-full h-1/3 bg-white rounded-t-xl">
+        <StyledView className="flex-1 flex-row shrink justify-center rounded-t-xl border-b-2 h-4 min-h-0 max-h-10 border-slate-200 border bg-white items-center">
+          <StlyizedText className="text-center grow pl-6">
             Nearby Locations
           </StlyizedText>
+          <Pressable
+            className="ml-auto pr-2"
+            onPress={() => {
+              locationLoading ? null : updateLocation();
+            }}
+            disabled={locationLoading}>
+            {<Icon name="refresh" color="#4d654e" />}
+          </Pressable>
         </StyledView>
         <NearbyLocationScrollView
           className="text-black z-50"
