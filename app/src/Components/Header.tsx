@@ -70,8 +70,13 @@ const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
     );
   }, [navigation, screenTitle]);
 
+  const classNameString =
+    Platform.OS === 'ios'
+      ? 'flex flex-row items-center w-screen h-24 pt-4 bg-dark-green border-b-3 border-slate-600'
+      : 'flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600';
+
   return (
-    <View className="flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600">
+    <View className={classNameString}>
       {isMainScreen() ? (
         <>
           <View className="w-5/6 pl-6">
