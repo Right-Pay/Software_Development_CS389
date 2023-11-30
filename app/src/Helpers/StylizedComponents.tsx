@@ -1,4 +1,4 @@
-import {styled} from 'nativewind';
+import { styled } from 'nativewind';
 import {
   FlatList,
   Image,
@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 //Component Wrappers
 export const KeyboardAvoidingScroll = styled(

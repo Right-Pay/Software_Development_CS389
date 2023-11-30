@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react';
-import {ColorSchemeName, useColorScheme} from 'react-native';
+import { useEffect, useState } from 'react';
+import { ColorSchemeName, useColorScheme } from 'react-native';
 
 const LightColors: ColorsType = {
   primary: '#4d654e',
@@ -23,7 +23,7 @@ const useColorsMode = (): UseColorsMode => {
     setThemeMode(theme);
   }, [theme]);
 
-  return {colors, themeMode};
+  return { colors, themeMode };
 };
 
 type UseColorsMode = {
@@ -37,5 +37,5 @@ export type ColorsType = {
   tertiary: string;
 };
 
-export {DarkColors, LightColors};
+export { DarkColors, LightColors };
 export default useColorsMode;

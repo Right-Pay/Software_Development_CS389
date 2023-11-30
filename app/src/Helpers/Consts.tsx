@@ -1,4 +1,4 @@
-import {Card, Reward} from '../types/CardType';
+import { Card, Reward } from '../types/CardType';
 import ConstsType from '../types/ConstsType';
 
 const AuthErrorMessages = {

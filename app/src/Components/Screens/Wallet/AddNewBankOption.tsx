@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 import authContext from '../../../Context/authContext';
 import Context from '../../../Context/context';
-import {FormInputBox} from '../../../Helpers/StylizedComponents';
-import {AppContext} from '../../../types/AppContextType';
-import {AuthContextType} from '../../../types/AuthContextType';
-import {OptionsPropsType} from '../../Common/Dropdown';
+import { FormInputBox } from '../../../Helpers/StylizedComponents';
+import { AppContext } from '../../../types/AppContextType';
+import { AuthContextType } from '../../../types/AuthContextType';
+import { OptionsPropsType } from '../../Common/Dropdown';
 import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
@@ -19,10 +19,9 @@ import TitleText from '../../Common/TitleText';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
-  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
-    authContext,
-  ) as AuthContextType;
-  const {validateCardForm, setCardForms, CardForms} = React.useContext(
+  const { addAuthError, clearAuthErrors, AuthErrorComponent } =
+    React.useContext(authContext) as AuthContextType;
+  const { validateCardForm, setCardForms, CardForms } = React.useContext(
     Context,
   ) as AppContext;
 
@@ -32,18 +31,18 @@ const AddNewBankOption = (props: OptionsPropsType) => {
   //handlers
   const handleSubmit = () => {
     clearAuthErrors();
-    const errors = validateCardForm({bankName: newOption});
+    const errors = validateCardForm({ bankName: newOption });
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     } else {
-      setCardForms({...CardForms, AddBankOption: false});
+      setCardForms({ ...CardForms, AddBankOption: false });
       props.setOption(newOption);
     }
   };
 
   const closeModal = () => {
-    setCardForms({...CardForms, AddBankOption: false});
+    setCardForms({ ...CardForms, AddBankOption: false });
     clearAuthErrors();
   };
 

@@ -1,9 +1,9 @@
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import {RouteProp} from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import React, {
   PropsWithChildren,
   useCallback,
@@ -21,8 +21,8 @@ import Icon from 'react-native-ionicons';
 import SettingsBottomSheet from '../Components/Screens/Settings/SettingsBottomSheet';
 import context from '../Context/context';
 import useColorsMode from '../Helpers/Colors';
-import {AppContext, BottomSheetTypes} from '../types/AppContextType';
-import {NavigationRoutesType} from '../types/NavigationRoutesType';
+import { AppContext, BottomSheetTypes } from '../types/AppContextType';
+import { NavigationRoutesType } from '../types/NavigationRoutesType';
 import {
   HomeStackNavigator,
   LocationStackNavigator,
@@ -35,7 +35,7 @@ const Tab = createBottomTabNavigator<NavigationRoutesType>();
 const tabOptions = (label: string) => {
   const options: BottomTabNavigationOptions = {
     tabBarLabel: label,
-    tabBarIconStyle: {color: 'green'},
+    tabBarIconStyle: { color: 'green' },
   };
 
   return options;
@@ -47,7 +47,7 @@ type TabBarType = {
 };
 
 const tabBarIconFilter = (
-  {color, size}: TabBarType,
+  { color, size }: TabBarType,
   route: RouteProp<NavigationRoutesType, keyof NavigationRoutesType>,
 ) => {
   switch (route.name) {
@@ -65,7 +65,7 @@ const tabBarIconFilter = (
 };
 
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
-  const {colors} = useColorsMode();
+  const { colors } = useColorsMode();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [backgroundStyles, setBackgroundStyles] = React.useState<
     StyleProp<{
@@ -76,7 +76,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       backgroundColor: string;
     }>,
   );
-  const {bottomSheetModal, showBottomSheetModal, setShowBottomSheetModal} =
+  const { bottomSheetModal, showBottomSheetModal, setShowBottomSheetModal } =
     React.useContext(context) as AppContext;
 
   useEffect(() => {
@@ -138,14 +138,15 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
   return (
     <>
       <Tab.Navigator
-        screenOptions={({route}) => ({
+        screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,
           tabBarActiveBackgroundColor: colors.primary,
           tabBarActiveTintColor: colors.secondary,
           tabBarInactiveBackgroundColor: colors.secondary,
           tabBarInactiveTintColor: colors.primary,
-          tabBarIcon: ({color, size}) => tabBarIconFilter({color, size}, route),
+          tabBarIcon: ({ color, size }) =>
+            tabBarIconFilter({ color, size }, route),
           tabBarAccessibilityLabel: route.name,
           tabBarHideOnKeyboard: true,
         })}>

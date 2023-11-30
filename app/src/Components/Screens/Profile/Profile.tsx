@@ -1,7 +1,7 @@
-import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import type {CompositeScreenProps} from '@react-navigation/native';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import type {PropsWithChildren} from 'react';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { PropsWithChildren } from 'react';
 import React from 'react';
 // import {
 //   Title,
@@ -9,8 +9,8 @@ import React from 'react';
 //   ProfileSubtitle,
 // } from '../../../Helpers/StylizedComponents';
 import authContext from '../../../Context/authContext';
-import {ProfileView} from '../../../Helpers/StylizedComponents';
-import {AuthContextType} from '../../../types/AuthContextType';
+import { ProfileView } from '../../../Helpers/StylizedComponents';
+import { AuthContextType } from '../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
@@ -26,7 +26,7 @@ type ProfileScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
-  const {userProfile} = React.useContext(authContext) as AuthContextType;
+  const { userProfile } = React.useContext(authContext) as AuthContextType;
 
   const cardCount = userProfile.cards.length;
   const rewardCount =

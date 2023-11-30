@@ -1,5 +1,5 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {PropsWithChildren} from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { PropsWithChildren } from 'react';
 import TopBar from '../Components/Header';
 import CardSettings from '../Components/Screens/Settings/CardSettings';
 import GeneralSettings from '../Components/Screens/Settings/GeneralSettings';
@@ -12,7 +12,7 @@ import WelcomeScreen from '../Components/Screens/Welcome/Welcome';
 import SplashScreen from '../Components/SplashScreen';
 import AuthContext from '../Context/authContext';
 import useColorsMode from '../Helpers/Colors';
-import {AuthContextType} from '../types/AuthContextType';
+import { AuthContextType } from '../types/AuthContextType';
 import {
   MainNavigationRoutesType,
   SettingsNavigationRoutesType,
@@ -47,7 +47,7 @@ const WelcomeNavigator: React.FC<PropsWithChildren> = () => {
 };
 
 const SettingsStackNavigator: React.FC<PropsWithChildren> = () => {
-  const {colors} = useColorsMode();
+  const { colors } = useColorsMode();
 
   return (
     <SettingsStack.Navigator
@@ -75,7 +75,7 @@ const SettingsStackNavigator: React.FC<PropsWithChildren> = () => {
 };
 
 const MainNavigator: React.FC<PropsWithChildren> = () => {
-  const {isLoading, userToken} = React.useContext(
+  const { isLoading, userToken } = React.useContext(
     AuthContext,
   ) as AuthContextType;
   if (isLoading) {
