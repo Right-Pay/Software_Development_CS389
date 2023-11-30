@@ -5,15 +5,7 @@ import type { PropsWithChildren } from 'react';
 import React, { useContext, useState } from 'react';
 import authContext from '../../../../Context/authContext';
 import Consts from '../../../../Helpers/Consts';
-import {
-  MainButton,
-  MainButtonText,
-  ProfileSubtitle,
-  SettingsInputBox,
-  SettingsSubtitle,
-  SettingsView,
-  Title,
-} from '../../../../Helpers/StylizedComponents';
+import { SettingsInputBox } from '../../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
@@ -21,7 +13,11 @@ import type {
 } from '../../../../types/NavigationRoutesType';
 import { Profile } from '../../../../types/ProfileType';
 import AuthErrorComponent from '../../../Common/AuthErrorComponent';
+import InnerWrapperView from '../../../Common/InnerWrapperView';
 import KeyboardAvoidingViewScroll from '../../../Common/KeyboardAvoidingViewScroll';
+import OutlineButton from '../../../Common/OutlineButton';
+import PrimaryText from '../../../Common/PrimaryText';
+import TitleText from '../../../Common/TitleText';
 import WrapperView from '../../../Common/WrapperView';
 
 type ProfileSettingsProps = CompositeScreenProps<
@@ -164,19 +160,23 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
     userProfile && (
       <WrapperView className="pb-0">
         <KeyboardAvoidingViewScroll>
-          <Title className="mt-10 mb-3">Profile Settings</Title>
-          {saved && <ProfileSubtitle>Profile Updated</ProfileSubtitle>}
-          <SettingsView>
+          <TitleText className="mt-10 mb-3">Profile Settings</TitleText>
+          {saved && (
+            <PrimaryText className="text-2xl font-bold">
+              Profile Updated
+            </PrimaryText>
+          )}
+          <InnerWrapperView className="border-t-2">
             {fieldsToRender.map((key, index) => renderProfileField(key, index))}
-          </SettingsView>
+          </InnerWrapperView>
           {editing ? (
-            <MainButton className="w-1/3 mb-3" onPress={handleSave}>
-              <MainButtonText>Save</MainButtonText>
-            </MainButton>
+            <OutlineButton className="w-1/3 mb-3" onPress={handleSave}>
+              <PrimaryText className="text-center text-xl">Save</PrimaryText>
+            </OutlineButton>
           ) : (
-            <SettingsSubtitle className="mb-3">
+            <PrimaryText className="text-2xl font-bold mb-3">
               No changes made
-            </SettingsSubtitle>
+            </PrimaryText>
           )}
           {AuthErrorComponent && <AuthErrorComponent />}
         </KeyboardAvoidingViewScroll>

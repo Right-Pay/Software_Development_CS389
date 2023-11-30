@@ -1,7 +1,7 @@
 import React from 'react';
 import AuthContext from '../../Context/authContext';
-import { Subtitle } from '../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../types/AuthContextType';
+import PrimaryText from './PrimaryText';
 
 const AuthErrorComponent = () => {
   const { authError } = React.useContext(AuthContext) as AuthContextType; // Use the useContext hook directly with types
@@ -14,7 +14,7 @@ const AuthErrorComponent = () => {
   return (
     <>
       {authError.map((error, index) => (
-        <Subtitle key={index}>{error}</Subtitle>
+        <PrimaryText key={index}>{error}</PrimaryText>
       ))}
     </>
   );

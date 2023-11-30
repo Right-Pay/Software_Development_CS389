@@ -3,25 +3,22 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React, { useContext, useEffect } from 'react';
-import { Linking, useColorScheme } from 'react-native';
+import { Linking } from 'react-native';
 import { Switch } from 'react-native-switch';
 import context from '../../../../Context/context';
 import locationContext from '../../../../Context/locationContext';
-import { DarkColors, LightColors } from '../../../../Helpers/Colors';
-import {
-  MainButton,
-  MainButtonText,
-  SettingsView,
-  Subtitle,
-  Title,
-} from '../../../../Helpers/StylizedComponents';
+import useColorsMode from '../../../../Helpers/Colors';
 import { AppContext } from '../../../../types/AppContextType';
 import { LocationContext } from '../../../../types/LocationContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
+import InnerWrapperView from '../../../Common/InnerWrapperView';
 import KeyboardAvoidingViewScroll from '../../../Common/KeyboardAvoidingViewScroll';
+import OutlineButton from '../../../Common/OutlineButton';
+import PrimaryText from '../../../Common/PrimaryText';
+import TitleText from '../../../Common/TitleText';
 import WrapperView from '../../../Common/WrapperView';
 
 type GeneralSettingsProps = CompositeScreenProps<
@@ -31,13 +28,11 @@ type GeneralSettingsProps = CompositeScreenProps<
   PropsWithChildren;
 
 const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
-  const {appStateVisible} = useContext(context) as AppContext;
-  const {requestLocationPermission, locationGrantType} = useContext(
+  const { appStateVisible } = useContext(context) as AppContext;
+  const { requestLocationPermission, locationGrantType } = useContext(
     locationContext,
   ) as LocationContext;
-  const theme = useColorScheme();
-  const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? DarkColors : LightColors;
+  const { colors } = useColorsMode();
 
   const [locationServicesOn, setLocationServicesOn] =
     React.useState<boolean>(locationGrantType);
@@ -57,12 +52,12 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <Title className="mt-10">General Settings</Title>
-        <SettingsView>
-          <Subtitle className="mb-3">
+        <TitleText className="mt-10 mb-4">General Settings</TitleText>
+        <InnerWrapperView className="border-t-2">
+          <PrimaryText className="mb-3">
             Your location is used to determine nearby companies and which card
             to suggest you use
-          </Subtitle>
+          </PrimaryText>
           <Switch
             value={locationServicesOn}
             onValueChange={navigateToSettings}
@@ -90,15 +85,17 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
             switchWidthMultiplier={4} // multiplied by the `circleSize` prop to calculate total width of the Switch
             switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
           />
-          <Subtitle className="mb-3">
+          <PrimaryText className="mb-3">
             {locationServicesOn
               ? 'Location Services On'
               : 'Location Services Off'}
-          </Subtitle>
-          <MainButton onPress={() => navigateToSettings()}>
-            <MainButtonText>More Settings</MainButtonText>
-          </MainButton>
-        </SettingsView>
+          </PrimaryText>
+          <OutlineButton type="primary" onPress={() => navigateToSettings()}>
+            <PrimaryText className="text-center text-xl">
+              More Settings
+            </PrimaryText>
+          </OutlineButton>
+        </InnerWrapperView>
       </KeyboardAvoidingViewScroll>
     </WrapperView>
   );

@@ -1,29 +1,40 @@
 import { useEffect, useState } from 'react';
-import { useColorScheme } from 'react-native';
+import { ColorSchemeName, useColorScheme } from 'react-native';
 
-const LightColors = {
+const LightColors: ColorsType = {
   primary: '#4d654e',
   secondary: '#Ffffff',
   tertiary: '#e6ffe3',
 };
 
-const DarkColors = {
+const DarkColors: ColorsType = {
   primary: '#e6ffe3',
   secondary: '#272727',
   tertiary: '#4d654e',
 };
 
-const useColorsMode = () => {
+const useColorsMode = (): UseColorsMode => {
   const theme = useColorScheme();
-  const [colors, setColors] = useState(LightColors);
-  const [themeMode, setThemeMode] = useState(theme);
+  const [colors, setColors] = useState<ColorsType>(LightColors);
+  const [themeMode, setThemeMode] = useState<ColorSchemeName>(theme);
 
   useEffect(() => {
     setColors(theme === 'dark' ? DarkColors : LightColors);
     setThemeMode(theme);
   }, [theme]);
 
-  return [colors, themeMode];
+  return { colors, themeMode };
+};
+
+type UseColorsMode = {
+  colors: ColorsType;
+  themeMode: ColorSchemeName;
+};
+
+export type ColorsType = {
+  primary: string;
+  secondary: string;
+  tertiary: string;
 };
 
 export { DarkColors, LightColors };

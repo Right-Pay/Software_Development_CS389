@@ -4,15 +4,14 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { styled } from 'nativewind';
 import type { PropsWithChildren } from 'react';
 import React, { useRef } from 'react';
-import { Platform, Text, View, ViewToken, useColorScheme } from 'react-native';
+import { Platform, View, ViewToken } from 'react-native';
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import locationContext from '../../../Context/locationContext';
-import { DarkColors, LightColors } from '../../../Helpers/Colors';
+import useColorsMode from '../../../Helpers/Colors';
 import {
   GoogleMapsMarker,
   GoogleMapsView,
   NearbyLocationScrollView,
-  Title,
 } from '../../../Helpers/StylizedComponents';
 import { Place } from '../../../types/Location';
 import { LocationContext } from '../../../types/LocationContextType';
@@ -20,6 +19,8 @@ import type {
   LocationNavigationRoutesType,
   NavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 const StyledView = styled(View);
 
@@ -29,16 +30,12 @@ type LocationScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const StlyizedText = styled(Text, 'text-lg');
-
 const LocationScreen: React.FC<LocationScreenProps> = () => {
-  const {location, places} = React.useContext(
+  const { location, places } = React.useContext(
     locationContext,
   ) as LocationContext;
-  const theme = useColorScheme();
-  const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? DarkColors : LightColors;
-  // mapStyle[0].stylers[0].color = colors.secondary;
+  const { themeMode } = useColorsMode();
+  const isDarkTheme = themeMode === 'dark';
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentViewPlace, setCurrentViewedPlace] = React.useState<Place[]>(
@@ -54,29 +51,29 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
             : 'py-2 flex-1 flex-col h-20 w-full bg-white'
         }>
         <StyledView className="flex-1 flex-row place-content-between w-full">
-          <StlyizedText
+          <PrimaryText
             numberOfLines={1}
-            className="text-dark-green dark:text-light-green font-bold pl-4 text-xl w-3/4 text-left">
+            className="font-bold pl-4 text-xl w-3/4 text-left">
             {place.displayName.text}
-          </StlyizedText>
-          <StlyizedText className="text-gray-400 w-1/4 text-md text-right pr-4">
+          </PrimaryText>
+          <PrimaryText className="text-gray-400 w-1/4 text-md text-right pr-4">
             {place.distance} mi
-          </StlyizedText>
+          </PrimaryText>
         </StyledView>
         <StyledView className="flex-1 flex-row place-content-between w-full">
-          <StlyizedText className="text-dark-green dark:text-light-green pl-4 text-lg w-3/4 text-left">
+          <PrimaryText className="pl-4 text-lg w-3/4 text-left">
             {place.primaryTypeDisplayName?.text || place.types[0] || ''}
-          </StlyizedText>
-          <StlyizedText className="text-gray-400 w-1/4 text-sm self-center text-right pr-4">
+          </PrimaryText>
+          <PrimaryText className="text-gray-400 w-1/4 text-sm self-center text-right pr-4">
             See Rewards
-          </StlyizedText>
+          </PrimaryText>
         </StyledView>
       </StyledView>
     );
   };
 
   const seperatorComponent: React.FC = () => {
-    return <StyledView className="w-full h-0.5 bg-slate-200" />;
+    return <StyledView className="w-full h-0.5 bg-gray-200" />;
   };
 
   type Info = {
@@ -104,7 +101,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
 
   return (
     <WrapperView>
-      <Title className="mt-20">This is the location screen</Title>
+      <TitleText className="mt-20">This is the location screen</TitleText>
       <GoogleMapsView
         initialRegion={{
           latitude: location.latitude,
@@ -128,20 +125,15 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
             ? 'absolute bottom-0 left-0 w-full h-1/3 bg-dark rounded-t-xl'
             : 'absolute bottom-0 left-0 w-full h-1/3 bg-white rounded-t-xl'
         }>
-        <StyledView
-          className={
-            isDarkTheme
-              ? 'rounded-t-xl h-10 border-b-2 border-slate-900'
-              : 'rounded-t-xl h-10 border-b-2 border-slate-200'
-          }>
-          <StlyizedText className="text-dark-green dark:text-light-green text-center pt-1">
+        <StyledView className={'rounded-t-xl h-10 border-b-2 border-gray-200'}>
+          <PrimaryText className="text-lg text-center pt-1">
             Nearby Locations
-          </StlyizedText>
+          </PrimaryText>
         </StyledView>
         <NearbyLocationScrollView
           className="text-black z-50"
           data={places}
-          renderItem={({item}) => renderPlace(item as Place)}
+          renderItem={({ item }) => renderPlace(item as Place)}
           ItemSeparatorComponent={seperatorComponent}
           showsHorizontalScrollIndicator={false}
           horizontal={false}
@@ -157,83 +149,83 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
 };
 
 const mapStyle = [
-  {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-  {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
-  {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+  { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
   {
     featureType: 'administrative.locality',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#d59563'}],
+    stylers: [{ color: '#d59563' }],
   },
   {
     featureType: 'poi',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#d59563'}],
+    stylers: [{ color: '#d59563' }],
   },
   {
     featureType: 'poi.park',
     elementType: 'geometry',
-    stylers: [{color: '#263c3f'}],
+    stylers: [{ color: '#263c3f' }],
   },
   {
     featureType: 'poi.park',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#6b9a76'}],
+    stylers: [{ color: '#6b9a76' }],
   },
   {
     featureType: 'road',
     elementType: 'geometry',
-    stylers: [{color: '#38414e'}],
+    stylers: [{ color: '#38414e' }],
   },
   {
     featureType: 'road',
     elementType: 'geometry.stroke',
-    stylers: [{color: '#212a37'}],
+    stylers: [{ color: '#212a37' }],
   },
   {
     featureType: 'road',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#9ca5b3'}],
+    stylers: [{ color: '#9ca5b3' }],
   },
   {
     featureType: 'road.highway',
     elementType: 'geometry',
-    stylers: [{color: '#746855'}],
+    stylers: [{ color: '#746855' }],
   },
   {
     featureType: 'road.highway',
     elementType: 'geometry.stroke',
-    stylers: [{color: '#1f2835'}],
+    stylers: [{ color: '#1f2835' }],
   },
   {
     featureType: 'road.highway',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#f3d19c'}],
+    stylers: [{ color: '#f3d19c' }],
   },
   {
     featureType: 'transit',
     elementType: 'geometry',
-    stylers: [{color: '#2f3948'}],
+    stylers: [{ color: '#2f3948' }],
   },
   {
     featureType: 'transit.station',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#d59563'}],
+    stylers: [{ color: '#d59563' }],
   },
   {
     featureType: 'water',
     elementType: 'geometry',
-    stylers: [{color: '#17263c'}],
+    stylers: [{ color: '#17263c' }],
   },
   {
     featureType: 'water',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#515c6d'}],
+    stylers: [{ color: '#515c6d' }],
   },
   {
     featureType: 'water',
     elementType: 'labels.text.stroke',
-    stylers: [{color: '#17263c'}],
+    stylers: [{ color: '#17263c' }],
   },
 ];
 

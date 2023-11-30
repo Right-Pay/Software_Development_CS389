@@ -30,8 +30,8 @@ generateTemplateFiles([
         slot: '/* eslint-disable prettier/prettier */',
         slotValue: '',
       },
-      {slot: '/*', slotValue: ''},
-      {slot: '*/', slotValue: ''},
+      { slot: '/*', slotValue: '' },
+      { slot: '*/', slotValue: '' },
     ],
     output: {
       path: './src/Components/Screens/__screen__(pascalCase)',
@@ -75,8 +75,8 @@ generateTemplateFiles([
         slot: '/* eslint-disable prettier/prettier */',
         slotValue: '',
       },
-      {slot: '/*', slotValue: ''},
-      {slot: '*/', slotValue: ''},
+      { slot: '/*', slotValue: '' },
+      { slot: '*/', slotValue: '' },
     ],
     output: {
       path: './src/Components/Screens/__stack__(pascalCase)',

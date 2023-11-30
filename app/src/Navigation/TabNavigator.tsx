@@ -4,9 +4,8 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import React, { PropsWithChildren } from 'react';
-import { useColorScheme } from 'react-native';
 import Icon from 'react-native-ionicons';
-import { DarkColors, LightColors } from '../Helpers/Colors';
+import useColorsMode from '../Helpers/Colors';
 import { NavigationRoutesType } from '../types/NavigationRoutesType';
 import {
   HomeStackNavigator,
@@ -20,7 +19,7 @@ const Tab = createBottomTabNavigator<NavigationRoutesType>();
 const tabOptions = (label: string) => {
   const options: BottomTabNavigationOptions = {
     tabBarLabel: label,
-    tabBarIconStyle: {color: 'green'},
+    tabBarIconStyle: { color: 'green' },
   };
 
   return options;
@@ -32,7 +31,7 @@ type TabBarType = {
 };
 
 const tabBarIconFilter = (
-  {color, size}: TabBarType,
+  { color, size }: TabBarType,
   route: RouteProp<NavigationRoutesType, keyof NavigationRoutesType>,
 ) => {
   let iconName = 'home';
@@ -52,20 +51,19 @@ const tabBarIconFilter = (
 };
 
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
-  const theme = useColorScheme();
-  const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? DarkColors : LightColors;
+  const { colors } = useColorsMode();
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveBackgroundColor: colors.primary,
         tabBarActiveTintColor: colors.secondary,
         tabBarInactiveBackgroundColor: colors.secondary,
         tabBarInactiveTintColor: colors.primary,
-        tabBarIcon: ({color, size}) => tabBarIconFilter({color, size}, route),
+        tabBarIcon: ({ color, size }) =>
+          tabBarIconFilter({ color, size }, route),
         tabBarAccessibilityLabel: route.name,
         tabBarHideOnKeyboard: true,
       })}>

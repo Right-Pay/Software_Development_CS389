@@ -4,18 +4,15 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
 import authContext from '../../../Context/authContext';
-import {
-  MainButton,
-  MainButtonText,
-  ProfileSubtitle,
-  ProfileView,
-  Title,
-} from '../../../Helpers/StylizedComponents';
+import { ProfileView } from '../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import OutlineButton from '../../Common/OutlineButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 
 type ProfileScreenProps = CompositeScreenProps<
@@ -24,8 +21,8 @@ type ProfileScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
-  const {userProfile, signOut} = React.useContext(
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
+  const { userProfile, signOut } = React.useContext(
     authContext,
   ) as AuthContextType;
 
@@ -37,33 +34,35 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({navigation}) => {
 
   return (
     <WrapperView>
-      <Title className="top-10 mb-10">Profile</Title>
+      <TitleText className="top-10 mb-10">Profile</TitleText>
       <ProfileView className="justify-start">
-        <ProfileSubtitle numberOfLines={1}>
+        <PrimaryText className="text-2xl font-bold mb-2" numberOfLines={1}>
           Username: {userProfile.username}
-        </ProfileSubtitle>
-        <ProfileSubtitle numberOfLines={1}>
+        </PrimaryText>
+        <PrimaryText className="text-2xl font-bold mb-2" numberOfLines={1}>
           Email: {userProfile.email}
-        </ProfileSubtitle>
+        </PrimaryText>
         {userProfile.phone && userProfile.phone.length > 0 ? (
-          <ProfileSubtitle>{`Phone: ${userProfile.phone}`}</ProfileSubtitle>
+          <PrimaryText className="text-2xl font-bold mb-2">{`Phone: ${userProfile.phone}`}</PrimaryText>
         ) : null}
-        <ProfileSubtitle className="mt-20">
+        <PrimaryText className="text-2xl font-bold mt-20">
           You have {cardCount} card
           {cardCount > 1 ? 's' : ''}
-        </ProfileSubtitle>
-        <ProfileSubtitle>
+        </PrimaryText>
+        <PrimaryText className="text-2xl font-bold">
           {`You have ${rewardCount} reward${rewardCount !== 1 ? 's' : ''}`}
-        </ProfileSubtitle>
+        </PrimaryText>
       </ProfileView>
-      <MainButton
+      <OutlineButton
         onPress={() => navigation.navigate('SettingsScreen')}
-        className="absolute top-0 right-0">
-        <MainButtonText>Settings</MainButtonText>
-      </MainButton>
-      <MainButton className="absolute top-0 left-0" onPress={() => signOut()}>
-        <MainButtonText>Logout</MainButtonText>
-      </MainButton>
+        className="w-1/3 absolute top-0 right-0">
+        <PrimaryText className="text-center text-xl">Settings</PrimaryText>
+      </OutlineButton>
+      <OutlineButton
+        className="w-1/3 absolute top-0 left-0"
+        onPress={() => signOut()}>
+        <PrimaryText className="text-center text-xl">Logout</PrimaryText>
+      </OutlineButton>
     </WrapperView>
   );
 };

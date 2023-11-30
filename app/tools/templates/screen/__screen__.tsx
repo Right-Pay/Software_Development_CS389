@@ -16,7 +16,7 @@ type __screen__ScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const __screen__Screen: React.FC<__screen__ScreenProps> = ({navigation}) => {
+const __screen__Screen: React.FC<__screen__ScreenProps> = ({ navigation }) => {
   return (
     <>
       <WrapperView>

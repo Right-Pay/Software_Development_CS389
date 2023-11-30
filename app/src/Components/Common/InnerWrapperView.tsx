@@ -3,21 +3,23 @@ import React from 'react';
 import { View } from 'react-native';
 import useColorsMode from '../../Helpers/Colors';
 
-type WrapperViewProps = PropsWithChildren & {
+type InnerWrapperViewProps = PropsWithChildren & {
   className?: string;
 } & View['props'];
 
-const WrapperView: React.FC<WrapperViewProps> = ({
+const InnerWrapperView: React.FC<InnerWrapperViewProps> = ({
   children,
   className,
   ...props
 }) => {
   const { themeMode } = useColorsMode();
   const isDarkTheme = themeMode === 'dark';
-  const bgColor = isDarkTheme ? 'bg-dark' : 'bg-light';
+  const bgColor = isDarkTheme
+    ? 'bg-dark border-light-green'
+    : 'bg-light border-dark-green';
   const classNames =
     bgColor +
-    ' flex-1 items-center h-full overflow-y-scroll space-between pb-12 justify-center ' +
+    ' flex-1 flex-col w-full p-5 items-center space-between' +
     className;
   return (
     <View className={classNames} {...props}>
@@ -26,4 +28,4 @@ const WrapperView: React.FC<WrapperViewProps> = ({
   );
 };
 
-export default WrapperView;
+export default InnerWrapperView;

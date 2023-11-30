@@ -20,16 +20,14 @@ import MainNavigator from './src/Navigation/MainNavigator';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const {colorScheme, setColorScheme} = useColorScheme();
+  const { setColorScheme } = useColorScheme();
   const theme = useNativeColorScheme();
 
   useEffect(() => {
     if (theme === 'dark') {
       setColorScheme('dark');
-      console.log('dark theme');
     } else {
       setColorScheme('light');
-      console.log('light theme');
     }
   }, [theme, setColorScheme]);
 

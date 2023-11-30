@@ -4,20 +4,20 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import authContext from '../../../Context/authContext';
 import Context from '../../../Context/context';
 import {
   AddCFormOverlayView,
-  FormButton,
-  FormButtonText,
   FormInputBox,
-  Title,
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { OptionsPropsType } from '../../Common/Dropdown';
+import PrimaryButton from '../../Common/PrimaryButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
@@ -88,18 +88,22 @@ const AddNewBankOption = (props: OptionsPropsType) => {
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         <AddCFormOverlayView className="flex-auto ">
-          <Title>{'Enter a New Option for bank'}</Title>
+          <TitleText>{'Enter a New Option for bank'}</TitleText>
           <FormInputBox
             placeholder="Name of Option"
             placeholderTextColor="#AFAEAE"
             onChange={event => setNewOption(event.nativeEvent.text)}
           />
-          <FormButton onPress={handleSubmit} className="mt-1 z-0">
-            <FormButtonText>Submit</FormButtonText>
-          </FormButton>
-          <FormButton onPress={closeModal} className="z-0">
-            <FormButtonText>Close</FormButtonText>
-          </FormButton>
+          <PrimaryButton onPress={handleSubmit} className="mt-1 z-0">
+            <PrimaryText type="secondary" className="text-center text-xl">
+              Submit
+            </PrimaryText>
+          </PrimaryButton>
+          <PrimaryButton onPress={closeModal} className="z-0">
+            <PrimaryText type="secondary" className="text-center text-xl">
+              Close
+            </PrimaryText>
+          </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}
         </AddCFormOverlayView>
       </KeyboardAvoidingView>

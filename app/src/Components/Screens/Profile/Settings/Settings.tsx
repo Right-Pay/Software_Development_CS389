@@ -5,18 +5,15 @@ import type { PropsWithChildren } from 'react';
 import React from 'react';
 import { View } from 'react-native';
 import authContext from '../../../../Context/authContext';
-import {
-  SettingsSubtitle,
-  SettingsView,
-  Subtitle,
-  Title,
-} from '../../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
 import { navSettingType } from '../../../../types/SettingsType';
+import InnerWrapperView from '../../../Common/InnerWrapperView';
+import PrimaryText from '../../../Common/PrimaryText';
+import TitleText from '../../../Common/TitleText';
 import WrapperView from '../../../Common/WrapperView';
 
 type SettingsScreenProps = CompositeScreenProps<
@@ -25,8 +22,8 @@ type SettingsScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
-  const {userProfile} = React.useContext(authContext) as AuthContextType;
+const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
+  const { userProfile } = React.useContext(authContext) as AuthContextType;
 
   const settingsPages: navSettingType[] = [
     {
@@ -61,26 +58,26 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({navigation}) => {
   const renderSettingsNav = (setting: navSettingType, key: number) => {
     return (
       <View key={key} className={'w-screen pl-4 justify-center h-1/6'}>
-        <SettingsSubtitle
+        <PrimaryText
           onPress={() => handleSettingsNavPress(setting.route)}
-          className="text-left">
+          className="text-2xl font-bold text-left">
           {setting.name}
-        </SettingsSubtitle>
+        </PrimaryText>
       </View>
     );
   };
 
   return (
     <WrapperView>
-      <Title className="top-10">Settings</Title>
-      <Subtitle className="top-10 mb-10 ml-5 mr-5" numberOfLines={1}>
+      <TitleText className="top-10">Settings</TitleText>
+      <PrimaryText className="top-10 mb-14 ml-5 mr-5" numberOfLines={1}>
         {userProfile.username}
-      </Subtitle>
-      <SettingsView className="left-0 divide-dark-green divide-solid divide-y-2 height-screen pt-0">
+      </PrimaryText>
+      <InnerWrapperView className="border-t-2 left-0 divide-dark-green divide-solid divide-y-2 height-screen pt-0">
         {settingsPages.map((setting, index) =>
           renderSettingsNav(setting, index),
         )}
-      </SettingsView>
+      </InnerWrapperView>
     </WrapperView>
   );
 };

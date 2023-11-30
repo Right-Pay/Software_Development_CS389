@@ -20,16 +20,16 @@ import {
   // FinePrint,
   BankOptionsView,
   BanksView,
-  FormButton,
-  FormButtonText,
   FormDateView,
   FormInputBox,
-  Title,
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { Card, CardBank } from '../../../types/CardType';
 import DropdownComponent, { OptionsProps } from '../../Common/Dropdown';
+import PrimaryButton from '../../Common/PrimaryButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
 // import AddNewDropdownOption from './AddNewBankOption';
 
 const AddCardFullForm = () => {
@@ -424,11 +424,11 @@ const AddCardFullForm = () => {
           enabled={isKeyboardVisible}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
           <AddCFormOverlayView className="flex-auto text-left z-0">
-            <Title>
+            <TitleText>
               {editState !== EditStates.Edit
                 ? 'Enter Card Details'
                 : 'Edit Card Details'}
-            </Title>
+            </TitleText>
             {renderBinInput()}
             {editState !== EditStates.Bin && (
               <>
@@ -440,12 +440,19 @@ const AddCardFullForm = () => {
               </>
             )}
 
-            <FormButton onPress={handleSubmit} className="mt-1 z-0">
-              <FormButtonText>Submit</FormButtonText>
-            </FormButton>
-            <FormButton onPress={closeModal} className="z-0">
-              <FormButtonText>Close</FormButtonText>
-            </FormButton>
+            <PrimaryButton
+              type="primary"
+              onPress={handleSubmit}
+              className="mt-1 z-0">
+              <PrimaryText type="secondary" className="text-center text-xl">
+                Submit
+              </PrimaryText>
+            </PrimaryButton>
+            <PrimaryButton onPress={closeModal} className="z-0">
+              <PrimaryText type="secondary" className="text-center text-xl">
+                Close
+              </PrimaryText>
+            </PrimaryButton>
             {AuthErrorComponent && <AuthErrorComponent />}
           </AddCFormOverlayView>
         </KeyboardAvoidingView>
