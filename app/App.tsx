@@ -88,9 +88,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
-  safeArea: {
-    backgroundColor: 'red',
-  },
 });
 
 export default RightPayApp;
