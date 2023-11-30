@@ -1,5 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Keyboard, KeyboardAvoidingView, Modal, Platform} from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  StyleSheet,
+} from 'react-native';
+import authContext from '../../../Context/authContext';
+import Context from '../../../Context/context';
+import {OptionsPropsType} from '../../../Helpers/Dropdown';
 import {
   AddCFormOverlayView,
   FormButton,
@@ -8,18 +17,16 @@ import {
   Title,
 } from '../../../Helpers/StylizedComponents';
 import {AppContext} from '../../../types/AppContextType';
-import Context from '../../../Context/context';
-import authContext from '../../../Context/authContext';
 import {AuthContextType} from '../../../types/AuthContextType';
-import {OptionsPropsType} from '../../../Helpers/Dropdown';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
   const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
     authContext,
   ) as AuthContextType;
-  const {setUpdatingDropdown, validateCardForm, setCardForms, CardForms} =
-    React.useContext(Context) as AppContext;
+  const {validateCardForm, setCardForms, CardForms} = React.useContext(
+    Context,
+  ) as AppContext;
 
   //options state
   const [newOption, setNewOption] = useState<string>('');
@@ -32,14 +39,12 @@ const AddNewBankOption = (props: OptionsPropsType) => {
       errors.forEach(error => addAuthError(error));
       return;
     } else {
-      setUpdatingDropdown(true);
       setCardForms({...CardForms, AddBankOption: false});
       props.setOption(newOption);
     }
   };
 
   const closeModal = () => {
-    setUpdatingDropdown(true);
     setCardForms({...CardForms, AddBankOption: false});
     clearAuthErrors();
   };
@@ -69,7 +74,7 @@ const AddNewBankOption = (props: OptionsPropsType) => {
 
   useEffect(() => {
     clearAuthErrors();
-  }, [props.show]);
+  }, [clearAuthErrors, props.show]);
 
   return (
     <Modal
@@ -78,11 +83,7 @@ const AddNewBankOption = (props: OptionsPropsType) => {
       visible={props.show}
       onRequestClose={closeModal}>
       <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          flexDirection: 'column',
-        }}
+        style={styles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
@@ -105,5 +106,13 @@ const AddNewBankOption = (props: OptionsPropsType) => {
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
+});
 
 export default AddNewBankOption;

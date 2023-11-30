@@ -41,3 +41,17 @@ export type WalletNavigationRoutesType = {
 export type LocationNavigationRoutesType = {
   LocationScreen: undefined;
 };
+
+export enum MainNavigationRoutesEnum {
+  HomeScreen = 'HomeScreen',
+  ProfileScreen = 'ProfileScreen',
+  CompanyScreen = 'CompanyScreen',
+  WalletScreen = 'WalletScreen',
+  LocationScreen = 'LocationScreen',
+}
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends NavigationRoutesType {}
+  }
+}

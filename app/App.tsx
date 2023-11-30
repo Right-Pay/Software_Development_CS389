@@ -1,18 +1,21 @@
-import 'react-native-dotenv';
-import 'react-native-config';
-import React, {useEffect, useState} from 'react';
-// import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {NavigationContainer} from '@react-navigation/native';
-import MainNavigator from './src/Navigation/MainNavigator';
+import React, {useEffect, useState} from 'react';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from 'react-native';
+import 'react-native-config';
+import 'react-native-dotenv';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
 import AuthState from './src/Context/AuthState';
-import {KeyboardAvoidingView, Platform} from 'react-native';
-import {Keyboard} from 'react-native';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import MainNavigator from './src/Navigation/MainNavigator';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -40,15 +43,10 @@ const RightPayApp = () => {
   return (
     <AuthState>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <GestureHandlerRootView style={{flex: 1}}>
+        <GestureHandlerRootView style={styles.gestureHandlerRootView}>
           <NavigationContainer>
             <KeyboardAvoidingView
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                flexDirection: 'column',
-                zIndex: 0,
-              }}
+              style={styles.keyboardAvoidingView}
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               enabled={isKeyboardVisible}
               keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
@@ -62,5 +60,17 @@ const RightPayApp = () => {
     </AuthState>
   );
 };
+
+const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'column',
+    zIndex: 0,
+  },
+  gestureHandlerRootView: {
+    flex: 1,
+  },
+});
 
 export default RightPayApp;
