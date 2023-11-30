@@ -89,13 +89,11 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
   const snapPoints = useMemo(() => ['25%'], []);
 
   const presentModal = useCallback(() => {
-    console.log('presentModal');
     bottomSheetModalRef.current?.present();
     bottomSheetModalRef.current?.snapToIndex(0);
   }, [bottomSheetModalRef]);
 
   const handleModalDismiss = useCallback(() => {
-    console.log('handleModalDismiss');
     setShowBottomSheetModal(false);
   }, [setShowBottomSheetModal]);
 
