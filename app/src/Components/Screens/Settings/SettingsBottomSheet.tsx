@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import { NavigationTabProp } from 'react-navigation-tabs';
 import authContext from '../../../Context/authContext';
+import useColorsMode from '../../../Helpers/Colors';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { navSettingType } from '../../../types/SettingsType';
 import PrimaryText from '../../Common/PrimaryText';
@@ -12,6 +13,7 @@ import PrimaryText from '../../Common/PrimaryText';
 const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
   const { signOut } = React.useContext(authContext) as AuthContextType;
   const { dismiss } = useBottomSheetModal();
+  const { colors } = useColorsMode();
   const navigation =
     useNavigation<NavigationTabProp<ReactNavigation.RootParamList>>();
 
@@ -79,11 +81,14 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
         key={key}
         className={'flex-1 flex-row w-screen pl-4 items-center h-auto'}>
         <View className="w-8 text-center">
-          <Icon name={getIcon(setting.name).toString()} color="#4d654e" />
+          <Icon
+            name={getIcon(setting.name).toString()}
+            color={colors.primary}
+          />
         </View>
         <PrimaryText
           onPress={() => handleSettingsNavPress(setting.route)}
-          className="text-left text-lg text-dark-green">
+          className="text-left text-lg">
           {setting.name}
         </PrimaryText>
       </View>

@@ -8,13 +8,11 @@ import {
 } from 'react-native';
 import authContext from '../../../Context/authContext';
 import Context from '../../../Context/context';
-import {
-  AddCFormOverlayView,
-  FormInputBox,
-} from '../../../Helpers/StylizedComponents';
+import { FormInputBox } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { OptionsPropsType } from '../../Common/Dropdown';
+import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
@@ -86,7 +84,7 @@ const AddNewBankOption = (props: OptionsPropsType) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-        <AddCFormOverlayView className="flex-auto ">
+        <ModalOverlayView className="flex-auto ">
           <TitleText>{'Enter a New Option for bank'}</TitleText>
           <FormInputBox
             placeholder="Name of Option"
@@ -104,7 +102,7 @@ const AddNewBankOption = (props: OptionsPropsType) => {
             </PrimaryText>
           </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}
-        </AddCFormOverlayView>
+        </ModalOverlayView>
       </KeyboardAvoidingView>
     </Modal>
   );

@@ -93,10 +93,6 @@ export const AddCardButton = styled(
   Pressable,
   'w-20 h-20 items-center justify-center',
 );
-export const AddCFormOverlayView = styled(
-  View,
-  'justify-center items-center bg-dark',
-);
 export const BanksView = styled(
   View,
   'flex flex-col justify-center border-2 border-slate-600 rounded-xl w-2/3 p-0 z-50 sticky',

@@ -16,17 +16,17 @@ import authContext from '../../../Context/authContext';
 import Context from '../../../Context/context';
 import Consts from '../../../Helpers/Consts';
 import {
-  AddCFormOverlayView,
   // FinePrint,
   BankOptionsView,
   BanksView,
   FormDateView,
-  FormInputBox,
+  FormInputBox
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { Card, CardBank } from '../../../types/CardType';
 import DropdownComponent, { OptionsProps } from '../../Common/Dropdown';
+import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
@@ -423,7 +423,7 @@ const AddCardFullForm = () => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           enabled={isKeyboardVisible}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-          <AddCFormOverlayView className="flex-auto text-left z-0">
+          <ModalOverlayView className="flex-auto text-left z-0">
             <TitleText>
               {editState !== EditStates.Edit
                 ? 'Enter Card Details'
@@ -454,7 +454,7 @@ const AddCardFullForm = () => {
               </PrimaryText>
             </PrimaryButton>
             {AuthErrorComponent && <AuthErrorComponent />}
-          </AddCFormOverlayView>
+          </ModalOverlayView>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </Modal>

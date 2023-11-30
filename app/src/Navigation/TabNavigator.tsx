@@ -9,9 +9,9 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
+  useRef
 } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet } from 'react-native';
 import Icon from 'react-native-ionicons';
 import SettingsBottomSheet from '../Components/Screens/Settings/SettingsBottomSheet';
 import context from '../Context/context';
@@ -22,7 +22,7 @@ import {
   HomeStackNavigator,
   LocationStackNavigator,
   ProfileStackNavigator,
-  WalletStackNavigator
+  WalletStackNavigator,
 } from './StackNavigator';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
@@ -64,8 +64,24 @@ const tabBarIconFilter = (
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
   const { colors } = useColorsMode();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [backgroundStyles, setBackgroundStyles] = React.useState<
+    StyleProp<{
+      backgroundColor: string;
+    }>
+  >(
+    {} as StyleProp<{
+      backgroundColor: string;
+    }>,
+  );
   const { bottomSheetModal, showBottomSheetModal, setShowBottomSheetModal } =
     React.useContext(context) as AppContext;
+
+  useEffect(() => {
+    const style = {
+      backgroundColor: colors.secondary,
+    };
+    setBackgroundStyles(StyleSheet.flatten([styles.modalBackground, style]));
+  }, [colors.secondary, setBackgroundStyles]);
 
   const snapPoints = useMemo(() => ['25%'], []);
 
@@ -149,7 +165,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         onDismiss={handleModalDismiss}
-        backgroundStyle={styles.modalBackground}>
+        backgroundStyle={backgroundStyles}>
         {getBottomSheetModal()}
       </BottomSheetModal>
     </>
@@ -159,6 +175,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
 const styles = StyleSheet.create({
   modalBackground: {
     opacity: 1,
+    backgroundColor: 'white',
   },
 });
 

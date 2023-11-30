@@ -36,7 +36,7 @@ const StyledView = styled(View);
 const LocationScreen: React.FC<LocationScreenProps> = () => {
   const { location, places, updateLocation, locationLoading } =
     React.useContext(locationContext) as LocationContext;
-  const { themeMode } = useColorsMode();
+  const { colors, themeMode } = useColorsMode();
   const isDarkTheme = themeMode === 'dark';
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -127,8 +127,8 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
             ? 'absolute bottom-0 left-0 w-full h-1/3 bg-dark rounded-t-xl'
             : 'absolute bottom-0 left-0 w-full h-1/3 bg-white rounded-t-xl'
         }>
-        <StyledView className={'rounded-t-xl h-10 border-b-2 border-gray-200'}>
-          <PrimaryText className="text-lg text-center pt-1">
+        <StyledView className="flex-1 flex-row shrink justify-center rounded-t-xl border-b-2 h-4 min-h-0 max-h-10 border-gray-200 items-center">
+          <PrimaryText className="text-lg text-center grow pl-6">
             Nearby Locations
           </PrimaryText>
           <Pressable
@@ -137,7 +137,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
               locationLoading ? null : updateLocation();
             }}
             disabled={locationLoading}>
-            {<Icon name="refresh" color="#4d654e" />}
+            {<Icon name="refresh" color={colors.primary} />}
           </Pressable>
         </StyledView>
         <NearbyLocationScrollView
