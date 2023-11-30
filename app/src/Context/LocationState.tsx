@@ -5,12 +5,12 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import LocationContext from './locationContext';
-import {Location, Place, PlaceLocation} from '../types/Location';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import context from './context';
 import {AppContext} from '../types/AppContextType';
+import {Location, Place, PlaceLocation} from '../types/Location';
+import context from './context';
+import LocationContext from './locationContext';
 
 const LocationState: React.FC<PropsWithChildren> = ({children}) => {
   const [location, setLocation] = useState<Location>({} as Location);
@@ -322,7 +322,7 @@ const LocationState: React.FC<PropsWithChildren> = ({children}) => {
     if (appStateVisible === 'active') {
       updateLocation();
     }
-  }, [updateLocation, appStateVisible]);
+  }, [appStateVisible, updateLocation]);
 
   return (
     <LocationContext.Provider

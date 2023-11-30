@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -10,11 +10,13 @@ import {
   AuthInputBox,
   Logo,
   LogoContainer,
+  Subtitle,
   Title,
   WrapperView,
 } from '../../../Helpers/StylizedComponents';
 import KeyboardAvoidingViewScroll from '../../../Helpers/KeyboardAvoidingViewScroll';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
+import Icon from 'react-native-ionicons';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -32,6 +34,19 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
+
+  const backButton = useCallback(() => {
+    return (
+      <Pressable
+        className="flex-1 flex-row pl-4 h-10 justify-start items-center text-center top-10 left-0 absolute"
+        onPress={() => {
+          navigation.goBack();
+        }}>
+        <Icon name="arrow-back" color="#4d654e" />
+        <Subtitle className="ml-2 font-bold text-dark-green">Back</Subtitle>
+      </Pressable>
+    );
+  }, [navigation]);
 
   return (
     <WrapperView className="pb-0">
@@ -58,6 +73,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
             <AuthButtonText>Reset Password</AuthButtonText>
           </AuthButton>
           {AuthErrorComponent && <AuthErrorComponent />}
+          {backButton()}
         </View>
       </KeyboardAvoidingViewScroll>
     </WrapperView>

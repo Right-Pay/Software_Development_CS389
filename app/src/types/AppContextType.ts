@@ -26,4 +26,17 @@ export interface AppContext {
   newCardBin: number;
   isKeyboardVisible: boolean;
   appStateVisible: string;
+  setShowBottomSheetModal: (_showBottomSheetModal: boolean) => void;
+  showBottomSheetModal: boolean;
+  setBottomSheetModal: (_bottomSheetModal: BottomSheetModalType) => void;
+  bottomSheetModal: BottomSheetModalType;
+}
+
+export enum BottomSheetTypes {
+  SETTINGS = 'Settings',
+}
+
+export interface BottomSheetModalType {
+  type: BottomSheetTypes;
+  snapPoints: string[];
 }

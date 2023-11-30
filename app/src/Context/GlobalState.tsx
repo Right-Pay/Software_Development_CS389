@@ -1,20 +1,21 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
 import type {PropsWithChildren} from 'react';
-import Context from './context';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {AppState, Keyboard} from 'react-native';
+import Config from 'react-native-config';
+import Consts from '../Helpers/Consts';
+import {BottomSheetModalType, BottomSheetTypes} from '../types/AppContextType';
+import {AuthContextType} from '../types/AuthContextType';
 import {
-  CardFormDetails,
-  CardFormsType,
   Card,
-  Reward,
   CardBank,
   CardBrand,
+  CardFormDetails,
+  CardFormsType,
+  Reward,
 } from '../types/CardType';
-import {AppState, Keyboard} from 'react-native';
-import Consts from '../Helpers/Consts';
-import Config from 'react-native-config';
-import {AuthContextType} from '../types/AuthContextType';
-import AuthContext from './authContext';
 import LocationState from './LocationState';
+import AuthContext from './authContext';
+import Context from './context';
 const baseURL = Config.REACT_APP_API_URL;
 
 const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
@@ -25,6 +26,14 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
 
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
+
+  const [showBottomSheetModal, setShowBottomSheetModal] =
+    useState<boolean>(false);
+  const [bottomSheetModal, setBottomSheetModal] =
+    useState<BottomSheetModalType>({
+      type: BottomSheetTypes.SETTINGS,
+      snapPoints: ['25%'],
+    });
 
   const [CardForms, setCardForms] = useState<CardFormsType>({
     Full: false,
@@ -407,6 +416,10 @@ const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
         setNewCardBin,
         isKeyboardVisible,
         appStateVisible,
+        setShowBottomSheetModal,
+        showBottomSheetModal,
+        setBottomSheetModal,
+        bottomSheetModal,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>
