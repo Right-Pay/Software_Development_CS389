@@ -4,7 +4,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import authContext from '../../../Context/authContext';
 import Context from '../../../Context/context';
@@ -23,8 +23,9 @@ const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
   const { addAuthError, clearAuthErrors, AuthErrorComponent } =
     React.useContext(authContext) as AuthContextType;
-  const { setUpdatingDropdown, validateCardForm, setCardForms, CardForms } =
-    React.useContext(Context) as AppContext;
+  const { validateCardForm, setCardForms, CardForms } = React.useContext(
+    Context,
+  ) as AppContext;
 
   //options state
   const [newOption, setNewOption] = useState<string>('');
@@ -37,14 +38,12 @@ const AddNewBankOption = (props: OptionsPropsType) => {
       errors.forEach(error => addAuthError(error));
       return;
     } else {
-      setUpdatingDropdown(true);
       setCardForms({ ...CardForms, AddBankOption: false });
       props.setOption(newOption);
     }
   };
 
   const closeModal = () => {
-    setUpdatingDropdown(true);
     setCardForms({ ...CardForms, AddBankOption: false });
     clearAuthErrors();
   };
@@ -74,7 +73,7 @@ const AddNewBankOption = (props: OptionsPropsType) => {
 
   useEffect(() => {
     clearAuthErrors();
-  }, [props.show, clearAuthErrors]);
+  }, [clearAuthErrors, props.show]);
 
   return (
     <Modal

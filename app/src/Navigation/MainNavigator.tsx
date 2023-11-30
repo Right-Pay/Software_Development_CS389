@@ -39,6 +39,7 @@ const MainNavigator: React.FC<PropsWithChildren> = () => {
   if (isLoading) {
     return <SplashScreen />;
   }
+
   return userToken ? <BottomTabNavigator /> : <WelcomeNavigator />;
 };
 

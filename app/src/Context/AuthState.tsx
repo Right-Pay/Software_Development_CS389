@@ -251,16 +251,12 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
       username: newUserProfile.username,
       phone: newUserProfile.phone,
     };
-    console.log(JSON.stringify(body));
     await fetch(`${baseURL}users`, {
       method: 'PUT',
       headers: headers,
       body: JSON.stringify(body),
     })
       .then(async res => {
-        res.json().then(result => {
-          console.log(result);
-        });
         if (res.status === 200) {
           await refreshUserProfile();
         } else {

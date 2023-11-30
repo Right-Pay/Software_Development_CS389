@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'react-native-config';
 import 'react-native-dotenv';
 // import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import { useColorScheme } from 'nativewind';
 import {
@@ -11,6 +12,9 @@ import {
   StyleSheet,
   useColorScheme as useNativeColorScheme,
 } from 'react-native';
+import 'react-native-config';
+import 'react-native-dotenv';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -54,15 +58,19 @@ const RightPayApp = () => {
   return (
     <AuthState>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <NavigationContainer>
-          <KeyboardAvoidingView
-            style={styles.keyboardAvoidingView}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            enabled={isKeyboardVisible}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-            <MainNavigator />
-          </KeyboardAvoidingView>
-        </NavigationContainer>
+        <GestureHandlerRootView style={styles.gestureHandlerRootView}>
+          <NavigationContainer>
+            <KeyboardAvoidingView
+              style={styles.keyboardAvoidingView}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              enabled={isKeyboardVisible}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
+              <BottomSheetModalProvider>
+                <MainNavigator />
+              </BottomSheetModalProvider>
+            </KeyboardAvoidingView>
+          </NavigationContainer>
+        </GestureHandlerRootView>
       </SafeAreaProvider>
     </AuthState>
   );
@@ -74,6 +82,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'column',
     zIndex: 0,
+  },
+  gestureHandlerRootView: {
+    flex: 1,
   },
 });
 

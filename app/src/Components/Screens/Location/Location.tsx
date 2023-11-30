@@ -4,7 +4,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { styled } from 'nativewind';
 import type { PropsWithChildren } from 'react';
 import React, { useRef } from 'react';
-import { Platform, View, ViewToken } from 'react-native';
+import { Platform, Pressable, Text, View, ViewToken } from 'react-native';
+import Icon from 'react-native-ionicons';
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import locationContext from '../../../Context/locationContext';
 import useColorsMode from '../../../Helpers/Colors';
@@ -22,7 +23,6 @@ import type {
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
-const StyledView = styled(View);
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -30,10 +30,12 @@ type LocationScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
+const StlyizedText = styled(Text, 'text-lg text-dark-green');
+const StyledView = styled(View);
+
 const LocationScreen: React.FC<LocationScreenProps> = () => {
-  const { location, places } = React.useContext(
-    locationContext,
-  ) as LocationContext;
+  const { location, places, updateLocation, locationLoading } =
+    React.useContext(locationContext) as LocationContext;
   const { themeMode } = useColorsMode();
   const isDarkTheme = themeMode === 'dark';
 
@@ -129,6 +131,14 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
           <PrimaryText className="text-lg text-center pt-1">
             Nearby Locations
           </PrimaryText>
+          <Pressable
+            className="ml-auto pr-2"
+            onPress={() => {
+              locationLoading ? null : updateLocation();
+            }}
+            disabled={locationLoading}>
+            {<Icon name="refresh" color="#4d654e" />}
+          </Pressable>
         </StyledView>
         <NearbyLocationScrollView
           className="text-black z-50"

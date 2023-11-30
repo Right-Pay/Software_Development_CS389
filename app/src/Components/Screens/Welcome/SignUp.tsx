@@ -1,12 +1,13 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { Pressable, View } from 'react-native';
+import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
 import {
   AuthInputBox,
   Logo,
-  LogoContainer
+  LogoContainer,
 } from '../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
@@ -33,6 +34,22 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
+
+  const backButton = useCallback(() => {
+    return (
+      <Pressable
+        className="flex-1 flex-row pl-4 h-10 justify-start items-center text-center top-10 left-0 absolute"
+        onPress={() => {
+          navigation.goBack();
+        }}>
+        <Icon name="arrow-back" color="#4d654e" />
+        <PrimaryText className="ml-2 text-xl text-center font-bold">
+          Back
+        </PrimaryText>
+      </Pressable>
+    );
+  }, [navigation]);
+
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
@@ -78,6 +95,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
             <TitleText>'You have successfully signed up'</TitleText>
           )}
           {AuthErrorComponent && <AuthErrorComponent />}
+          {backButton()}
         </View>
       </KeyboardAvoidingViewScroll>
     </WrapperView>
