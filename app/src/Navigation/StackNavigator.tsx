@@ -19,7 +19,7 @@ import type {
   LocationNavigationRoutesType,
   NavigationRoutesType,
   ProfileNavigationRoutesType,
-  WalletNavigationRoutesType
+  WalletNavigationRoutesType,
 } from '../types/NavigationRoutesType';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
