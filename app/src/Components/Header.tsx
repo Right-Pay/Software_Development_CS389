@@ -1,17 +1,17 @@
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
-import { NativeStackHeaderProps } from '@react-navigation/native-stack';
-import React, { useCallback } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import {NativeStackHeaderProps} from '@react-navigation/native-stack';
+import React, {useCallback} from 'react';
+import {Platform, Pressable, Text, View} from 'react-native';
 import Icon from 'react-native-ionicons';
 import context from '../Context/context';
 import locationContext from '../Context/locationContext';
-import { AppContext, BottomSheetTypes } from '../types/AppContextType';
-import { LocationContext } from '../types/LocationContextType';
-import { MainNavigationRoutesEnum } from '../types/NavigationRoutesType';
+import {AppContext, BottomSheetTypes} from '../types/AppContextType';
+import {LocationContext} from '../types/LocationContextType';
+import {MainNavigationRoutesEnum} from '../types/NavigationRoutesType';
 
-const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
-  const { address } = React.useContext(locationContext) as LocationContext;
-  const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
+const TopBar: React.FC<NativeStackHeaderProps> = ({navigation, route}) => {
+  const {address} = React.useContext(locationContext) as LocationContext;
+  const {setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal} =
     React.useContext(context) as AppContext;
 
   const handlePresentModalPress = useCallback(() => {
@@ -70,8 +70,13 @@ const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
     );
   }, [navigation, screenTitle]);
 
+  const classNameString =
+    Platform.OS === 'ios'
+      ? 'flex flex-row items-center w-screen h-24 pt-4 bg-dark-green border-b-3 border-slate-600'
+      : 'flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600';
+
   return (
-    <View className="flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600">
+    <View className={classNameString}>
       {isMainScreen() ? (
         <>
           <View className="w-5/6 pl-6">
