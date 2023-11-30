@@ -1,8 +1,8 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { PropsWithChildren } from 'react';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {PropsWithChildren} from 'react';
 import React from 'react';
-import { Logo, LogoContainer } from '../../../Helpers/StylizedComponents';
-import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import {Logo, LogoContainer} from '../../../Helpers/StylizedComponents';
+import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
@@ -14,7 +14,7 @@ type WelcomeScreenProps = NativeStackScreenProps<
 > &
   PropsWithChildren;
 
-const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
+const WelcomeScreen: React.FC<WelcomeScreenProps> = ({navigation}) => {
   return (
     <WrapperView>
       <TitleText className="mt-20">Welcome to RightPay</TitleText>

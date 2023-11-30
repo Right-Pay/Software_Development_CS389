@@ -1,4 +1,4 @@
-import { Card } from './CardType';
+import {Card} from './CardType';
 
 export interface Profile {
   id: number;

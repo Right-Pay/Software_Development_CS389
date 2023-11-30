@@ -1,19 +1,19 @@
-import { useBottomSheetModal } from '@gorhom/bottom-sheet';
-import { useNavigation } from '@react-navigation/native';
-import React, { PropsWithChildren } from 'react';
-import { View } from 'react-native';
+import {useBottomSheetModal} from '@gorhom/bottom-sheet';
+import {useNavigation} from '@react-navigation/native';
+import React, {PropsWithChildren} from 'react';
+import {View} from 'react-native';
 import Icon from 'react-native-ionicons';
-import { NavigationTabProp } from 'react-navigation-tabs';
+import {NavigationTabProp} from 'react-navigation-tabs';
 import authContext from '../../../Context/authContext';
 import useColorsMode from '../../../Helpers/Colors';
-import { AuthContextType } from '../../../types/AuthContextType';
-import { navSettingType } from '../../../types/SettingsType';
+import {AuthContextType} from '../../../types/AuthContextType';
+import {navSettingType} from '../../../types/SettingsType';
 import PrimaryText from '../../Common/PrimaryText';
 
 const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
-  const { signOut } = React.useContext(authContext) as AuthContextType;
-  const { dismiss } = useBottomSheetModal();
-  const { colors } = useColorsMode();
+  const {signOut} = React.useContext(authContext) as AuthContextType;
+  const {dismiss} = useBottomSheetModal();
+  const {colors} = useColorsMode();
   const navigation =
     useNavigation<NavigationTabProp<ReactNavigation.RootParamList>>();
 
@@ -50,7 +50,7 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
         });
         break;
       case 'CardSettings':
-        navigation.navigate('SettingsStack', { screen: 'CardSettings' });
+        navigation.navigate('SettingsStack', {screen: 'CardSettings'});
         break;
       case 'SignOut':
         signOut();

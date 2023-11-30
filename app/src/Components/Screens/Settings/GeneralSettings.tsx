@@ -1,15 +1,15 @@
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { CompositeScreenProps } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { PropsWithChildren } from 'react';
-import React, { useContext, useEffect } from 'react';
-import { Linking } from 'react-native';
-import { Switch } from 'react-native-switch';
+import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import type {CompositeScreenProps} from '@react-navigation/native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {PropsWithChildren} from 'react';
+import React, {useContext, useEffect} from 'react';
+import {Linking} from 'react-native';
+import {Switch} from 'react-native-switch';
 import context from '../../../Context/context';
 import locationContext from '../../../Context/locationContext';
 import useColorsMode from '../../../Helpers/Colors';
-import { AppContext } from '../../../types/AppContextType';
-import { LocationContext } from '../../../types/LocationContextType';
+import {AppContext} from '../../../types/AppContextType';
+import {LocationContext} from '../../../types/LocationContextType';
 import type {
   NavigationRoutesType,
   SettingsNavigationRoutesType,
@@ -28,11 +28,11 @@ type GeneralSettingsProps = CompositeScreenProps<
   PropsWithChildren;
 
 const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
-  const { appStateVisible } = useContext(context) as AppContext;
-  const { requestLocationPermission, locationGrantType } = useContext(
+  const {appStateVisible} = useContext(context) as AppContext;
+  const {requestLocationPermission, locationGrantType} = useContext(
     locationContext,
   ) as LocationContext;
-  const { colors } = useColorsMode();
+  const {colors} = useColorsMode();
 
   const [locationServicesOn, setLocationServicesOn] =
     React.useState<boolean>(locationGrantType);

@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import type {PropsWithChildren} from 'react';
 import React from 'react';
 import TitleText from './Common/TitleText';
 import WrapperView from './Common/WrapperView';

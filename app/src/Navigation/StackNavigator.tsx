@@ -6,20 +6,20 @@ import {
   RouteProp,
   getFocusedRouteNameFromRoute,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { PropsWithChildren } from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, {PropsWithChildren} from 'react';
 import TopBar from '../Components/Header';
 import HomeScreen from '../Components/Screens/Home/Home';
 import LocationScreen from '../Components/Screens/Location/Location';
 import ProfileScreen from '../Components/Screens/Profile/Profile';
 import WalletScreen from '../Components/Screens/Wallet/Wallet';
-import useColorsMode, { DarkColors, LightColors } from '../Helpers/Colors';
+import useColorsMode, {DarkColors, LightColors} from '../Helpers/Colors';
 import type {
   HomeNavigationRoutesType,
   LocationNavigationRoutesType,
   NavigationRoutesType,
   ProfileNavigationRoutesType,
-  WalletNavigationRoutesType
+  WalletNavigationRoutesType,
 } from '../types/NavigationRoutesType';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
@@ -35,9 +35,9 @@ const hideTabBar = (
 ): void => {
   const routeName = getFocusedRouteNameFromRoute(route);
   if (routeName === screenToNotHide || routeName === undefined) {
-    navigation.setOptions({ tabBarStyle: { display: 'flex' } });
+    navigation.setOptions({tabBarStyle: {display: 'flex'}});
   } else {
-    navigation.setOptions({ tabBarStyle: { display: 'none' } });
+    navigation.setOptions({tabBarStyle: {display: 'none'}});
   }
 };
 
@@ -60,8 +60,8 @@ const screenOptionStyleDark = {
 type StackProps = BottomTabScreenProps<NavigationRoutesType> &
   PropsWithChildren;
 
-const HomeStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
-  const { themeMode } = useColorsMode();
+const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {themeMode} = useColorsMode();
 
   const screenOptionStyle =
     themeMode === 'dark' ? screenOptionStyleDark : screenOptionStyleLight;
@@ -81,14 +81,14 @@ const HomeStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{ title: 'Home Screen' }}
+        options={{title: 'Home Screen'}}
       />
     </HomeStack.Navigator>
   );
 };
 
-const ProfileStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
-  const { themeMode } = useColorsMode();
+const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {themeMode} = useColorsMode();
 
   const screenOptionStyle =
     themeMode === 'dark' ? screenOptionStyleDark : screenOptionStyleLight;
@@ -110,8 +110,8 @@ const ProfileStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
   );
 };
 
-const WalletStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
-  const { themeMode } = useColorsMode();
+const WalletStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {themeMode} = useColorsMode();
 
   const screenOptionStyle =
     themeMode === 'dark' ? screenOptionStyleDark : screenOptionStyleLight;
@@ -132,11 +132,8 @@ const WalletStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
   );
 };
 
-const LocationStackNavigator: React.FC<StackProps> = ({
-  navigation,
-  route,
-}) => {
-  const { themeMode } = useColorsMode();
+const LocationStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
+  const {themeMode} = useColorsMode();
 
   const screenOptionStyle =
     themeMode === 'dark' ? screenOptionStyleDark : screenOptionStyleLight;

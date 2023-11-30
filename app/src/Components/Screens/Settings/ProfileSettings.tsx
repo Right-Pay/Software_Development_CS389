@@ -1,17 +1,17 @@
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { CompositeScreenProps } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { PropsWithChildren } from 'react';
-import React, { useContext, useState } from 'react';
+import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import type {CompositeScreenProps} from '@react-navigation/native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {PropsWithChildren} from 'react';
+import React, {useContext, useState} from 'react';
 import authContext from '../../../Context/authContext';
 import Consts from '../../../Helpers/Consts';
-import { SettingsInputBox } from '../../../Helpers/StylizedComponents';
-import { AuthContextType } from '../../../types/AuthContextType';
+import {SettingsInputBox} from '../../../Helpers/StylizedComponents';
+import {AuthContextType} from '../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
   SettingsNavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
-import { Profile } from '../../../types/ProfileType';
+import {Profile} from '../../../types/ProfileType';
 import AuthErrorComponent from '../../Common/AuthErrorComponent';
 import InnerWrapperView from '../../Common/InnerWrapperView';
 import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';

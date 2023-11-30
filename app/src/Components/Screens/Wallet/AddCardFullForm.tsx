@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -20,12 +20,12 @@ import {
   BankOptionsView,
   BanksView,
   FormDateView,
-  FormInputBox
+  FormInputBox,
 } from '../../../Helpers/StylizedComponents';
-import { AppContext } from '../../../types/AppContextType';
-import { AuthContextType } from '../../../types/AuthContextType';
-import { Card, CardBank } from '../../../types/CardType';
-import DropdownComponent, { OptionsProps } from '../../Common/Dropdown';
+import {AppContext} from '../../../types/AppContextType';
+import {AuthContextType} from '../../../types/AuthContextType';
+import {Card, CardBank} from '../../../types/CardType';
+import DropdownComponent, {OptionsProps} from '../../Common/Dropdown';
 import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
@@ -34,7 +34,7 @@ import TitleText from '../../Common/TitleText';
 
 const AddCardFullForm = () => {
   //Context
-  const { addAuthError, clearAuthErrors, AuthErrorComponent, removeAuthError } =
+  const {addAuthError, clearAuthErrors, AuthErrorComponent, removeAuthError} =
     React.useContext(authContext) as AuthContextType;
   const {
     linkCard,
@@ -103,7 +103,7 @@ const AddCardFullForm = () => {
     const currentExpirationDate = card?.exp_date;
     const year = currentExpirationDate?.split('-')[0];
     if (currentExpirationDate) {
-      setCard({ ...card, exp_date: `${year}-${month}` });
+      setCard({...card, exp_date: `${year}-${month}`});
     }
   };
 
@@ -111,7 +111,7 @@ const AddCardFullForm = () => {
     const currentExpirationDate = card?.exp_date;
     const month = currentExpirationDate?.split('-')[1];
     if (currentExpirationDate) {
-      setCard({ ...card, exp_date: `${year}-${month}` });
+      setCard({...card, exp_date: `${year}-${month}`});
     }
   };
 
@@ -143,7 +143,7 @@ const AddCardFullForm = () => {
         setFilteredBankOptions([]);
         setEditState(EditStates.Edit);
       } else {
-        setCard({ ...card, exp_date: '23-01' });
+        setCard({...card, exp_date: '23-01'});
         setEditState(EditStates.Add);
       }
     }
@@ -152,14 +152,14 @@ const AddCardFullForm = () => {
   };
 
   const closeModal = () => {
-    setCardForms({ ...CardForms, Full: false });
+    setCardForms({...CardForms, Full: false});
     setCard({} as Card);
     setBankSearch('');
     clearAuthErrors();
     setEditState(EditStates.Bin);
   };
 
-  const renderBankOption = ({ item }: { item: CardBank }) => (
+  const renderBankOption = ({item}: {item: CardBank}) => (
     <Pressable
       onPress={() => {
         const bank_id = Number(item.id);
@@ -251,7 +251,7 @@ const AddCardFullForm = () => {
       }
 
       removeAuthError(Consts.authErrorMessages.invalidCardBin);
-      setCard({ ...card, card_bin: bin });
+      setCard({...card, card_bin: bin});
     };
     return (
       <FormInputBox
@@ -269,7 +269,7 @@ const AddCardFullForm = () => {
       if (editState === EditStates.Edit && card.card_level !== text) {
         setEditState(EditStates.Add);
       }
-      setCard({ ...card, card_level: text });
+      setCard({...card, card_level: text});
     };
     return (
       <FormInputBox
@@ -359,7 +359,7 @@ const AddCardFullForm = () => {
       if (editState === EditStates.Edit && card.card_type !== event) {
         setEditState(EditStates.Add);
       }
-      setCard({ ...card, card_type: event });
+      setCard({...card, card_type: event});
     };
     return (
       <DropdownComponent
@@ -385,7 +385,7 @@ const AddCardFullForm = () => {
     return (
       <FormDateView className="m-2 z-30">
         <DropdownComponent
-          options={Array.from({ length: 12 }, (_, i) => {
+          options={Array.from({length: 12}, (_, i) => {
             return {
               label: (i + 1).toString(),
               value: (i + 1).toString(),

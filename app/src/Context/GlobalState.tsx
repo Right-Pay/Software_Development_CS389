@@ -1,13 +1,10 @@
-import type { PropsWithChildren } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { AppState, Keyboard } from 'react-native';
+import type {PropsWithChildren} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {AppState, Keyboard} from 'react-native';
 import Config from 'react-native-config';
 import Consts from '../Helpers/Consts';
-import {
-  BottomSheetModalType,
-  BottomSheetTypes,
-} from '../types/AppContextType';
-import { AuthContextType } from '../types/AuthContextType';
+import {BottomSheetModalType, BottomSheetTypes} from '../types/AppContextType';
+import {AuthContextType} from '../types/AuthContextType';
 import {
   Card,
   CardBank,
@@ -21,8 +18,8 @@ import AuthContext from './authContext';
 import Context from './context';
 const baseURL = Config.REACT_APP_API_URL;
 
-const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
-  const { refreshAuth0Token, userToken, userProfile, addAuthError } =
+const GlobalState: React.FC<PropsWithChildren> = ({children}) => {
+  const {refreshAuth0Token, userToken, userProfile, addAuthError} =
     React.useContext(AuthContext) as AuthContextType;
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);

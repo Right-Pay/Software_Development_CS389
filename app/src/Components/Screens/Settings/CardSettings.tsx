@@ -1,18 +1,18 @@
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { CompositeScreenProps } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { PropsWithChildren } from 'react';
+import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import type {CompositeScreenProps} from '@react-navigation/native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {PropsWithChildren} from 'react';
 import React from 'react';
-import { View } from 'react-native';
+import {View} from 'react-native';
 import authContext from '../../../Context/authContext';
 import context from '../../../Context/context';
 import {
   SettingsCardList,
   SettingsCardView,
 } from '../../../Helpers/StylizedComponents';
-import { AppContext } from '../../../types/AppContextType';
-import { AuthContextType } from '../../../types/AuthContextType';
-import { Card } from '../../../types/CardType';
+import {AppContext} from '../../../types/AppContextType';
+import {AuthContextType} from '../../../types/AuthContextType';
+import {Card} from '../../../types/CardType';
 import type {
   NavigationRoutesType,
   SettingsNavigationRoutesType,
@@ -31,9 +31,9 @@ type CardSettingsScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const CardSettings: React.FC<CardSettingsScreenProps> = () => {
-  const { cards } = (React.useContext(authContext) as AuthContextType)
+  const {cards} = (React.useContext(authContext) as AuthContextType)
     .userProfile;
-  const { unlinkCard } = React.useContext(context) as AppContext;
+  const {unlinkCard} = React.useContext(context) as AppContext;
 
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 

@@ -1,4 +1,4 @@
-import { Location, Place } from './Location';
+import {Location, Place} from './Location';
 
 export interface LocationContext {
   location: Location;

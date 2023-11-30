@@ -1,7 +1,7 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { PropsWithChildren } from 'react';
-import React, { useCallback, useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {PropsWithChildren} from 'react';
+import React, {useCallback, useEffect} from 'react';
+import {Pressable, View} from 'react-native';
 import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
 import {
@@ -9,8 +9,8 @@ import {
   Logo,
   LogoContainer,
 } from '../../../Helpers/StylizedComponents';
-import { AuthContextType } from '../../../types/AuthContextType';
-import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import {AuthContextType} from '../../../types/AuthContextType';
+import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
 import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
@@ -23,13 +23,13 @@ type SignUpScreenProps = NativeStackScreenProps<
 > &
   PropsWithChildren;
 
-const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
+const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
   const [email, setEmail] = React.useState<string>('');
   const [username, setUsername] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
 
-  const { signUp, clearAuthErrors, AuthErrorComponent, userToken } =
+  const {signUp, clearAuthErrors, AuthErrorComponent, userToken} =
     React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();

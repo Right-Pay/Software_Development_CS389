@@ -1,5 +1,6 @@
-import { Card } from './CardType';
-import { Profile } from './ProfileType';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {Card} from './CardType';
+import {Profile} from './ProfileType';
 
 interface hashType {
   [key: string]: string;

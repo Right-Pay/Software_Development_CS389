@@ -1,10 +1,10 @@
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { CompositeScreenProps } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { PropsWithChildren } from 'react';
+import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import type {CompositeScreenProps} from '@react-navigation/native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {PropsWithChildren} from 'react';
 import React from 'react';
 import AuthContext from '../../../Context/authContext';
-import { AuthContextType } from '../../../types/AuthContextType';
+import {AuthContextType} from '../../../types/AuthContextType';
 import type {
   HomeNavigationRoutesType,
   NavigationRoutesType,
@@ -20,7 +20,7 @@ type HomeScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
-  const { userProfile } = React.useContext(AuthContext) as AuthContextType;
+  const {userProfile} = React.useContext(AuthContext) as AuthContextType;
 
   return (
     <WrapperView>
