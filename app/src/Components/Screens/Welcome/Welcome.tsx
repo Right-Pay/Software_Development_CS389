@@ -1,10 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
-import {
-  Logo,
-  LogoContainer
-} from '../../../Helpers/StylizedComponents';
+import { Logo, LogoContainer } from '../../../Helpers/StylizedComponents';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';

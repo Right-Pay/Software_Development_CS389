@@ -5,24 +5,24 @@ import type { PropsWithChildren } from 'react';
 import React, { useContext, useEffect } from 'react';
 import { Linking } from 'react-native';
 import { Switch } from 'react-native-switch';
-import context from '../../../../Context/context';
-import locationContext from '../../../../Context/locationContext';
-import useColorsMode from '../../../../Helpers/Colors';
-import { AppContext } from '../../../../types/AppContextType';
-import { LocationContext } from '../../../../types/LocationContextType';
+import context from '../../../Context/context';
+import locationContext from '../../../Context/locationContext';
+import useColorsMode from '../../../Helpers/Colors';
+import { AppContext } from '../../../types/AppContextType';
+import { LocationContext } from '../../../types/LocationContextType';
 import type {
   NavigationRoutesType,
-  ProfileNavigationRoutesType,
-} from '../../../../types/NavigationRoutesType';
-import InnerWrapperView from '../../../Common/InnerWrapperView';
-import KeyboardAvoidingViewScroll from '../../../Common/KeyboardAvoidingViewScroll';
-import OutlineButton from '../../../Common/OutlineButton';
-import PrimaryText from '../../../Common/PrimaryText';
-import TitleText from '../../../Common/TitleText';
-import WrapperView from '../../../Common/WrapperView';
+  SettingsNavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
+import InnerWrapperView from '../../Common/InnerWrapperView';
+import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
+import OutlineButton from '../../Common/OutlineButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
+import WrapperView from '../../Common/WrapperView';
 
 type GeneralSettingsProps = CompositeScreenProps<
-  NativeStackScreenProps<ProfileNavigationRoutesType, 'GeneralSettings'>,
+  NativeStackScreenProps<SettingsNavigationRoutesType, 'GeneralSettings'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;

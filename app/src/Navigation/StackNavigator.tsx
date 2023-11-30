@@ -9,27 +9,21 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { PropsWithChildren } from 'react';
 import TopBar from '../Components/Header';
-import CompanyScreen from '../Components/Screens/Company/Company';
 import HomeScreen from '../Components/Screens/Home/Home';
 import LocationScreen from '../Components/Screens/Location/Location';
 import ProfileScreen from '../Components/Screens/Profile/Profile';
-import CardSettings from '../Components/Screens/Profile/Settings/CardSettings';
-import GeneralSettings from '../Components/Screens/Profile/Settings/GeneralSettings';
-import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSettings';
 import WalletScreen from '../Components/Screens/Wallet/Wallet';
 import useColorsMode, { DarkColors, LightColors } from '../Helpers/Colors';
 import type {
-  CompanyNavigationRoutesType,
   HomeNavigationRoutesType,
   LocationNavigationRoutesType,
   NavigationRoutesType,
   ProfileNavigationRoutesType,
-  WalletNavigationRoutesType,
+  WalletNavigationRoutesType
 } from '../types/NavigationRoutesType';
 
 const HomeStack = createNativeStackNavigator<HomeNavigationRoutesType>();
 const ProfileStack = createNativeStackNavigator<ProfileNavigationRoutesType>();
-const CompanyStack = createNativeStackNavigator<CompanyNavigationRoutesType>();
 const WalletStack = createNativeStackNavigator<WalletNavigationRoutesType>();
 const LocationStack =
   createNativeStackNavigator<LocationNavigationRoutesType>();
@@ -111,51 +105,8 @@ const ProfileStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
         ...screenOptionStyle,
         header: headerProps => TopBar(headerProps),
       }}>
-      <ProfileStack.Group
-        screenOptions={{
-          ...screenOptionStyle,
-          header: headerProps => TopBar(headerProps),
-        }}>
-        <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
-      </ProfileStack.Group>
-      <ProfileStack.Group
-        screenOptions={{
-          ...screenOptionStyle,
-          header: headerProps => TopBar(headerProps),
-        }}>
-        <ProfileStack.Screen
-          name="ProfileSettings"
-          component={ProfileSettings}
-        />
-        <ProfileStack.Screen
-          name="GeneralSettings"
-          component={GeneralSettings}
-        />
-        <ProfileStack.Screen name="CardSettings" component={CardSettings} />
-      </ProfileStack.Group>
+      <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
     </ProfileStack.Navigator>
-  );
-};
-
-const CompanyStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
-  const { themeMode } = useColorsMode();
-
-  const screenOptionStyle =
-    themeMode === 'dark' ? screenOptionStyleDark : screenOptionStyleLight;
-
-  React.useLayoutEffect(
-    () => hideTabBar(navigation, route, 'CompanyScreen'),
-    [navigation, route],
-  );
-  return (
-    <CompanyStack.Navigator
-      initialRouteName="CompanyScreen"
-      screenOptions={{
-        ...screenOptionStyle,
-        header: headerProps => TopBar(headerProps),
-      }}>
-      <CompanyStack.Screen name="CompanyScreen" component={CompanyScreen} />
-    </CompanyStack.Navigator>
   );
 };
 
@@ -207,7 +158,6 @@ const LocationStackNavigator: React.FC<StackProps> = ({
 };
 
 export {
-  CompanyStackNavigator,
   HomeStackNavigator,
   LocationStackNavigator,
   ProfileStackNavigator,

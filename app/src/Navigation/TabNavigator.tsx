@@ -13,7 +13,7 @@ import React, {
 } from 'react';
 import { StyleSheet } from 'react-native';
 import Icon from 'react-native-ionicons';
-import SettingsBottomSheet from '../Components/Screens/Profile/Settings/SettingsBottomSheet';
+import SettingsBottomSheet from '../Components/Screens/Settings/SettingsBottomSheet';
 import context from '../Context/context';
 import useColorsMode from '../Helpers/Colors';
 import { AppContext, BottomSheetTypes } from '../types/AppContextType';
@@ -22,7 +22,7 @@ import {
   HomeStackNavigator,
   LocationStackNavigator,
   ProfileStackNavigator,
-  WalletStackNavigator,
+  WalletStackNavigator
 } from './StackNavigator';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
@@ -128,11 +128,6 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
           component={HomeStackNavigator}
           options={tabOptions('Home')}
         />
-        {/* {<Tab.Screen
-        name="CompanyStack"
-        component={CompanyStackNavigator}
-        options={tabOptions('Company')}
-      />} */}
         <Tab.Screen
           name="WalletStack"
           component={WalletStackNavigator}

@@ -1,17 +1,19 @@
-import {useBottomSheetModal} from '@gorhom/bottom-sheet';
-import {useNavigation} from '@react-navigation/native';
-import React, {PropsWithChildren} from 'react';
-import {View} from 'react-native';
+import { useBottomSheetModal } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
+import React, { PropsWithChildren } from 'react';
+import { View } from 'react-native';
 import Icon from 'react-native-ionicons';
-import authContext from '../../../../Context/authContext';
-import {SettingsSubtitle} from '../../../../Helpers/StylizedComponents';
-import {AuthContextType} from '../../../../types/AuthContextType';
-import {navSettingType} from '../../../../types/SettingsType';
+import { NavigationTabProp } from 'react-navigation-tabs';
+import authContext from '../../../Context/authContext';
+import { AuthContextType } from '../../../types/AuthContextType';
+import { navSettingType } from '../../../types/SettingsType';
+import PrimaryText from '../../Common/PrimaryText';
 
 const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
-  const {signOut} = React.useContext(authContext) as AuthContextType;
-  const {dismiss} = useBottomSheetModal();
-  const navigation = useNavigation();
+  const { signOut } = React.useContext(authContext) as AuthContextType;
+  const { dismiss } = useBottomSheetModal();
+  const navigation =
+    useNavigation<NavigationTabProp<ReactNavigation.RootParamList>>();
 
   const settingsPages: navSettingType[] = [
     {
@@ -36,15 +38,17 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
     dismiss();
     switch (route) {
       case 'ProfileSettings':
-        navigation.navigate('ProfileStack', {screen: 'ProfileSettings'});
+        navigation.navigate('SettingsStack', {
+          screen: 'ProfileSettings',
+        });
         break;
       case 'GeneralSettings':
-        navigation.navigate('ProfileStack', {
+        navigation.navigate('SettingsStack', {
           screen: 'GeneralSettings',
         });
         break;
       case 'CardSettings':
-        navigation.navigate('ProfileStack', {screen: 'CardSettings'});
+        navigation.navigate('SettingsStack', { screen: 'CardSettings' });
         break;
       case 'SignOut':
         signOut();
@@ -77,11 +81,11 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
         <View className="w-8 text-center">
           <Icon name={getIcon(setting.name).toString()} color="#4d654e" />
         </View>
-        <SettingsSubtitle
+        <PrimaryText
           onPress={() => handleSettingsNavPress(setting.route)}
           className="text-left text-lg text-dark-green">
           {setting.name}
-        </SettingsSubtitle>
+        </PrimaryText>
       </View>
     );
   };

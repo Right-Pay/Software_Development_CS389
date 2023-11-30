@@ -11,3 +11,9 @@ declare module 'react-native-config' {
   export const Config: NativeConfig;
   export default Config;
 }
+
+declare global {
+  namespace ReactNavigation {
+    type RootParamList = NavigationRoutesType;
+  }
+}

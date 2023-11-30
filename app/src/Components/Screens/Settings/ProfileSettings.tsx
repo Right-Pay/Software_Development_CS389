@@ -3,25 +3,25 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React, { useContext, useState } from 'react';
-import authContext from '../../../../Context/authContext';
-import Consts from '../../../../Helpers/Consts';
-import { SettingsInputBox } from '../../../../Helpers/StylizedComponents';
-import { AuthContextType } from '../../../../types/AuthContextType';
+import authContext from '../../../Context/authContext';
+import Consts from '../../../Helpers/Consts';
+import { SettingsInputBox } from '../../../Helpers/StylizedComponents';
+import { AuthContextType } from '../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
-  ProfileNavigationRoutesType,
-} from '../../../../types/NavigationRoutesType';
-import { Profile } from '../../../../types/ProfileType';
-import AuthErrorComponent from '../../../Common/AuthErrorComponent';
-import InnerWrapperView from '../../../Common/InnerWrapperView';
-import KeyboardAvoidingViewScroll from '../../../Common/KeyboardAvoidingViewScroll';
-import OutlineButton from '../../../Common/OutlineButton';
-import PrimaryText from '../../../Common/PrimaryText';
-import TitleText from '../../../Common/TitleText';
-import WrapperView from '../../../Common/WrapperView';
+  SettingsNavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
+import { Profile } from '../../../types/ProfileType';
+import AuthErrorComponent from '../../Common/AuthErrorComponent';
+import InnerWrapperView from '../../Common/InnerWrapperView';
+import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
+import OutlineButton from '../../Common/OutlineButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
+import WrapperView from '../../Common/WrapperView';
 
 type ProfileSettingsProps = CompositeScreenProps<
-  NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileSettings'>,
+  NativeStackScreenProps<SettingsNavigationRoutesType, 'ProfileSettings'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;

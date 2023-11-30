@@ -16,7 +16,7 @@ import {
   CardText,
   CardView,
   DeleteCardButton,
-  RewardsView
+  RewardsView,
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';

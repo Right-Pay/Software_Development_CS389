@@ -12,9 +12,13 @@ export type WelcomeNavigationRoutesType = {
 export type NavigationRoutesType = {
   HomeStack: NavigatorScreenParams<HomeNavigationRoutesType>;
   ProfileStack: NavigatorScreenParams<ProfileNavigationRoutesType>;
-  CompanyStack: NavigatorScreenParams<CompanyNavigationRoutesType>;
   WalletStack: NavigatorScreenParams<WalletNavigationRoutesType>;
   LocationStack: NavigatorScreenParams<LocationNavigationRoutesType>;
+};
+
+export type MainNavigationRoutesType = {
+  BottomTabNavigator: NavigatorScreenParams<NavigationRoutesType>;
+  SettingsStack: NavigatorScreenParams<SettingsNavigationRoutesType>;
 };
 
 export type HomeNavigationRoutesType = {
@@ -25,13 +29,13 @@ export type HomeNavigationRoutesType = {
 
 export type ProfileNavigationRoutesType = {
   ProfileScreen: undefined;
+};
+
+export type SettingsNavigationRoutesType = {
+  SettingsScreen: undefined;
   ProfileSettings: undefined;
   GeneralSettings: undefined;
   CardSettings: undefined;
-};
-
-export type CompanyNavigationRoutesType = {
-  CompanyScreen: undefined;
 };
 
 export type WalletNavigationRoutesType = {
@@ -45,13 +49,6 @@ export type LocationNavigationRoutesType = {
 export enum MainNavigationRoutesEnum {
   HomeScreen = 'HomeScreen',
   ProfileScreen = 'ProfileScreen',
-  CompanyScreen = 'CompanyScreen',
   WalletScreen = 'WalletScreen',
   LocationScreen = 'LocationScreen',
-}
-
-declare global {
-  namespace ReactNavigation {
-    interface RootParamList extends NavigationRoutesType {}
-  }
 }

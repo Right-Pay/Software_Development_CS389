@@ -4,28 +4,28 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
 import { View } from 'react-native';
-import authContext from '../../../../Context/authContext';
-import context from '../../../../Context/context';
+import authContext from '../../../Context/authContext';
+import context from '../../../Context/context';
 import {
   SettingsCardList,
   SettingsCardView,
-} from '../../../../Helpers/StylizedComponents';
-import { AppContext } from '../../../../types/AppContextType';
-import { AuthContextType } from '../../../../types/AuthContextType';
-import { Card } from '../../../../types/CardType';
+} from '../../../Helpers/StylizedComponents';
+import { AppContext } from '../../../types/AppContextType';
+import { AuthContextType } from '../../../types/AuthContextType';
+import { Card } from '../../../types/CardType';
 import type {
   NavigationRoutesType,
-  ProfileNavigationRoutesType,
-} from '../../../../types/NavigationRoutesType';
-import InnerWrapperView from '../../../Common/InnerWrapperView';
-import KeyboardAvoidingViewScroll from '../../../Common/KeyboardAvoidingViewScroll';
-import PrimaryButton from '../../../Common/PrimaryButton';
-import PrimaryText from '../../../Common/PrimaryText';
-import TitleText from '../../../Common/TitleText';
-import WrapperView from '../../../Common/WrapperView';
+  SettingsNavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
+import InnerWrapperView from '../../Common/InnerWrapperView';
+import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
+import PrimaryButton from '../../Common/PrimaryButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
+import WrapperView from '../../Common/WrapperView';
 
 type CardSettingsScreenProps = CompositeScreenProps<
-  NativeStackScreenProps<ProfileNavigationRoutesType, 'CardSettings'>,
+  NativeStackScreenProps<SettingsNavigationRoutesType, 'CardSettings'>,
   BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;
