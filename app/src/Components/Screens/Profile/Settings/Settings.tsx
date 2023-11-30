@@ -11,13 +11,13 @@ import {
   Subtitle,
   Title,
 } from '../../../../Helpers/StylizedComponents';
-import WrapperView from '../../../../Helpers/WrapperView';
 import { AuthContextType } from '../../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
 import { navSettingType } from '../../../../types/SettingsType';
+import WrapperView from '../../../Common/WrapperView';
 
 type SettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'SettingsScreen'>,

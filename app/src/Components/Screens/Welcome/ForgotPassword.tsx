@@ -3,7 +3,6 @@ import type { PropsWithChildren } from 'react';
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import AuthContext from '../../../Context/authContext';
-import KeyboardAvoidingViewScroll from '../../../Helpers/KeyboardAvoidingViewScroll';
 import {
   AuthButton,
   AuthButtonText,
@@ -12,9 +11,10 @@ import {
   LogoContainer,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import WrapperView from '../../../Helpers/WrapperView';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
+import WrapperView from '../../Common/WrapperView';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,

@@ -11,12 +11,12 @@ import {
   ProfileView,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import WrapperView from '../../../Helpers/WrapperView';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import WrapperView from '../../Common/WrapperView';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,

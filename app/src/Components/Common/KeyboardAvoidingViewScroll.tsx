@@ -1,8 +1,8 @@
 import React, { PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import context from '../Context/context';
-import { AppContext } from '../types/AppContextType';
-import { KeyboardAvoidingScroll } from './StylizedComponents';
+import context from '../../Context/context';
+import { KeyboardAvoidingScroll } from '../../Helpers/StylizedComponents';
+import { AppContext } from '../../types/AppContextType';
 
 const KeyboardAvoidingViewScroll = ({children}: PropsWithChildren) => {
   const scrollViewRef = useRef<ScrollView>(null);

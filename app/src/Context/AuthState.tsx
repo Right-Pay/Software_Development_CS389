@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect } from 'react';
 import type { PropsWithChildren } from 'react';
-import AuthContext from './authContext';
-import { Profile } from '../types/ProfileType';
-import { HttpResponse } from '../types/HttpResponse';
-import GlobalState from './GlobalState';
-import AuthErrorComponent from '../Helpers/AuthErrorComponent';
-import Consts from '../Helpers/Consts';
+import React, { useCallback, useEffect } from 'react';
 import Config from 'react-native-config';
-import { TokenType } from '../types/AuthContextType';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import AuthErrorComponent from '../Components/Common/AuthErrorComponent';
+import Consts from '../Helpers/Consts';
+import { TokenType } from '../types/AuthContextType';
+import { HttpResponse } from '../types/HttpResponse';
+import { Profile } from '../types/ProfileType';
+import GlobalState from './GlobalState';
+import AuthContext from './authContext';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);

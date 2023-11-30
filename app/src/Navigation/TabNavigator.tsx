@@ -6,7 +6,7 @@ import { RouteProp } from '@react-navigation/native';
 import React, { PropsWithChildren } from 'react';
 import { useColorScheme } from 'react-native';
 import Icon from 'react-native-ionicons';
-import { darkColors, lightColors } from '../Helpers/Colors';
+import { DarkColors, LightColors } from '../Helpers/Colors';
 import { NavigationRoutesType } from '../types/NavigationRoutesType';
 import {
   HomeStackNavigator,
@@ -54,7 +54,7 @@ const tabBarIconFilter = (
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? darkColors : lightColors;
+  const colors = isDarkTheme ? DarkColors : LightColors;
 
   return (
     <Tab.Navigator

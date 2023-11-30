@@ -19,7 +19,7 @@ import ProfileSettings from '../Components/Screens/Profile/Settings/ProfileSetti
 import SettingsScreen from '../Components/Screens/Profile/Settings/Settings';
 import WalletScreen from '../Components/Screens/Wallet/Wallet';
 import locationContext from '../Context/locationContext';
-import { darkColors, lightColors } from '../Helpers/Colors';
+import { DarkColors, LightColors } from '../Helpers/Colors';
 import { LocationContext } from '../types/LocationContextType';
 import type {
   CompanyNavigationRoutesType,
@@ -57,7 +57,7 @@ const HomeStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? darkColors : lightColors;
+  const colors = isDarkTheme ? DarkColors : LightColors;
 
   const screenOptionStyle = {
     headerStyle: {
@@ -92,7 +92,7 @@ const ProfileStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? darkColors : lightColors;
+  const colors = isDarkTheme ? DarkColors : LightColors;
 
   const screenOptionStyle = {
     headerStyle: {
@@ -130,7 +130,7 @@ const CompanyStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? darkColors : lightColors;
+  const colors = isDarkTheme ? DarkColors : LightColors;
 
   const screenOptionStyle = {
     headerStyle: {
@@ -158,7 +158,7 @@ const WalletStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? darkColors : lightColors;
+  const colors = isDarkTheme ? DarkColors : LightColors;
 
   const screenOptionStyle = {
     headerStyle: {
@@ -186,7 +186,7 @@ const LocationStackNavigator: React.FC<StackProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? darkColors : lightColors;
+  const colors = isDarkTheme ? DarkColors : LightColors;
 
   const screenOptionStyle = {
     headerStyle: {

@@ -3,7 +3,7 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
-import WrapperView from '../../../src/Helpers/WrapperView';
+import WrapperView from '../../../src/Components/Common/WrapperView';
 import type {
   __stack__NavigationRoutesType,
   NavigationRoutesType,

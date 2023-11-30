@@ -4,9 +4,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React, { useContext, useState } from 'react';
 import authContext from '../../../../Context/authContext';
-import AuthErrorComponent from '../../../../Helpers/AuthErrorComponent';
 import Consts from '../../../../Helpers/Consts';
-import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
 import {
   MainButton,
   MainButtonText,
@@ -16,13 +14,15 @@ import {
   SettingsView,
   Title,
 } from '../../../../Helpers/StylizedComponents';
-import WrapperView from '../../../../Helpers/WrapperView';
 import { AuthContextType } from '../../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
 import { Profile } from '../../../../types/ProfileType';
+import AuthErrorComponent from '../../../Common/AuthErrorComponent';
+import KeyboardAvoidingViewScroll from '../../../Common/KeyboardAvoidingViewScroll';
+import WrapperView from '../../../Common/WrapperView';
 
 type ProfileSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileSettings'>,

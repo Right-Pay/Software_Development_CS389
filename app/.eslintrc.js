@@ -6,5 +6,6 @@ module.exports = {
     '@react-native',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
+    'prettier',
   ],
 };

@@ -8,8 +8,8 @@ import {
   LogoContainer,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import WrapperView from '../../../Helpers/WrapperView';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import WrapperView from '../../Common/WrapperView';
 
 type WelcomeScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Dropdown } from './StylizedComponents';
-import { StyleSheet, View } from 'react-native';
 import { styled } from 'nativewind';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Dropdown } from '../../Helpers/StylizedComponents';
 
 const StyledView = styled(View);
 

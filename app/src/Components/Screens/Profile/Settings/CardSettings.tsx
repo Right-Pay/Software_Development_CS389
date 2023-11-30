@@ -6,7 +6,6 @@ import React from 'react';
 import { View } from 'react-native';
 import authContext from '../../../../Context/authContext';
 import context from '../../../../Context/context';
-import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
 import {
   MainButton,
   MainButtonText,
@@ -16,7 +15,6 @@ import {
   SettingsView,
   Title,
 } from '../../../../Helpers/StylizedComponents';
-import WrapperView from '../../../../Helpers/WrapperView';
 import { AppContext } from '../../../../types/AppContextType';
 import { AuthContextType } from '../../../../types/AuthContextType';
 import { Card } from '../../../../types/CardType';
@@ -24,6 +22,8 @@ import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
+import KeyboardAvoidingViewScroll from '../../../Common/KeyboardAvoidingViewScroll';
+import WrapperView from '../../../Common/WrapperView';
 
 type CardSettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'CardSettings'>,

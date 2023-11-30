@@ -20,7 +20,6 @@ import {
   Subtitle,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import WrapperView from '../../../Helpers/WrapperView';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { Card, Reward } from '../../../types/CardType';
@@ -28,6 +27,7 @@ import type {
   NavigationRoutesType,
   WalletNavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import WrapperView from '../../Common/WrapperView';
 import AddCardFullForm from './AddCardFullForm';
 
 type WalletScreenProps = CompositeScreenProps<

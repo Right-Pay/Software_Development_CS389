@@ -7,20 +7,20 @@ import React, { useRef } from 'react';
 import { Platform, Text, View, ViewToken, useColorScheme } from 'react-native';
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import locationContext from '../../../Context/locationContext';
-import { darkColors, lightColors } from '../../../Helpers/Colors';
+import { DarkColors, LightColors } from '../../../Helpers/Colors';
 import {
   GoogleMapsMarker,
   GoogleMapsView,
   NearbyLocationScrollView,
   Title,
 } from '../../../Helpers/StylizedComponents';
-import WrapperView from '../../../Helpers/WrapperView';
 import { Place } from '../../../types/Location';
 import { LocationContext } from '../../../types/LocationContextType';
 import type {
   LocationNavigationRoutesType,
   NavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import WrapperView from '../../Common/WrapperView';
 const StyledView = styled(View);
 
 type LocationScreenProps = CompositeScreenProps<
@@ -37,7 +37,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
   ) as LocationContext;
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? darkColors : lightColors;
+  const colors = isDarkTheme ? DarkColors : LightColors;
   // mapStyle[0].stylers[0].color = colors.secondary;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

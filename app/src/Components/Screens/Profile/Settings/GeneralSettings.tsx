@@ -7,8 +7,7 @@ import { Linking, useColorScheme } from 'react-native';
 import { Switch } from 'react-native-switch';
 import context from '../../../../Context/context';
 import locationContext from '../../../../Context/locationContext';
-import { darkColors, lightColors } from '../../../../Helpers/Colors';
-import KeyboardAvoidingViewScroll from '../../../../Helpers/KeyboardAvoidingViewScroll';
+import { DarkColors, LightColors } from '../../../../Helpers/Colors';
 import {
   MainButton,
   MainButtonText,
@@ -16,13 +15,14 @@ import {
   Subtitle,
   Title,
 } from '../../../../Helpers/StylizedComponents';
-import WrapperView from '../../../../Helpers/WrapperView';
 import { AppContext } from '../../../../types/AppContextType';
 import { LocationContext } from '../../../../types/LocationContextType';
 import type {
   NavigationRoutesType,
   ProfileNavigationRoutesType,
 } from '../../../../types/NavigationRoutesType';
+import KeyboardAvoidingViewScroll from '../../../Common/KeyboardAvoidingViewScroll';
+import WrapperView from '../../../Common/WrapperView';
 
 type GeneralSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'GeneralSettings'>,
@@ -37,7 +37,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   ) as LocationContext;
   const theme = useColorScheme();
   const isDarkTheme = theme === 'dark';
-  const colors = isDarkTheme ? darkColors : lightColors;
+  const colors = isDarkTheme ? DarkColors : LightColors;
 
   const [locationServicesOn, setLocationServicesOn] =
     React.useState<boolean>(locationGrantType);

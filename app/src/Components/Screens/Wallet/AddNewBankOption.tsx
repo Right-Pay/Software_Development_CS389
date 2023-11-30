@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import authContext from '../../../Context/authContext';
 import Context from '../../../Context/context';
-import { OptionsPropsType } from '../../../Helpers/Dropdown';
 import {
   AddCFormOverlayView,
   FormButton,
@@ -18,6 +17,7 @@ import {
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
+import { OptionsPropsType } from '../../Common/Dropdown';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context

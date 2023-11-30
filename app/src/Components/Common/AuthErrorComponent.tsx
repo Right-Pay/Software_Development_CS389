@@ -1,7 +1,7 @@
 import React from 'react';
-import { AuthContextType } from '../types/AuthContextType';
-import AuthContext from '../Context/authContext';
-import { Subtitle } from './StylizedComponents';
+import AuthContext from '../../Context/authContext';
+import { Subtitle } from '../../Helpers/StylizedComponents';
+import { AuthContextType } from '../../types/AuthContextType';
 
 const AuthErrorComponent = () => {
   const { authError } = React.useContext(AuthContext) as AuthContextType; // Use the useContext hook directly with types

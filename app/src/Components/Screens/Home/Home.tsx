@@ -5,12 +5,12 @@ import type { PropsWithChildren } from 'react';
 import React from 'react';
 import AuthContext from '../../../Context/authContext';
 import { Subtitle, Title } from '../../../Helpers/StylizedComponents';
-import WrapperView from '../../../Helpers/WrapperView';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type {
   HomeNavigationRoutesType,
   NavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import WrapperView from '../../Common/WrapperView';
 
 type HomeScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeNavigationRoutesType, 'HomeScreen'>,

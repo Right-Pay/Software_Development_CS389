@@ -15,7 +15,6 @@ import {
 import authContext from '../../../Context/authContext';
 import Context from '../../../Context/context';
 import Consts from '../../../Helpers/Consts';
-import DropdownComponent, { OptionsProps } from '../../../Helpers/Dropdown';
 import {
   AddCFormOverlayView,
   // FinePrint,
@@ -30,6 +29,7 @@ import {
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { Card, CardBank } from '../../../types/CardType';
+import DropdownComponent, { OptionsProps } from '../../Common/Dropdown';
 // import AddNewDropdownOption from './AddNewBankOption';
 
 const AddCardFullForm = () => {
