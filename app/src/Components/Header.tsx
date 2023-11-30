@@ -1,7 +1,7 @@
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import React, { useCallback } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, Text, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import context from '../Context/context';
 import locationContext from '../Context/locationContext';
@@ -25,7 +25,7 @@ const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
   const showMoreButton = useCallback(() => {
     return (
       <Pressable
-        className="flex-1 flex-col justify-center items-center text-center w-1/6 m-0 overflow-visible"
+        className="flex-1 flex-col justify-center items-center text-center w-1/6 h-3/4 m-0 overflow-visible"
         onPress={() => {
           handlePresentModalPress();
         }}>

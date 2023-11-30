@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import 'react-native-config';
 import 'react-native-dotenv';
 // import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {NavigationContainer} from '@react-navigation/native';
-import {useColorScheme} from 'nativewind';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { NavigationContainer } from '@react-navigation/native';
+import { useColorScheme } from 'nativewind';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -14,18 +14,18 @@ import {
 } from 'react-native';
 import 'react-native-config';
 import 'react-native-dotenv';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
 import AuthState from './src/Context/AuthState';
 import MainNavigator from './src/Navigation/MainNavigator';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const {setColorScheme} = useColorScheme();
+  const { setColorScheme } = useColorScheme();
   const theme = useNativeColorScheme();
 
   useEffect(() => {
@@ -87,9 +87,6 @@ const styles = StyleSheet.create({
   gestureHandlerRootView: {
     flex: 1,
     backgroundColor: 'transparent',
-  },
-  safeArea: {
-    backgroundColor: 'red',
   },
 });
 
