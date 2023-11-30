@@ -11,18 +11,16 @@ import {MainNavigationRoutesEnum} from '../types/NavigationRoutesType';
 
 const TopBar: React.FC<NativeStackHeaderProps> = ({navigation, route}) => {
   const {address} = React.useContext(locationContext) as LocationContext;
-  const {setBottomSheetModal, setShowBottomSheetModal} = React.useContext(
-    context,
-  ) as AppContext;
+  const {setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal} =
+    React.useContext(context) as AppContext;
 
   const handlePresentModalPress = useCallback(() => {
-    console.log('handlePresentModalPress', route);
     setBottomSheetModal({
       type: BottomSheetTypes.SETTINGS,
       snapPoints: ['25%'],
     });
-    setShowBottomSheetModal(true);
-  }, [setBottomSheetModal, setShowBottomSheetModal, route]);
+    setShowBottomSheetModal(!showBottomSheetModal);
+  }, [setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal]);
 
   const showMoreButton = useCallback(() => {
     return (

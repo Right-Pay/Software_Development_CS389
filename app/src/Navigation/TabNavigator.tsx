@@ -87,7 +87,6 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         bottomSheetModalRef.current?.close();
         setShowBottomSheetModal(false);
       }
-      console.log('handleSheetChanges', index);
     },
     [setShowBottomSheetModal],
   );
@@ -107,7 +106,6 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
   useEffect(() => {
     if (showBottomSheetModal) {
       presentModal();
-      console.log('showBottomSheetModal');
     } else if (!showBottomSheetModal) {
       bottomSheetModalRef.current?.close();
     }
