@@ -143,7 +143,7 @@ const WalletStackNavigator: React.FC<StackProps> = props => {
   const {navigation, route} = props;
 
   React.useLayoutEffect(
-    () => hideTabBar(navigation, route, 'ProfileScreen'),
+    () => hideTabBar(navigation, route, 'WalletScreen'),
     [navigation, route],
   );
   return (
