@@ -1,5 +1,5 @@
-import {FC} from 'react';
-import {Profile} from './ProfileType';
+import { FC } from 'react';
+import { Profile } from './ProfileType';
 
 export interface AuthContextType {
   isLoading: boolean;

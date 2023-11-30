@@ -36,7 +36,7 @@ export interface Reward {
   reward_value_currency: string;
 }
 
-export interface CardFormProps {}
+// export interface CardFormProps {}
 
 export interface CardFormsType {
   [key: string]: boolean;

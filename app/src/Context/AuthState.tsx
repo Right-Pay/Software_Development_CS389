@@ -1,16 +1,16 @@
-import React, {useCallback, useEffect} from 'react';
-import type {PropsWithChildren} from 'react';
-import AuthContext from './authContext';
-import {Profile} from '../types/ProfileType';
-import {HttpResponse} from '../types/HttpResponse';
-import GlobalState from './GlobalState';
-import AuthErrorComponent from '../Helpers/AuthErrorComponent';
-import Consts from '../Helpers/Consts';
+import type { PropsWithChildren } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Config from 'react-native-config';
-import {TokenType} from '../types/AuthContextType';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import AuthErrorComponent from '../Components/Common/AuthErrorComponent';
+import Consts from '../Helpers/Consts';
+import { TokenType } from '../types/AuthContextType';
+import { HttpResponse } from '../types/HttpResponse';
+import { Profile } from '../types/ProfileType';
+import GlobalState from './GlobalState';
+import AuthContext from './authContext';
 
-const AuthState: React.FC<PropsWithChildren> = ({children}) => {
+const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
@@ -100,7 +100,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       addAuthError(ErrorMessages.invalidToken);
       return false;
     }
-    var requestOptions = {
+    const requestOptions = {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -145,7 +145,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
     } else {
-      const {access_token, refresh_token} = (await signInAuth(
+      const { access_token, refresh_token } = (await signInAuth(
         email,
         password,
       )) as TokenType;
@@ -156,7 +156,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       if (access_token) {
         setIsLoading(true);
         await getUser(access_token).then(async result => {
-          let res = result as HttpResponse;
+          const res = result as HttpResponse;
           if (res.success) {
             setUserToken(access_token);
             await storeAuth0Token(access_token);
@@ -175,7 +175,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
   };
 
   const signInAuth = async (email: string, password: string) => {
-    var requestOptions = {
+    const requestOptions = {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -276,7 +276,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       return false;
     }
     await getUser(userToken).then(async result => {
-      let res = result as HttpResponse;
+      const res = result as HttpResponse;
       if (res.success) {
         setUserProfile(res.data as Profile);
         clearAuthErrors();
@@ -305,7 +305,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     } else if (!checkEqualPasswords(password, repeatedPassword)) {
       addAuthError(ErrorMessages.passwordsDoNotMatch);
     } else {
-      const {access_token}: TokenType = (await createNewAuth0User(
+      const { access_token }: TokenType = (await createNewAuth0User(
         email,
         password,
         username,
@@ -316,7 +316,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
       if (access_token) {
         await createNewDatabaseUser(access_token, email, username, phone).then(
           async result => {
-            let res = result as HttpResponse;
+            const res = result as HttpResponse;
             setIsLoading(false);
             if (res.success) {
               setUserToken(access_token);
@@ -342,7 +342,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     password: string,
     username: string,
   ) => {
-    var requestOptions = {
+    const requestOptions = {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -414,7 +414,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else {
-      var requestOptions = {
+      const requestOptions = {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json',
@@ -496,7 +496,7 @@ const AuthState: React.FC<PropsWithChildren> = ({children}) => {
         setRefreshToken(result?.refresh_token || null);
         if (result?.access_token) {
           await getUser(result.access_token).then(async userResult => {
-            let res = userResult as HttpResponse;
+            const res = userResult as HttpResponse;
             if (res.success) {
               setUserProfile(res.data as Profile);
               clearAuthErrors();

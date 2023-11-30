@@ -1,24 +1,23 @@
-import React, {useCallback, useEffect} from 'react';
-import type {PropsWithChildren} from 'react';
-import type {WelcomeNavigationRoutesType} from '../../../types/NavigationRoutesType';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { PropsWithChildren } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { Pressable, View } from 'react-native';
+import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
-import {AuthContextType} from '../../../types/AuthContextType';
 import {
-  Title,
   AuthInputBox,
-  WrapperView,
   FinePrint,
   FinePrintButton,
-  AuthButton,
-  LogoContainer,
   Logo,
-  AuthButtonText,
-  Subtitle,
+  LogoContainer,
 } from '../../../Helpers/StylizedComponents';
-import KeyboardAvoidingViewScroll from '../../../Helpers/KeyboardAvoidingViewScroll';
-import {Pressable, View} from 'react-native';
-import Icon from 'react-native-ionicons';
+import { AuthContextType } from '../../../types/AuthContextType';
+import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
+import PrimaryButton from '../../Common/PrimaryButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
+import WrapperView from '../../Common/WrapperView';
 
 type LogInScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -26,8 +25,8 @@ type LogInScreenProps = NativeStackScreenProps<
 > &
   PropsWithChildren;
 
-const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
-  const {clearAuthErrors, AuthErrorComponent, signIn} = React.useContext(
+const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
+  const { clearAuthErrors, AuthErrorComponent, signIn } = React.useContext(
     AuthContext,
   ) as AuthContextType;
   useEffect(() => {
@@ -44,7 +43,9 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
           navigation.goBack();
         }}>
         <Icon name="arrow-back" color="#4d654e" />
-        <Subtitle className="ml-2 font-bold text-dark-green">Back</Subtitle>
+        <PrimaryText className="ml-2 text-xl text-center font-bold">
+          Back
+        </PrimaryText>
       </Pressable>
     );
   }, [navigation]);
@@ -53,7 +54,9 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full h-screen justify-center items-center mb-0 pb-0">
-          <Title className="mt-20">Log In to Your RightPay Account</Title>
+          <TitleText className="mt-20">
+            Log In to Your RightPay Account
+          </TitleText>
           <LogoContainer>
             <Logo
               source={require('../../../Assets/RightPay-logo-light-transparent.png')}
@@ -74,12 +77,14 @@ const LogInScreen: React.FC<LogInScreenProps> = ({navigation}) => {
             onPress={() => navigation.navigate('ForgotPassword')}>
             <FinePrint>Forgot Password?</FinePrint>
           </FinePrintButton>
-          <AuthButton
+          <PrimaryButton
             onPress={() => {
               signIn(email, password);
             }}>
-            <AuthButtonText>Log In</AuthButtonText>
-          </AuthButton>
+            <PrimaryText type="secondary" className="text-xl">
+              Log In
+            </PrimaryText>
+          </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}
           {backButton()}
         </View>

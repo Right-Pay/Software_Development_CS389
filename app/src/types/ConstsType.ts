@@ -1,5 +1,5 @@
-import {Card} from './CardType';
-import {Profile} from './ProfileType';
+import { Card } from './CardType';
+import { Profile } from './ProfileType';
 
 interface hashType {
   [key: string]: string;

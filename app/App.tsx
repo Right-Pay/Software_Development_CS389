@@ -1,15 +1,20 @@
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {NavigationContainer} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
+import 'react-native-config';
+import 'react-native-dotenv';
+// import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { NavigationContainer } from '@react-navigation/native';
+import { useColorScheme } from 'nativewind';
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  useColorScheme as useNativeColorScheme,
 } from 'react-native';
 import 'react-native-config';
 import 'react-native-dotenv';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -19,6 +24,16 @@ import MainNavigator from './src/Navigation/MainNavigator';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const { setColorScheme } = useColorScheme();
+  const theme = useNativeColorScheme();
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      setColorScheme('dark');
+    } else {
+      setColorScheme('light');
+    }
+  }, [theme, setColorScheme]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(

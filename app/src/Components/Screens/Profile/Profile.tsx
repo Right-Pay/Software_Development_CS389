@@ -1,20 +1,23 @@
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { PropsWithChildren } from 'react';
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import type {
-  ProfileNavigationRoutesType,
-  NavigationRoutesType,
-} from '../../../types/NavigationRoutesType';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import type {CompositeScreenProps} from '@react-navigation/native';
-import {
-  Title,
-  WrapperView,
-  ProfileView,
-  ProfileSubtitle,
-} from '../../../Helpers/StylizedComponents';
+// import {
+//   Title,
+//   ProfileView,
+//   ProfileSubtitle,
+// } from '../../../Helpers/StylizedComponents';
 import authContext from '../../../Context/authContext';
-import {AuthContextType} from '../../../types/AuthContextType';
+import { ProfileView } from '../../../Helpers/StylizedComponents';
+import { AuthContextType } from '../../../types/AuthContextType';
+import type {
+  NavigationRoutesType,
+  ProfileNavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
+import WrapperView from '../../Common/WrapperView';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,
@@ -23,7 +26,7 @@ type ProfileScreenProps = CompositeScreenProps<
   PropsWithChildren;
 
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
-  const {userProfile} = React.useContext(authContext) as AuthContextType;
+  const { userProfile } = React.useContext(authContext) as AuthContextType;
 
   const cardCount = userProfile.cards.length;
   const rewardCount =
@@ -33,24 +36,26 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
   return (
     <WrapperView>
-      <Title className="top-10 mb-10">Profile</Title>
+      <TitleText className="top-10 mb-10">Profile</TitleText>
       <ProfileView className="justify-start">
-        <ProfileSubtitle numberOfLines={1} className="mt-10">
+        <PrimaryText
+          className="text-2xl font-bold mb-2 mt-10"
+          numberOfLines={1}>
           Username: {userProfile.username}
-        </ProfileSubtitle>
-        <ProfileSubtitle numberOfLines={1}>
+        </PrimaryText>
+        <PrimaryText className="text-2xl font-bold mb-2" numberOfLines={1}>
           Email: {userProfile.email}
-        </ProfileSubtitle>
+        </PrimaryText>
         {userProfile.phone && userProfile.phone.length > 0 ? (
-          <ProfileSubtitle>{`Phone: ${userProfile.phone}`}</ProfileSubtitle>
+          <PrimaryText className="text-2xl font-bold mb-2">{`Phone: ${userProfile.phone}`}</PrimaryText>
         ) : null}
-        <ProfileSubtitle className="mt-20">
+        <PrimaryText className="text-2xl font-bold mt-20">
           You have {cardCount} card
           {cardCount > 1 ? 's' : ''}
-        </ProfileSubtitle>
-        <ProfileSubtitle>
+        </PrimaryText>
+        <PrimaryText className="text-2xl font-bold">
           {`You have ${rewardCount} reward${rewardCount !== 1 ? 's' : ''}`}
-        </ProfileSubtitle>
+        </PrimaryText>
       </ProfileView>
     </WrapperView>
   );

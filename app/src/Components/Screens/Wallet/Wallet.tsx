@@ -1,13 +1,13 @@
-import React, {useEffect, useRef} from 'react';
-import type {PropsWithChildren} from 'react';
-import type {
-  WalletNavigationRoutesType,
-  NavigationRoutesType,
-} from '../../../types/NavigationRoutesType';
-import {View, Text, FlatList} from 'react-native';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import type {CompositeScreenProps} from '@react-navigation/native';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { styled } from 'nativewind';
+import type { PropsWithChildren } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Dimensions, FlatList, Text, View, ViewToken } from 'react-native';
+import authContext from '../../../Context/authContext';
+import Context from '../../../Context/context';
+import Consts from '../../../Helpers/Consts';
 import {
   AddCardButton,
   AddCardIcon,
@@ -17,19 +17,18 @@ import {
   CardView,
   DeleteCardButton,
   RewardsView,
-  Subtitle,
-  Title,
-  WrapperView,
 } from '../../../Helpers/StylizedComponents';
-import {AppContext} from '../../../types/AppContextType';
-import Context from '../../../Context/context';
-import {Card, Reward} from '../../../types/CardType';
-import {Dimensions} from 'react-native';
+import { AppContext } from '../../../types/AppContextType';
+import { AuthContextType } from '../../../types/AuthContextType';
+import { Card, Reward } from '../../../types/CardType';
+import type {
+  NavigationRoutesType,
+  WalletNavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
+import WrapperView from '../../Common/WrapperView';
 import AddCardFullForm from './AddCardFullForm';
-import Consts from '../../../Helpers/Consts';
-import authContext from '../../../Context/authContext';
-import {AuthContextType} from '../../../types/AuthContextType';
-import {styled} from 'nativewind';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -39,13 +38,12 @@ type WalletScreenProps = CompositeScreenProps<
 
 const StyledView = styled(View);
 const StyledList = styled(FlatList);
-// const StyledText = styled(Text, 'text-lg text-dark-green');
 
 const WalletScreen: React.FC<WalletScreenProps> = () => {
-  const {unlinkCard, setCardForms, CardForms} = React.useContext(
+  const { unlinkCard, setCardForms, CardForms } = React.useContext(
     Context,
   ) as AppContext;
-  const {userProfile} = React.useContext(authContext) as AuthContextType;
+  const { userProfile } = React.useContext(authContext) as AuthContextType;
 
   const [currentViewedCard, setCurrentViewedCard] = React.useState<Card[]>(
     userProfile.cards && userProfile.cards.length > 0
@@ -148,8 +146,8 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   const renderReward = (item: Reward) => {
     return (
       <RewardsView>
-        <Subtitle className="text-left">{item.reward_name}</Subtitle>
-        <Subtitle>{item.reward_description}</Subtitle>
+        <PrimaryText className="text-left">{item.reward_name}</PrimaryText>
+        <PrimaryText>{item.reward_description}</PrimaryText>
       </RewardsView>
     );
   };
@@ -167,13 +165,16 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   };
 
   const handleAddPress = () => {
-    setCardForms({...CardForms, Full: true});
+    setCardForms({ ...CardForms, Full: true });
   };
 
-  const onViewRef = useRef((viewableItems: any) => {
-    const check: Card[] = viewableItems.viewableItems.map(
-      (item: any) => item.item as Card,
-    );
+  type Info = {
+    viewableItems: ViewToken[];
+    changed: ViewToken[];
+  };
+
+  const onViewRef = useRef((info: Info) => {
+    const check: Card[] = info.viewableItems.map(item => item.item as Card);
     setCurrentViewedCard(check);
   });
 
@@ -184,7 +185,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   return (
     <WrapperView>
       {AddCardFullForm()}
-      <Title className="mt-10">Wallet</Title>
+      <TitleText className="mt-10">Wallet</TitleText>
       <View className="aspect-video mt-10 w-full">
         <StyledList
           className="w-full"
@@ -195,7 +196,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           }
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => (item as Card).id?.toString() || '0'}
-          renderItem={({item}) => renderCard(item as Card)}
+          renderItem={({ item }) => renderCard(item as Card)}
           horizontal={true}
           ItemSeparatorComponent={itemSeparatorComponent}
           onViewableItemsChanged={onViewRef.current} // To get the current viewed card. Can't add method here. Throws error.
@@ -210,12 +211,12 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           data={[]} //This will need to be done
           ListHeaderComponent={
             currentViewedCard.filter(i => i.id === -1).length === 0 ? (
-              <Title>Rewards</Title>
+              <TitleText>Rewards</TitleText>
             ) : null
           }
           showsVerticalScrollIndicator={true}
           keyExtractor={item => (item as Reward).reward_name.toString()}
-          renderItem={({item}) => renderReward(item as Reward)}
+          renderItem={({ item }) => renderReward(item as Reward)}
           ItemSeparatorComponent={itemSeparatorComponent}
         />
       </View>
