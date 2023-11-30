@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -8,23 +8,20 @@ import {
 } from 'react-native';
 import authContext from '../../../Context/authContext';
 import Context from '../../../Context/context';
-import {OptionsPropsType} from '../../../Helpers/Dropdown';
-import {
-  AddCFormOverlayView,
-  FormButton,
-  FormButtonText,
-  FormInputBox,
-  Title,
-} from '../../../Helpers/StylizedComponents';
-import {AppContext} from '../../../types/AppContextType';
-import {AuthContextType} from '../../../types/AuthContextType';
+import { FormInputBox } from '../../../Helpers/StylizedComponents';
+import { AppContext } from '../../../types/AppContextType';
+import { AuthContextType } from '../../../types/AuthContextType';
+import { OptionsPropsType } from '../../Common/Dropdown';
+import ModalOverlayView from '../../Common/ModalOverlayView';
+import PrimaryButton from '../../Common/PrimaryButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
-  const {addAuthError, clearAuthErrors, AuthErrorComponent} = React.useContext(
-    authContext,
-  ) as AuthContextType;
-  const {validateCardForm, setCardForms, CardForms} = React.useContext(
+  const { addAuthError, clearAuthErrors, AuthErrorComponent } =
+    React.useContext(authContext) as AuthContextType;
+  const { validateCardForm, setCardForms, CardForms } = React.useContext(
     Context,
   ) as AppContext;
 
@@ -34,18 +31,18 @@ const AddNewBankOption = (props: OptionsPropsType) => {
   //handlers
   const handleSubmit = () => {
     clearAuthErrors();
-    const errors = validateCardForm({bankName: newOption});
+    const errors = validateCardForm({ bankName: newOption });
     if (errors.length > 0) {
       errors.forEach(error => addAuthError(error));
       return;
     } else {
-      setCardForms({...CardForms, AddBankOption: false});
+      setCardForms({ ...CardForms, AddBankOption: false });
       props.setOption(newOption);
     }
   };
 
   const closeModal = () => {
-    setCardForms({...CardForms, AddBankOption: false});
+    setCardForms({ ...CardForms, AddBankOption: false });
     clearAuthErrors();
   };
 
@@ -87,21 +84,25 @@ const AddNewBankOption = (props: OptionsPropsType) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-        <AddCFormOverlayView className="flex-auto ">
-          <Title>{'Enter a New Option for bank'}</Title>
+        <ModalOverlayView className="flex-auto ">
+          <TitleText>{'Enter a New Option for bank'}</TitleText>
           <FormInputBox
             placeholder="Name of Option"
             placeholderTextColor="#AFAEAE"
             onChange={event => setNewOption(event.nativeEvent.text)}
           />
-          <FormButton onPress={handleSubmit} className="mt-1 z-0">
-            <FormButtonText>Submit</FormButtonText>
-          </FormButton>
-          <FormButton onPress={closeModal} className="z-0">
-            <FormButtonText>Close</FormButtonText>
-          </FormButton>
+          <PrimaryButton onPress={handleSubmit} className="mt-1 z-0">
+            <PrimaryText type="secondary" className="text-center text-xl">
+              Submit
+            </PrimaryText>
+          </PrimaryButton>
+          <PrimaryButton onPress={closeModal} className="z-0">
+            <PrimaryText type="secondary" className="text-center text-xl">
+              Close
+            </PrimaryText>
+          </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}
-        </AddCFormOverlayView>
+        </ModalOverlayView>
       </KeyboardAvoidingView>
     </Modal>
   );

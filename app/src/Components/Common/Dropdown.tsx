@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {Dropdown} from './StylizedComponents';
-import {StyleSheet, View} from 'react-native';
-import {styled} from 'nativewind';
+import { styled } from 'nativewind';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Dropdown } from '../../Helpers/StylizedComponents';
 
 const StyledView = styled(View);
 
@@ -80,8 +80,8 @@ const styleSheet = StyleSheet.create({
     fontSize: 20,
     color: 'black',
   },
-  placeholderStyle: {color: 'black', fontWeight: 'bold', fontSize: 20},
-  textStyle: {color: 'black', fontSize: 20},
+  placeholderStyle: { color: 'black', fontWeight: 'bold', fontSize: 20 },
+  textStyle: { color: 'black', fontSize: 20 },
 });
 
 export default DropdownComponent;

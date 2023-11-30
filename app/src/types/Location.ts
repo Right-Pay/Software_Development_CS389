@@ -8,7 +8,7 @@ export interface Location {
 export interface Place {
   displayName: DisplayName; // inline object type here
   businessStatus: string;
-  types: String[];
+  types: string[];
   primaryType: string;
   primaryTypeDisplayName: DisplayName;
   readableType: string;

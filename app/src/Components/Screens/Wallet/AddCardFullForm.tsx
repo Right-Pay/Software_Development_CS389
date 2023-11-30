@@ -1,38 +1,40 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
+  NativeSyntheticEvent,
   Platform,
   Pressable,
   StyleSheet,
   Text,
+  TextInputChangeEventData,
   TouchableWithoutFeedback,
 } from 'react-native';
+import authContext from '../../../Context/authContext';
+import Context from '../../../Context/context';
+import Consts from '../../../Helpers/Consts';
 import {
-  AddCFormOverlayView,
-  FormButton,
-  FormButtonText,
-  FormInputBox,
-  FormDateView,
-  Title,
   // FinePrint,
   BankOptionsView,
   BanksView,
+  FormDateView,
+  FormInputBox
 } from '../../../Helpers/StylizedComponents';
-import {Card, CardBank} from '../../../types/CardType';
-import {AppContext} from '../../../types/AppContextType';
-import Context from '../../../Context/context';
-import DropdownComponent, {OptionsProps} from '../../../Helpers/Dropdown';
-import authContext from '../../../Context/authContext';
-import {AuthContextType} from '../../../types/AuthContextType';
-import Consts from '../../../Helpers/Consts';
+import { AppContext } from '../../../types/AppContextType';
+import { AuthContextType } from '../../../types/AuthContextType';
+import { Card, CardBank } from '../../../types/CardType';
+import DropdownComponent, { OptionsProps } from '../../Common/Dropdown';
+import ModalOverlayView from '../../Common/ModalOverlayView';
+import PrimaryButton from '../../Common/PrimaryButton';
+import PrimaryText from '../../Common/PrimaryText';
+import TitleText from '../../Common/TitleText';
 // import AddNewDropdownOption from './AddNewBankOption';
 
 const AddCardFullForm = () => {
   //Context
-  const {addAuthError, clearAuthErrors, AuthErrorComponent, removeAuthError} =
+  const { addAuthError, clearAuthErrors, AuthErrorComponent, removeAuthError } =
     React.useContext(authContext) as AuthContextType;
   const {
     linkCard,
@@ -101,7 +103,7 @@ const AddCardFullForm = () => {
     const currentExpirationDate = card?.exp_date;
     const year = currentExpirationDate?.split('-')[0];
     if (currentExpirationDate) {
-      setCard({...card, exp_date: `${year}-${month}`});
+      setCard({ ...card, exp_date: `${year}-${month}` });
     }
   };
 
@@ -109,7 +111,7 @@ const AddCardFullForm = () => {
     const currentExpirationDate = card?.exp_date;
     const month = currentExpirationDate?.split('-')[1];
     if (currentExpirationDate) {
-      setCard({...card, exp_date: `${year}-${month}`});
+      setCard({ ...card, exp_date: `${year}-${month}` });
     }
   };
 
@@ -141,7 +143,7 @@ const AddCardFullForm = () => {
         setFilteredBankOptions([]);
         setEditState(EditStates.Edit);
       } else {
-        setCard({...card, exp_date: '23-01'});
+        setCard({ ...card, exp_date: '23-01' });
         setEditState(EditStates.Add);
       }
     }
@@ -150,18 +152,18 @@ const AddCardFullForm = () => {
   };
 
   const closeModal = () => {
-    setCardForms({...CardForms, Full: false});
+    setCardForms({ ...CardForms, Full: false });
     setCard({} as Card);
     setBankSearch('');
     clearAuthErrors();
     setEditState(EditStates.Bin);
   };
 
-  const renderBankOption = ({item}: {item: CardBank}) => (
+  const renderBankOption = ({ item }: { item: CardBank }) => (
     <Pressable
       onPress={() => {
-        let bank_id = Number(item.id);
-        let bank_name = item.bank_name;
+        const bank_id = Number(item.id);
+        const bank_name = item.bank_name;
         if (
           editState === EditStates.Edit &&
           Number(card?.card_bank_id) !== bank_id
@@ -235,8 +237,10 @@ const AddCardFullForm = () => {
   }, [bankSearch, filterBank]);
 
   const renderBinInput = () => {
-    const updateBin = (event: any) => {
-      let bin = Number(event.nativeEvent.text);
+    const updateBin = (
+      event: NativeSyntheticEvent<TextInputChangeEventData>,
+    ) => {
+      const bin = Number(event.nativeEvent.text);
       if (editState === EditStates.Edit && Number(card.card_bin) !== bin) {
         setEditState(EditStates.Add);
       }
@@ -247,7 +251,7 @@ const AddCardFullForm = () => {
       }
 
       removeAuthError(Consts.authErrorMessages.invalidCardBin);
-      setCard({...card, card_bin: bin});
+      setCard({ ...card, card_bin: bin });
     };
     return (
       <FormInputBox
@@ -265,7 +269,7 @@ const AddCardFullForm = () => {
       if (editState === EditStates.Edit && card.card_level !== text) {
         setEditState(EditStates.Add);
       }
-      setCard({...card, card_level: text});
+      setCard({ ...card, card_level: text });
     };
     return (
       <FormInputBox
@@ -316,9 +320,9 @@ const AddCardFullForm = () => {
   };
 
   const renderBrandDropdown = () => {
-    const updateBrand = (event: any) => {
-      let brand_id = Number(event);
-      let brand_name = brandOptions.find(b => b.id === brand_id)?.brand_name;
+    const updateBrand = (event: string) => {
+      const brand_id = Number(event);
+      const brand_name = brandOptions.find(b => b.id === brand_id)?.brand_name;
       if (isNaN(brand_id)) {
         return;
       }
@@ -328,7 +332,11 @@ const AddCardFullForm = () => {
       ) {
         setEditState(EditStates.Add);
       }
-      setCard({...card, card_brand_id: brand_id, card_brand_name: brand_name});
+      setCard({
+        ...card,
+        card_brand_id: brand_id,
+        card_brand_name: brand_name,
+      });
     };
     return (
       <DropdownComponent
@@ -347,14 +355,11 @@ const AddCardFullForm = () => {
   };
 
   const renderTypeDropdown = () => {
-    const updateType = (event: any) => {
-      if (
-        editState === EditStates.Edit &&
-        card.card_type !== event.toString()
-      ) {
+    const updateType = (event: string) => {
+      if (editState === EditStates.Edit && card.card_type !== event) {
         setEditState(EditStates.Add);
       }
-      setCard({...card, card_type: event.toString()});
+      setCard({ ...card, card_type: event });
     };
     return (
       <DropdownComponent
@@ -380,7 +385,7 @@ const AddCardFullForm = () => {
     return (
       <FormDateView className="m-2 z-30">
         <DropdownComponent
-          options={Array.from({length: 12}, (_, i) => {
+          options={Array.from({ length: 12 }, (_, i) => {
             return {
               label: (i + 1).toString(),
               value: (i + 1).toString(),
@@ -418,12 +423,12 @@ const AddCardFullForm = () => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           enabled={isKeyboardVisible}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-          <AddCFormOverlayView className="flex-auto text-left z-0">
-            <Title>
+          <ModalOverlayView className="flex-auto text-left z-0">
+            <TitleText>
               {editState !== EditStates.Edit
                 ? 'Enter Card Details'
                 : 'Edit Card Details'}
-            </Title>
+            </TitleText>
             {renderBinInput()}
             {editState !== EditStates.Bin && (
               <>
@@ -435,14 +440,21 @@ const AddCardFullForm = () => {
               </>
             )}
 
-            <FormButton onPress={handleSubmit} className="mt-1 z-0">
-              <FormButtonText>Submit</FormButtonText>
-            </FormButton>
-            <FormButton onPress={closeModal} className="z-0">
-              <FormButtonText>Close</FormButtonText>
-            </FormButton>
+            <PrimaryButton
+              type="primary"
+              onPress={handleSubmit}
+              className="mt-1 z-0">
+              <PrimaryText type="secondary" className="text-center text-xl">
+                Submit
+              </PrimaryText>
+            </PrimaryButton>
+            <PrimaryButton onPress={closeModal} className="z-0">
+              <PrimaryText type="secondary" className="text-center text-xl">
+                Close
+              </PrimaryText>
+            </PrimaryButton>
             {AuthErrorComponent && <AuthErrorComponent />}
-          </AddCFormOverlayView>
+          </ModalOverlayView>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </Modal>

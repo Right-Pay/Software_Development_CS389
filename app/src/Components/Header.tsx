@@ -1,17 +1,17 @@
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import {NativeStackHeaderProps} from '@react-navigation/native-stack';
-import React, {useCallback} from 'react';
-import {Pressable, Text, View} from 'react-native';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { NativeStackHeaderProps } from '@react-navigation/native-stack';
+import React, { useCallback } from 'react';
+import { Pressable, Text, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import context from '../Context/context';
 import locationContext from '../Context/locationContext';
-import {AppContext, BottomSheetTypes} from '../types/AppContextType';
-import {LocationContext} from '../types/LocationContextType';
-import {MainNavigationRoutesEnum} from '../types/NavigationRoutesType';
+import { AppContext, BottomSheetTypes } from '../types/AppContextType';
+import { LocationContext } from '../types/LocationContextType';
+import { MainNavigationRoutesEnum } from '../types/NavigationRoutesType';
 
-const TopBar: React.FC<NativeStackHeaderProps> = ({navigation, route}) => {
-  const {address} = React.useContext(locationContext) as LocationContext;
-  const {setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal} =
+const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
+  const { address } = React.useContext(locationContext) as LocationContext;
+  const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
     React.useContext(context) as AppContext;
 
   const handlePresentModalPress = useCallback(() => {
@@ -53,21 +53,22 @@ const TopBar: React.FC<NativeStackHeaderProps> = ({navigation, route}) => {
       <Pressable
         className="flex-1 flex-row pl-6 justify-start items-center text-center"
         onPress={() => {
-          if (route.name === 'ProfileSettings') {
-            navigation.navigate('ProfileStack', {screen: 'ProfileScreen'});
-          } else if (route.name === 'GeneralSettings') {
-            navigation.navigate('HomeStack', {screen: 'HomeScreen'});
-          } else if (route.name === 'CardSettings') {
-            navigation.navigate('WalletStack', {screen: 'WalletScreen'});
-          } else {
-            navigation.navigate('HomeStack', {screen: 'HomeScreen'});
-          }
+          // if (route.name === 'ProfileSettings') {
+          //   navigation.navigate('ProfileStack', { screen: 'ProfileScreen' });
+          // } else if (route.name === 'GeneralSettings') {
+          //   navigation.navigate('HomeStack', { screen: 'HomeScreen' });
+          // } else if (route.name === 'CardSettings') {
+          //   navigation.navigate('WalletStack', { screen: 'WalletScreen' });
+          // } else {
+          //   navigation.navigate('HomeStack', { screen: 'HomeScreen' });
+          // }
+          navigation.goBack();
         }}>
         <Icon name="arrow-back" color="#Ffffff" />
         <Text className="text-xl text-light-green p-0">{screenTitle()}</Text>
       </Pressable>
     );
-  }, [navigation, route.name, screenTitle]);
+  }, [navigation, screenTitle]);
 
   return (
     <View className="flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600">

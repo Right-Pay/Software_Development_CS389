@@ -12,14 +12,15 @@ import React, {
   useRef,
 } from 'react';
 import {
+  StyleProp,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
-  useColorScheme,
 } from 'react-native';
 import Icon from 'react-native-ionicons';
-import SettingsBottomSheet from '../Components/Screens/Profile/Settings/SettingsBottomSheet';
+import SettingsBottomSheet from '../Components/Screens/Settings/SettingsBottomSheet';
 import context from '../Context/context';
+import useColorsMode from '../Helpers/Colors';
 import {AppContext, BottomSheetTypes} from '../types/AppContextType';
 import {NavigationRoutesType} from '../types/NavigationRoutesType';
 import {
@@ -64,14 +65,26 @@ const tabBarIconFilter = (
 };
 
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
+  const {colors} = useColorsMode();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [backgroundStyles, setBackgroundStyles] = React.useState<
+    StyleProp<{
+      backgroundColor: string;
+    }>
+  >(
+    {} as StyleProp<{
+      backgroundColor: string;
+    }>,
+  );
   const {bottomSheetModal, showBottomSheetModal, setShowBottomSheetModal} =
     React.useContext(context) as AppContext;
-  const theme = useColorScheme();
-  const isDarkTheme = theme === 'dark';
 
-  const lightColor = '#Ffffff';
-  const darkColor = '#272727';
+  useEffect(() => {
+    const style = {
+      backgroundColor: colors.secondary,
+    };
+    setBackgroundStyles(StyleSheet.flatten([styles.modalBackground, style]));
+  }, [colors.secondary, setBackgroundStyles]);
 
   const snapPoints = useMemo(() => ['25%'], []);
 
@@ -128,10 +141,10 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         screenOptions={({route}) => ({
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarActiveBackgroundColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
-          tabBarActiveTintColor: isDarkTheme ? darkColor : lightColor,
-          tabBarInactiveBackgroundColor: isDarkTheme ? darkColor : lightColor,
-          tabBarInactiveTintColor: isDarkTheme ? '#e6ffe3' : '#4d654e',
+          tabBarActiveBackgroundColor: colors.primary,
+          tabBarActiveTintColor: colors.secondary,
+          tabBarInactiveBackgroundColor: colors.secondary,
+          tabBarInactiveTintColor: colors.primary,
           tabBarIcon: ({color, size}) => tabBarIconFilter({color, size}, route),
           tabBarAccessibilityLabel: route.name,
           tabBarHideOnKeyboard: true,
@@ -141,11 +154,6 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
           component={HomeStackNavigator}
           options={tabOptions('Home')}
         />
-        {/* {<Tab.Screen
-          name="CompanyStack"
-          component={CompanyStackNavigator}
-          options={tabOptions('Company')}
-        />} */}
         <Tab.Screen
           name="WalletStack"
           component={WalletStackNavigator}
@@ -168,7 +176,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         onChange={handleSheetChanges}
         onDismiss={handleModalDismiss}
         backdropComponent={backdropComponent}
-        backgroundStyle={styles.modalBackground}>
+        backgroundStyle={backgroundStyles}>
         {getBottomSheetModal()}
       </BottomSheetModal>
     </>
@@ -178,6 +186,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
 const styles = StyleSheet.create({
   modalBackground: {
     opacity: 1,
+    backgroundColor: 'white',
   },
 });
 
