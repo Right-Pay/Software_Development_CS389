@@ -11,7 +11,12 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { StyleProp, StyleSheet, View } from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import Icon from 'react-native-ionicons';
 import SettingsBottomSheet from '../Components/Screens/Settings/SettingsBottomSheet';
 import context from '../Context/context';
@@ -45,20 +50,18 @@ const tabBarIconFilter = (
   { color, size }: TabBarType,
   route: RouteProp<NavigationRoutesType, keyof NavigationRoutesType>,
 ) => {
-  let iconName = 'home';
-
-  if (route.name === 'HomeStack') {
-    iconName = 'home';
-  } else if (route.name === 'ProfileStack') {
-    iconName = 'person';
-  } else if (route.name === 'WalletStack') {
-    iconName = 'wallet';
-  } else if (route.name === 'LocationStack') {
-    iconName = 'pin';
+  switch (route.name) {
+    case 'HomeStack':
+      return <Icon name="home" size={size} color={color} />;
+    case 'ProfileStack':
+      return <Icon name="person" size={size} color={color} />;
+    case 'WalletStack':
+      return <Icon name="wallet" size={size} color={color} />;
+    case 'LocationStack':
+      return <Icon name="pin" size={size} color={color} />;
+    default:
+      return <Icon name="home" size={size} color={color} />;
   }
-
-  // You can return any component that you like here!
-  return <Icon name={iconName} size={size} color={color} />;
 };
 
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
@@ -86,13 +89,11 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
   const snapPoints = useMemo(() => ['25%'], []);
 
   const presentModal = useCallback(() => {
-    console.log('presentModal');
     bottomSheetModalRef.current?.present();
     bottomSheetModalRef.current?.snapToIndex(0);
   }, [bottomSheetModalRef]);
 
   const handleModalDismiss = useCallback(() => {
-    console.log('handleModalDismiss');
     setShowBottomSheetModal(false);
   }, [setShowBottomSheetModal]);
 
@@ -121,6 +122,14 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       return null;
     }
   }, [bottomSheetModal]);
+
+  const backdropComponent = useCallback(() => {
+    return (
+      <TouchableWithoutFeedback onPress={() => handleModalDismiss()}>
+        <View className="absolute top-0 left-0 opacity-50 bg-black h-screen w-screen" />
+      </TouchableWithoutFeedback>
+    );
+  }, [handleModalDismiss]);
 
   useEffect(() => {
     if (showBottomSheetModal) {
@@ -171,6 +180,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         onDismiss={handleModalDismiss}
+        backdropComponent={backdropComponent}
         backgroundStyle={backgroundStyles}>
         {getBottomSheetModal()}
       </BottomSheetModal>

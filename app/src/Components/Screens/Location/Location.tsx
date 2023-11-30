@@ -30,7 +30,6 @@ type LocationScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
-const StlyizedText = styled(Text, 'text-lg text-dark-green');
 const StyledView = styled(View);
 
 const LocationScreen: React.FC<LocationScreenProps> = () => {

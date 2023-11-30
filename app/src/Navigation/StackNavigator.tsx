@@ -117,7 +117,7 @@ const WalletStackNavigator: React.FC<StackProps> = ({ navigation, route }) => {
     themeMode === 'dark' ? screenOptionStyleDark : screenOptionStyleLight;
 
   React.useLayoutEffect(
-    () => hideTabBar(navigation, route, 'ProfileScreen'),
+    () => hideTabBar(navigation, route, 'WalletScreen'),
     [navigation, route],
   );
   return (
