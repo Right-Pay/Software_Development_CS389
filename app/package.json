@@ -15,7 +15,8 @@
     "start:production": "SET ENVFILE = '.env.production' && react-native start --reset-cache",
     "android:staging": "SET ENVFILE = '.env.staging' && react-native run-android",
     "generate": "node ./tools/generate.js",
-    "podinstall": "cd ios && pod install --verbose && cd .."
+    "podinstall": "cd ios && pod install --verbose && cd ..",
+    "setupiosbuild": "cd ios && rm -rf Pods --verbose && pod install --verbose"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",
