@@ -45,7 +45,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       </TitleText>
       {topCard ? (
         <View className="w-full justify-center items-center h-1/3 mt-10">
-          <PrimaryText className="text-center text-xl mt-10">{`You're at ${address?.displayName.text}. We suggest you use the following card.`}</PrimaryText>
+          <PrimaryText className="text-center text-xl mt-10">{`You're at ${address?.displayName.text}\n We suggest you use the following card`}</PrimaryText>
           <CardComponent
             card_name={topCard?.card_name as string}
             card_bin={topCard?.card_bin as number}
