@@ -8,11 +8,14 @@ import locationContext from '../Context/locationContext';
 import { AppContext, BottomSheetTypes } from '../types/AppContextType';
 import { LocationContext } from '../types/LocationContextType';
 import { MainNavigationRoutesEnum } from '../types/NavigationRoutesType';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
   const { address } = React.useContext(locationContext) as LocationContext;
   const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
     React.useContext(context) as AppContext;
+
+  const insets = useSafeAreaInsets();
 
   const handlePresentModalPress = useCallback(() => {
     setBottomSheetModal({
@@ -70,13 +73,10 @@ const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
     );
   }, [navigation, screenTitle]);
 
-  const classNameString =
-    Platform.OS === 'ios'
-      ? 'flex flex-row items-center w-screen h-24 pt-4 bg-dark-green border-b-3 border-slate-600'
-      : 'flex flex-row items-center w-screen h-16 bg-dark-green border-b-3 border-slate-600';
-
   return (
-    <View className={classNameString}>
+    <View
+      className="flex flex-row items-center w-screen pt-6 bg-dark-green border-b-3 border-slate-600"
+      style={{ height: insets.top + 45 }}>
       {isMainScreen() ? (
         <>
           <View className="w-5/6 pl-6">

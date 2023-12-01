@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AuthErrorComponent from '../Components/Common/AuthErrorComponent';
@@ -9,6 +9,7 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
+import { AccessibilityInfo } from 'react-native';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -31,6 +32,18 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     setUserProfile({} as Profile);
     clearAuthErrors();
   };
+
+  const [reducedMotion, setReducedMotion] = useState<boolean>(false);
+
+  const fetchReducedMotion = useCallback(async () => {
+    await AccessibilityInfo.isReduceMotionEnabled().then(reduced => {
+      setReducedMotion(reduced);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetchReducedMotion();
+  }, [fetchReducedMotion]);
 
   const addAuthError = (error: string) => {
     setAuthError(prevErrors => Array.from(new Set([...prevErrors, error])));
@@ -541,6 +554,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         AuthErrorComponent,
         refreshAuth0Token,
         updateUserProfile,
+        reducedMotion,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>

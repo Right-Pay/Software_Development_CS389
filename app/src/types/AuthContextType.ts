@@ -26,6 +26,7 @@ export interface AuthContextType {
   checkValidPhone: (_phone: string) => boolean;
   refreshAuth0Token: () => void;
   updateUserProfile: (_newProfile: Profile) => void;
+  reducedMotion: boolean;
 }
 
 export interface TokenType {

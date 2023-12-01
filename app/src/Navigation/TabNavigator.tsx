@@ -7,11 +7,13 @@ import { RouteProp } from '@react-navigation/native';
 import React, {
   PropsWithChildren,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
 } from 'react';
 import {
+  Platform,
   StyleProp,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -29,6 +31,8 @@ import {
   ProfileStackNavigator,
   WalletStackNavigator,
 } from './StackNavigator';
+import authContext from '../Context/authContext';
+import { AuthContextType } from '../types/AuthContextType';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
@@ -65,6 +69,7 @@ const tabBarIconFilter = (
 };
 
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
+  const { reducedMotion } = useContext(authContext) as AuthContextType;
   const { colors } = useColorsMode();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [backgroundStyles, setBackgroundStyles] = React.useState<
@@ -138,7 +143,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       bottomSheetModalRef.current?.close();
     }
   }, [presentModal, showBottomSheetModal]);
-
+  console.log(reducedMotion);
   return (
     <>
       <Tab.Navigator
@@ -177,6 +182,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       </Tab.Navigator>
       <BottomSheetModal
         ref={bottomSheetModalRef}
+        animateOnMount={reducedMotion}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         onDismiss={handleModalDismiss}
