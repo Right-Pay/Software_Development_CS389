@@ -11,6 +11,7 @@ import { AppContext } from '../types/AppContextType';
 import { Location, Place, PlaceLocation } from '../types/Location';
 import context from './context';
 import LocationContext from './locationContext';
+import Config from 'react-native-config';
 
 const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [location, setLocation] = useState<Location>({} as Location);
@@ -19,6 +20,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
   const { appStateVisible } = useContext(context) as AppContext;
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
+  const apiURL = Config.REACT_APP_GOOGLE_API;
 
   const requestLocationPermission = useCallback(async () => {
     try {
@@ -65,10 +67,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       'X-Goog-FieldMask',
       'places.displayName,places.businessStatus,places.primaryType',
     );
-    myHeaders.append(
-      'X-Goog-Api-Key',
-      'AIzaSyDSQqzE6cXDeUCWEquYC4PPCCpk9KRJiw8',
-    );
+    myHeaders.append('X-Goog-Api-Key', apiURL);
 
     const raw = JSON.stringify({
       excludedTypes: ['parking'],
@@ -104,7 +103,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     });
 
     setAddress(resultAddress[0]);
-  }, [location, locationGrantType, requestLocationPermission]);
+  }, [location, locationGrantType, requestLocationPermission, apiURL]);
 
   const calculateDistanceLatLong = (
     location1: PlaceLocation,
@@ -155,7 +154,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       'X-Goog-FieldMask',
       'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types',
     );
-    headers.append('X-Goog-Api-Key', 'AIzaSyDSQqzE6cXDeUCWEquYC4PPCCpk9KRJiw8');
+    headers.append('X-Goog-Api-Key', apiURL);
 
     const placesTypes = {
       restaurant: 'Restaurant',
@@ -235,7 +234,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
 
     setPlaces(resultPlaces);
     setLocationLoading(false);
-  }, [location, requestLocationPermission, locationGrantType]);
+  }, [location, requestLocationPermission, locationGrantType, apiURL]);
 
   const getLocation = useCallback(async () => {
     await requestLocationPermission();
