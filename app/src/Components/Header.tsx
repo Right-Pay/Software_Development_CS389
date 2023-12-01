@@ -12,27 +12,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
   const { address } = React.useContext(locationContext) as LocationContext;
-  const {
-    setBottomSheetModal,
-    setShowBottomSheetModal,
-    showBottomSheetModal,
-    snapPointArray,
-  } = React.useContext(context) as AppContext;
+  const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
+    React.useContext(context) as AppContext;
 
   const insets = useSafeAreaInsets();
 
   const handlePresentModalPress = useCallback(() => {
     setBottomSheetModal({
       type: BottomSheetTypes.SETTINGS,
-      snapPoints: snapPointArray,
+      snapPoints: ['30%'],
     });
     setShowBottomSheetModal(!showBottomSheetModal);
-  }, [
-    setBottomSheetModal,
-    setShowBottomSheetModal,
-    showBottomSheetModal,
-    snapPointArray,
-  ]);
+  }, [setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal]);
 
   const showMoreButton = useCallback(() => {
     return (

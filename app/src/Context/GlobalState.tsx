@@ -25,8 +25,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const { refreshAuth0Token, userToken, userProfile, addAuthError } =
     React.useContext(AuthContext) as AuthContextType;
 
-  const snapPointArray = ['40%'];
-
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
@@ -37,7 +35,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [bottomSheetModal, setBottomSheetModal] =
     useState<BottomSheetModalType>({
       type: BottomSheetTypes.SETTINGS,
-      snapPoints: snapPointArray,
+      snapPoints: ['30%'],
     });
 
   const [CardForms, setCardForms] = useState<CardFormsType>({
@@ -425,7 +423,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         showBottomSheetModal,
         setBottomSheetModal,
         bottomSheetModal,
-        snapPointArray,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>

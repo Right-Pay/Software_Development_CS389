@@ -80,12 +80,8 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       backgroundColor: string;
     }>,
   );
-  const {
-    bottomSheetModal,
-    showBottomSheetModal,
-    setShowBottomSheetModal,
-    snapPointArray,
-  } = React.useContext(context) as AppContext;
+  const { bottomSheetModal, showBottomSheetModal, setShowBottomSheetModal } =
+    React.useContext(context) as AppContext;
 
   useEffect(() => {
     const style = {
@@ -94,7 +90,10 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
     setBackgroundStyles(StyleSheet.flatten([styles.modalBackground, style]));
   }, [colors.secondary, setBackgroundStyles]);
 
-  const snapPoints = useMemo(() => snapPointArray, []);
+  const snapPoints = useMemo(
+    () => bottomSheetModal.snapPoints,
+    [bottomSheetModal.snapPoints],
+  );
 
   const presentModal = useCallback(() => {
     bottomSheetModalRef.current?.present();
