@@ -37,6 +37,49 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
 
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
+  const confirmDeleteCard = (card: Card, key: number) => {
+    return (
+      <>
+        <PrimaryButton
+          className="self-start w-fit bg-red-500 border-dark-green pl-6 pr-6"
+          onPress={() => {
+            unlinkCard(cards[key]);
+            setConfirmDelete(false);
+          }}>
+          <PrimaryText className="text-center text-md text-white">
+            Are you sure?
+          </PrimaryText>
+        </PrimaryButton>
+        <PrimaryButton
+          type="tertiary"
+          onPress={() => {
+            setConfirmDelete(false);
+          }}>
+          <PrimaryText className="text-center text-xl text-white">
+            Cancel
+          </PrimaryText>
+        </PrimaryButton>
+      </>
+    );
+  };
+
+  const deletePhaseButtons = (card: Card, key: number) => {
+    return (
+      <>
+        <PrimaryButton
+          className="bg-red-500"
+          onPress={() => setConfirmDelete(true)}>
+          <PrimaryText className="text-xl text-white">Delete</PrimaryText>
+        </PrimaryButton>
+        <PrimaryButton className="opacity-50">
+          <PrimaryText className="text-md text-white">
+            Edit Coming Soon
+          </PrimaryText>
+        </PrimaryButton>
+      </>
+    );
+  };
+
   const renderCard = (card: Card, key: number) => {
     return (
       <SettingsCardView key={key}>
@@ -47,42 +90,9 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
           {card.card_bin}
         </PrimaryText>
         <View className="flex flex-row justify-between w-full">
-          {confirmDelete ? (
-            <>
-              <PrimaryButton
-                className="self-start w-fit bg-red-500 border-dark-green pl-6 pr-6"
-                onPress={() => {
-                  unlinkCard(cards[key]);
-                  setConfirmDelete(false);
-                }}>
-                <PrimaryText className="text-center text-md text-white">
-                  Are you sure?
-                </PrimaryText>
-              </PrimaryButton>
-              <PrimaryButton
-                type="tertiary"
-                onPress={() => {
-                  setConfirmDelete(false);
-                }}>
-                <PrimaryText className="text-center text-xl text-white">
-                  Cancel
-                </PrimaryText>
-              </PrimaryButton>
-            </>
-          ) : (
-            <>
-              <PrimaryButton
-                className="bg-red-500"
-                onPress={() => setConfirmDelete(true)}>
-                <PrimaryText className="text-xl text-white">Delete</PrimaryText>
-              </PrimaryButton>
-              <PrimaryButton className="opacity-50">
-                <PrimaryText className="text-md text-white">
-                  Edit Coming Soon
-                </PrimaryText>
-              </PrimaryButton>
-            </>
-          )}
+          {confirmDelete
+            ? confirmDeleteCard(card, key)
+            : deletePhaseButtons(card, key)}
         </View>
       </SettingsCardView>
     );
