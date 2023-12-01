@@ -55,3 +55,16 @@ export enum CardFormTypes {
   Review = 'Review',
   AddBank = 'AddBank',
 }
+
+export interface CardProps {
+  card_name: string;
+  card_bin: number;
+  exp_date: string;
+  card_brand_name: string;
+  card_type: string;
+  deleteCard?: boolean;
+  handleDelete?: () => void;
+  setDeleteCard?: (setCardTo: boolean) => void;
+  handleCardPress?: () => void;
+  classNameProp?: string;
+}

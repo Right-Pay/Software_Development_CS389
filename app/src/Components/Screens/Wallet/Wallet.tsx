@@ -11,11 +11,8 @@ import Consts from '../../../Helpers/Consts';
 import {
   AddCardButton,
   AddCardIcon,
-  CardButton,
   CardItemSeperator,
-  CardText,
   CardView,
-  DeleteCardButton,
   RewardsView,
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
@@ -29,6 +26,7 @@ import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import AddCardFullForm from './AddCardFullForm';
+import CardComponent from '../../Card';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -72,74 +70,23 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     </CardView>
   );
 
-  const formatBin = (bin: string) => {
-    return (
-      bin
-        .replace(/\s/g, '')
-        .replace(/(\d{4})/g, '$1 ')
-        .trim() + '** **** ****'
-    );
-  };
-
-  const formatExpirationDate = (expDate: string) => {
-    // exp date is in YYYY-MM-DDT00:00:00 format
-    expDate = expDate.split('T')[0].replace(/-/g, '');
-    return expDate.slice(4, 6) + '/' + expDate.slice(2, 4);
-  };
-
   const renderCard = (item: Card) => {
     if (item.card_name === 'Add') {
       return addNewCardComponent();
     }
+
     return (
-      <CardView>
-        <StyledView className="flex-1 flex-col w-11/12 h-full justify-center items-center bg-dark-green rounded-xl">
-          <CardButton
-            onLongPress={() => handleCardPress()}
-            className={deleteCard ? 'opacity-50' : 'opacity-100'}>
-            <StyledView className="relative flex-1 flex-col h-full">
-              <StyledView className="text-center">
-                <CardText
-                  className="text-left font-bold truncate px-2"
-                  numberOfLines={2}>
-                  {item.card_name}
-                </CardText>
-              </StyledView>
-              <StyledView className="absolute bottom-0 left-2 flex-1 flex-col">
-                <Text className="text-lg text-white">
-                  {formatBin(item?.card_bin.toString())}
-                </Text>
-                <Text className="text-xs text-white text-left">
-                  {formatExpirationDate(item?.exp_date || '')}
-                </Text>
-              </StyledView>
-              <StyledView className="absolute bottom-0 right-2 flex-1 flex-col">
-                <Text className="text-lg text-white">
-                  {item.card_brand_name}
-                </Text>
-                <Text className="text-xs text-white text-right">
-                  {item.card_type}
-                </Text>
-              </StyledView>
-            </StyledView>
-          </CardButton>
-          {deleteCard && (
-            <DeleteCardButton
-              onLongPress={handleDelete}
-              onPress={() => setDeleteCard(false)}>
-              <CardText className="opacity-100 text-4xl text-center">
-                Delete Card?
-              </CardText>
-              <CardText className="opacity-100 text-3xl text-center">
-                Long Press Again to Confirm
-              </CardText>
-              <CardText className="opacity-100 text-2xl text-center">
-                Tap to Exit
-              </CardText>
-            </DeleteCardButton>
-          )}
-        </StyledView>
-      </CardView>
+      <CardComponent
+        card_name={item.card_name as string}
+        card_bin={item.card_bin ?? ''}
+        exp_date={item.exp_date as string}
+        card_brand_name={item.card_brand_name as string}
+        card_type={item.card_type as string}
+        handleCardPress={handleCardPress}
+        deleteCard={deleteCard}
+        setDeleteCard={setDeleteCard}
+        handleDelete={handleDelete}
+      />
     );
   };
 
