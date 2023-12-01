@@ -1,7 +1,7 @@
 import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { useNavigation } from '@react-navigation/native';
 import React, { PropsWithChildren } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import { NavigationTabProp } from 'react-navigation-tabs';
 import authContext from '../../../Context/authContext';
@@ -77,7 +77,8 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
 
   const renderSettingsNav = (setting: navSettingType, key: number) => {
     return (
-      <View
+      <Pressable
+        onPress={() => handleSettingsNavPress(setting.route)}
         key={key}
         className={'flex-1 flex-row w-screen pl-4 items-center h-auto'}>
         <View className="w-8 text-center">
@@ -86,17 +87,13 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
             color={colors.primary}
           />
         </View>
-        <PrimaryText
-          onPress={() => handleSettingsNavPress(setting.route)}
-          className="text-left text-lg">
-          {setting.name}
-        </PrimaryText>
-      </View>
+        <PrimaryText className="text-left text-lg">{setting.name}</PrimaryText>
+      </Pressable>
     );
   };
 
   return (
-    <View className="flex-1 w-full h-full">
+    <View className="flex-1 w-full h-full pb-6">
       {settingsPages.map((setting, index) => renderSettingsNav(setting, index))}
     </View>
   );
