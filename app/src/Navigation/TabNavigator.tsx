@@ -86,7 +86,10 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
     setBackgroundStyles(StyleSheet.flatten([styles.modalBackground, style]));
   }, [colors.secondary, setBackgroundStyles]);
 
-  const snapPoints = useMemo(() => ['25%'], []);
+  const snapPoints = useMemo(
+    () => bottomSheetModal.snapPoints,
+    [bottomSheetModal.snapPoints],
+  );
 
   const presentModal = useCallback(() => {
     bottomSheetModalRef.current?.present();

@@ -35,7 +35,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [bottomSheetModal, setBottomSheetModal] =
     useState<BottomSheetModalType>({
       type: BottomSheetTypes.SETTINGS,
-      snapPoints: ['25%'],
+      snapPoints: ['30%'],
     });
 
   const [CardForms, setCardForms] = useState<CardFormsType>({
