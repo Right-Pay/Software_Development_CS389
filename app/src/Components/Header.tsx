@@ -1,7 +1,7 @@
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import React, { useCallback } from 'react';
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import context from '../Context/context';
 import locationContext from '../Context/locationContext';

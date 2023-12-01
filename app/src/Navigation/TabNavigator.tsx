@@ -7,13 +7,11 @@ import { RouteProp } from '@react-navigation/native';
 import React, {
   PropsWithChildren,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
 } from 'react';
 import {
-  Platform,
   StyleProp,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -31,8 +29,6 @@ import {
   ProfileStackNavigator,
   WalletStackNavigator,
 } from './StackNavigator';
-import authContext from '../Context/authContext';
-import { AuthContextType } from '../types/AuthContextType';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
