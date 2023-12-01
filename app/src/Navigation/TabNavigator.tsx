@@ -69,7 +69,6 @@ const tabBarIconFilter = (
 };
 
 const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
-  const { reducedMotion } = useContext(authContext) as AuthContextType;
   const { colors } = useColorsMode();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [backgroundStyles, setBackgroundStyles] = React.useState<
@@ -81,8 +80,12 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       backgroundColor: string;
     }>,
   );
-  const { bottomSheetModal, showBottomSheetModal, setShowBottomSheetModal } =
-    React.useContext(context) as AppContext;
+  const {
+    bottomSheetModal,
+    showBottomSheetModal,
+    setShowBottomSheetModal,
+    snapPointArray,
+  } = React.useContext(context) as AppContext;
 
   useEffect(() => {
     const style = {
@@ -91,7 +94,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
     setBackgroundStyles(StyleSheet.flatten([styles.modalBackground, style]));
   }, [colors.secondary, setBackgroundStyles]);
 
-  const snapPoints = useMemo(() => ['25%'], []);
+  const snapPoints = useMemo(() => snapPointArray, []);
 
   const presentModal = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -143,7 +146,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       bottomSheetModalRef.current?.close();
     }
   }, [presentModal, showBottomSheetModal]);
-  console.log(reducedMotion);
+
   return (
     <>
       <Tab.Navigator
@@ -182,7 +185,6 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
       </Tab.Navigator>
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        animateOnMount={reducedMotion}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         onDismiss={handleModalDismiss}

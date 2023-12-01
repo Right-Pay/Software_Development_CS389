@@ -96,7 +96,7 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
   };
 
   return (
-    <View className="flex-1 w-full h-full">
+    <View className="flex-1 w-full h-full pb-6">
       {settingsPages.map((setting, index) => renderSettingsNav(setting, index))}
     </View>
   );

@@ -30,6 +30,7 @@ export interface AppContext {
   showBottomSheetModal: boolean;
   setBottomSheetModal: (_bottomSheetModal: BottomSheetModalType) => void;
   bottomSheetModal: BottomSheetModalType;
+  snapPointArray: string[];
 }
 
 export enum BottomSheetTypes {
