@@ -1,4 +1,5 @@
 import React from 'react';
+import QRCode from '../assets/svg/TestFlightQRCode.svg'
 import Image from 'next/image';
 
 const Home: React.FC = () => {
@@ -15,7 +16,7 @@ const Home: React.FC = () => {
           <div className="bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-4 text-dark-green">Test Flight Build</h2>
             <p className="text-gray-600 mb-6">
-              Try out our latest features by downloading the Test Flight build.
+              Try out our latest features by downloading the Test Flight build now!
             </p>
 
             <div className="flex flex-col lg:flex-row items-center space-4">
@@ -29,9 +30,14 @@ const Home: React.FC = () => {
               </a>
 
               {/* You may replace the QR code with your own implementation */}
-              <div className="flex-shrink-0">
-                <Image src={'../assets/svg/TestFlightQRCode.svg'} alt="RightPayNow TestFlight QR Code" width={200} height={200} />
+              <div className="mx-auto md:mr-0">
+                <Image src={QRCode} alt="RightPayNow TestFlight QR Code" width={200} height={200} />
               </div>
+            </div>
+            <div className="text-center">
+              <p className="text-gray-600 mt-6 text-sm">
+                *Only available on iOS 14 or higher*
+              </p>
             </div>
           </div>
         </div>
