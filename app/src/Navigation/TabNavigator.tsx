@@ -29,6 +29,7 @@ import {
   ProfileStackNavigator,
   WalletStackNavigator,
 } from './StackNavigator';
+import LocationBottomSheet from '../Components/Screens/Location/LocationBottomSheet';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
@@ -116,6 +117,13 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         return (
           <View className="w-full h-full">
             <SettingsBottomSheet />
+          </View>
+        );
+      }
+      else if (bottomSheetModal.type === BottomSheetTypes.LOCATION) {
+        return (
+          <View className="w-full h-full">
+            <LocationBottomSheet />
           </View>
         );
       } else {

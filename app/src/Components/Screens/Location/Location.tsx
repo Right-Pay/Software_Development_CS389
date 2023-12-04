@@ -3,7 +3,7 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { styled } from 'nativewind';
 import type { PropsWithChildren } from 'react';
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Platform, Pressable, View, ViewToken } from 'react-native';
 import Icon from 'react-native-ionicons';
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -23,6 +23,8 @@ import type {
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import context from '../../../Context/context';
+import { AppContext, BottomSheetTypes } from '../../../types/AppContextType';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -33,8 +35,10 @@ type LocationScreenProps = CompositeScreenProps<
 const StyledView = styled(View);
 
 const LocationScreen: React.FC<LocationScreenProps> = () => {
-  const { location, places, updateLocation, locationLoading } =
+  const { location, places, updateLocation, locationLoading, updateSelectedLocation } =
     React.useContext(locationContext) as LocationContext;
+  const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
+    React.useContext(context) as AppContext;
   const { colors, themeMode } = useColorsMode();
   const isDarkTheme = themeMode === 'dark';
 
@@ -44,6 +48,13 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
   );
 
   const renderPlace = (place: Place) => {
+    const handlePresentModalPress = useCallback(() => {
+      setBottomSheetModal({
+        type: BottomSheetTypes.LOCATION,
+        snapPoints: ['30%', '80%'],
+      });
+      setShowBottomSheetModal(!showBottomSheetModal);
+    }, [setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal]);
     return (
       <Pressable
         className={
@@ -53,8 +64,8 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         }
         onPress={() => {
           console.log('Pressed');
-          // setSelectedLocation to this place
-          // look at handlePresentModalPress on line 20 in Header.tsx
+          updateSelectedLocation(place);
+          handlePresentModalPress();
           // set the bottom sheet modal to a new TSX component made in the Location directory
           // you can make a copy of the SettingsBottomSheet in the Settings directory and rename everything
           // to LocationBottomSheet
