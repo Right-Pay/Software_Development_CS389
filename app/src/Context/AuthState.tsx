@@ -9,6 +9,7 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
+import { sign } from 'crypto';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -121,6 +122,14 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
           case 'too_many_attempts':
             addAuthError(ErrorMessages.tooManyAttepts);
             return false;
+          case 'access_denied':
+            if (result.error_description === 'Not_Verified') {
+              addAuthError(ErrorMessages.notVerified);
+              return false;
+            } else {
+              addAuthError(ErrorMessages.userNotFound);
+              return false;
+            }
           case undefined:
             setRefreshToken(result.refresh_token);
             await storeAuth0RefreshToken(result.refresh_token);
@@ -163,10 +172,41 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
             setUserProfile(res.data as Profile);
             clearAuthErrors();
           } else {
-            setUserToken(null);
-            await removeAuth0Token();
-            setUserProfile({} as Profile);
-            addAuthError(res.message as string);
+            console.log(res);
+
+            //This part is if we don't create user until they sign in the first time
+            if (res.message.includes('existe' || 'exists')) {
+              await createNewDatabaseUser(
+                access_token,
+                email,
+                'temp_username', //We need to figure out a way to get this username
+              ).then(async r => {
+                console.log(r);
+                const resdos = r as HttpResponse;
+                setIsLoading(false);
+                if (resdos.success) {
+                  clearAuthErrors();
+                  signIn(email, password);
+                } else {
+                  setUserToken(null);
+                  await removeAuth0Token();
+                  setUserProfile({} as Profile);
+                  addAuthError(resdos.message as string);
+                }
+              });
+
+              /* This would be instead of creating user we would just be signing in with the user
+                  setUserToken(null);
+                  await removeAuth0Token();
+                  setUserProfile({} as Profile);
+                  addAuthError(resdos.message as string);
+              */
+            } else {
+              setUserToken(null);
+              await removeAuth0Token();
+              setUserProfile({} as Profile);
+              addAuthError(res.message as string);
+            }
           }
         });
       }
@@ -186,7 +226,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         password: password,
         client_id: auth0ClientId,
         audience: auth0Audience,
-        scope: 'offline_access',
+        scope: 'offline_access email_verified',
       }).toString(),
     };
     return await fetch(`${auth0URL}/oauth/token`, requestOptions)
@@ -199,6 +239,14 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
           case 'too_many_attempts':
             addAuthError(ErrorMessages.tooManyAttepts);
             return false;
+          case 'access_denied':
+            if (result.error_description === 'Not_Verified') {
+              addAuthError(ErrorMessages.notVerified);
+              return false;
+            } else {
+              addAuthError(ErrorMessages.userNotFound);
+              return false;
+            }
           case undefined:
             return {
               access_token: result.access_token,
@@ -309,11 +357,12 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         email,
         password,
         username,
-      ).then(async () => {
-        return await signInAuth(email, password);
+      ).then(async r => {
+        console.log(r);
+        //return await signInAuth(email, password, true);
       })) as TokenType;
-
-      if (access_token) {
+      //I can only do this if I do not need an access_token to sign into the db for signing  up only
+      /*if (access_token) {
         await createNewDatabaseUser(access_token, email, username, phone).then(
           async result => {
             const res = result as HttpResponse;
@@ -333,7 +382,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         );
       } else {
         addAuthError(ErrorMessages.errorCreatingUser);
-      }
+      }*/
     }
   };
 
