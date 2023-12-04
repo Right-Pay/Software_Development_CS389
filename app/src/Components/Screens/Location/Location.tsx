@@ -7,6 +7,7 @@ import React, { useCallback, useRef } from 'react';
 import { Platform, Pressable, View, ViewToken } from 'react-native';
 import Icon from 'react-native-ionicons';
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
+import context from '../../../Context/context';
 import locationContext from '../../../Context/locationContext';
 import useColorsMode from '../../../Helpers/Colors';
 import {
@@ -14,6 +15,7 @@ import {
   GoogleMapsView,
   NearbyLocationScrollView,
 } from '../../../Helpers/StylizedComponents';
+import { AppContext, BottomSheetTypes } from '../../../types/AppContextType';
 import { Place } from '../../../types/Location';
 import { LocationContext } from '../../../types/LocationContextType';
 import type {
@@ -23,8 +25,6 @@ import type {
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
-import context from '../../../Context/context';
-import { AppContext, BottomSheetTypes } from '../../../types/AppContextType';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -35,8 +35,13 @@ type LocationScreenProps = CompositeScreenProps<
 const StyledView = styled(View);
 
 const LocationScreen: React.FC<LocationScreenProps> = () => {
-  const { location, places, updateLocation, locationLoading, updateSelectedLocation } =
-    React.useContext(locationContext) as LocationContext;
+  const {
+    location,
+    places,
+    updateLocation,
+    locationLoading,
+    updateSelectedLocation,
+  } = React.useContext(locationContext) as LocationContext;
   const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
     React.useContext(context) as AppContext;
   const { colors, themeMode } = useColorsMode();
@@ -47,14 +52,15 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
     [] as Place[],
   );
 
+  const handlePresentModalPress = useCallback(() => {
+    setBottomSheetModal({
+      type: BottomSheetTypes.LOCATION,
+      snapPoints: ['30%', '80%'],
+    });
+    setShowBottomSheetModal(!showBottomSheetModal);
+  }, [setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal]);
+
   const renderPlace = (place: Place) => {
-    const handlePresentModalPress = useCallback(() => {
-      setBottomSheetModal({
-        type: BottomSheetTypes.LOCATION,
-        snapPoints: ['30%', '80%'],
-      });
-      setShowBottomSheetModal(!showBottomSheetModal);
-    }, [setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal]);
     return (
       <Pressable
         className={
