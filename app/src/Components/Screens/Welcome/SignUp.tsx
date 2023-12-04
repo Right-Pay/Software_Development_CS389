@@ -16,6 +16,7 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import Consts from '../../../Helpers/Consts';
 
 type SignUpScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -29,8 +30,16 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
 
-  const { signUp, clearAuthErrors, AuthErrorComponent, userToken } =
-    React.useContext(AuthContext) as AuthContextType;
+  const {
+    signUp,
+    clearAuthErrors,
+    AuthErrorComponent,
+    userToken,
+    addAuthError,
+  } = React.useContext(AuthContext) as AuthContextType;
+
+  const Errors = Consts.authErrorMessages;
+
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
@@ -84,8 +93,16 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           />
           <PrimaryButton
             onPress={async () => {
-              await signUp(email, username, password, repeatedPassword);
-              userToken && navigation.navigate('Login');
+              await signUp(email, username, password, repeatedPassword).then(
+                res => {
+                  if (res) {
+                    addAuthError(Errors.verifyEmail);
+                    setTimeout(() => {
+                      navigation.navigate('Login');
+                    }, 3000);
+                  }
+                },
+              );
             }}>
             <PrimaryText type="secondary" className="text-xl">
               Sign Up

@@ -1,7 +1,7 @@
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import React, { useCallback } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import context from '../Context/context';
 import locationContext from '../Context/locationContext';
@@ -73,10 +73,17 @@ const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
     );
   }, [navigation, screenTitle]);
 
+  const styles = StyleSheet.create({
+    heightStyle: {
+      height: insets.top + Platform.OS === 'ios' ? 45 : 65,
+      paddingBottom: 5,
+    },
+  });
+
   return (
     <View
       className="flex flex-row items-center w-screen pt-6 bg-dark-green border-b-3 border-slate-600"
-      style={{ height: insets.top + 45 }}>
+      style={styles.heightStyle}>
       {isMainScreen() ? (
         <>
           <View className="w-5/6 pl-6">

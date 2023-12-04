@@ -9,7 +9,6 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
-import { sign } from 'crypto';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -61,6 +60,22 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const storeUsername = async (username: string) => {
+    try {
+      await EncryptedStorage.setItem('rp_username', username);
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const removeUsername = async () => {
+    try {
+      await EncryptedStorage.removeItem('rp_username');
+    } catch (error) {
+      return false;
+    }
+  };
+
   const removeAuth0Token = async () => {
     try {
       await EncryptedStorage.removeItem('rp_auth0_token');
@@ -91,6 +106,18 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         refresh_token: auth0RefreshToken,
       };
       return tokens;
+    } catch (error) {
+      return null;
+    }
+  }, []);
+
+  const retrieveUsername = useCallback(async (): Promise<string | null> => {
+    try {
+      const username = await EncryptedStorage.getItem('rp_username');
+      if (!username) {
+        return null;
+      }
+      return username;
     } catch (error) {
       return null;
     }
@@ -165,24 +192,22 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
       if (access_token) {
         setIsLoading(true);
         await getUser(access_token).then(async result => {
-          const res = result as HttpResponse;
+          const res = result as HttpResponse<Profile>;
           if (res.success) {
             setUserToken(access_token);
             await storeAuth0Token(access_token);
             setUserProfile(res.data as Profile);
             clearAuthErrors();
           } else {
-            console.log(res);
-
-            //This part is if we don't create user until they sign in the first time
-            if (res.message.includes('existe' || 'exists')) {
+            const username = await retrieveUsername();
+            if (res.message.includes('existe' || 'exist')) {
+              setIsLoading(true);
               await createNewDatabaseUser(
                 access_token,
                 email,
-                'temp_username', //We need to figure out a way to get this username
+                username ?? 'No Username Set',
               ).then(async r => {
-                console.log(r);
-                const resdos = r as HttpResponse;
+                const resdos = r as HttpResponse<Profile>;
                 setIsLoading(false);
                 if (resdos.success) {
                   clearAuthErrors();
@@ -194,13 +219,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
                   addAuthError(resdos.message as string);
                 }
               });
-
-              /* This would be instead of creating user we would just be signing in with the user
-                  setUserToken(null);
-                  await removeAuth0Token();
-                  setUserProfile({} as Profile);
-                  addAuthError(resdos.message as string);
-              */
+              await removeUsername();
             } else {
               setUserToken(null);
               await removeAuth0Token();
@@ -324,7 +343,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
       return false;
     }
     await getUser(userToken).then(async result => {
-      const res = result as HttpResponse;
+      const res = result as HttpResponse<Profile>;
       if (res.success) {
         setUserProfile(res.data as Profile);
         clearAuthErrors();
@@ -342,47 +361,28 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     username: string,
     password: string,
     repeatedPassword: string,
-    phone?: string,
   ) => {
     await resetVariables();
 
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
+      return false;
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
+      return false;
     } else if (!checkEqualPasswords(password, repeatedPassword)) {
       addAuthError(ErrorMessages.passwordsDoNotMatch);
+      return false;
     } else {
-      const { access_token }: TokenType = (await createNewAuth0User(
-        email,
-        password,
-        username,
-      ).then(async r => {
-        console.log(r);
-        //return await signInAuth(email, password, true);
-      })) as TokenType;
-      //I can only do this if I do not need an access_token to sign into the db for signing  up only
-      /*if (access_token) {
-        await createNewDatabaseUser(access_token, email, username, phone).then(
-          async result => {
-            const res = result as HttpResponse;
-            setIsLoading(false);
-            if (res.success) {
-              setUserToken(access_token);
-              await storeAuth0Token(access_token);
-              setUserProfile(res.data as Profile);
-              clearAuthErrors();
-            } else {
-              setUserToken(null);
-              await removeAuth0Token();
-              setUserProfile({} as Profile);
-              addAuthError(res.message as string);
-            }
-          },
-        );
-      } else {
-        addAuthError(ErrorMessages.errorCreatingUser);
-      }*/
+      await createNewAuth0User(email, password, username).then(async r => {
+        if (r.code && r.code === 'invalid_signup') {
+          addAuthError(ErrorMessages.userAlreadyExists);
+          return false;
+        } else {
+          await storeUsername(username);
+        }
+      });
+      return true;
     }
   };
 
@@ -545,7 +545,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         setRefreshToken(result?.refresh_token || null);
         if (result?.access_token) {
           await getUser(result.access_token).then(async userResult => {
-            const res = userResult as HttpResponse;
+            const res = userResult as HttpResponse<unknown>;
             if (res.success) {
               setUserProfile(res.data as Profile);
               clearAuthErrors();

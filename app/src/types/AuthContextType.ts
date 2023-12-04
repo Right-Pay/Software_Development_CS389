@@ -14,7 +14,7 @@ export interface AuthContextType {
     _username: string,
     _password: string,
     _repeatedPassword: string,
-  ) => void;
+  ) => Promise<boolean>;
   resetPassword: (_email: string) => void;
   clearAuthErrors: () => void;
   addAuthError: (_signInError: string) => void;
