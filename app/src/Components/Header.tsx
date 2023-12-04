@@ -75,7 +75,7 @@ const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
 
   const styles = StyleSheet.create({
     heightStyle: {
-      height: insets.top + Platform.OS === 'ios' ? 45 : 65,
+      height: insets.top + (Platform.OS === 'ios' ? 40 : 65),
       paddingBottom: 5,
     },
   });
