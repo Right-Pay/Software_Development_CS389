@@ -202,7 +202,6 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     password: string,
     inputUsername?: string | undefined,
   ) => {
-    setIsLoading(true);
     setKeyboardVisible(false);
     await resetVariables();
     if (checkSignInValues(email, password, inputUsername)) {
