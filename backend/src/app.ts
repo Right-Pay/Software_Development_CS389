@@ -1,16 +1,17 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import express, { Express } from 'express';
 import cors from 'cors';
+import express, { Express } from 'express';
 import helmet from "helmet";
 import ErrorHandlers from './middleware/errorHandling';
 import { languageMiddleware } from './middleware/i18nMiddleware';
-import DefaultRotuer from './routes/defaultRoutes';
-import UserRouter from './routes/userRoutes';
 import BankRouter from './routes/bankRoutes';
 import BrandRouter from './routes/brandRoutes';
 import CardRouter from './routes/cardRoutes';
+import CategoryRouter from './routes/categoryRoutes';
+import DefaultRotuer from './routes/defaultRoutes';
+import UserRouter from './routes/userRoutes';
 
 
 const app: Express = express();
@@ -30,6 +31,7 @@ app.use('/api/users', UserRouter);
 app.use('/api/banks', BankRouter);
 app.use('/api/brands', BrandRouter);
 app.use('/api/cards', CardRouter);
+app.use('/api/categories', CategoryRouter);
 
 // Needs to be last
 

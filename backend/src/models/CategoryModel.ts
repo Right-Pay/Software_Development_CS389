@@ -8,7 +8,7 @@ export class CategoryModel {
   async create(category: Category): Promise<Category> {
     try {
       const client = await dbPool.connect();
-      const categoryCheck = await this.getByName(category.category);
+      const categoryCheck = await this.getByName(category.category_name);
       if (categoryCheck) {
         throw new Error('error.categoryFound');
       }
@@ -16,8 +16,8 @@ export class CategoryModel {
         const categoryString = category.specific_places.replace(/\s/g, '');
         category.specific_places = categoryString.split(',');
       }
-      const sql = 'INSERT INTO rp_categories (category, specific_places) VALUES ($1, $2) RETURNING *';
-      const values = [category.category, category.specific_places];
+      const sql = 'INSERT INTO rp_categories (category_name, specific_places) VALUES ($1, $2) RETURNING *';
+      const values = [category.category_name, category.specific_places];
       const result = await client.query(sql, values);
       if (!result.rows.length) {
         throw new Error('error.categoryNotCreated');
@@ -53,7 +53,7 @@ export class CategoryModel {
   async getByName(category: string): Promise<Category | null> {
     try {
       const client = await dbPool.connect();
-      const sql = 'SELECT * FROM rp_categories WHERE category = $1';
+      const sql = 'SELECT * FROM rp_categories WHERE category_name = $1';
       const values = [category];
       const result = await client.query(sql, values);
       client.release();

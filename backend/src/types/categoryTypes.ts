@@ -1,5 +1,5 @@
 export interface Category {
   id?: number;
-  category: string;
+  category_name: string;
   specific_places: string[];
 }

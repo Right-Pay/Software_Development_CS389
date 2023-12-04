@@ -1,43 +1,43 @@
 import { Request, Response } from 'express';
 import i18n from '../config/i18n';
-import BrandModel from '../models/BrandModel';
-import { Brand } from '../types/brandTypes';
+import CategoryModel from '../models/CategoryModel';
+import { Category } from '../types/categoryTypes';
 import { IJsonResponse } from '../types/jsonResponse';
 
-class BrandController {
-  async getBrand(req: Request, res: Response) {
+class CategoryController {
+  async getCategory(req: Request, res: Response) {
     const response: IJsonResponse = {
-      message: 'TLX API - Get Brand',
+      message: 'TLX API - Get Category',
       success: true,
       data: {}
     };
-    if (req.query.hasOwnProperty('brand_id') && Number.isNaN(Number(req.query.brand_id))) {
+    if (req.query.hasOwnProperty('category_id') && Number.isNaN(Number(req.query.category_id))) {
       response.success = false;
-      response.message = i18n.t('error.brandNotFound');
+      response.message = i18n.t('error.categoryNotFound');
       res.status(400).json(response);
       return;
     }
-    const brandId: number = Number(req.query.brand_id || 0);
-    const brandName: string = String(req.query.brand_name || '');
-    if (!brandId && !brandName) {
+    const categoryId: number = Number(req.query.category_id || 0);
+    const categoryName: string = String(req.query.category_name || '');
+    if (!categoryId && !categoryName) {
       response.success = false;
       response.message = i18n.t('error.missingFields');
       res.status(400).json(response);
       return;
     }
     try {
-      let brand;
-      if (brandId) {
-        brand = await BrandModel.get(brandId);
+      let category;
+      if (categoryId) {
+        category = await CategoryModel.get(categoryId);
       } else {
-        brand = await BrandModel.getByName(brandName);
+        category = await CategoryModel.getByName(categoryName);
       }
-      if (brand) {
-        response.data = brand;
+      if (category) {
+        response.data = category;
         res.json(response);
       } else {
         response.success = false;
-        response.message = i18n.t('error.brandNotFound');
+        response.message = i18n.t('error.categoryNotFound');
         res.status(404).json(response);
       }
     } catch (error: any) {
@@ -49,20 +49,20 @@ class BrandController {
     return response;
   }
 
-  async getAllBrands(req: Request, res: Response) {
+  async getAllCategories(req: Request, res: Response) {
     const response: IJsonResponse = {
-      message: 'TLX API - Get All Brands',
+      message: 'TLX API - Get All Categorys',
       success: true,
       data: {}
     };
     try {
-      const brands = await BrandModel.getAll();
-      if (brands) {
-        response.data = brands;
+      const categorys = await CategoryModel.getAll();
+      if (categorys) {
+        response.data = categorys;
         res.json(response);
       } else {
         response.success = false;
-        response.message = i18n.t('error.brandNotFound');
+        response.message = i18n.t('error.categoryNotFound');
         res.status(404).json(response);
       }
     } catch (error: any) {
@@ -74,14 +74,14 @@ class BrandController {
     return response;
   }
 
-  async createBrand(req: Request, res: Response) {
+  async createCategory(req: Request, res: Response) {
     const response: IJsonResponse = {
-      message: 'TLX API - Register Brand',
+      message: 'TLX API - Register Category',
       success: true,
       data: {}
     };
-    const brandData = req.body as Brand;
-    if (!brandData.brand_name) {
+    const categoryData = req.body as Category;
+    if (!categoryData.category_name) {
       response.success = false;
       response.message = i18n.t('error.missingFields');
       res.status(400).json(response);
@@ -89,8 +89,8 @@ class BrandController {
     }
     try {
       throw new Error(i18n.t('error.notAllowedAtThisTime'));
-      // const newBrand = await BrandModel.create(brandData);
-      // response.data = newBrand;
+      // const newCategory = await CategoryModel.create(categoryData);
+      // response.data = newCategory;
       // res.status(201).json(response);
     } catch (error: any) {
       response.success = false;
@@ -101,9 +101,9 @@ class BrandController {
     return response;
   }
 
-  async deleteBrand(req: Request, res: Response) {
+  async deleteCategory(req: Request, res: Response) {
     const response: IJsonResponse = {
-      message: 'TLX API - Delete Brand',
+      message: 'TLX API - Delete Category',
       success: true,
       data: {}
     };
@@ -113,8 +113,8 @@ class BrandController {
       res.status(401).json(response);
       return;
     }
-    const brandId = req.body.brand_id;
-    if (!brandId) {
+    const categoryId = req.body.category_id;
+    if (!categoryId) {
       response.success = false;
       response.message = i18n.t('error.missingFields');
       res.status(400).json(response);
@@ -122,9 +122,9 @@ class BrandController {
     }
     try {
       throw new Error(i18n.t('error.notAllowedAtThisTime'));
-      // const brandDeleted = await BrandModel.delete(brandId);
-      // if (brandDeleted) {
-      //   response.data = brandDeleted;
+      // const categoryDeleted = await CategoryModel.delete(categoryId);
+      // if (categoryDeleted) {
+      //   response.data = categoryDeleted;
       //   res.json(response);
       // }
     } catch (error: any) {
@@ -136,4 +136,4 @@ class BrandController {
   }
 }
 
-export default new BrandController();
+export default new CategoryController();

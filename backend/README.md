@@ -310,6 +310,49 @@ Returns Created Brand in format specified in [brandTypes.ts](./src/types/brandTy
 
 Used to delete a brand. No user has access to do this atm
 
+### Category API
+
+#### Get Category
+
+```http
+  GET /api/categories?category_name|category_id
+```
+
+| Query Parameter    | Type     | Description                                           |
+| :----------------- | :------- | :---------------------------------------------------- |
+| `category_name`    | `string` | **Either this or category_id required** Category name |
+| `category_id`      | `number` | Category ID in DB                                     |
+
+Returns Category in format specified in [categoryTypes.ts](./src/types/categoryTypes.ts)
+
+#### Get All Categories
+
+```http
+  GET /api/categories/all
+```
+
+Returns all categoriess in an array of objects, format specified in [categoryTypes.ts](./src/types/categoryTypes.ts)
+
+#### Create Category
+
+```http
+  POST /api/categories
+```
+
+| Parameter         | Type        | Description                |
+| :---------------- | :---------- | :------------------------- |
+| `category_name`   | `string`    | **Required** Category name |
+
+Returns Created Category in format specified in [categoryTypes.ts](./src/types/categoryTypes.ts). Really only used on the admin side
+
+#### Delete Category
+
+```http
+  DELETE /api/categories
+```
+
+Used to delete a category. No user has access to do this atm
+
 #### dotenv.config()
 
 Loads the .env file
