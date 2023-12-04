@@ -1,14 +1,13 @@
 import { Request, Response } from 'express';
-import CardModel from '../models/CardModel';
-import { IJsonResponse } from '../types/jsonResponse';
-import { Card } from '../types/cardTypes';
-import i18n from '../config/i18n';
-import BankModelInstance from '../models/BankModel';
-import BrandModelInstance from '../models/BrandModel';
-import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
+import i18n from '../config/i18n';
+import BankModelInstance from '../models/BankModel';
+import BrandModelInstance from '../models/BrandModel';
+import CardModel from '../models/CardModel';
+import { Card } from '../types/cardTypes';
+import { IJsonResponse } from '../types/jsonResponse';
 
 class CardController {
   async getCard(req: Request, res: Response) {
@@ -107,11 +106,6 @@ class CardController {
     const cardId = req.body.card_id;
     try {
       throw new Error(i18n.t('error.notAllowedAtThisTime'));
-      const cardDeleted = await CardModel.delete(cardId);
-      if (cardDeleted) {
-        response.data = cardDeleted;
-        res.json(response);
-      }
     } catch (error: any) {
       response.success = false;
       response.message = error.message;
