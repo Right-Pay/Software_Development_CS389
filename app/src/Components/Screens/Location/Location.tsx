@@ -45,12 +45,15 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
 
   const renderPlace = (place: Place) => {
     return (
-      <StyledView
+      <Pressable
         className={
           isDarkTheme
             ? 'py-2 flex-1 flex-col h-20 w-full bg-dark'
             : 'py-2 flex-1 flex-col h-20 w-full bg-white'
-        }>
+        }
+        onPress={() => {
+          console.log("Pressed")
+        }}>
         <StyledView className="flex-1 flex-row place-content-between w-full">
           <PrimaryText
             numberOfLines={1}
@@ -69,7 +72,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
             See Rewards
           </PrimaryText>
         </StyledView>
-      </StyledView>
+      </Pressable>
     );
   };
 
