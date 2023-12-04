@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Keyboard } from 'react-native';
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AuthErrorComponent from '../Components/Common/AuthErrorComponent';
@@ -9,7 +10,6 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
-import { AppState, Keyboard } from 'react-native';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -417,6 +417,30 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     password: string,
     repeatedPassword: string,
   ) => {
+    /**
+     * 1. Validate all fields
+     * 2. Create new Auth0 user
+     * 3. If successful, store username in encrypted local storage
+     * 4. Take user to email verification page
+     * 5. User clicks on link in email
+     * 6. User email is verified
+     * 7. User comes back to the app
+     *
+     * If the app is open
+     * 1. The email verification page that comes up will check if the email was verified,
+     * 2. If email is verified, we create the user in the database, if successful, we log
+     *    the user in. If not, we prompt the user to log in again and have a page to re-enter
+     *    the username.
+     *
+     * If the app was closed
+     * 1. The user goes to the log in page, if the user logs in and the email is not
+     *    verified, we prompt the user to verify the email. If the user logs in and the
+     *    email is verified, we create the user in the database, if successful, we log
+     *    them in.
+     * 2. In the case the username is not stored anymore, prompt the user to re-enter the username.
+     * 3. Then create user in database, if successful, log them in.
+     *
+     */
     await resetVariables();
     setKeyboardVisible(false);
 
