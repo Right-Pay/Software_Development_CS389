@@ -6,12 +6,12 @@ import React, {
   useState,
 } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+import Config from 'react-native-config';
 import Geolocation from 'react-native-geolocation-service';
 import { AppContext } from '../types/AppContextType';
 import { Location, Place, PlaceLocation } from '../types/Location';
 import context from './context';
 import LocationContext from './locationContext';
-import Config from 'react-native-config';
 
 const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [location, setLocation] = useState<Location>({} as Location);
@@ -20,6 +20,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
   const { appStateVisible } = useContext(context) as AppContext;
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
+  const [selectedLocation, setSelectedLocation] = useState<Place | null>(null);
+
   const apiURL = Config.REACT_APP_GOOGLE_API;
 
   const requestLocationPermission = useCallback(async () => {
@@ -308,6 +310,13 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     });
   }, [requestLocationPermission]);
 
+  const updateSelectedLocation = useCallback(
+    (newSelectedLocation: Place | null) => {
+      setSelectedLocation(newSelectedLocation);
+    },
+    [setSelectedLocation],
+  );
+
   useEffect(() => {
     getLocation();
   }, [getLocation]);
@@ -335,6 +344,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         updateLocation,
         locationGrantType,
         locationLoading,
+        selectedLocation,
+        updateSelectedLocation,
       }}>
       {children}
     </LocationContext.Provider>

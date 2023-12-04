@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { styled } from 'nativewind';
 import type { PropsWithChildren } from 'react';
 import React, { useRef } from 'react';
-import { Platform, Pressable, Text, View, ViewToken } from 'react-native';
+import { Platform, Pressable, View, ViewToken } from 'react-native';
 import Icon from 'react-native-ionicons';
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import locationContext from '../../../Context/locationContext';
@@ -52,7 +52,13 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
             : 'py-2 flex-1 flex-col h-20 w-full bg-white'
         }
         onPress={() => {
-          console.log("Pressed")
+          console.log('Pressed');
+          // setSelectedLocation to this place
+          // look at handlePresentModalPress on line 20 in Header.tsx
+          // set the bottom sheet modal to a new TSX component made in the Location directory
+          // you can make a copy of the SettingsBottomSheet in the Settings directory and rename everything
+          // to LocationBottomSheet
+          // set the tab points to ['30%', '80%']
         }}>
         <StyledView className="flex-1 flex-row place-content-between w-full">
           <PrimaryText
