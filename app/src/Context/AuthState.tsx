@@ -33,6 +33,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     await removeAuth0RefreshToken();
     setUserProfile({} as Profile);
     clearAuthErrors();
+    setNeedsUsername(false);
   };
 
   const addAuthError = (error: string) => {
@@ -219,7 +220,6 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         //no set needsUsername true returns
 
         await getUser(access_token).then(async result => {
-          console.log(result);
           const res = result as HttpResponse<Profile>;
           if (res.success) {
             setUserToken(access_token);
@@ -227,40 +227,57 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
             setUserProfile(res.data as Profile);
             clearAuthErrors();
           } else {
-            console.log(res);
-            //User does not exist
-            // if (res.message.includes('existe' || 'exist')) {
-            //   await retrieveUsername().then(async usernameResult => {
-            //     if (usernameResult) {
-            //       //Create user with usernameResult
-            //       //Sign in
-            //       await createNewDatabaseUser(
-            //         access_token,
-            //         email,
-            //         usernameResult,
-            //       ).then(async createResult => {
-            //         const createRes = createResult as HttpResponse<Profile>;
-            //         if (createRes.success) {
-            //           setUserToken(access_token);
-            //           await storeAuth0Token(access_token);
-            //           setUserProfile(createRes.data as Profile);
-            //           clearAuthErrors();
-            //         } else {
-            //           //Database error
-            //           addAuthError(createRes.message as string);
-            //         }
-            //       });
-            //     } else {
-            //       //requests user adds new username
-            //       setNeedsUsername(true);
-            //       addAuthError(ErrorMessages.addUsername);
-            //       return;
-            //     }
-            //   });
-            // } else {
-            //   //Database error
-            //   addAuthError(res.message as string);
-            // }
+            if (res.message.includes('existe' || 'exist')) {
+              if (inputUsername) {
+                await createNewDatabaseUser(
+                  access_token,
+                  email,
+                  inputUsername,
+                ).then(async createResult => {
+                  const createRes = createResult as HttpResponse<Profile>;
+                  if (createRes.success) {
+                    setUserToken(access_token);
+                    await storeAuth0Token(access_token);
+                    setUserProfile(createRes.data as Profile);
+                    clearAuthErrors();
+                  } else {
+                    //Database error
+                    addAuthError(createRes.message as string);
+                  }
+                });
+              } else {
+                await retrieveUsername().then(async usernameResult => {
+                  if (usernameResult) {
+                    //Create user with usernameResult
+                    //Sign in
+                    await createNewDatabaseUser(
+                      access_token,
+                      email,
+                      usernameResult,
+                    ).then(async createResult => {
+                      const createRes = createResult as HttpResponse<Profile>;
+                      if (createRes.success) {
+                        setUserToken(access_token);
+                        await storeAuth0Token(access_token);
+                        setUserProfile(createRes.data as Profile);
+                        clearAuthErrors();
+                      } else {
+                        //Database error
+                        addAuthError(createRes.message as string);
+                      }
+                    });
+                  } else {
+                    //requests user adds new username
+                    setNeedsUsername(true);
+                    addAuthError(ErrorMessages.addUsername);
+                    return;
+                  }
+                });
+              }
+            } else {
+              //Database error
+              addAuthError(res.message as string);
+            }
           }
         });
       }
@@ -576,8 +593,6 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     async function loadFromStorage() {
-      await removeUsername();
-
       setIsLoading(true);
       setLang('es');
       await retrieveUserAuth().then(async result => {
