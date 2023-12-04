@@ -27,6 +27,7 @@ export interface AuthContextType {
   refreshAuth0Token: () => void;
   updateUserProfile: (_newProfile: Profile) => void;
   needsUsername: boolean;
+  isKeyboardVisible: boolean;
 }
 
 export interface TokenType {

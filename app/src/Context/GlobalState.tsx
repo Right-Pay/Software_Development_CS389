@@ -362,28 +362,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, [fetchBanks, fetchBrands, userToken]);
 
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
-
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
@@ -417,7 +395,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         validateCardForm,
         newCardBin,
         setNewCardBin,
-        isKeyboardVisible,
         appStateVisible,
         setShowBottomSheetModal,
         showBottomSheetModal,

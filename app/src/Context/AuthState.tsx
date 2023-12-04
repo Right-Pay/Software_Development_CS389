@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AuthErrorComponent from '../Components/Common/AuthErrorComponent';
@@ -9,6 +9,7 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
+import { AppState, Keyboard } from 'react-native';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -201,6 +202,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     password: string,
     inputUsername?: string | undefined,
   ) => {
+    setKeyboardVisible(false);
     await resetVariables();
     if (checkSignInValues(email, password, inputUsername)) {
       const { access_token, refresh_token } = (await signInAuth(
@@ -415,6 +417,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     repeatedPassword: string,
   ) => {
     await resetVariables();
+    setKeyboardVisible(false);
 
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
@@ -514,6 +517,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   const resetPassword = async (email: string) => {
+    setKeyboardVisible(false);
     await resetVariables();
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
@@ -625,6 +629,28 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     loadFromStorage();
   }, [retrieveUserAuth, getUser, clearAuthErrors, retrieveUsername]);
 
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -648,6 +674,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         refreshAuth0Token,
         updateUserProfile,
         needsUsername,
+        isKeyboardVisible,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>

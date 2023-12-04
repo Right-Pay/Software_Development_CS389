@@ -34,8 +34,13 @@ import TitleText from '../../Common/TitleText';
 
 const AddCardFullForm = () => {
   //Context
-  const { addAuthError, clearAuthErrors, AuthErrorComponent, removeAuthError } =
-    React.useContext(authContext) as AuthContextType;
+  const {
+    addAuthError,
+    clearAuthErrors,
+    AuthErrorComponent,
+    removeAuthError,
+    isKeyboardVisible,
+  } = React.useContext(authContext) as AuthContextType;
   const {
     linkCard,
     bankOptions,
@@ -182,29 +187,6 @@ const AddCardFullForm = () => {
       <Text className="text-black text-xl text-left">{item.bank_name}</Text>
     </Pressable>
   );
-
-  //Keyboard
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   // useEffect(() => {
   //   if (newBankOption !== '') {

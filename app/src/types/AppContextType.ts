@@ -24,7 +24,6 @@ export interface AppContext {
   validateCardForm: (_formDetails: CardFormDetails) => string[];
   setNewCardBin: (_newCardBin: number) => void;
   newCardBin: number;
-  isKeyboardVisible: boolean;
   appStateVisible: string;
   setShowBottomSheetModal: (_showBottomSheetModal: boolean) => void;
   showBottomSheetModal: boolean;
