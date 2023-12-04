@@ -177,21 +177,31 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
       });
   };
 
+  function checkSignInValues(
+    email: string,
+    password: string,
+    inputUsername?: string | undefined,
+  ) {
+    if (!checkValidEmail(email)) {
+      addAuthError(ErrorMessages.invalidEmail);
+      return false;
+    } else if (!checkValidPassword(password)) {
+      addAuthError(ErrorMessages.invalidPassword);
+      return false;
+    } else if (!checkValidUsername(inputUsername ?? 'PassThisCheck')) {
+      addAuthError(ErrorMessages.invalidUsername);
+      return false;
+    }
+    return true;
+  }
+
   const signIn = async (
     email: string,
     password: string,
     inputUsername?: string | undefined,
   ) => {
     await resetVariables();
-    console.log(inputUsername, username, email, password);
-    if (!checkValidEmail(email)) {
-      addAuthError(ErrorMessages.invalidEmail);
-    } else if (!checkValidPassword(password)) {
-      addAuthError(ErrorMessages.invalidPassword);
-    } else if (!checkValidUsername(inputUsername ?? 'PassThisCheck')) {
-      addAuthError(ErrorMessages.invalidUsername);
-      return false;
-    } else {
+    if (checkSignInValues(email, password, inputUsername)) {
       const { access_token, refresh_token } = (await signInAuth(
         email,
         password,
@@ -201,24 +211,13 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         await storeAuth0RefreshToken(refresh_token);
       }
       if (access_token) {
-        if (needsUsername) {
-          await createNewDatabaseUser(
-            access_token,
-            email,
-            inputUsername as string,
-          ).then(async r => {
-            const res = r as HttpResponse<Profile>;
-            if (res.success) {
-              clearAuthErrors();
-            } else {
-              setUserToken(null);
-              await removeAuth0Token();
-              setUserProfile({} as Profile);
-              addAuthError(res.message as string);
-              return;
-            }
-          });
-        }
+        //Fetch userData
+        //Check if user is created yes -> sign in, no -> create user
+        //If user is not created
+        //Check if there is cached username
+        //yes -> create user with cached username then sign in
+        //no set needsUsername true returns
+
         await getUser(access_token).then(async result => {
           console.log(result);
           const res = result as HttpResponse<Profile>;
@@ -228,49 +227,40 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
             setUserProfile(res.data as Profile);
             clearAuthErrors();
           } else {
-            if (res.message.includes('existe' || 'exist')) {
-              console.log(inputUsername);
-              if (inputUsername) {
-                await createNewDatabaseUser(
-                  access_token,
-                  email,
-                  needsUsername
-                    ? (inputUsername as string)
-                    : (username as string),
-                ).then(async r => {
-                  console.log(r);
-                  const resdos = r as HttpResponse<Profile>;
-                  setIsLoading(false);
-                  if (resdos.success) {
-                    clearAuthErrors();
-                    signIn(email, password);
-                  } else {
-                    setUserToken(null);
-                    await removeAuth0Token();
-                    setUserProfile({} as Profile);
-                    addAuthError(resdos.message as string);
-                  }
-                  await removeUsername();
-                });
-              } else {
-                await retrieveUsername().then(async resdos => {
-                  if (resdos) {
-                    setUsername(resdos);
-                    setNeedsUsername(false);
-                    signIn(email, password);
-                  } else {
-                    setNeedsUsername(true);
-                    addAuthError(ErrorMessages.addUsername);
-                    return;
-                  }
-                });
-              }
-            } else {
-              setUserToken(null);
-              await removeAuth0Token();
-              setUserProfile({} as Profile);
-              addAuthError(res.message as string);
-            }
+            console.log(res);
+            //User does not exist
+            // if (res.message.includes('existe' || 'exist')) {
+            //   await retrieveUsername().then(async usernameResult => {
+            //     if (usernameResult) {
+            //       //Create user with usernameResult
+            //       //Sign in
+            //       await createNewDatabaseUser(
+            //         access_token,
+            //         email,
+            //         usernameResult,
+            //       ).then(async createResult => {
+            //         const createRes = createResult as HttpResponse<Profile>;
+            //         if (createRes.success) {
+            //           setUserToken(access_token);
+            //           await storeAuth0Token(access_token);
+            //           setUserProfile(createRes.data as Profile);
+            //           clearAuthErrors();
+            //         } else {
+            //           //Database error
+            //           addAuthError(createRes.message as string);
+            //         }
+            //       });
+            //     } else {
+            //       //requests user adds new username
+            //       setNeedsUsername(true);
+            //       addAuthError(ErrorMessages.addUsername);
+            //       return;
+            //     }
+            //   });
+            // } else {
+            //   //Database error
+            //   addAuthError(res.message as string);
+            // }
           }
         });
       }

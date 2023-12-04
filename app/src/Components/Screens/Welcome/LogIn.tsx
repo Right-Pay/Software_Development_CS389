@@ -54,7 +54,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full h-screen justify-center items-center mb-0 pb-0">
-          <TitleText className="mt-20">
+          <TitleText className="mt-20 ml-3 mr-3">
             Log In to Your RightPay Account
           </TitleText>
           <LogoContainer>

@@ -63,7 +63,9 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
-          <TitleText className="mt-20">Sign Up for RightPay</TitleText>
+          <TitleText className="mt-20 ml-3 mr-3">
+            Sign Up for RightPay
+          </TitleText>
           <LogoContainer>
             <Logo
               source={require('../../../Assets/RightPay-logo-light-transparent.png')}

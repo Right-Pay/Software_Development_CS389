@@ -52,7 +52,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
-          <TitleText className="mt-20">
+          <TitleText className="mt-20 ml-3 mr-3">
             Forgot your Password for RightPay?
           </TitleText>
           <LogoContainer>
