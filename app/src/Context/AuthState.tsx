@@ -417,6 +417,32 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     password: string,
     repeatedPassword: string,
   ) => {
+    /**
+     * 1. Validate all fields
+     * 2. Create new Auth0 user
+     * 3. If successful, store username in encrypted local storage
+     * 4. Take user to email verification page
+     * 5. User clicks on link in email
+     * 6. User email is verified
+     * 7. User comes back to the app
+     *
+     * If the app is open
+     * 1. The email verification page that comes up will check if the email was verified,
+     * 2. If email is verified, we create the user in the database, if successful, we log
+     *    the user in. If not, we prompt the user to log in again and have a page to re-enter
+     *    the username.
+     *
+     * If the app was closed
+     * 1. The user goes to the log in page, if the user logs in and the email is not
+     *    verified, we prompt the user to verify the email. If the user logs in and the
+     *    email is verified, we create the user in the database, if successful, we log
+     *    them in.
+     * 2. In the case the username is not stored anymore, prompt the user to re-enter the username.
+     * 3. Then create user in database, if successful, log them in.
+     *
+     */
+    //Comment from Tyler. The problem with this is that the way we have the code we'd have to store the password somewhere as that is the only way we can authenticate with auth0. Which I don't want to bother doing and I don't want to waste time doing
+
     await resetVariables();
     setKeyboardVisible(false);
 
