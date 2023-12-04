@@ -16,7 +16,10 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [userProfile, setUserProfile] = React.useState<Profile>({} as Profile);
   const [userToken, setUserToken] = React.useState<string | null>(null);
   const [refreshToken, setRefreshToken] = React.useState<string | null>(null);
+  const [needsUsername, setNeedsUsername] = React.useState<boolean>(false);
+  const [username, setUsername] = React.useState<string>('');
   const [lang, setLang] = React.useState<string>('en');
+
   const baseURL = Config.REACT_APP_API_URL;
   const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
   const auth0ClientId = Config.REACT_APP_AUTH0_CLIENT_ID;
@@ -60,9 +63,9 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
-  const storeUsername = async (username: string) => {
+  const storeUsername = async (stoUsername: string) => {
     try {
-      await EncryptedStorage.setItem('rp_username', username);
+      await EncryptedStorage.setItem('rp_username', stoUsername);
     } catch (error) {
       return false;
     }
@@ -113,11 +116,11 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
 
   const retrieveUsername = useCallback(async (): Promise<string | null> => {
     try {
-      const username = await EncryptedStorage.getItem('rp_username');
-      if (!username) {
+      const cachedUsername = await EncryptedStorage.getItem('rp_username');
+      if (!cachedUsername) {
         return null;
       }
-      return username;
+      return cachedUsername;
     } catch (error) {
       return null;
     }
@@ -174,12 +177,20 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
       });
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (
+    email: string,
+    password: string,
+    inputUsername?: string | undefined,
+  ) => {
     await resetVariables();
+    console.log(inputUsername, username, email, password);
     if (!checkValidEmail(email)) {
       addAuthError(ErrorMessages.invalidEmail);
     } else if (!checkValidPassword(password)) {
       addAuthError(ErrorMessages.invalidPassword);
+    } else if (!checkValidUsername(inputUsername ?? 'PassThisCheck')) {
+      addAuthError(ErrorMessages.invalidUsername);
+      return false;
     } else {
       const { access_token, refresh_token } = (await signInAuth(
         email,
@@ -190,8 +201,26 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         await storeAuth0RefreshToken(refresh_token);
       }
       if (access_token) {
-        setIsLoading(true);
+        if (needsUsername) {
+          await createNewDatabaseUser(
+            access_token,
+            email,
+            inputUsername as string,
+          ).then(async r => {
+            const res = r as HttpResponse<Profile>;
+            if (res.success) {
+              clearAuthErrors();
+            } else {
+              setUserToken(null);
+              await removeAuth0Token();
+              setUserProfile({} as Profile);
+              addAuthError(res.message as string);
+              return;
+            }
+          });
+        }
         await getUser(access_token).then(async result => {
+          console.log(result);
           const res = result as HttpResponse<Profile>;
           if (res.success) {
             setUserToken(access_token);
@@ -199,27 +228,43 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
             setUserProfile(res.data as Profile);
             clearAuthErrors();
           } else {
-            const username = await retrieveUsername();
             if (res.message.includes('existe' || 'exist')) {
-              setIsLoading(true);
-              await createNewDatabaseUser(
-                access_token,
-                email,
-                username ?? 'No Username Set',
-              ).then(async r => {
-                const resdos = r as HttpResponse<Profile>;
-                setIsLoading(false);
-                if (resdos.success) {
-                  clearAuthErrors();
-                  signIn(email, password);
-                } else {
-                  setUserToken(null);
-                  await removeAuth0Token();
-                  setUserProfile({} as Profile);
-                  addAuthError(resdos.message as string);
-                }
-              });
-              await removeUsername();
+              console.log(inputUsername);
+              if (inputUsername) {
+                await createNewDatabaseUser(
+                  access_token,
+                  email,
+                  needsUsername
+                    ? (inputUsername as string)
+                    : (username as string),
+                ).then(async r => {
+                  console.log(r);
+                  const resdos = r as HttpResponse<Profile>;
+                  setIsLoading(false);
+                  if (resdos.success) {
+                    clearAuthErrors();
+                    signIn(email, password);
+                  } else {
+                    setUserToken(null);
+                    await removeAuth0Token();
+                    setUserProfile({} as Profile);
+                    addAuthError(resdos.message as string);
+                  }
+                  await removeUsername();
+                });
+              } else {
+                await retrieveUsername().then(async resdos => {
+                  if (resdos) {
+                    setUsername(resdos);
+                    setNeedsUsername(false);
+                    signIn(email, password);
+                  } else {
+                    setNeedsUsername(true);
+                    addAuthError(ErrorMessages.addUsername);
+                    return;
+                  }
+                });
+              }
             } else {
               setUserToken(null);
               await removeAuth0Token();
@@ -358,7 +403,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
 
   const signUp = async (
     email: string,
-    username: string,
+    newUsername: string,
     password: string,
     repeatedPassword: string,
   ) => {
@@ -373,13 +418,16 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     } else if (!checkEqualPasswords(password, repeatedPassword)) {
       addAuthError(ErrorMessages.passwordsDoNotMatch);
       return false;
+    } else if (!checkValidUsername(newUsername)) {
+      addAuthError(ErrorMessages.invalidUsername);
+      return false;
     } else {
-      await createNewAuth0User(email, password, username).then(async r => {
+      await createNewAuth0User(email, password, newUsername).then(async r => {
         if (r.code && r.code === 'invalid_signup') {
           addAuthError(ErrorMessages.userAlreadyExists);
           return false;
         } else {
-          await storeUsername(username);
+          await storeUsername(newUsername);
         }
       });
       return true;
@@ -389,7 +437,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const createNewAuth0User = async (
     email: string,
     password: string,
-    username: string,
+    newUsername: string,
   ) => {
     const requestOptions = {
       method: 'POST',
@@ -400,7 +448,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         client_id: auth0ClientId,
         email: email,
         password: password,
-        name: username,
+        name: newUsername,
         connection: 'Username-Password-Authentication',
       }),
     };
@@ -419,7 +467,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const createNewDatabaseUser = async (
     token: string,
     email: string,
-    username: string,
+    newUsername: string,
     phone?: string,
   ) => {
     let result = {};
@@ -433,7 +481,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
       },
       body: JSON.stringify({
         email: email,
-        username: username,
+        username: newUsername,
         phone: phone,
       }),
     })
@@ -516,9 +564,9 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     return password === repeatedPassword && checkValidPassword(password);
   }
 
-  function checkValidUsername(username: string): boolean {
-    const usernameRegex = /^[a-zA-Z0-9._-]{3,}$/;
-    const test = username.length > 0 && usernameRegex.test(username);
+  function checkValidUsername(checkUsername: string): boolean {
+    const usernameRegex = /^[a-zA-Z]{3,}$/;
+    const test = checkUsername.length > 0 && usernameRegex.test(checkUsername);
     if (!test) {
       addAuthError(ErrorMessages.invalidUsername);
       return false;
@@ -538,6 +586,8 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     async function loadFromStorage() {
+      await removeUsername();
+
       setIsLoading(true);
       setLang('es');
       await retrieveUserAuth().then(async result => {
@@ -563,10 +613,12 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
           });
         }
       });
+
       setIsLoading(false);
     }
+
     loadFromStorage();
-  }, [retrieveUserAuth, getUser, clearAuthErrors]);
+  }, [retrieveUserAuth, getUser, clearAuthErrors, retrieveUsername]);
 
   return (
     <AuthContext.Provider
@@ -590,6 +642,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         AuthErrorComponent,
         refreshAuth0Token,
         updateUserProfile,
+        needsUsername,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>

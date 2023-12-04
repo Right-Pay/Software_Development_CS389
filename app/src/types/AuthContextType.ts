@@ -7,7 +7,7 @@ export interface AuthContextType {
   userProfile: Profile; //change this eventually
   authError: string[];
   AuthErrorComponent: FC | null;
-  signIn: (_email: string, _password: string) => void;
+  signIn: (_email: string, _password: string, _inputUsername?: string) => void;
   signOut: () => void;
   signUp: (
     _email: string,
@@ -26,6 +26,7 @@ export interface AuthContextType {
   checkValidPhone: (_phone: string) => boolean;
   refreshAuth0Token: () => void;
   updateUserProfile: (_newProfile: Profile) => void;
+  needsUsername: boolean;
 }
 
 export interface TokenType {

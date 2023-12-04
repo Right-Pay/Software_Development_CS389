@@ -26,14 +26,14 @@ type LogInScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
-  const { clearAuthErrors, AuthErrorComponent, signIn } = React.useContext(
-    AuthContext,
-  ) as AuthContextType;
+  const { clearAuthErrors, AuthErrorComponent, signIn, needsUsername } =
+    React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
+  const [username, setUsername] = React.useState<string>('');
 
   const backButton = useCallback(() => {
     return (
@@ -73,13 +73,22 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
             secureTextEntry={true}
             onChange={event => setPassword(event.nativeEvent.text)}
           />
+          {needsUsername && (
+            <AuthInputBox
+              placeholder="Username"
+              placeholderTextColor={'black'}
+              onChange={event => setUsername(event.nativeEvent.text)}
+            />
+          )}
           <FinePrintButton
             onPress={() => navigation.navigate('ForgotPassword')}>
             <FinePrint>Forgot Password?</FinePrint>
           </FinePrintButton>
           <PrimaryButton
             onPress={() => {
-              signIn(email, password);
+              needsUsername
+                ? signIn(email, password, username)
+                : signIn(email, password);
             }}>
             <PrimaryText type="secondary" className="text-xl">
               Log In
