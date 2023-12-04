@@ -9,7 +9,7 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
-import { AppState, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -205,16 +205,24 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     setIsLoading(true);
     setKeyboardVisible(false);
     await resetVariables();
-    if (checkSignInValues(email, password, inputUsername)) {
-      const { access_token, refresh_token } = (await signInAuth(
-        email,
-        password,
-      )) as TokenType;
-      if (refresh_token) {
-        setRefreshToken(refresh_token);
-        await storeAuth0RefreshToken(refresh_token);
+    let access_token = '';
+    await retrieveUserAuth().then(async result => {
+      if (result?.access_token) {
+        access_token = result.access_token;
       }
-      if (access_token) {
+    });
+    if (checkSignInValues(email, password, inputUsername)) {
+      {
+        const res = (await signInAuth(email, password)) as TokenType;
+        if (res.refresh_token) {
+          setRefreshToken(res.refresh_token);
+          await storeAuth0RefreshToken(res.refresh_token);
+        }
+        if (res.access_token) {
+          access_token = res.access_token;
+        }
+      }
+      if (access_token.length > 0) {
         //Fetch userData
         //Check if user is created yes -> sign in, no -> create user
         //If user is not created
@@ -439,6 +447,15 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
           return false;
         } else {
           await storeUsername(newUsername);
+          const { access_token, refresh_token } = (await signInAuth(
+            email,
+            password,
+          )) as TokenType;
+          if (refresh_token) {
+            setRefreshToken(refresh_token);
+            await storeAuth0RefreshToken(refresh_token);
+            await storeAuth0Token(access_token as string);
+          }
         }
       });
       return true;
