@@ -4,6 +4,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
+import useColorsMode from '../../../Helpers/Colors';
 import {
   AuthInputBox,
   Logo,
@@ -28,6 +29,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 }) => {
   const { clearAuthErrors, resetPassword, AuthErrorComponent } =
     React.useContext(AuthContext) as AuthContextType;
+  const { colors } = useColorsMode();
   const [email, setEmail] = React.useState<string>('');
   useEffect(() => {
     clearAuthErrors();
@@ -40,13 +42,13 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         onPress={() => {
           navigation.goBack();
         }}>
-        <Icon name="arrow-back" color="#4d654e" />
+        <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
           Back
         </PrimaryText>
       </Pressable>
     );
-  }, [navigation]);
+  }, [colors.primary, navigation]);
 
   return (
     <WrapperView className="pb-0">

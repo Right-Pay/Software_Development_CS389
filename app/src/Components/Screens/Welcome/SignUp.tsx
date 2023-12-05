@@ -4,6 +4,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
+import useColorsMode from '../../../Helpers/Colors';
 import {
   AuthInputBox,
   Logo,
@@ -16,7 +17,6 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
-import Consts from '../../../Helpers/Consts';
 
 type SignUpScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -29,6 +29,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const [username, setUsername] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
+  const { colors } = useColorsMode();
 
   const {
     signUp,
@@ -49,13 +50,13 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
         onPress={() => {
           navigation.goBack();
         }}>
-        <Icon name="arrow-back" color="#4d654e" />
+        <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
           Back
         </PrimaryText>
       </Pressable>
     );
-  }, [navigation]);
+  }, [colors.primary, navigation]);
 
   return (
     <WrapperView className="pb-0">

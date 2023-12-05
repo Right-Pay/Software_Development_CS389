@@ -4,6 +4,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
+import useColorsMode from '../../../Helpers/Colors';
 import {
   AuthInputBox,
   FinePrint,
@@ -36,6 +37,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
+  const { colors } = useColorsMode();
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [username, setUsername] = React.useState<string>('');
@@ -47,13 +49,13 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
         onPress={() => {
           navigation.goBack();
         }}>
-        <Icon name="arrow-back" color="#4d654e" />
+        <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
           Back
         </PrimaryText>
       </Pressable>
     );
-  }, [navigation]);
+  }, [colors.primary, navigation]);
 
   return (
     <WrapperView className="pb-0">

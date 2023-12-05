@@ -3,21 +3,22 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useEffect } from 'react';
+import { Pressable, View } from 'react-native';
+import Icon from 'react-native-ionicons';
 import WrapperView from '../../../../src/Components/Common/WrapperView';
+import AuthContext from '../../../Context/authContext';
+import useColorsMode from '../../../Helpers/Colors';
+import Consts from '../../../Helpers/Consts';
+import { Logo, LogoContainer } from '../../../Helpers/StylizedComponents';
+import { AuthContextType } from '../../../types/AuthContextType';
 import type {
-  WelcomeNavigationRoutesType,
   NavigationRoutesType,
+  WelcomeNavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
 import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
-import { Pressable, View } from 'react-native';
-import TitleText from '../../Common/TitleText';
-import { Logo, LogoContainer } from '../../../Helpers/StylizedComponents';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
-import Icon from 'react-native-ionicons';
-import { AuthContextType } from '../../../types/AuthContextType';
-import AuthContext from '../../../Context/authContext';
-import Consts from '../../../Helpers/Consts';
+import TitleText from '../../Common/TitleText';
 
 type VerifyEmailScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WelcomeNavigationRoutesType, 'VerifyEmailScreen'>,
@@ -36,6 +37,7 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
     notVerified,
   } = React.useContext(AuthContext) as AuthContextType;
   const AuthErrors = Consts.authErrorMessages;
+  const { colors } = useColorsMode();
 
   useEffect(() => {
     clearAuthErrors();
@@ -48,13 +50,13 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
         onPress={() => {
           navigation.goBack();
         }}>
-        <Icon name="arrow-back" color="#4d654e" />
+        <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
           Back
         </PrimaryText>
       </Pressable>
     );
-  }, [navigation]);
+  }, [colors.primary, navigation]);
 
   return (
     <WrapperView className="pb-0">
