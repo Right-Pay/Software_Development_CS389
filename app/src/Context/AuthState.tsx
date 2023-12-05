@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
+import { Keyboard } from 'react-native';
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AuthErrorComponent from '../Components/Common/AuthErrorComponent';
