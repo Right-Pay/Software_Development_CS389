@@ -71,11 +71,7 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
           <PrimaryButton
             onPress={async () => {
               await checkVerfiedEmail();
-              if (!notVerified) {
-                navigation.navigate('Login');
-              } else {
-                addAuthError(AuthErrors.notVerified);
-              }
+              addAuthError(AuthErrors.notVerified);
             }}>
             <PrimaryText type="secondary" className="text-xl">
               Continue
