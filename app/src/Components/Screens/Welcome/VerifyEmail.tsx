@@ -34,7 +34,8 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
     checkVerfiedEmail,
     AuthErrorComponent,
     addAuthError,
-    notVerified,
+    retrieveVerifiedEmail,
+    backendSignIn,
   } = React.useContext(AuthContext) as AuthContextType;
   const AuthErrors = Consts.authErrorMessages;
   const { colors } = useColorsMode();
@@ -73,7 +74,14 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
           <PrimaryButton
             onPress={async () => {
               await checkVerfiedEmail();
-              addAuthError(AuthErrors.notVerified);
+              await retrieveVerifiedEmail().then(async res => {
+                console.log('res', res);
+                if (res) {
+                  await backendSignIn();
+                } else {
+                  addAuthError(AuthErrors.notVerified);
+                }
+              });
             }}>
             <PrimaryText type="secondary" className="text-xl">
               Continue

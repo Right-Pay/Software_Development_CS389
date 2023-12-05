@@ -28,7 +28,7 @@ type ProfileScreenProps = CompositeScreenProps<
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   const { userProfile } = React.useContext(authContext) as AuthContextType;
 
-  const cardCount = userProfile.cards.length;
+  const cardCount = userProfile.cards ? userProfile.cards.length : 0;
   const rewardCount =
     userProfile.cards
       .map(card => card.rewards?.length)

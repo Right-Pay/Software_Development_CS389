@@ -14,7 +14,7 @@ export interface AuthContextType {
     _username: string,
     _password: string,
     _repeatedPassword: string,
-  ) => Promise<boolean>;
+  ) => void;
   resetPassword: (_email: string) => void;
   clearAuthErrors: () => void;
   addAuthError: (_signInError: string) => void;
@@ -24,12 +24,14 @@ export interface AuthContextType {
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
   checkValidUsername: (_username: string) => boolean;
   checkValidPhone: (_phone: string) => boolean;
-  refreshAuth0Token: () => void;
+  refreshAuth0Token: (_trace: string) => void;
   updateUserProfile: (_newProfile: Profile) => void;
   needsUsername: boolean;
   isKeyboardVisible: boolean;
-  checkVerfiedEmail: () => Promise<boolean>;
+  checkVerfiedEmail: () => void;
   notVerified: boolean;
+  retrieveVerifiedEmail: () => Promise<boolean | null>;
+  backendSignIn: () => void;
 }
 
 export interface TokenType {

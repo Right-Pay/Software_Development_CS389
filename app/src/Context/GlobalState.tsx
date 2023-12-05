@@ -79,7 +79,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       const content = await response.json();
 
       if (content.data.code === 'invalid_token') {
-        await refreshAuth0Token();
+        await refreshAuth0Token('findCard');
         if (tryAgain) {
           setTimeout(() => {
             findCard(cardBin, false);
@@ -156,7 +156,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
           content.data.code &&
           content.data.code === 'invalid_token'
         ) {
-          await refreshAuth0Token();
+          await refreshAuth0Token('linkCard');
           if (tryAgain) {
             setTimeout(() => {
               linkToUser(false);
@@ -218,7 +218,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         });
         const content = await response.json();
         if (content.data.code === 'invalid_token') {
-          await refreshAuth0Token();
+          await refreshAuth0Token('unlinkCard');
           if (tryAgain) {
             setTimeout(() => {
               unlinkToUser(false);

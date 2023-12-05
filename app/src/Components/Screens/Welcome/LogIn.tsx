@@ -32,7 +32,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
     AuthErrorComponent,
     signIn,
     needsUsername,
-    notVerified,
+    retrieveVerifiedEmail,
   } = React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
@@ -96,9 +96,11 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
               needsUsername
                 ? await signIn(email, password, username)
                 : await signIn(email, password);
-              if (notVerified) {
-                navigation.navigate('VerifyEmailScreen');
-              }
+              await retrieveVerifiedEmail().then(ret => {
+                if (!ret) {
+                  navigation.navigate('VerifyEmailScreen');
+                }
+              });
             }}>
             <PrimaryText type="secondary" className="text-xl">
               Log In
