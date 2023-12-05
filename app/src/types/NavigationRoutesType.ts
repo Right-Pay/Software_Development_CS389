@@ -6,7 +6,7 @@ export type WelcomeNavigationRoutesType = {
   Register: undefined;
   ForgotPassword: undefined;
   ResetPassword: undefined;
-  VerifyEmail: undefined;
+  VerifyEmailScreen: undefined;
 };
 
 export type NavigationRoutesType = {

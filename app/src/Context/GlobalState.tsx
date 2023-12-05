@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { AppState, Keyboard } from 'react-native';
+import { AppState } from 'react-native';
 import Config from 'react-native-config';
 import Consts from '../Helpers/Consts';
 import {
