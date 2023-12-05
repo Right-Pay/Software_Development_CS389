@@ -15,6 +15,7 @@ export interface Place {
   distance?: number;
   id: string;
   location: PlaceLocation;
+  formattedAddress: string;
 }
 
 export interface DisplayName {

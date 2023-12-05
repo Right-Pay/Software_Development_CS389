@@ -146,6 +146,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
           types: ['Restaurant'],
           readableType: 'Restaurant',
           id: '0',
+          formattedAddress: 'Unavailable',
         },
       ]);
       return;
@@ -154,7 +155,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     headers.append('Content-Type', 'application/json');
     headers.append(
       'X-Goog-FieldMask',
-      'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types',
+      'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types,places.formattedAddress',
     );
     headers.append('X-Goog-Api-Key', apiURL);
 
