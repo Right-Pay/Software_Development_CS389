@@ -10,7 +10,6 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
-import { Keyboard } from 'react-native';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
