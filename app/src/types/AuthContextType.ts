@@ -4,7 +4,7 @@ import { Profile } from './ProfileType';
 export interface AuthContextType {
   isLoading: boolean;
   userToken: string | null;
-  userProfile: Profile; //change this eventually
+  userProfile: Profile;
   authError: string[];
   AuthErrorComponent: FC | null;
   signIn: (_email: string, _password: string, _inputUsername?: string) => void;
@@ -28,6 +28,8 @@ export interface AuthContextType {
   updateUserProfile: (_newProfile: Profile) => void;
   needsUsername: boolean;
   isKeyboardVisible: boolean;
+  checkVerfiedEmail: () => Promise<boolean>;
+  notVerified: boolean;
 }
 
 export interface TokenType {

@@ -35,10 +35,8 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
     clearAuthErrors,
     AuthErrorComponent,
     userToken,
-    addAuthError,
+    notVerified,
   } = React.useContext(AuthContext) as AuthContextType;
-
-  const Errors = Consts.authErrorMessages;
 
   useEffect(() => {
     clearAuthErrors();
@@ -95,16 +93,10 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           />
           <PrimaryButton
             onPress={async () => {
-              await signUp(email, username, password, repeatedPassword).then(
-                res => {
-                  if (res) {
-                    addAuthError(Errors.verifyEmail);
-                    setTimeout(() => {
-                      navigation.navigate('Login');
-                    }, 3000);
-                  }
-                },
-              );
+              await signUp(email, username, password, repeatedPassword);
+              if (notVerified) {
+                navigation.navigate('VerifyEmailScreen');
+              }
             }}>
             <PrimaryText type="secondary" className="text-xl">
               Sign Up

@@ -26,8 +26,13 @@ type LogInScreenProps = NativeStackScreenProps<
   PropsWithChildren;
 
 const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
-  const { clearAuthErrors, AuthErrorComponent, signIn, needsUsername } =
-    React.useContext(AuthContext) as AuthContextType;
+  const {
+    clearAuthErrors,
+    AuthErrorComponent,
+    signIn,
+    needsUsername,
+    notVerified,
+  } = React.useContext(AuthContext) as AuthContextType;
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
@@ -85,10 +90,13 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
             <FinePrint>Forgot Password?</FinePrint>
           </FinePrintButton>
           <PrimaryButton
-            onPress={() => {
+            onPress={async () => {
               needsUsername
-                ? signIn(email, password, username)
-                : signIn(email, password);
+                ? await signIn(email, password, username)
+                : await signIn(email, password);
+              if (notVerified) {
+                navigation.navigate('VerifyEmailScreen');
+              }
             }}>
             <PrimaryText type="secondary" className="text-xl">
               Log In

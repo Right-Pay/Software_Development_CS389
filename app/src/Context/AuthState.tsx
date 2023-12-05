@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AuthErrorComponent from '../Components/Common/AuthErrorComponent';
@@ -9,7 +9,7 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
-import { AppState, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -18,8 +18,9 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [userToken, setUserToken] = React.useState<string | null>(null);
   const [refreshToken, setRefreshToken] = React.useState<string | null>(null);
   const [needsUsername, setNeedsUsername] = React.useState<boolean>(false);
-  const [username, setUsername] = React.useState<string>('');
+  const [localPassword, setLocalPassword] = React.useState<string>('');
   const [lang, setLang] = React.useState<string>('en');
+  const [notVerified, setNotVerified] = React.useState<boolean>(false);
 
   const baseURL = Config.REACT_APP_API_URL;
   const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
@@ -35,6 +36,8 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     setUserProfile({} as Profile);
     clearAuthErrors();
     setNeedsUsername(false);
+    setNotVerified(false);
+    setLocalPassword('');
   };
 
   const addAuthError = (error: string) => {
@@ -76,6 +79,22 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const removeUsername = async () => {
     try {
       await EncryptedStorage.removeItem('rp_username');
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const storeEmail = async (stoEmail: string) => {
+    try {
+      await EncryptedStorage.setItem('rp_email', stoEmail);
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const removeEmail = async () => {
+    try {
+      await EncryptedStorage.removeItem('rp_email');
     } catch (error) {
       return false;
     }
@@ -128,6 +147,18 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, []);
 
+  const retrieveEmail = useCallback(async (): Promise<string | null> => {
+    try {
+      const cachedEmail = await EncryptedStorage.getItem('rp_email');
+      if (!cachedEmail) {
+        return null;
+      }
+      return cachedEmail;
+    } catch (error) {
+      return null;
+    }
+  }, []);
+
   const refreshAuth0Token = async () => {
     if (!refreshToken) {
       addAuthError(ErrorMessages.invalidToken);
@@ -156,7 +187,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
             return false;
           case 'access_denied':
             if (result.error_description === 'Not_Verified') {
-              addAuthError(ErrorMessages.notVerified);
+              setNotVerified(true);
               return false;
             } else {
               addAuthError(ErrorMessages.userNotFound);
@@ -204,87 +235,83 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   ) => {
     setKeyboardVisible(false);
     await resetVariables();
-    if (checkSignInValues(email, password, inputUsername)) {
+
+    const user = await retrieveUsername();
+
+    if (!inputUsername && !user) {
+      setNeedsUsername(true);
+      addAuthError(ErrorMessages.addUsername);
+      return false;
+    }
+
+    if (
+      checkSignInValues(email, password, inputUsername) &&
+      (user || inputUsername)
+    ) {
+      await storeEmail(email);
+      setLocalPassword(password);
+
       const { access_token, refresh_token } = (await signInAuth(
         email,
         password,
       )) as TokenType;
-      if (refresh_token) {
-        setRefreshToken(refresh_token);
-        await storeAuth0RefreshToken(refresh_token);
-      }
-      if (access_token) {
+      if (access_token && refresh_token) {
         //Fetch userData
         //Check if user is created yes -> sign in, no -> create user
         //If user is not created
         //Check if there is cached username
         //yes -> create user with cached username then sign in
         //no set needsUsername true returns
-
-        await getUser(access_token).then(async result => {
-          const res = result as HttpResponse<Profile>;
-          if (res.success) {
-            setUserToken(access_token);
-            await storeAuth0Token(access_token);
-            setUserProfile(res.data as Profile);
-            clearAuthErrors();
-          } else {
-            if (res.message.includes('existe' || 'exist')) {
-              if (inputUsername) {
-                await createNewDatabaseUser(
-                  access_token,
-                  email,
-                  inputUsername,
-                ).then(async createResult => {
-                  const createRes = createResult as HttpResponse<Profile>;
-                  if (createRes.success) {
-                    setUserToken(access_token);
-                    await storeAuth0Token(access_token);
-                    setUserProfile(createRes.data as Profile);
-                    clearAuthErrors();
-                  } else {
-                    //Database error
-                    addAuthError(createRes.message as string);
-                  }
-                });
-              } else {
-                await retrieveUsername().then(async usernameResult => {
-                  if (usernameResult) {
-                    //Create user with usernameResult
-                    //Sign in
-                    await createNewDatabaseUser(
-                      access_token,
-                      email,
-                      usernameResult,
-                    ).then(async createResult => {
-                      const createRes = createResult as HttpResponse<Profile>;
-                      if (createRes.success) {
-                        setUserToken(access_token);
-                        await storeAuth0Token(access_token);
-                        setUserProfile(createRes.data as Profile);
-                        clearAuthErrors();
-                      } else {
-                        //Database error
-                        addAuthError(createRes.message as string);
-                      }
-                    });
-                  } else {
-                    //requests user adds new username
-                    setNeedsUsername(true);
-                    addAuthError(ErrorMessages.addUsername);
-                    return;
-                  }
-                });
-              }
-            } else {
-              //Database error
-              addAuthError(res.message as string);
-            }
-          }
-        });
+        setRefreshToken(refresh_token);
+        await storeAuth0RefreshToken(refresh_token);
+        backendSignIn(access_token, email, user ?? inputUsername ?? '');
+      } else {
+        if (inputUsername && !user) {
+          await storeUsername(inputUsername);
+        }
+        setNotVerified(true);
       }
     }
     setIsLoading(false);
+  };
+
+  const backendSignIn = async (
+    access_token: string,
+    email: string,
+    inputUsername: string,
+  ) => {
+    return await getUser(access_token).then(async result => {
+      const res = result as HttpResponse<Profile>;
+      if (res.success) {
+        setUserToken(access_token);
+        await storeAuth0Token(access_token);
+        setUserProfile(res.data as Profile);
+        clearAuthErrors();
+      } else {
+        if (res.message.includes('existe' || 'exist')) {
+          await createNewDatabaseUser(access_token, email, inputUsername).then(
+            async createResult => {
+              const createRes = createResult as HttpResponse<Profile>;
+              if (createRes.success) {
+                setUserToken(access_token);
+                await storeAuth0Token(access_token);
+                setUserProfile(createRes.data as Profile);
+                clearAuthErrors();
+                return true;
+              } else {
+                //Database error
+                addAuthError(createRes.message as string);
+                return false;
+              }
+            },
+          );
+        } else {
+          //Database error
+          addAuthError(res.message as string);
+          return false;
+        }
+      }
+    });
   };
 
   const signInAuth = async (email: string, password: string) => {
@@ -314,7 +341,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
             return false;
           case 'access_denied':
             if (result.error_description === 'Not_Verified') {
-              addAuthError(ErrorMessages.notVerified);
+              setNotVerified(true);
               return false;
             } else {
               addAuthError(ErrorMessages.userNotFound);
@@ -359,6 +386,33 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     },
     [ErrorMessages.errorGettingUser, baseURL, lang],
   );
+
+  const checkVerfiedEmail = async () => {
+    const cached_email = await retrieveEmail();
+    const cached_username = await retrieveUsername();
+    if (cached_email && localPassword && cached_username) {
+      const { refresh_token, access_token } = (await signInAuth(
+        cached_email,
+        localPassword,
+      )) as TokenType;
+
+      if (access_token && refresh_token) {
+        setRefreshToken(refresh_token);
+        await storeAuth0RefreshToken(refresh_token);
+        await storeAuth0Token(access_token);
+        await backendSignIn(access_token, cached_email, cached_username);
+        return true;
+      } else {
+        if (!cached_username) {
+          setNeedsUsername(true);
+        }
+        setNotVerified(true);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
 
   const updateUserProfile = async (newUserProfile: Profile) => {
     //setUserProfile(newUserProfile);
@@ -458,15 +512,19 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
       addAuthError(ErrorMessages.invalidUsername);
       return false;
     } else {
-      await createNewAuth0User(email, password, newUsername).then(async r => {
-        if (r.code && r.code === 'invalid_signup') {
-          addAuthError(ErrorMessages.userAlreadyExists);
-          return false;
-        } else {
-          await storeUsername(newUsername);
-        }
-      });
-      return true;
+      return await createNewAuth0User(email, password, newUsername).then(
+        async r => {
+          if (r.code && r.code === 'invalid_signup') {
+            addAuthError(ErrorMessages.userAlreadyExists);
+            return false;
+          } else {
+            setLocalPassword(password);
+            //await storeUsername(newUsername);
+            await storeEmail(email);
+            return true;
+          }
+        },
+      );
     }
   };
 
@@ -492,6 +550,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
     return await fetch(`${auth0URL}/dbconnections/signup`, requestOptions)
       .then(response => response.json())
       .then(result => {
+        console.log(result);
         return result;
       })
       .catch(() => {
@@ -701,6 +760,8 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         updateUserProfile,
         needsUsername,
         isKeyboardVisible,
+        checkVerfiedEmail,
+        notVerified,
       }}>
       <GlobalState>{children}</GlobalState>
     </AuthContext.Provider>
