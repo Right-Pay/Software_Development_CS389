@@ -1,12 +1,14 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Logo, LogoContainer } from '../../../Helpers/StylizedComponents';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import authContext from '../../../Context/authContext';
+import { AuthContextType } from '../../../types/AuthContextType';
 
 type WelcomeScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -17,7 +19,7 @@ type WelcomeScreenProps = NativeStackScreenProps<
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
   return (
     <WrapperView>
-      <TitleText className="mt-20">Welcome to RightPay</TitleText>
+      <TitleText className="mt-20 ml-3 mr-3">Welcome to RightPay</TitleText>
       <LogoContainer>
         <Logo
           source={require('../../../Assets/RightPay-logo-light-transparent.png')}

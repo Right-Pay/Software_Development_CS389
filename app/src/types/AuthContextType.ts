@@ -4,10 +4,10 @@ import { Profile } from './ProfileType';
 export interface AuthContextType {
   isLoading: boolean;
   userToken: string | null;
-  userProfile: Profile; //change this eventually
+  userProfile: Profile;
   authError: string[];
   AuthErrorComponent: FC | null;
-  signIn: (_email: string, _password: string) => void;
+  signIn: (_email: string, _password: string, _inputUsername?: string) => void;
   signOut: () => void;
   signUp: (
     _email: string,
@@ -24,8 +24,14 @@ export interface AuthContextType {
   checkEqualPasswords: (_password: string, _confirmPassword: string) => boolean;
   checkValidUsername: (_username: string) => boolean;
   checkValidPhone: (_phone: string) => boolean;
-  refreshAuth0Token: () => void;
+  refreshAuth0Token: (_trace: string) => void;
   updateUserProfile: (_newProfile: Profile) => void;
+  needsUsername: boolean;
+  isKeyboardVisible: boolean;
+  checkVerfiedEmail: () => void;
+  notVerified: boolean;
+  retrieveVerifiedEmail: () => Promise<boolean | null>;
+  backendSignIn: () => void;
 }
 
 export interface TokenType {

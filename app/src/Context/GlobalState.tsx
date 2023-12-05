@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { AppState, Keyboard } from 'react-native';
+import { AppState } from 'react-native';
 import Config from 'react-native-config';
 import Consts from '../Helpers/Consts';
 import {
@@ -79,7 +79,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       const content = await response.json();
 
       if (content.data.code === 'invalid_token') {
-        await refreshAuth0Token();
+        await refreshAuth0Token('findCard');
         if (tryAgain) {
           setTimeout(() => {
             findCard(cardBin, false);
@@ -156,7 +156,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
           content.data.code &&
           content.data.code === 'invalid_token'
         ) {
-          await refreshAuth0Token();
+          await refreshAuth0Token('linkCard');
           if (tryAgain) {
             setTimeout(() => {
               linkToUser(false);
@@ -218,7 +218,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         });
         const content = await response.json();
         if (content.data.code === 'invalid_token') {
-          await refreshAuth0Token();
+          await refreshAuth0Token('unlinkCard');
           if (tryAgain) {
             setTimeout(() => {
               unlinkToUser(false);
@@ -362,28 +362,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, [fetchBanks, fetchBrands, userToken]);
 
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
-
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
@@ -417,7 +395,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         validateCardForm,
         newCardBin,
         setNewCardBin,
-        isKeyboardVisible,
         appStateVisible,
         setShowBottomSheetModal,
         showBottomSheetModal,

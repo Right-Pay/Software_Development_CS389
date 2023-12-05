@@ -19,6 +19,7 @@ import {
   WelcomeNavigationRoutesType,
 } from '../types/NavigationRoutesType';
 import BottomTabNavigator from './TabNavigator';
+import VerifyEmailScreen from '../Components/Screens/Welcome/VerifyEmail';
 
 const WelcomeStack = createNativeStackNavigator<WelcomeNavigationRoutesType>();
 const MainNavigatorStack =
@@ -41,6 +42,10 @@ const WelcomeNavigator: React.FC<PropsWithChildren> = () => {
       <WelcomeStack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
+      />
+      <WelcomeStack.Screen
+        name="VerifyEmailScreen"
+        component={VerifyEmailScreen}
       />
     </WelcomeStack.Navigator>
   );

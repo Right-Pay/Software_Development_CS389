@@ -1,46 +1,48 @@
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React, { useCallback, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
+import WrapperView from '../../../../src/Components/Common/WrapperView';
 import AuthContext from '../../../Context/authContext';
 import useColorsMode from '../../../Helpers/Colors';
-import {
-  AuthInputBox,
-  FinePrint,
-  FinePrintButton,
-  Logo,
-  LogoContainer,
-} from '../../../Helpers/StylizedComponents';
+import Consts from '../../../Helpers/Consts';
+import { Logo, LogoContainer } from '../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../types/AuthContextType';
-import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import type {
+  NavigationRoutesType,
+  WelcomeNavigationRoutesType,
+} from '../../../types/NavigationRoutesType';
 import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-import WrapperView from '../../Common/WrapperView';
 
-type LogInScreenProps = NativeStackScreenProps<
-  WelcomeNavigationRoutesType,
-  'Login'
+type VerifyEmailScreenProps = CompositeScreenProps<
+  NativeStackScreenProps<WelcomeNavigationRoutesType, 'VerifyEmailScreen'>,
+  BottomTabScreenProps<NavigationRoutesType>
 > &
   PropsWithChildren;
 
-const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
+const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
+  navigation,
+}) => {
   const {
     clearAuthErrors,
+    checkVerfiedEmail,
     AuthErrorComponent,
-    signIn,
-    needsUsername,
+    addAuthError,
     retrieveVerifiedEmail,
+    backendSignIn,
   } = React.useContext(AuthContext) as AuthContextType;
+  const AuthErrors = Consts.authErrorMessages;
+  const { colors } = useColorsMode();
+
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
-  const { colors } = useColorsMode();
-  const [email, setEmail] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
-  const [username, setUsername] = React.useState<string>('');
 
   const backButton = useCallback(() => {
     return (
@@ -60,50 +62,29 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <View className="flex-1 flex-col w-full h-screen justify-center items-center mb-0 pb-0">
+        <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
           <TitleText className="mt-20 ml-3 mr-3">
-            Log In to Your RightPay Account
+            Please check your email for a verification link
           </TitleText>
           <LogoContainer>
             <Logo
               source={require('../../../Assets/RightPay-logo-light-transparent.png')}
             />
           </LogoContainer>
-          <AuthInputBox
-            placeholder="Email Address"
-            placeholderTextColor={'black'}
-            onChange={event => setEmail(event.nativeEvent.text)}
-          />
-          <AuthInputBox
-            placeholder="Password"
-            placeholderTextColor={'black'}
-            secureTextEntry={true}
-            onChange={event => setPassword(event.nativeEvent.text)}
-          />
-          {needsUsername && (
-            <AuthInputBox
-              placeholder="Username"
-              placeholderTextColor={'black'}
-              onChange={event => setUsername(event.nativeEvent.text)}
-            />
-          )}
-          <FinePrintButton
-            onPress={() => navigation.navigate('ForgotPassword')}>
-            <FinePrint>Forgot Password?</FinePrint>
-          </FinePrintButton>
           <PrimaryButton
             onPress={async () => {
-              needsUsername
-                ? await signIn(email, password, username)
-                : await signIn(email, password);
-              await retrieveVerifiedEmail().then(ret => {
-                if (!ret) {
-                  navigation.navigate('VerifyEmailScreen');
+              await checkVerfiedEmail();
+              await retrieveVerifiedEmail().then(async res => {
+                console.log('res', res);
+                if (res) {
+                  await backendSignIn();
+                } else {
+                  addAuthError(AuthErrors.notVerified);
                 }
               });
             }}>
             <PrimaryText type="secondary" className="text-xl">
-              Log In
+              Continue
             </PrimaryText>
           </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}
@@ -113,5 +94,4 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
     </WrapperView>
   );
 };
-
-export default LogInScreen;
+export default VerifyEmailScreen;
