@@ -70,6 +70,7 @@ const AddCardFullForm = () => {
 
   //consts
   const ModalMode = Consts.DropdownListModes.MODAL;
+  const [bankSetFromList, setBankSetFromList] = useState<boolean>(false);
 
   //Add New Options
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,7 +79,7 @@ const AddCardFullForm = () => {
   //onChange Methods
   const filterBank = useCallback(
     (item: string) => {
-      if (item.length <= 3) {
+      if (item.length < 2) {
         setFilteredBankOptions([]);
         return;
       }
@@ -92,7 +93,7 @@ const AddCardFullForm = () => {
             b.bank_name.toLowerCase().includes(item.toLowerCase()),
         ),
       ];
-
+      setBankSetFromList(filter.length > 0);
       setFilteredBankOptions(filter);
     },
     [bankOptions],
@@ -126,6 +127,9 @@ const AddCardFullForm = () => {
         level: card?.card_level,
       };
       const errors = validateCardForm(cardDetails);
+      if (!bankSetFromList) {
+        errors.push(Consts.authErrorMessages.invalidBankName);
+      }
       if (errors.length > 0) {
         errors.forEach(error => addAuthError(error));
         return;

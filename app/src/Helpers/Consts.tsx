@@ -3,7 +3,8 @@ import ConstsType from '../types/ConstsType';
 
 const AuthErrorMessages = {
   invalidEmail: 'Invalid Email',
-  invalidPassword: 'Invalid Password',
+  invalidPassword:
+    'Invalid Password\n*Must be at least 12 characters\n*Must contain an uppercase and lowercase letter\n*Must contain a number\n*Must contain a special character',
   passwordsDoNotMatch: 'Passwords Do Not Match',
   userAlreadyExists: 'User Already Exists',
   userNotFound: 'User Not Found\nEither Email or Password is Incorrect',
@@ -18,7 +19,8 @@ const AuthErrorMessages = {
   invalidCardName:
     'Invalid  Card Name\nName must be more then 10 characters\nName must only contain letters',
   invalidCardBin: 'Invalid Card Number\nMust be 6 digits',
-  invalidBankName: 'Invalid Bank Name\nName must be more then 3 characters',
+  invalidBankName:
+    'Invalid Bank Name\nName must be more then 3 characters\nName must come from autocomplete',
   invalidDropdownOption: 'Invalid Dropdown Option',
   invalidCardLevel: 'Invalid Card Level\nName must be more then 3 characters',
   undefined: 'Request failed, please try again later or contact support!',
