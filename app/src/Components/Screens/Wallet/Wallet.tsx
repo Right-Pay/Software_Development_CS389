@@ -190,6 +190,10 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => renderReward(item)}
           ItemSeparatorComponent={itemSeparatorComponent}
+          refreshing={!showRewardHeader && currentViewedCard[0].id !== -1}
+          onRefresh={() => {
+            console.log('refreshing');
+          }}
         />
       </View>
     </WrapperView>
