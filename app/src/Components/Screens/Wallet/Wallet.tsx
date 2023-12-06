@@ -22,11 +22,11 @@ import type {
   NavigationRoutesType,
   WalletNavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import CardComponent from '../../Card';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import AddCardFullForm from './AddCardFullForm';
-import CardComponent from '../../Card';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -77,11 +77,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
     return (
       <CardComponent
-        card_name={item.card_name as string}
-        card_bin={item.card_bin ?? ''}
-        exp_date={item.exp_date as string}
-        card_brand_name={item.card_brand_name as string}
-        card_type={item.card_type as string}
+        card={item}
         handleCardPress={handleCardPress}
         deleteCard={deleteCard}
         setDeleteCard={setDeleteCard}
@@ -131,7 +127,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   return (
     <WrapperView>
-      {AddCardFullForm()}
+      <AddCardFullForm />
       <TitleText className="mt-10">Wallet</TitleText>
       <View className="aspect-video mt-10 w-full">
         <StyledList

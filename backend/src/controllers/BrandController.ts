@@ -81,7 +81,7 @@ class BrandController {
       data: {}
     };
     const brandData = req.body as Brand;
-    if (!brandData.brand_name) {
+    if (!brandData.brand_name || !brandData.brand_abbr) {
       response.success = false;
       response.message = i18n.t('error.missingFields');
       res.status(400).json(response);

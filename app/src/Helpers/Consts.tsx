@@ -20,9 +20,10 @@ const AuthErrorMessages = {
     'Invalid  Card Name\nName must be more then 10 characters\nName must only contain letters',
   invalidCardBin: 'Invalid Card Number\nMust be 6 digits',
   invalidBankName:
-    'Invalid Bank Name\nName must be more then 3 characters\nName must come from autocomplete',
+    'Invalid Bank Name\nWe do not support that bank at this time!',
   invalidDropdownOption: 'Invalid Dropdown Option',
   invalidCardLevel: 'Invalid Card Level\nName must be more then 3 characters',
+  invalidCardType: 'Invalid Card Type\nThe type must be either Credit or Debit',
   undefined: 'Request failed, please try again later or contact support!',
   invalidUsername:
     'Invalid Username\nUsername must be more then 3 characters\nUsername must only contain letters',

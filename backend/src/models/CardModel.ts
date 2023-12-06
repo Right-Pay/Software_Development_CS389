@@ -1,7 +1,7 @@
 // generate a card model that will be used to interact with the database
 import { dbPool } from "../config/config";
-import { Card } from "../types/cardTypes";
 import i18n from '../config/i18n';
+import { Card } from "../types/cardTypes";
 
 export class CardModel {
 
@@ -87,6 +87,24 @@ export class CardModel {
       console.log('DB Error', err);
       const userFriendlyError = i18n.t([err.message, 'error.default']);
       throw new Error(userFriendlyError);
+    }
+  }
+
+  async updateApiCount(api_name: string) {
+    try {
+      const client = await dbPool.connect();
+      const sql = 'UPDATE rp_api_calls SET api_count = api_count + 1 WHERE api_name = $1';
+      const values = [api_name];
+      const result = await client.query(sql, values);
+      client.release();
+      if (!result.rowCount) {
+        throw new Error('error.apiCountNotUpdated');
+      }
+      return true;
+    } catch (err: any) {
+      console.log('DB Error', err);
+      const cardFriendlyError = i18n.t([err.message, 'error.default']);
+      throw new Error(cardFriendlyError);
     }
   }
 

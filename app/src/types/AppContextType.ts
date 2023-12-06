@@ -10,6 +10,10 @@ import {
 export interface AppContext {
   rewards: Reward[];
   findCard: (_cardBin: number, _tryAgain: boolean) => Promise<Card | false>;
+  findCardByAPI: (
+    _cardBin: number,
+    _tryAgain: boolean,
+  ) => Promise<Card | false>;
   linkCard: (_card: Card, _newCard: boolean) => Promise<boolean>;
   unlinkCard: (_Card: Card) => void;
   addNewReward: (_reward: Reward) => void;

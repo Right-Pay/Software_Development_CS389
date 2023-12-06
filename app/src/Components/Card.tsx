@@ -1,19 +1,18 @@
 /* eslint-disable react/no-unstable-nested-components */
+import React from 'react';
 import { Text, View } from 'react-native';
 import {
   CardButton,
-  CardText,
   CardView,
   DeleteCardButton,
 } from '../Helpers/StylizedComponents';
-import React from 'react';
 import { CardProps } from '../types/CardType';
 
 const CardComponent: React.FC<CardProps> = props => {
   const formatBin = (bin: string) => {
     return (
       bin
-        .replace(/\s/g, '')
+        ?.replace(/\s/g, '')
         .replace(/(\d{4})/g, '$1 ')
         .trim() + '** **** ****'
     );
@@ -27,27 +26,38 @@ const CardComponent: React.FC<CardProps> = props => {
 
   const CardName = (
     <View className="text-center">
-      <CardText className="text-left font-bold truncate px-2" numberOfLines={2}>
-        {props.card_name}
-      </CardText>
+      <Text
+        className="text-2xl text-white text-left font-bold truncate px-2"
+        numberOfLines={1}>
+        {props.card?.card_bank_name}
+      </Text>
+      <Text
+        className="text-lg text-white text-left truncate px-2"
+        numberOfLines={2}>
+        {props.card?.card_level}
+      </Text>
     </View>
   );
 
   const CardMiddle = (
     <View className="absolute bottom-0 left-2 flex-1 flex-col">
-      <Text className="text-lg text-white">
-        {formatBin(props.card_bin.toString())}
+      <Text className="text-lg text-white font-bold">
+        {formatBin(props.card?.card_bin.toString())}
       </Text>
       <Text className="text-xs text-white text-left">
-        {formatExpirationDate(props?.exp_date || '')}
+        {formatExpirationDate(props.card?.exp_date || '')}
       </Text>
     </View>
   );
 
   const CardBottom = (
     <View className="absolute bottom-0 right-2 flex-1 flex-col">
-      <Text className="text-lg text-white">{props.card_brand_name}</Text>
-      <Text className="text-xs text-white text-right">{props.card_type}</Text>
+      <Text className="text-lg text-white font-bold">
+        {props.card?.card_brand_name}
+      </Text>
+      <Text className="text-xs text-white text-right">
+        {props.card?.card_type}
+      </Text>
     </View>
   );
 
@@ -58,15 +68,15 @@ const CardComponent: React.FC<CardProps> = props => {
         onPress={() =>
           props.setDeleteCard !== undefined && props.setDeleteCard(false)
         }>
-        <CardText className="opacity-100 text-4xl text-center">
+        <Text className="text-2xl text-white text-left opacity-100 text-4xl text-center">
           Delete Card?
-        </CardText>
-        <CardText className="opacity-100 text-3xl text-center">
+        </Text>
+        <Text className="text-2xl text-white text-left opacity-100 text-3xl text-center">
           Long Press Again to Confirm
-        </CardText>
-        <CardText className="opacity-100 text-2xl text-center">
+        </Text>
+        <Text className="text-2xl text-white text-left opacity-100 text-2xl text-center">
           Tap to Exit
-        </CardText>
+        </Text>
       </DeleteCardButton>
     );
   };

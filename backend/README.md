@@ -213,15 +213,6 @@ Returns Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
 
 Returns Created Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
 
-#### Delete Card
-
-```http
-  DELETE /api/card
-```
-
-Used to delete a card. No user has access to do this atm
-
-
 ### Bank API
 
 #### Get Bank
@@ -244,28 +235,6 @@ Returns Bank in format specified in [bankTypes.ts](./src/types/bankTypes.ts)
 ```
 
 Returns all banks in an array of objects, format specified in [bankTypes.ts](./src/types/bankTypes.ts)
-
-#### Create Bank
-
-```http
-  POST /api/banks
-```
-
-| Parameter     | Type     | Description                    |
-| :------------ | :------- | :----------------------------- |
-| `bank_name`   | `string` | **Required** Bank name         |
-| `abbr`        | `string` | **Required** Bank abbreviation |
-
-Returns Created Bank in format specified in [bankTypes.ts](./src/types/bankTypes.ts)
-
-#### Delete Bank
-
-```http
-  DELETE /api/banks
-```
-
-Used to delete a bank. No user has access to do this atm
-
 
 ### Brand API
 
@@ -290,26 +259,6 @@ Returns Brand in format specified in [brandTypes.ts](./src/types/brandTypes.ts)
 
 Returns all brands in an array of objects, format specified in [brandTypes.ts](./src/types/brandTypes.ts)
 
-#### Create Brand
-
-```http
-  POST /api/brands
-```
-
-| Parameter      | Type     | Description             |
-| :------------- | :------- | :---------------------- |
-| `brand_name`   | `string` | **Required** Brand name |
-
-Returns Created Brand in format specified in [brandTypes.ts](./src/types/brandTypes.ts). Really only used on the admin side
-
-#### Delete Brand
-
-```http
-  DELETE /api/brands
-```
-
-Used to delete a brand. No user has access to do this atm
-
 ### Category API
 
 #### Get Category
@@ -332,26 +281,6 @@ Returns Category in format specified in [categoryTypes.ts](./src/types/categoryT
 ```
 
 Returns all categoriess in an array of objects, format specified in [categoryTypes.ts](./src/types/categoryTypes.ts)
-
-#### Create Category
-
-```http
-  POST /api/categories
-```
-
-| Parameter         | Type        | Description                |
-| :---------------- | :---------- | :------------------------- |
-| `category_name`   | `string`    | **Required** Category name |
-
-Returns Created Category in format specified in [categoryTypes.ts](./src/types/categoryTypes.ts). Really only used on the admin side
-
-#### Delete Category
-
-```http
-  DELETE /api/categories
-```
-
-Used to delete a category. No user has access to do this atm
 
 #### dotenv.config()
 

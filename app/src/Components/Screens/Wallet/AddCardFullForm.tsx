@@ -46,6 +46,7 @@ const AddCardFullForm: React.FC = () => {
     setCardForms,
     validateCardForm,
     findCard,
+    findCardByAPI,
     getCardTypeFromBin,
   } = React.useContext(Context) as AppContext;
   const { themeMode } = useColorsMode();
@@ -179,16 +180,47 @@ const AddCardFullForm: React.FC = () => {
         setEditState(EditStates.Review);
         setEditForm(EditForm.Type);
       } else {
-        setCard({ ...card, exp_date: '23-01' });
-        setEditState(EditStates.Invalid);
-        setEditForm(EditForm.Type);
+        const searchForCard2 = await findCardByAPI(
+          card.card_bin as number,
+          false,
+        );
+        if (searchForCard2) {
+          searchForCard2.exp_date =
+            currentYear + '-' + (new Date().getMonth() + 1);
+          setCard(searchForCard2);
+          setBankSearch(searchForCard2.card_bank_name || '');
+          setFilteredBankOptions([]);
+          setEditState(EditStates.Review);
+          setEditForm(EditForm.Type);
+        } else {
+          setCard({ ...card, exp_date: '23-01' });
+          setEditState(EditStates.Invalid);
+          setEditForm(EditForm.Type);
+        }
       }
     } else {
       if (editForm === EditForm.Type) {
+        if (
+          card.card_type === '' ||
+          (card.card_type !== 'Credit' && card.card_type !== 'Debit')
+        ) {
+          console.log('invalid card type');
+          console.log(Consts.authErrorMessages.invalidCardType);
+          addAuthError(Consts.authErrorMessages.invalidCardType);
+          return;
+        }
         setEditForm(EditForm.Bank);
       } else if (editForm === EditForm.Bank) {
+        if (card.card_bank_id === 0) {
+          addAuthError(Consts.authErrorMessages.invalidCardBank);
+          return;
+        }
         setEditForm(EditForm.Level);
       } else if (editForm === EditForm.Level) {
+        if (card.card_level === '') {
+          addAuthError(Consts.authErrorMessages.invalidCardLevel);
+          return;
+        }
         // if add state, pass true to new card bool
         if (await linkCard(card, EditStates.Add === editState)) {
           closeModal();

@@ -1,11 +1,9 @@
+import axios from 'axios';
 import { Request, Response } from 'express';
-import fs from 'fs';
-import path from 'path';
-import readline from 'readline';
 import i18n from '../config/i18n';
 import BankModelInstance from '../models/BankModel';
 import BrandModelInstance from '../models/BrandModel';
-import CardModel from '../models/CardModel';
+import CardModel, { CardModelInstance } from '../models/CardModel';
 import { Card } from '../types/cardTypes';
 import { IJsonResponse } from '../types/jsonResponse';
 
@@ -57,6 +55,118 @@ class CardController {
       res.status(500).json(response);
     }
     return response;
+  }
+
+  async getCardFromAPI(req: Request, res: Response) {
+    const response: IJsonResponse = {
+      message: 'TLX API - Register Card',
+      success: true,
+      data: {}
+    };
+    if ((req.query.hasOwnProperty('card_bin') && (Number.isNaN(Number(req.query.card_bin)) || Number(req.query.card_bin) < 100000)) || !req.query.card_bin) {
+      response.success = false;
+      response.message = i18n.t('error.cardNotFound');
+      res.status(400).json(response);
+      return;
+    }
+    const cardBin: number = Number(req.query.card_bin || 0);
+    if (!cardBin) {
+      response.success = false;
+      response.message = i18n.t('error.missingFields');
+      res.status(400).json(response);
+      return;
+    }
+    try {
+      const card = await this.getCardFromAPIFnc(cardBin);
+      if (card) {
+        response.data = card;
+        res.json(response);
+      } else {
+        response.success = false;
+        response.message = i18n.t('error.cardNotFound');
+        res.status(404).json(response);
+      }
+    } catch (error: any) {
+      response.success = false;
+      response.message = error.message;
+      response.data = {};
+      res.status(500).json(response);
+    }
+    return response;
+  }
+
+  async getCardFromAPIFnc(cardBin: number): Promise<boolean|Card> {
+    const response = await axios({
+      method: 'POST',
+      url: `https://bin-ip-checker.p.rapidapi.com/?bin=${cardBin}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-RapidAPI-Key': '4b6b6e6ef2msh2e79065a169063ap1bed05jsn912041adaff8',
+        'X-RapidAPI-Host': 'bin-ip-checker.p.rapidapi.com'
+      },
+      data: {bin: cardBin}
+    });
+
+    try {
+      CardModelInstance.updateApiCount('rapidapi');
+    } catch (error) {
+      console.log(error);
+      console.log('Failed to update API count for rapidapi');
+    }
+
+    if (response.status !== 200) {
+      return false;
+    }
+
+    const responseJson = await response.data;
+    if (responseJson.success = false || !responseJson || !responseJson.BIN) {
+      return false;
+    }
+
+    const binData = responseJson.BIN;
+    if (binData.valid === false) {
+      return false;
+    }
+
+    const cardData: Card = {
+      card_bin: cardBin,
+      card_bank_id: 0,
+      card_brand_id: 0,
+      card_country: binData?.country?.alpha3 || 'USA',
+      card_level: '',
+      card_name: '',
+      card_type: binData?.card_type || '',
+    };
+
+    if (binData.issuer && binData.issuer.name) {
+      const bankName = binData.issuer.name;
+      const bank = await BankModelInstance.getByName(bankName);
+      if (!bank) {
+        const newBank = await BankModelInstance.create({ bank_name: bankName, abbr: bankName });
+        cardData.card_bank_id = newBank.id || 0;
+        cardData.card_bank_name = newBank.bank_name;
+        cardData.card_bank_abbr = newBank.abbr;
+      } else {
+        cardData.card_bank_id = bank.id || 0;
+        cardData.card_bank_name = bank.bank_name;
+        cardData.card_bank_abbr = bank.abbr;
+      }
+    }
+
+    if (binData.brand) {
+      const brandName = binData.brand;
+      const brand = await BrandModelInstance.getByName(brandName);
+      const brandAbbr = brandName.toLowerCase().replace(' ', '_');
+      if (!brand) {
+        const newBrand = await BrandModelInstance.create({ brand_name: brandName, brand_abbr: brandAbbr });
+        cardData.card_brand_id = newBrand.id || 0;
+        cardData.card_brand_name = newBrand.brand_name;
+      } else {
+        cardData.card_brand_id = brand.id || 0;
+        cardData.card_brand_name = brand.brand_name;
+      }
+    }
+    return cardData;
   }
 
   async createCard(req: Request, res: Response) {
@@ -114,70 +224,70 @@ class CardController {
     }
   }
 
-  async addCardsFromCSV(req: Request, res: Response) {
-    const response: IJsonResponse = {
-      message: 'TLX API - Register Card',
-      success: true,
-      data: {}
-    };
-    const banks = await BankModelInstance.getAll();
-    const brands = await BrandModelInstance.getAll();
-    const csvFilePath = path.join(__dirname, '../../src/binlist-data.csv');
-    // 0.bin,1.brand,2.type,3.category,4.issuer(bank),5.alpha_2,6.alpha_3,7.country,8.latitude,9.longitude,10.bank_phone,11.bank_url
-    try {
-      const fileStream = fs.createReadStream(csvFilePath, 'utf-8');
-      const rl = readline.createInterface({
-          input: fileStream,
-          crlfDelay: Infinity,
-      });
+  // async addCardsFromCSV(req: Request, res: Response) {
+  //   const response: IJsonResponse = {
+  //     message: 'TLX API - Register Card',
+  //     success: true,
+  //     data: {}
+  //   };
+  //   const banks = await BankModelInstance.getAll();
+  //   const brands = await BrandModelInstance.getAll();
+  //   const csvFilePath = path.join(__dirname, '../../src/binlist-data.csv');
+  //   // 0.bin,1.brand,2.type,3.category,4.issuer(bank),5.alpha_2,6.alpha_3,7.country,8.latitude,9.longitude,10.bank_phone,11.bank_url
+  //   try {
+  //     const fileStream = fs.createReadStream(csvFilePath, 'utf-8');
+  //     const rl = readline.createInterface({
+  //         input: fileStream,
+  //         crlfDelay: Infinity,
+  //     });
   
-      const cardData = [] as Card[];
-      let isFirstLine = true;
-      for await (const line of rl) {
-        if (isFirstLine) {
-          isFirstLine = false;
-          continue; // Skip the first line
-        }
+  //     const cardData = [] as Card[];
+  //     let isFirstLine = true;
+  //     for await (const line of rl) {
+  //       if (isFirstLine) {
+  //         isFirstLine = false;
+  //         continue; // Skip the first line
+  //       }
 
-        const cardArray = line.split(',');
+  //       const cardArray = line.split(',');
 
-        const brand_name = cardArray[1];
-        let brand_id = brands.find((brand) => brand.brand_name === brand_name)?.id || -1;
-        if (brand_id === -1) {
-          const new_brand = await BrandModelInstance.create({ brand_name });
-          brand_id = new_brand.id || -1;
-          brands.push(new_brand);
-        }
-        const bank_name = cardArray[4];
-        let bank_id = banks.find((bank) => bank.bank_name === bank_name)?.id || -1;
-        if (bank_id === -1) {
-          const new_bank = await BankModelInstance.create({ bank_name, abbr: bank_name });
-          bank_id = new_bank.id || -1;
-          banks.push(new_bank);
-        }
+  //       const brand_name = cardArray[1];
+  //       let brand_id = brands.find((brand) => brand.brand_name === brand_name)?.id || -1;
+  //       if (brand_id === -1) {
+  //         const new_brand = await BrandModelInstance.create({ brand_name });
+  //         brand_id = new_brand.id || -1;
+  //         brands.push(new_brand);
+  //       }
+  //       const bank_name = cardArray[4];
+  //       let bank_id = banks.find((bank) => bank.bank_name === bank_name)?.id || -1;
+  //       if (bank_id === -1) {
+  //         const new_bank = await BankModelInstance.create({ bank_name, abbr: bank_name });
+  //         bank_id = new_bank.id || -1;
+  //         banks.push(new_bank);
+  //       }
 
-        const cardObject: Card = {
-          card_bin: parseInt(cardArray[0]),
-          card_brand_id: brand_id,
-          card_type: cardArray[2],
-          card_bank_id: bank_id,
-          card_country: cardArray[7],
-          card_level: cardArray[3] ? cardArray[3] : '',
-          card_name: bank_name + ' ' + brand_name + ' ' + cardArray[3] + ' ' + cardArray[2],
-        };
+  //       const cardObject: Card = {
+  //         card_bin: parseInt(cardArray[0]),
+  //         card_brand_id: brand_id,
+  //         card_type: cardArray[2],
+  //         card_bank_id: bank_id,
+  //         card_country: cardArray[7],
+  //         card_level: cardArray[3] ? cardArray[3] : '',
+  //         card_name: bank_name + ' ' + brand_name + ' ' + cardArray[3] + ' ' + cardArray[2],
+  //       };
 
-        const newCard = await CardModel.create(cardObject);
-        cardData.push(newCard);
-      };
-      response.data = cardData;
-      res.status(201).json(response);
-    } catch (error: any) {
-      response.success = false;
-      response.message = error.message + ' - failed at cardData.map';
-      response.data = {};
-      res.status(500).json(response);
-    }
-  }
+  //       const newCard = await CardModel.create(cardObject);
+  //       cardData.push(newCard);
+  //     };
+  //     response.data = cardData;
+  //     res.status(201).json(response);
+  //   } catch (error: any) {
+  //     response.success = false;
+  //     response.message = error.message + ' - failed at cardData.map';
+  //     response.data = {};
+  //     res.status(500).json(response);
+  //   }
+  // }
 
 }
 

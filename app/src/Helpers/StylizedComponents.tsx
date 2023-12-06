@@ -4,9 +4,8 @@ import {
   Image,
   Pressable,
   ScrollView,
-  Text,
   TextInput,
-  View,
+  View
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, { Marker } from 'react-native-maps';
@@ -79,7 +78,6 @@ export const DeleteCardButton = styled(
   Pressable,
   'w-full h-full absolute top-0 left-0 flex bg-red-500 rounded-xl opacity-75 justify-center items-center',
 );
-export const CardText = styled(Text, 'text-2xl text-white text-left mb-2');
 export const CardItemSeperator = styled(View, 'w-12');
 export const AddCardIcon = styled(Image, 'w-full h-full');
 export const AddCardView = styled(

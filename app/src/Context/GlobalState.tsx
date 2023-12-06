@@ -120,6 +120,57 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const findCardByAPI = async (
+    cardBin: number,
+    tryAgain: boolean,
+  ): Promise<Card | false> => {
+    setIsLoading(true);
+    //Check api for card
+    //found card will need to be set if found
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Authorization', `bearer ${userToken}`);
+
+    const query = `?card_bin=${cardBin}`;
+    try {
+      const response = await fetch(`${baseURL}cards/rapidapi${query}`, {
+        method: 'GET',
+        headers: headers,
+      });
+      const content = await response.json();
+
+      if (content.data.code === 'invalid_token') {
+        await refreshAuth0Token('findCard');
+        if (tryAgain) {
+          setTimeout(() => {
+            findCardByAPI(cardBin, false);
+          }, 20);
+        }
+        setIsLoading(false);
+        return false;
+      }
+
+      if (response.status === 200) {
+        const card = content.data;
+        const modifiedCard = {
+          ...card,
+          exp_date: '23-01',
+        } as Card;
+        setIsLoading(false);
+        return modifiedCard;
+      } else {
+        setIsLoading(false);
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+      addAuthError(ErrorMessages.undefined);
+      setIsLoading(false);
+      return false;
+    }
+  };
+
   const linkCard = async (card: Card, new_card: boolean): Promise<boolean> => {
     setIsLoading(true);
     const linkToUser = async (tryAgain: boolean) => {
@@ -171,6 +222,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
           return false;
         }
         if (!content.success) {
+          addAuthError(content.message);
           return false;
         }
         setNewCardBin(0o0);
@@ -552,6 +604,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       value={{
         rewards,
         findCard,
+        findCardByAPI,
         linkCard,
         unlinkCard,
         addNewReward,
