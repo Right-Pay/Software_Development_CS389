@@ -48,6 +48,11 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
       ? [userProfile.cards[0]]
       : [Consts.addCard],
   );
+  const [currentRewards, setCurrentRewards] = React.useState<Reward[]>([]);
+
+  const [showRewardHeader, setShowRewardHeader] =
+    React.useState<boolean>(false);
+
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
   //helpers
@@ -139,7 +144,10 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   });
 
   useEffect(() => {
-    setDeleteCard(false);
+    if (currentViewedCard.length === 1 && currentViewedCard[0].id !== -1) {
+      setShowRewardHeader(true);
+      setCurrentRewards(currentViewedCard[0].rewards || []);
+    }
   }, [currentViewedCard]);
 
   return (
@@ -164,16 +172,19 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           snapToInterval={
             Dimensions.get('window').width + Consts.cardItemSeparatorWidth
           } //Change 48 based on width of CardItemSeperator width
+          onScrollBeginDrag={() => {
+            setDeleteCard(false);
+            setCurrentRewards([]);
+            setShowRewardHeader(false);
+          }}
         />
       </View>
       <View className="aspect-video mt-10 w-full justify-center items-center">
         <FlatList
           className="w-full text-center w-3/4 p-2"
-          data={currentViewedCard[0].rewards} //This will need to be done
+          data={currentRewards} //This will need to be done
           ListHeaderComponent={
-            currentViewedCard.filter(i => i.id === -1).length === 0 ? (
-              <TitleText>Rewards</TitleText>
-            ) : null
+            showRewardHeader ? <TitleText>Rewards</TitleText> : null
           }
           showsVerticalScrollIndicator={true}
           keyExtractor={(item, index) => index.toString()}

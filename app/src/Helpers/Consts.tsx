@@ -59,6 +59,7 @@ const addCard: Card = {
   card_name: 'Add',
   id: -1,
   card_bin: 0o0,
+  rewards: [],
 };
 
 //Dummy Data for development
