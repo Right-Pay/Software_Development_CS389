@@ -43,7 +43,7 @@ export class CardModel {
           if (row.id) {
             row.rewards = await RewardModelInstance.getByCard(row.id);
             row.rewards = row.rewards.filter((reward: Reward) => {
-              return reward.crowd_source_score && reward.crowd_source_score >= 2;
+              return reward.crowd_source_score && Number(reward.crowd_source_score) >= 2;
             });
           }
         }
@@ -72,7 +72,7 @@ export class CardModel {
           if (row.id) {
             row.rewards = await RewardModelInstance.getByCard(row.id);
             row.rewards = row.rewards.filter((reward: Reward) => {
-              return reward.crowd_source_score && reward.crowd_source_score >= 2;
+              return reward.crowd_source_score && Number(reward.crowd_source_score) >= 2;
             });
           }
         }

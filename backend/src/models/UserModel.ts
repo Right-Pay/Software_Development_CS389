@@ -176,6 +176,13 @@ export class UserModel {
       if (!result.rows.length) {
         throw new Error('error.userCardNotUnlinked');
       }
+      
+      const sql2 = 'DELETE FROM rp_linked_user_card_to_reward_link WHERE user_id = $1 AND card_id = $2 RETURNING *';
+      const values2 = [user_id, card_id];
+      const result2 = await client.query(sql2, values2);
+      // if (!result2.rows.length) {
+      //   throw new Error('error.userCardNotUnlinked');
+      // }
       client.release();
       return cardCheck;
     } catch (err: any) {
