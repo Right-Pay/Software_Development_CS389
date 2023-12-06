@@ -45,18 +45,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   return (
     <WrapperView>
       <TitleText className="top-10 mb-2">Profile</TitleText>
-      <Pressable
-        onPress={() => addPoints(1)}
-        className="border-2 h-1/3 w-1/3 bg-red-500">
-        <PrimaryText>add point</PrimaryText>
-      </Pressable>
       <PrimaryText className="text-2xl font-bold mb-2 mt-10" numberOfLines={1}>
         Hello {userProfile.username}
       </PrimaryText>
       <View className="flex flex-row h-auto w-auto justify-center">
         <Icon name="ribbon" color={colors.primary} className="h-fit w-fit" />
         <PrimaryText className="text-2xl font-bold ml-2">
-          100000{/* will be from user profile evetually*/}
+          {userProfile.points ?? 0}
         </PrimaryText>
       </View>
       <ProfileView className="justify-start">

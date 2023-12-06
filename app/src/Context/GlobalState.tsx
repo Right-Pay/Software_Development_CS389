@@ -27,6 +27,7 @@ import LocationState from './LocationState';
 import AuthContext from './authContext';
 import Context from './context';
 const baseURL = Config.REACT_APP_API_URL;
+const points_key = Config.REACT_APP_POINTS_KEY;
 
 const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const {
@@ -34,6 +35,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     userToken,
     userProfile,
     refreshUserProfile,
+    updateUserProfile,
     addAuthError,
   } = React.useContext(AuthContext) as AuthContextType;
 
@@ -67,9 +69,52 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [categoryOptions, setCategoryOptions] = useState<Category[]>([]);
 
   const [selectedCard, setSelectedCard] = useState<Card>({} as Card);
-  const addPoints = (points: number) => {
+
+  const addPoints = async (points: number, tryAgain: boolean) => {
     if (!showAddPoints) {
       //Eventually change this to add points to user profile
+      try {
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Access-Control-Allow-Origin', '*');
+        headers.append('Authorization', `bearer ${userToken}`);
+
+        const raw = {
+          points: points,
+          points_key: points_key,
+        };
+
+        const response = await fetch(`${baseURL}/users/addUserPoints`, {
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify(raw),
+        });
+
+        const content = await response.json();
+
+        if (content.data.code === 'invalid_token') {
+          await refreshAuth0Token('addPoint');
+
+          if (tryAgain) {
+            setTimeout(() => {
+              addPoints(points, false);
+            }, 20);
+          }
+          setIsLoading(false);
+          return false;
+        }
+
+        if (!content.success) {
+          addAuthError(content.message);
+          return;
+        }
+
+        await refreshUserProfile();
+      } catch {
+        console.log('error');
+        addAuthError(ErrorMessages.undefined);
+      }
+
       setPointsToAdd(points);
       setshowAddPoints(true);
       setTimeout(() => {
@@ -278,7 +323,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       return false;
     }
     setIsLoading(false);
-    refreshUserProfile();
     return true;
   };
 
@@ -349,6 +393,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         }
         const retReward = content.data as Reward;
         if (add_to_card) {
+          await addPoints(10, true);
           if (selectedCard.rewards) {
             selectedCard.rewards.push(retReward);
           } else {
