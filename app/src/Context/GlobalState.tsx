@@ -273,7 +273,22 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       headers.append('Content-Type', 'application/json');
       headers.append('Access-Control-Allow-Origin', '*');
       headers.append('Authorization', `bearer ${userToken}`);
-
+      if (new_reward) {
+        if (reward.category_id === undefined || !reward.category_id) {
+          reward.new_category = reward.category;
+        }
+        if (reward.category_id) {
+          const matchingCategory = categoryOptions.find(
+            c => c.id === reward.category_id,
+          );
+          if (
+            reward.category?.specific_places !==
+            matchingCategory?.specific_places
+          ) {
+            reward.new_category = reward.category;
+          }
+        }
+      }
       const raw = new_reward
         ? {
             new_reward: reward,
@@ -306,6 +321,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         }
         if (!content.success) {
           console.log(content);
+          if (content.data.code === 'reward_already_linked') {
+            return true;
+          }
           addAuthError(content.message);
           return false;
         }

@@ -39,6 +39,7 @@ export interface Reward {
   type?: RewardType;
   crowd_source_score?: number;
   card_to_reward_link_id?: number;
+  new_category?: Category;
 }
 
 export enum RewardType {

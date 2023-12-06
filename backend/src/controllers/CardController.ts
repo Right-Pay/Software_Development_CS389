@@ -249,7 +249,7 @@ class CardController {
         throw new Error(i18n.t('error.cardNotFound'));
       }
       let crowdSourceScore = 0;
-
+      let returnReward;
       if (rewardId) {
         // verification
         const reward = await RewardModelInstance.get(rewardId);
@@ -268,12 +268,8 @@ class CardController {
             crowdSourceScore = matchingReward.crowd_source_score || 0;
           }
         }
+        returnReward = reward;
       } else {
-        newReward = {new_category: {
-          category_name: 'gas_station',
-          specific_places: null,
-        }, initial_percentage: 3.5, initial_limit: 2500, term_length_months: 1, fallback_percentage: 1};
-        // newReward = {category_id: 1, initial_percentage: 5, initial_limit: 2000, term_length_months: 1, fallback_percentage: 2.5};
         // create a new reward
         let categoryId = newReward.category_id;
         const newCategory: Category = newReward.new_category;
@@ -297,12 +293,13 @@ class CardController {
           const categoryCheck = await CategoryModelInstance.getByName(categoryData.category_name);
           if (categoryCheck && categoryCheck.specific_places === categoryData.specific_places) {
             categoryId = categoryCheck.id || -1;
+          } else {
+            const category = await CategoryModelInstance.create(categoryData);
+            categoryId = category.id || -1;
+            if (!category) {
+              throw new Error(i18n.t('error.categoryNotFound'));
+            }
           }
-          const category = await CategoryModelInstance.create(categoryData);
-          if (!category) {
-            throw new Error(i18n.t('error.categoryNotFound'));
-          }
-          categoryId = category.id || -1;
         }
 
         // create rewardDataObject
@@ -327,19 +324,23 @@ class CardController {
               crowdSourceScore = matchingReward.crowd_source_score || 0;
             }
           }
+          returnReward = rewardCheck;
         } else {
           // if it doesn't, create a new reward and link it to this card
           const reward = await RewardModelInstance.create(rewardData);
           rewardId = reward.id || -1;
+          returnReward = reward;
         }
       }
       
       let linkedReward;
+      let linkedUserReward;
       
       const user_card_reward_link = await RewardModelInstance.getByUserCard(userId, cardId);
       if (user_card_reward_link.length > 0) {
         const thisRewardLink = user_card_reward_link.find((link) => link.id === rewardId);
         if (thisRewardLink) {
+          response.data.code = 'reward_already_linked';
           throw new Error(i18n.t('error.rewardAlreadyLinked'));
         }
       }
@@ -347,19 +348,25 @@ class CardController {
         // increment crowd_source_score by 1
         linkedReward = await RewardModelInstance.incrementCrowdSourceScore(cardId, rewardId);
         // if crowd source score is below 3, add reward to user card reward link table
-        linkedReward = await CardModel.linkUserReward(userId, cardId, userToCardLinkId, linkedReward.id || 0);
+        linkedUserReward = await CardModel.linkUserReward(userId, cardId, userToCardLinkId, linkedReward.id || 0);
       } else {
         // create new link to reward in both user_card_reward and card_reward
         linkedReward = await CardModel.linkReward(cardId, rewardId, type);
-        console.log('linkedReward', linkedReward);
-        linkedReward = await CardModel.linkUserReward(userId, cardId, userToCardLinkId, linkedReward.id || 0);
+        linkedUserReward = await CardModel.linkUserReward(userId, cardId, userToCardLinkId, linkedReward.id || 0);
       }
-      response.data = linkedReward;
+      returnReward.crowd_source_score = linkedReward.crowd_source_score;
+      returnReward.card_to_reward_link_id = linkedReward.card_to_reward_link_id;
+      if (!returnReward.category) {
+        const returnCategory = await CategoryModelInstance.get(returnReward.category_id);
+        if (returnCategory) {
+          returnReward.category = returnCategory;
+        }
+      }
+      response['data'] = returnReward;
       res.json(response);
     } catch (error: any) {
       response.success = false;
       response.message = error.message;
-      response.data = {};
       res.status(500).json(response);
     }
     return response;

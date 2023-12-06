@@ -105,7 +105,7 @@ export class CardModel {
           // get rewards for card
           row.rewards = [];
           if (row.id) {
-            row.rewards = await RewardModelInstance.getByCard(row.id);
+            row.rewards = await RewardModelInstance.getByUserCard(user_id, row.id);
           }
         }
         return result.rows;

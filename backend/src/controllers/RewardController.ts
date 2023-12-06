@@ -62,8 +62,13 @@ class RewardController {
       if (!category) {
         throw new Error(i18n.t('error.bankNotFound'));
       }
-      const newReward = await RewardModel.create(rewardData);
-      response.data = newReward;
+      const rewardCheck = await RewardModel.getByAllFields(rewardData);
+      if (rewardCheck) {
+        response.data = rewardCheck;
+      } else {
+        const newReward = await RewardModel.create(rewardData);
+        response.data = newReward;
+      }
       res.status(201).json(response);
     } catch (error: any) {
       response.success = false;

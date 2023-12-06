@@ -109,14 +109,10 @@ const AddRewardForm: React.FC = () => {
         }
         // if add state, pass true to new reward bool
         // for now always creating a new reward as we don't allow editing rewards
-        if (await linkReward(newReward, true, true)) {
+        const newLink = await linkReward(newReward, true, true);
+        if (newLink) {
           setEditForm(EditForm.Category);
           setEditState(EditStates.Main);
-          if (selectedCard.rewards) {
-            selectedCard.rewards.push(newReward);
-          } else {
-            selectedCard.rewards = [newReward];
-          }
         }
       }
     } else if (EditStates.Main === editState) {
@@ -127,6 +123,7 @@ const AddRewardForm: React.FC = () => {
           if (await linkReward(reward, false, false)) {
             continue;
           } else {
+            console.log('error');
             errors = true;
           }
         }
@@ -480,7 +477,30 @@ const AddRewardForm: React.FC = () => {
           enabled={isKeyboardVisible}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}> */}
         <ModalOverlayView className="flex-auto text-left z-0 pt-20">
-          <TitleText className="mb-10 mt-4 w-9/12">{renderTitle()}</TitleText>
+          {editState !== EditStates.Main && editForm === EditForm.Category && (
+            <>
+              <TitleText className="mt-4 mb-2 w-9/12">
+                {renderTitle()}
+              </TitleText>
+              <View className="mb-4 w-11/12">
+                <PrimaryText className="text-center w-full text-md mb-2">
+                  At this time, we only support 1 category per reward. If you
+                  have a reward that has multiple categories, please add them as
+                  separate rewards. To select a category, start typing below and
+                  select the category from the dropdown.
+                </PrimaryText>
+              </View>
+            </>
+          )}
+          {editState !== EditStates.Main &&
+            editForm === EditForm.Percentages && (
+              <TitleText className="mt-4 mb-10 w-9/12">
+                {renderTitle()}
+              </TitleText>
+            )}
+          {editState === EditStates.Main && (
+            <TitleText className="mb-10 mt-4 w-9/12">Rewards</TitleText>
+          )}
           {editState === EditStates.Main && renderRewards()}
           {editState !== EditStates.Main && (
             <>
