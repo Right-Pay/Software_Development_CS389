@@ -19,8 +19,12 @@ import TitleText from '../../Common/TitleText';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
-  const { addAuthError, clearAuthErrors, AuthErrorComponent } =
-    React.useContext(authContext) as AuthContextType;
+  const {
+    addAuthError,
+    clearAuthErrors,
+    AuthErrorComponent,
+    isKeyboardVisible,
+  } = React.useContext(authContext) as AuthContextType;
   const { validateCardForm, setCardForms, CardForms } = React.useContext(
     Context,
   ) as AppContext;
@@ -45,29 +49,6 @@ const AddNewBankOption = (props: OptionsPropsType) => {
     setCardForms({ ...CardForms, AddBankOption: false });
     clearAuthErrors();
   };
-
-  //keyboard
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   useEffect(() => {
     clearAuthErrors();

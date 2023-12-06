@@ -4,6 +4,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
+import useColorsMode from '../../../Helpers/Colors';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
 import InputBox from '../../Common/InputBox';
@@ -24,9 +25,11 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const [username, setUsername] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [repeatedPassword, setRepeatedPassword] = React.useState<string>('');
+  const { colors } = useColorsMode();
 
   const { signUp, clearAuthErrors, AuthErrorComponent, userToken } =
     React.useContext(AuthContext) as AuthContextType;
+
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
@@ -38,13 +41,13 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
         onPress={() => {
           navigation.goBack();
         }}>
-        <Icon name="arrow-back" color="#4d654e" />
+        <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
           Back
         </PrimaryText>
       </Pressable>
     );
-  }, [navigation]);
+  }, [colors.primary, navigation]);
 
   return (
     <WrapperView className="pb-0">
@@ -76,7 +79,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           <PrimaryButton
             onPress={async () => {
               await signUp(email, username, password, repeatedPassword);
-              userToken && navigation.navigate('Login');
+              navigation.navigate('VerifyEmailScreen');
             }}>
             <PrimaryText type="secondary" className="text-xl">
               Sign Up

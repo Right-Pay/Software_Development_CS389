@@ -29,6 +29,11 @@ const AuthErrorMessages = {
   invalidPhone:
     'Invalid Phone Number\nMust be 10 digits in any acceptable phone number format',
   errorUpdatingUser: 'Error Updating User',
+  notVerified: 'Email Not Verified\nPlease Verify Your Email',
+  verifyEmail:
+    'Successfully Signed Up\nPlease Check Your Email to Verify Your Account',
+  addUsername:
+    'Your Username was Not Saved\nPlease Add a Username and Try Again',
 };
 
 enum CardFormEnum {
