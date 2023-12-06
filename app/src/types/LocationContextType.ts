@@ -10,4 +10,6 @@ export interface LocationContext {
   updateLocation: () => void;
   locationLoading: boolean;
   locationGrantType: boolean;
+  selectedLocation: Place | null;
+  updateSelectedLocation: (place: Place) => void;
 }
