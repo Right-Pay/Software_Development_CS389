@@ -320,6 +320,9 @@ const AddCardFullForm: React.FC = () => {
       removeAuthError(Consts.authErrorMessages.invalidCardBin);
       setCard({ ...card, card_bin: bin });
     };
+    const classes =
+      'absolute right-2 mb-auto mt-auto text-xl rounded-full' +
+      (themeMode === 'dark' ? ' bg-light-green' : ' bg-dark-green');
 
     return (
       <>
@@ -333,7 +336,7 @@ const AddCardFullForm: React.FC = () => {
             onChange={updateBin}
           />
           {card.card_brand_name && card.card_bin > 0 && (
-            <View className="absolute right-2 mb-auto mt-auto text-xl bg-light-green rounded-full">
+            <View className={classes}>
               <PrimaryText type="secondary" className="text-right p-2">
                 {card.card_brand_name}
               </PrimaryText>

@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { NavigationTabProp } from 'react-navigation-tabs';
 import locationContext from '../../../Context/locationContext';
 import useColorsMode from '../../../Helpers/Colors';
+import { Card, Reward } from '../../../types/CardType';
 import { LocationContext } from '../../../types/LocationContextType';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
@@ -20,6 +21,30 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
   // use this to navigate off the screen if needed (maybe in the future we need to navigate to the card screen)
   const navigation =
     useNavigation<NavigationTabProp<ReactNavigation.RootParamList>>();
+
+  const renderReward = (reward: Reward) => {
+    return (
+      <View>
+        <PrimaryText className="ml-2 text-lg">
+          Cashback Percent: {reward.initial_percentage}
+        </PrimaryText>
+      </View>
+    );
+  };
+
+  const renderCard = (card: Card) => {
+    console.log(card.rewards);
+    return (
+      card.rewards &&
+      card.rewards.length > 0 && (
+        <View>
+          <PrimaryText className="ml-2 text-lg">{card.card_bin}</PrimaryText>
+          {card.rewards && card.rewards.map(reward => renderReward(reward))}
+        </View>
+      )
+    );
+  };
+
   return (
     <View className="flex-1 w-full h-full pb-6">
       <TitleText className="text-center text-3xl">
@@ -28,6 +53,8 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
       <PrimaryText className="text-center text-xl">
         {selectedLocation?.formattedAddress}
       </PrimaryText>
+      {selectedLocation?.cardRewards &&
+        selectedLocation?.cardRewards.map(card => renderCard(card))}
     </View>
   );
 };

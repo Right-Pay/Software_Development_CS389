@@ -9,7 +9,9 @@ import { PermissionsAndroid, Platform } from 'react-native';
 import Config from 'react-native-config';
 import Geolocation from 'react-native-geolocation-service';
 import { AppContext } from '../types/AppContextType';
+import { AuthContextType } from '../types/AuthContextType';
 import { Location, Place, PlaceLocation } from '../types/Location';
+import authContext from './authContext';
 import context from './context';
 import LocationContext from './locationContext';
 
@@ -19,6 +21,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [address, setAddress] = useState<Place | undefined>(undefined);
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
   const { appStateVisible } = useContext(context) as AppContext;
+  const { userProfile } = useContext(authContext) as AuthContextType;
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<Place | null>(null);
 
@@ -318,6 +321,47 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       setLocationLoading(false);
     });
   }, [requestLocationPermission]);
+
+  const fetchRewards = useCallback(async () => {
+    places?.forEach(place => {
+      const placeType = place.primaryType.toLowerCase();
+      const placeSecondaryTypes = place.types;
+      const cards = userProfile.cards?.filter(card => {
+        const filteredCardRewards = card?.rewards?.filter(reward => {
+          const rewardType = reward.category?.category_name.toLowerCase();
+          const rewardSecondaryTypes = reward.category?.specific_places;
+          rewardSecondaryTypes?.forEach(type => {
+            type.toLowerCase();
+          });
+          if (
+            rewardType === placeType ||
+            (rewardType &&
+              (rewardType?.includes(placeType) ||
+                placeType?.includes(rewardType))) ||
+            reward.category?.category_name === 'All'
+          ) {
+            return true;
+          } else if (rewardSecondaryTypes) {
+            return rewardSecondaryTypes.some(type => {
+              return placeSecondaryTypes.includes(type.toLowerCase());
+            });
+          } else {
+            return false;
+          }
+        });
+        if (filteredCardRewards && filteredCardRewards.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      place.cardRewards = cards;
+    });
+  }, [places, userProfile.cards]);
+
+  useEffect(() => {
+    fetchRewards();
+  }, [places, fetchRewards, userProfile.cards]);
 
   const updateSelectedLocation = useCallback(
     (newSelectedLocation: Place | null) => {
