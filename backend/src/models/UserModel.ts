@@ -144,7 +144,9 @@ export class UserModel {
         throw new Error('error.userCardNotLinked');
       }
       client.release();
-      return cardCheck;
+      return {...cardCheck,
+        exp_date: exp_date
+      };
     } catch (err: any) {
       console.log('DB Error', err);
       const userFriendlyError = i18n.t([err.message, 'error.default']);

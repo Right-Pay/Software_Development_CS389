@@ -559,9 +559,11 @@ const AddCardFullForm: React.FC = () => {
           )}
           {editState === EditStates.Invalid && (
             <>
-              <TitleText className="mb-10 w-9/12">
-                We Do Not Support This Card Yet
-              </TitleText>
+              <TitleText className="mb-10 mt-4 w-9/12">Oh No!</TitleText>
+              <PrimaryText className="text-center text-lg w-9/12">
+                Looks like we don't support this card yet. Please try again
+                later!
+              </PrimaryText>
               {backButton()}
             </>
           )}
