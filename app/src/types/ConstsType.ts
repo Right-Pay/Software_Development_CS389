@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from './CardType';
+import { Place } from './Location';
 import { Profile } from './ProfileType';
 
 interface hashType {
@@ -15,6 +16,7 @@ interface ConstsType {
   dummyCardRewards: any[];
   cardItemSeparatorWidth: number;
   addCard: Card;
+  devLocations: Place[];
 }
 
 export default ConstsType;

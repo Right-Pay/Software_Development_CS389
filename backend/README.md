@@ -153,7 +153,7 @@ Returns User's Updated Profile in format specified in [userTypes.ts](./src/types
 
 Links a card to a user's profile, returns the linked card 
 
-*If you need to create a new card **and** link it to this user, you can use the new_card object instead which would be a json object with the new card, **this is untested***
+*If you need to create a new card **and** link it to this user, you can use the new_card object instead which would be a json object with the new card*
 
 #### Delete User
 
@@ -212,6 +212,27 @@ Returns Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
 | `card_country`  | `string` | **Required** Card Country                                   |
 
 Returns Created Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
+
+#### Link Reward
+
+```http
+  PUT /api/cards/linkReward
+```
+
+| Parameter                 | Type     | Description                                                        |
+| :------------------------ | :------- | :----------------------------------------------------------------- |
+| `reward_id`               | `number` | **This or new_reward Required** Reward ID                          |
+| `new_reward`              | `Reward` | **Optional if Reward ID is used** A new Reward to use when linking |
+| `type `                   | `string` | **Required** Reward type (only support Cashback as of 12/6/2023)   |
+| `card_id`                 | `number` | **Required** Card ID to link reward to                             |
+| `user_to_card_link_id`    | `number` | **Required** ID of user card link in db                            |
+
+Links a reward to a card and a user. It will add new rewards to cards or increment the crowd source score of the card reward link.
+As for the user, it will link the card to the user's cards reward table which is seperate from the general card rewards table.
+This allows for crowd sourcing. 
+
+*If you need to create a new reward **and** link it to this card, you can use the new_reward object instead which would be a json object with the new reward*
+*If you need to create a new category **and** link it to the reward which is being linked to this card, you can use new_category in the new_reward obj*
 
 ### Bank API
 

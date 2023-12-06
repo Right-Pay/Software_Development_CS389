@@ -17,4 +17,5 @@ export interface Card {
   card_brand_name?: string;
   exp_date?: string;
   date_card_linked?: string;
+  user_to_card_link_id?: number;
 }

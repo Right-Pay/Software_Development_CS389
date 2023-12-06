@@ -4,10 +4,12 @@ import i18n from '../config/i18n';
 import { Bank } from "../types/bankTypes";
 import { Brand } from "../types/brandTypes";
 import { Card } from "../types/cardTypes";
+import { Category } from "../types/categoryTypes";
 import { User } from "../types/userTypes";
 import BankModelInstance from "./BankModel";
 import BrandModelInstance from "./BrandModel";
 import CardModelInstance from "./CardModel";
+import CategoryModelInstance from "./CategoryModel";
 
 export class UserModel {
 
@@ -44,6 +46,7 @@ export class UserModel {
         const user: User = result.rows[0];
         const banks: Bank[] = await BankModelInstance.getAll();
         const brands: Brand[] = await BrandModelInstance.getAll();
+        const categories: Category[] = await CategoryModelInstance.getAll();
         let userCards: Card[] = await CardModelInstance.getByUser(user.id);
 
         user.cards = userCards;
@@ -59,7 +62,6 @@ export class UserModel {
             if (brand) {
               card.card_brand_name = brand.brand_name;
             }
-            card.rewards = [];
           });
         }
         return user;

@@ -11,6 +11,9 @@ router.get("/rapidapi", checkJwt, async (req: Request, res: Response) => await C
 
 // router.get("/all", checkJwt, async (req: Request, res: Response) => await CardController.getAllCards(req, res))
 
+// Link Card to Reward
+router.put("/linkReward", checkJwt, async (req: Request, res: Response) => await CardController.linkRewardToCard(req, res))
+
 // Register Card
 router.post("/", checkJwt, async (req: Request, res: Response) => {
   try {

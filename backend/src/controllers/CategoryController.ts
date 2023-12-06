@@ -101,39 +101,39 @@ class CategoryController {
     return response;
   }
 
-  async deleteCategory(req: Request, res: Response) {
-    const response: IJsonResponse = {
-      message: 'TLX API - Delete Category',
-      success: true,
-      data: {}
-    };
-    if (!req.auth?.payload.sub) {
-      response.success = false;
-      response.message = i18n.t('error.unauthorized');
-      res.status(401).json(response);
-      return;
-    }
-    const categoryId = req.body.category_id;
-    if (!categoryId) {
-      response.success = false;
-      response.message = i18n.t('error.missingFields');
-      res.status(400).json(response);
-      return;
-    }
-    try {
-      throw new Error(i18n.t('error.notAllowedAtThisTime'));
-      // const categoryDeleted = await CategoryModel.delete(categoryId);
-      // if (categoryDeleted) {
-      //   response.data = categoryDeleted;
-      //   res.json(response);
-      // }
-    } catch (error: any) {
-      response.success = false;
-      response.message = error.message;
-      response.data = {};
-      res.status(500).json(response);
-    }
-  }
+  // async deleteCategory(req: Request, res: Response) {
+  //   const response: IJsonResponse = {
+  //     message: 'TLX API - Delete Category',
+  //     success: true,
+  //     data: {}
+  //   };
+  //   if (!req.auth?.payload.sub) {
+  //     response.success = false;
+  //     response.message = i18n.t('error.unauthorized');
+  //     res.status(401).json(response);
+  //     return;
+  //   }
+  //   const categoryId = req.body.category_id;
+  //   if (!categoryId) {
+  //     response.success = false;
+  //     response.message = i18n.t('error.missingFields');
+  //     res.status(400).json(response);
+  //     return;
+  //   }
+  //   try {
+  //     throw new Error(i18n.t('error.notAllowedAtThisTime'));
+  //     // const categoryDeleted = await CategoryModel.delete(categoryId);
+  //     // if (categoryDeleted) {
+  //     //   response.data = categoryDeleted;
+  //     //   res.json(response);
+  //     // }
+  //   } catch (error: any) {
+  //     response.success = false;
+  //     response.message = error.message;
+  //     response.data = {};
+  //     res.status(500).json(response);
+  //   }
+  // }
 }
 
 export default new CategoryController();

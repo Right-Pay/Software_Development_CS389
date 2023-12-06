@@ -69,7 +69,6 @@ const DropdownComponent = (props: DropdownProps) => {
         setValue={setValue}
         setItems={setItems}
         listMode={listMode}
-        theme={themeMode === 'dark' ? 'DARK' : 'LIGHT'}
         modalProps={{
           animationType: 'slide',
           transparent: true,
@@ -142,5 +141,5 @@ export interface OptionsPropsType {
 export interface OptionsProps {
   label: string;
   value: string;
-  labelStyle?: {};
+  labelStyle?: any;
 }

@@ -4,8 +4,13 @@ import i18n from '../config/i18n';
 import BankModelInstance from '../models/BankModel';
 import BrandModelInstance from '../models/BrandModel';
 import CardModel, { CardModelInstance } from '../models/CardModel';
+import CategoryModelInstance from '../models/CategoryModel';
+import RewardModelInstance from '../models/RewardModel';
+import UserModelInstance from '../models/UserModel';
 import { Card } from '../types/cardTypes';
+import { Category } from '../types/categoryTypes';
 import { IJsonResponse } from '../types/jsonResponse';
+import { Reward } from '../types/rewardTypes';
 
 class CardController {
   async getCard(req: Request, res: Response) {
@@ -207,22 +212,182 @@ class CardController {
     return response;
   }
 
-  async deleteCard(req: Request, res: Response) {
+  async linkRewardToCard(req: Request, res: Response) {
     const response: IJsonResponse = {
-      message: 'TLX API - Delete Card',
+      message: 'TLX API - Link Reward to Card',
       success: true,
       data: {}
     };
     const cardId = req.body.card_id;
+    const userToCardLinkId = req.body.user_to_card_link_id;
+    const authId = req.auth?.payload.sub || '';
+    const userCheck = await UserModelInstance.get(authId);
+    if (userCheck === null) {
+      throw new Error('error.userNotFound');
+    }
+    const userId = userCheck.id;
+    let rewardId = req.body.reward_id;
+    let newReward = req.body.new_reward;
+    const type = req.body.type;
+    if (!cardId || (!rewardId && !newReward) || !type || !userToCardLinkId) {
+      response.success = false;
+      response.message = i18n.t('error.missingFields');
+      response.data = {
+        card_id: cardId || 'missing',
+        reward_id: rewardId || 'missing',
+        new_reward: newReward || 'missing (optional)',
+        type: type || 'missing',
+        user_to_card_link_id: userToCardLinkId || 'missing',
+      }
+      res.status(400).json(response);
+      return;
+    }
     try {
-      throw new Error(i18n.t('error.notAllowedAtThisTime'));
+      // verification 
+      const card = await CardModel.get(cardId);
+      if (!card) {
+        throw new Error(i18n.t('error.cardNotFound'));
+      }
+      let crowdSourceScore = 0;
+
+      if (rewardId) {
+        // verification
+        const reward = await RewardModelInstance.get(rewardId);
+        console.log('reward', reward);
+        if (!reward) {
+          throw new Error(i18n.t('error.rewardNotFound'));
+        }
+
+        // if reward is linked to this card, get the crowd_source_score
+        const cardRewards = await RewardModelInstance.getByCard(cardId);
+        console.log('cardRewards', cardRewards);
+        if (cardRewards.length > 0) {
+          const matchingReward = cardRewards.find((cardReward) => Number(cardReward.id) === Number(rewardId));
+          if (matchingReward) {
+            console.log('matchingReward', matchingReward);
+            crowdSourceScore = matchingReward.crowd_source_score || 0;
+          }
+        }
+      } else {
+        newReward = {new_category: {
+          category_name: 'gas_station',
+          specific_places: null,
+        }, initial_percentage: 3.5, initial_limit: 2500, term_length_months: 1, fallback_percentage: 1};
+        // newReward = {category_id: 1, initial_percentage: 5, initial_limit: 2000, term_length_months: 1, fallback_percentage: 2.5};
+        // create a new reward
+        let categoryId = newReward.category_id;
+        const newCategory: Category = newReward.new_category;
+        // verification
+        if (!categoryId && !newCategory) {
+          throw new Error(i18n.t('error.missingFields'));
+        }
+
+        if (categoryId) {
+          // verification
+          const category = await CategoryModelInstance.get(newReward.category_id);
+          if (!category) {
+            throw new Error(i18n.t('error.categoryNotFound'));
+          }
+        } else {
+          // create new category
+          const categoryData: Category = {
+            category_name: newCategory.category_name,
+            specific_places: newCategory.specific_places,
+          };
+          const categoryCheck = await CategoryModelInstance.getByName(categoryData.category_name);
+          if (categoryCheck && categoryCheck.specific_places === categoryData.specific_places) {
+            categoryId = categoryCheck.id || -1;
+          }
+          const category = await CategoryModelInstance.create(categoryData);
+          if (!category) {
+            throw new Error(i18n.t('error.categoryNotFound'));
+          }
+          categoryId = category.id || -1;
+        }
+
+        // create rewardDataObject
+        const rewardData: Reward = {
+          category_id: categoryId,
+          initial_percentage: newReward.initial_percentage,
+          initial_limit: newReward.initial_limit,
+          term_length_months: newReward.term_length_months,
+          fallback_percentage: newReward.fallback_percentage,
+          type: type,
+        };
+
+        // check to see if reward already exists
+        const rewardCheck = await RewardModelInstance.getByAllFields(rewardData);
+        if (rewardCheck) {
+          // if it does, use that reward id and check to see if it's linked to this card, if it is get the crowd_source_score
+          rewardId = rewardCheck.id || -1;
+          const cardRewards = await RewardModelInstance.getByCard(cardId);
+          if (cardRewards.length > 0) {
+            const matchingReward = cardRewards.find((cardReward) => cardReward.id === rewardId);
+            if (matchingReward) {
+              crowdSourceScore = matchingReward.crowd_source_score || 0;
+            }
+          }
+        } else {
+          // if it doesn't, create a new reward and link it to this card
+          const reward = await RewardModelInstance.create(rewardData);
+          rewardId = reward.id || -1;
+        }
+      }
+      
+      let linkedReward;
+      
+      const user_card_reward_link = await RewardModelInstance.getByUserCard(userId, cardId);
+      if (user_card_reward_link.length > 0) {
+        const thisRewardLink = user_card_reward_link.find((link) => link.id === rewardId);
+        if (thisRewardLink) {
+          throw new Error(i18n.t('error.rewardAlreadyLinked'));
+        }
+      }
+      if (crowdSourceScore > 0) {
+        // increment crowd_source_score by 1
+        linkedReward = await RewardModelInstance.incrementCrowdSourceScore(cardId, rewardId);
+        // if crowd source score is below 3, add reward to user card reward link table
+        linkedReward = await CardModel.linkUserReward(userId, cardId, userToCardLinkId, linkedReward.id || 0);
+      } else {
+        // create new link to reward in both user_card_reward and card_reward
+        linkedReward = await CardModel.linkReward(cardId, rewardId, type);
+        console.log('linkedReward', linkedReward);
+        linkedReward = await CardModel.linkUserReward(userId, cardId, userToCardLinkId, linkedReward.id || 0);
+      }
+      response.data = linkedReward;
+      res.json(response);
     } catch (error: any) {
       response.success = false;
       response.message = error.message;
       response.data = {};
       res.status(500).json(response);
     }
+    return response;
   }
+
+  async unlinkRewardFromCard(req: Request, res: Response) {
+    // go through normal verification
+    // if reward is linked to this card, get the crowd_source_score
+    // decrement crowd source, if crowd source gets decremented to 0, remove hte reward from the card
+    // remove the reward from the user card reward link table
+  }
+
+  // async deleteCard(req: Request, res: Response) {
+  //   const response: IJsonResponse = {
+  //     message: 'TLX API - Delete Card',
+  //     success: true,
+  //     data: {}
+  //   };
+  //   const cardId = req.body.card_id;
+  //   try {
+  //     throw new Error(i18n.t('error.notAllowedAtThisTime'));
+  //   } catch (error: any) {
+  //     response.success = false;
+  //     response.message = error.message;
+  //     response.data = {};
+  //     res.status(500).json(response);
+  //   }
+  // }
 
   // async addCardsFromCSV(req: Request, res: Response) {
   //   const response: IJsonResponse = {

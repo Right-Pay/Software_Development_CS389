@@ -5,7 +5,7 @@ import {
   Pressable,
   ScrollView,
   TextInput,
-  View
+  View,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, { Marker } from 'react-native-maps';
@@ -55,10 +55,6 @@ export const ProfileView = styled(
 
 //Settings components
 
-export const SettingsInputBox = styled(
-  TextInput,
-  'px-2 py-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-dark-green bg-white',
-);
 export const SettingsCardList = styled(View, 'flex-1 flex-col w-full h-full');
 export const SettingsCardView = styled(
   View,

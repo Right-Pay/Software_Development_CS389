@@ -9,7 +9,7 @@ export class CategoryModel {
     try {
       const client = await dbPool.connect();
       const categoryCheck = await this.getByName(category.category_name);
-      if (categoryCheck) {
+      if (categoryCheck && categoryCheck.specific_places === category.specific_places) {
         throw new Error('error.categoryFound');
       }
       if (category.specific_places instanceof String) {

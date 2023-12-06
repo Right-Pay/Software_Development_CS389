@@ -212,7 +212,7 @@ const AddCardFullForm: React.FC = () => {
         setEditForm(EditForm.Bank);
       } else if (editForm === EditForm.Bank) {
         if (card.card_bank_id === 0) {
-          addAuthError(Consts.authErrorMessages.invalidCardBank);
+          addAuthError(Consts.authErrorMessages.invalidBankName);
           return;
         }
         setEditForm(EditForm.Level);
