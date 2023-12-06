@@ -90,10 +90,7 @@ export const BankOptionsView = styled(
 );
 
 //Rewards components
-export const RewardsView = styled(
-  View,
-  'flex-1 flex-col ml-20 mr-20 mb-2 mt-10',
-);
+export const RewardsView = styled(View, 'flex-1 flex-col mb-2 mt-10');
 
 //Location components
 export const NearbyLocationScrollView = styled(FlatList, 'w-full h-1/3');

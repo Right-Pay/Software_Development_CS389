@@ -4,6 +4,7 @@ import {
   CardBrand,
   CardFormDetails,
   CardFormsType,
+  Category,
   Reward,
 } from './CardType';
 
@@ -16,6 +17,11 @@ export interface AppContext {
   ) => Promise<Card | false>;
   linkCard: (_card: Card, _newCard: boolean) => Promise<boolean>;
   unlinkCard: (_Card: Card) => void;
+  linkReward: (
+    _reward: Reward,
+    _newReward: boolean,
+    _addToCard: boolean,
+  ) => Promise<boolean>;
   addNewReward: (_reward: Reward) => void;
   removeReward: (_reward: Reward) => void;
   isLoading: boolean;
@@ -23,6 +29,7 @@ export interface AppContext {
   bankOptions: CardBank[];
   setBankOptions: (_bankOptions: CardBank[]) => void;
   brandOptions: CardBrand[];
+  categoryOptions: Category[];
   CardForms: CardFormsType;
   setCardForms: (_CardForms: CardFormsType) => void;
   validateCardForm: (_formDetails: CardFormDetails) => string[];
@@ -34,6 +41,7 @@ export interface AppContext {
   setBottomSheetModal: (_bottomSheetModal: BottomSheetModalType) => void;
   bottomSheetModal: BottomSheetModalType;
   getCardTypeFromBin: (_cardBin: number) => string;
+  selectedCard: Card;
 }
 
 export enum BottomSheetTypes {

@@ -11,5 +11,6 @@ export interface Profile {
   zip: string;
   subscribed: boolean;
   cards: Card[];
+  points?: number;
   // any more things we need to add to the profile?
 }

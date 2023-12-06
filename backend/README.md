@@ -125,6 +125,18 @@ Returns User's Profile in format specified in [userTypes.ts](./src/types/userTyp
 
 Returns User's Created Profile in format specified in [userTypes.ts](./src/types/userTypes.ts)
 
+#### Add User Points
+
+```http
+  PUT /api/users/addUserPoints
+```
+
+| Parameter    | Type     | Description                       |
+| :----------- | :------- | :-------------------------------- |
+| `points_key` | `string` | **Required** Amount of points     |
+
+Returns User's Updated Profile in format specified in [userTypes.ts](./src/types/userTypes.ts)
+
 #### Update User
 
 ```http
@@ -164,7 +176,6 @@ Links a card to a user's profile, returns the linked card
 Uses auth token to determine which user to delete (only logged in user can delete themself)
 
 Returns whether the user was deleted or not in the data object (could be success true but the user wasn't deleted)
-
 
 #### Unlink Card
 

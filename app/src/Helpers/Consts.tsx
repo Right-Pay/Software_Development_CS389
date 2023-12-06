@@ -35,6 +35,8 @@ const AuthErrorMessages = {
   addUsername:
     'Your Username was Not Saved\nPlease Add a Username and Try Again',
   errorGettingUser: 'Error Getting User',
+  invalidCategory: 'Invalid Category',
+  invalidInitialPercentage: 'Invalid Initial Percentage',
 };
 
 enum CardFormEnum {

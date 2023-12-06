@@ -20,6 +20,7 @@ import {
   CardBrand,
   CardFormDetails,
   CardFormsType,
+  Category,
   Reward,
 } from '../types/CardType';
 import LocationState from './LocationState';
@@ -46,7 +47,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
 
   const [CardForms, setCardForms] = useState<CardFormsType>({
     Full: false,
-    Review: false,
     Rewards: false,
     AddBankOption: false,
   });
@@ -55,6 +55,10 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [bankOptions, setBankOptions] = useState<CardBank[]>([]);
 
   const [brandOptions, setBrandOptions] = useState<CardBrand[]>([]);
+
+  const [categoryOptions, setCategoryOptions] = useState<Category[]>([]);
+
+  const [selectedCard, setSelectedCard] = useState<Card>({} as Card);
 
   /* Card Add Flow
    * 1. Search for card using 6 digit number
@@ -228,10 +232,12 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         setNewCardBin(0o0);
         setCardForms({
           ...CardForms,
-          Review: false,
           Full: false,
+          Rewards: true,
         });
+        console.log('Setting to rewards form');
         const retCard = content.data as Card;
+        console.log(retCard);
         const cardWithBankAndBrand = {
           ...retCard,
           card_bank_name:
@@ -241,7 +247,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
             brandOptions.find(b => b.id === +(retCard.card_brand_id as number))
               ?.brand_name ?? '',
         } as Card;
-        userProfile.cards.push(cardWithBankAndBrand);
+        setSelectedCard(cardWithBankAndBrand);
         return true;
       } catch (e) {
         console.log(e);
@@ -254,6 +260,73 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     }
     setIsLoading(false);
     return true;
+  };
+
+  const linkReward = async (
+    reward: Reward,
+    new_reward: boolean,
+    add_to_card: boolean,
+  ): Promise<boolean> => {
+    setIsLoading(true);
+    const linkToReward = async (tryAgain: boolean) => {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      headers.append('Authorization', `bearer ${userToken}`);
+
+      const raw = new_reward
+        ? {
+            new_reward: reward,
+            card_id: selectedCard?.id,
+            user_to_card_link_id: selectedCard?.user_to_card_link_id,
+            type: 'cashback',
+          }
+        : {
+            reward_id: reward.id,
+            card_id: selectedCard?.id,
+            user_to_card_link_id: selectedCard?.user_to_card_link_id,
+            type: 'cashback',
+          };
+
+      try {
+        const response = await fetch(`${baseURL}cards/linkReward`, {
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify(raw),
+        });
+        const content = await response.json();
+        if (content.data.code === 'invalid_token') {
+          await refreshAuth0Token('linkReward');
+          if (tryAgain) {
+            setTimeout(() => {
+              linkToReward(false);
+            }, 20);
+          }
+          return false;
+        }
+        if (!content.success) {
+          console.log(content);
+          addAuthError(content.message);
+          return false;
+        }
+        const retReward = content.data as Reward;
+        if (add_to_card) {
+          if (selectedCard.rewards) {
+            selectedCard.rewards.push(retReward);
+          } else {
+            selectedCard.rewards = [retReward];
+          }
+        }
+        return true;
+      } catch (e) {
+        console.log(e);
+        addAuthError(ErrorMessages.undefined);
+        return false;
+      }
+    };
+    const success = await linkToReward(false);
+    setIsLoading(false);
+    return success;
   };
 
   const unlinkCard = async (card: Card): Promise<boolean> => {
@@ -578,12 +651,27 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     setBrandOptions(Array.from(new Set(content.data)));
   }, [userToken]);
 
+  const fetchCategories = useCallback(async () => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Authorization', `bearer ${userToken}`);
+
+    const response = await fetch(`${baseURL}categories/all`, {
+      method: 'GET',
+      headers: headers,
+    });
+    const content = await response.json();
+    setCategoryOptions(content.data);
+  }, [userToken]);
+
   useEffect(() => {
     if (userToken) {
       fetchBanks();
       fetchBrands();
+      fetchCategories();
     }
-  }, [fetchBanks, fetchBrands, userToken]);
+  }, [fetchBanks, fetchBrands, fetchCategories, userToken]);
 
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
@@ -606,6 +694,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         findCard,
         findCardByAPI,
         linkCard,
+        linkReward,
         unlinkCard,
         addNewReward,
         removeReward,
@@ -614,6 +703,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         bankOptions,
         setBankOptions,
         brandOptions,
+        categoryOptions,
         CardForms,
         setCardForms,
         validateCardForm,
@@ -625,6 +715,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         setBottomSheetModal,
         bottomSheetModal,
         getCardTypeFromBin,
+        selectedCard,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>

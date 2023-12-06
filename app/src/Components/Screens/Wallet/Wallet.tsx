@@ -13,7 +13,6 @@ import {
   AddCardIcon,
   CardItemSeperator,
   CardView,
-  RewardsView,
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
@@ -27,6 +26,7 @@ import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import AddCardFullForm from './AddCardFullForm';
+import AddRewardForm from './AddRewardForm';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -88,10 +88,27 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   const renderReward = (item: Reward) => {
     return (
-      <RewardsView>
-        <PrimaryText className="text-left">{item.reward_name}</PrimaryText>
-        <PrimaryText>{item.reward_description}</PrimaryText>
-      </RewardsView>
+      <View className="flex-1 flex-col mb-2 mt-10 w-full">
+        <PrimaryText className="text-left">
+          Category: {item.category?.category_name}
+        </PrimaryText>
+        {item.category?.specific_places && (
+          <PrimaryText className="text-left">
+            Specific Places: {item.category?.specific_places.join(', ')}
+          </PrimaryText>
+        )}
+        <PrimaryText className="text-left">
+          Initial Percentage: {item.initial_percentage}
+        </PrimaryText>
+        <PrimaryText>Initial Limit: {item.initial_limit}</PrimaryText>
+        <PrimaryText>
+          Term Length (time until limit resets): {item.term_length_months} Month
+          {item.term_length_months > 1 ? 's' : ''}
+        </PrimaryText>
+        <PrimaryText>
+          Fallback Percentage: {item.fallback_percentage}
+        </PrimaryText>
+      </View>
     );
   };
 
@@ -128,6 +145,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   return (
     <WrapperView>
       <AddCardFullForm />
+      <AddRewardForm />
       <TitleText className="mt-10">Wallet</TitleText>
       <View className="aspect-video mt-10 w-full">
         <StyledList
@@ -151,15 +169,15 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
       <View className="aspect-video mt-10 w-full justify-center items-center">
         <FlatList
           className="w-full text-center w-3/4 p-2"
-          data={[]} //This will need to be done
+          data={currentViewedCard[0].rewards} //This will need to be done
           ListHeaderComponent={
             currentViewedCard.filter(i => i.id === -1).length === 0 ? (
               <TitleText>Rewards</TitleText>
             ) : null
           }
           showsVerticalScrollIndicator={true}
-          keyExtractor={item => (item as Reward).reward_name.toString()}
-          renderItem={({ item }) => renderReward(item as Reward)}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => renderReward(item)}
           ItemSeparatorComponent={itemSeparatorComponent}
         />
       </View>

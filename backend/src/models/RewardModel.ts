@@ -2,6 +2,7 @@
 import { dbPool } from "../config/config";
 import i18n from '../config/i18n';
 import { Reward } from "../types/rewardTypes";
+import CategoryModelInstance from "./CategoryModel";
 
 export class RewardModel {
 
@@ -76,6 +77,11 @@ export class RewardModel {
       const result = await client.query(sql, values);
       client.release();
       if (result.rows.length) {
+        for (const row of result.rows as Reward[]) {
+          // get rewards for card
+          const category = await CategoryModelInstance.get(row.category_id);
+          row.category = category || undefined;
+        }
         return result.rows;
       } else {
         return [];
@@ -98,7 +104,12 @@ export class RewardModel {
       const values = [card_id, user_id];
       const result = await client.query(sql, values);
       client.release();
-      if (result.rows.length) {
+      if (result.rows.length as number) {
+        for (const row of result.rows as Reward[]) {
+          // get rewards for card
+          const category = await CategoryModelInstance.get(row.category_id);
+          row.category = category || undefined;
+        }
         return result.rows;
       } else {
         return [];

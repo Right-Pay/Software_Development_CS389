@@ -223,19 +223,22 @@ const AddCardFullForm: React.FC = () => {
         }
         // if add state, pass true to new card bool
         if (await linkCard(card, EditStates.Add === editState)) {
-          closeModal();
+          closeModal(true);
         }
       }
     }
   };
 
-  const closeModal = useCallback(() => {
-    setCardForms({ ...CardForms, Full: false });
-    setCard({} as Card);
-    setBankSearch('');
-    clearAuthErrors();
-    setEditState(EditStates.Bin);
-  }, [CardForms, EditStates, clearAuthErrors, setCardForms]);
+  const closeModal = useCallback(
+    (rewards = false) => {
+      setCardForms({ ...CardForms, Full: false, Rewards: rewards });
+      setCard({} as Card);
+      setBankSearch('');
+      clearAuthErrors();
+      setEditState(EditStates.Bin);
+    },
+    [CardForms, EditStates, clearAuthErrors, setCardForms],
+  );
 
   const renderBankOption = useCallback(
     ({ item }: { item: CardBank }) => (
@@ -458,7 +461,7 @@ const AddCardFullForm: React.FC = () => {
     return (
       <Pressable
         className="flex-1 flex-row pl-4 h-10 justify-start items-center text-center top-10 left-0 absolute"
-        onPress={closeModal}>
+        onPress={() => closeModal}>
         <Icon name="close-outline" color="#4d654e" />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
           Close
@@ -516,7 +519,7 @@ const AddCardFullForm: React.FC = () => {
       animationType="slide"
       transparent={false}
       visible={CardForms.Full}
-      onRequestClose={closeModal}>
+      onRequestClose={() => closeModal}>
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();

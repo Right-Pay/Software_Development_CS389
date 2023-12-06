@@ -275,6 +275,52 @@ class UserController {
     }
     return response;
   }
+
+  async addUserPoints(req: Request, res: Response) {
+    const response: IJsonResponse = {
+      message: 'TLX API - Add User Points',
+      success: true,
+      data: {}
+    };
+    if (!req.auth?.payload.sub) {
+      response.success = false;
+      response.message = i18n.t('error.default');
+      res.status(401).json(response);
+      return;
+    }
+    const userId = req.auth?.payload.sub;
+    const points = req.body.points;
+    const pointsKey = req.body.points_key;
+    if (pointsKey !== process.env.POINTS_KEY) {
+      response.success = false;
+      response.message = i18n.t('error.invalidPointsKey');
+      res.status(401).json(response);
+      return;
+    }
+    if (!points || Number.isNaN(Number(points)) || Number(points) < 0) {
+      response.success = false;
+      response.message = i18n.t('error.missingFields');
+      res.status(400).json(response);
+      return;
+    }
+    try {
+      const userUpdated = await UserModel.add_user_points(userId, points);
+      if (userUpdated) {
+        response.data = userUpdated;
+        res.status(201).json(response);
+      } else {
+        response.success = false;
+        response.message = i18n.t('error.default');
+        res.status(500).json(response);
+      }
+    } catch (error: any) {
+      response.success = false;
+      response.message = error.message;
+      response.data = {};
+      res.status(500).json(response);
+    }
+    return response;
+  }
 }
 
 export default new UserController();

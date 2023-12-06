@@ -13,6 +13,7 @@ export interface Card {
   // used when returning a card linked to a user
   rewards?: Reward[];
   date_card_linked?: string;
+  user_to_card_link_id?: number;
 }
 
 export interface CardBrand {
@@ -29,18 +30,28 @@ export interface CardBank {
 
 export interface Reward {
   id?: number;
-  reward_name: string;
-  reward_description: string;
-  reward_type: string;
-  reward_value: number;
-  reward_value_type: string;
-  reward_value_currency: string;
+  category_id: number;
+  category?: Category;
+  initial_percentage: number;
+  initial_limit: number;
+  term_length_months: number;
+  fallback_percentage?: number;
+  type?: RewardType;
+  crowd_source_score?: number;
+  card_to_reward_link_id?: number;
+}
+
+export enum RewardType {
+  Cashback = 'cashback',
+  Points = 'points',
 }
 
 // export interface CardFormProps {}
 
 export interface CardFormsType {
-  [key: string]: boolean;
+  Full: boolean;
+  Rewards: boolean;
+  AddBankOption: boolean;
 }
 
 export interface CardFormDetails {
@@ -64,4 +75,10 @@ export interface CardProps {
   setDeleteCard?: (setCardTo: boolean) => void;
   handleCardPress?: () => void;
   classNameProp?: string;
+}
+
+export interface Category {
+  id: number;
+  category_name: string;
+  specific_places: string[];
 }

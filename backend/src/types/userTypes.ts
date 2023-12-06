@@ -8,4 +8,5 @@ export interface User {
   auth_token?: string;
   phone?: string;
   cards: Card[];
+  points: number;
 }

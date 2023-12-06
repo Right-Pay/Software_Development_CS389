@@ -20,7 +20,7 @@ export class UserModel {
       if (userCheck) {
         throw new Error('error.userFound');
       }
-      const sql = 'INSERT INTO rp_users (username, email, auth_id, auth_token, phone) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+      const sql = 'INSERT INTO rp_users (username, email, auth_id, auth_token, phone, points) VALUES ($1, $2, $3, $4, $5, 10) RETURNING *';
       const values = [user.username, user.email, user.auth_id, user.auth_token, user.phone];
       const result = await client.query(sql, values);
       if (!result.rows.length) {
@@ -147,7 +147,8 @@ export class UserModel {
       }
       client.release();
       return {...cardCheck,
-        exp_date: exp_date
+        exp_date: exp_date,
+        user_to_card_link_id: result.rows[0].id,
       };
     } catch (err: any) {
       console.log('DB Error', err);
@@ -177,6 +178,34 @@ export class UserModel {
       }
       client.release();
       return cardCheck;
+    } catch (err: any) {
+      console.log('DB Error', err);
+      const userFriendlyError = i18n.t([err.message, 'error.default']);
+      throw new Error(userFriendlyError);
+    }
+  }
+
+  async add_user_points(auth_id: string, points: number): Promise<User> {
+    try {
+      const client = await dbPool.connect();
+      const userCheck = await this.get(auth_id);
+      if (userCheck === null) {
+        throw new Error('error.userNotFound');
+      }
+      const user_id = userCheck.id;
+
+      if (Number(points) < 0) {
+        throw new Error('error.invalidPoints');
+      }
+
+      const sql = 'UPDATE rp_users SET points = points + $1 WHERE id = $2 RETURNING *';
+      const values = [points, user_id];
+      const result = await client.query(sql, values);
+      if (!result.rows.length) {
+        throw new Error('error.userPointsNotUpdated');
+      }
+      client.release();
+      return result.rows[0];
     } catch (err: any) {
       console.log('DB Error', err);
       const userFriendlyError = i18n.t([err.message, 'error.default']);

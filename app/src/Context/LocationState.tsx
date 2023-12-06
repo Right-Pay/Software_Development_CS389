@@ -8,6 +8,7 @@ import React, {
 import { PermissionsAndroid, Platform } from 'react-native';
 import Config from 'react-native-config';
 import Geolocation from 'react-native-geolocation-service';
+import Consts from '../Helpers/Consts';
 import { AppContext } from '../types/AppContextType';
 import { Location, Place, PlaceLocation } from '../types/Location';
 import context from './context';
@@ -192,55 +193,55 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       },
     });
 
-    const response = await fetch(
-      'https://places.googleapis.com/v1/places:searchNearby',
-      {
-        method: 'POST',
-        headers: headers,
-        body: raw,
-      },
-    );
+    // const response = await fetch(
+    //   'https://places.googleapis.com/v1/places:searchNearby',
+    //   {
+    //     method: 'POST',
+    //     headers: headers,
+    //     body: raw,
+    //   },
+    // );
 
-    // Manipulate result to return
-    const result = await response.json();
-    const resultPlaces = result.places
-      .filter((place: Place) => {
-        return place.businessStatus === 'OPERATIONAL';
-      })
-      .map((place: Place, index: number) => {
-        let primaryTypeDisplayName = {};
-        if (
-          !place.hasOwnProperty('primaryType') &&
-          place.types.length > 0 &&
-          placesTypes.hasOwnProperty(place.types[0].toString())
-        ) {
-          primaryTypeDisplayName = {
-            lang: 'en-US',
-            text: placesTypes[place.types[0] as keyof typeof placesTypes],
-          };
-        } else if (!place.hasOwnProperty('primaryType')) {
-          const type = place.types[0];
-          let displayName = '';
-          type.split('_').forEach(name => {
-            displayName +=
-              name.charAt(0).toUpperCase() + name.substring(1) + ' ';
-          });
-          primaryTypeDisplayName = {
-            lang: 'en-US',
-            text: displayName,
-          };
-        } else {
-          primaryTypeDisplayName = place.primaryTypeDisplayName;
-        }
-        return {
-          ...place,
-          primaryTypeDisplayName: primaryTypeDisplayName,
-          distance: calculateDistanceLatLong(location, place.location),
-          id: index.toString(),
-        } as Place;
-      });
-
-    setPlaces(resultPlaces);
+    // // Manipulate result to return
+    // const result = await response.json();
+    // const resultPlaces = result.places
+    //   .filter((place: Place) => {
+    //     return place.businessStatus === 'OPERATIONAL';
+    //   })
+    //   .map((place: Place, index: number) => {
+    //     let primaryTypeDisplayName = {};
+    //     if (
+    //       !place.hasOwnProperty('primaryType') &&
+    //       place.types.length > 0 &&
+    //       placesTypes.hasOwnProperty(place.types[0].toString())
+    //     ) {
+    //       primaryTypeDisplayName = {
+    //         lang: 'en-US',
+    //         text: placesTypes[place.types[0] as keyof typeof placesTypes],
+    //       };
+    //     } else if (!place.hasOwnProperty('primaryType')) {
+    //       const type = place.types[0];
+    //       let displayName = '';
+    //       type.split('_').forEach(name => {
+    //         displayName +=
+    //           name.charAt(0).toUpperCase() + name.substring(1) + ' ';
+    //       });
+    //       primaryTypeDisplayName = {
+    //         lang: 'en-US',
+    //         text: displayName,
+    //       };
+    //     } else {
+    //       primaryTypeDisplayName = place.primaryTypeDisplayName;
+    //     }
+    //     return {
+    //       ...place,
+    //       primaryTypeDisplayName: primaryTypeDisplayName,
+    //       distance: calculateDistanceLatLong(location, place.location),
+    //       id: index.toString(),
+    //     } as Place;
+    //   });
+    // setPlaces(resultPlaces);
+    setPlaces(Consts.devLocations as unknown as Place[]);
     setLocationLoading(false);
   }, [location, requestLocationPermission, locationGrantType, apiURL]);
 
