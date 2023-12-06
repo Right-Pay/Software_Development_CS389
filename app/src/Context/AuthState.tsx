@@ -469,6 +469,8 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   const refreshUserProfile = async () => {
+    console.log('refreshing');
+
     if (!userToken) {
       // need to replace with refresh token logic,
       addAuthError(ErrorMessages.invalidToken);
@@ -479,7 +481,6 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
       if (res.success) {
         setUserProfile(res.data as Profile);
         clearAuthErrors();
-        setIsLoading(true);
       } else {
         setUserToken(null);
         await removeAuth0Token();
@@ -773,6 +774,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
         AuthErrorComponent,
         refreshAuth0Token,
         updateUserProfile,
+        refreshUserProfile,
         needsUsername,
         isKeyboardVisible,
         checkVerfiedEmail,

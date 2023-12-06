@@ -433,7 +433,7 @@ const AddCardFullForm: React.FC = () => {
 
   const renderExpirationDropdown = useCallback(() => {
     return (
-      <FormDateView className="m-2 z-30">
+      <FormDateView className="m-2">
         <DropdownComponent
           options={monthOptions}
           placeholder={card?.exp_date?.split('-')[1] || '1'}
@@ -461,7 +461,7 @@ const AddCardFullForm: React.FC = () => {
     return (
       <Pressable
         className="flex-1 flex-row pl-4 h-10 justify-start items-center text-center top-10 left-0 absolute"
-        onPress={() => closeModal}>
+        onPress={() => closeModal()}>
         <Icon name="close-outline" color="#4d654e" />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
           Close
