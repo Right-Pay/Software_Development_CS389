@@ -46,6 +46,7 @@ export interface AppContext {
 
 export enum BottomSheetTypes {
   SETTINGS = 'Settings',
+  LOCATION = 'Location',
 }
 
 export interface BottomSheetModalType {

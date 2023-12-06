@@ -20,6 +20,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
   const { appStateVisible } = useContext(context) as AppContext;
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
+  const [selectedLocation, setSelectedLocation] = useState<Place | null>(null);
+
   const apiURL = Config.REACT_APP_GOOGLE_API;
 
   const requestLocationPermission = useCallback(async () => {
@@ -144,6 +146,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
           types: ['Restaurant'],
           readableType: 'Restaurant',
           id: '0',
+          formattedAddress: 'Unavailable',
         },
       ]);
       return;
@@ -152,7 +155,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     headers.append('Content-Type', 'application/json');
     headers.append(
       'X-Goog-FieldMask',
-      'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types',
+      'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types,places.formattedAddress',
     );
     headers.append('X-Goog-Api-Key', apiURL);
 
@@ -316,6 +319,13 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     });
   }, [requestLocationPermission]);
 
+  const updateSelectedLocation = useCallback(
+    (newSelectedLocation: Place | null) => {
+      setSelectedLocation(newSelectedLocation);
+    },
+    [setSelectedLocation],
+  );
+
   useEffect(() => {
     getLocation();
   }, [getLocation]);
@@ -343,6 +353,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         updateLocation,
         locationGrantType,
         locationLoading,
+        selectedLocation,
+        updateSelectedLocation,
       }}>
       {children}
     </LocationContext.Provider>
