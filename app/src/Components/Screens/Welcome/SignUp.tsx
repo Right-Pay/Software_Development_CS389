@@ -4,13 +4,9 @@ import React, { useCallback, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
-import {
-  AuthInputBox,
-  Logo,
-  LogoContainer,
-} from '../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
+import InputBox from '../../Common/InputBox';
 import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
@@ -53,32 +49,27 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
-          <TitleText className="mt-20">Sign Up for RightPay</TitleText>
-          <LogoContainer>
-            <Logo
-              source={require('../../../Assets/RightPay-logo-light-transparent.png')}
-            />
-          </LogoContainer>
-          <AuthInputBox
+        <View className="flex-1 flex-col w-full h-screen items-center mb-0">
+          <TitleText className="mt-24 mb-10">Sign Up</TitleText>
+          <InputBox
             placeholder="Email"
-            placeholderTextColor={'black'}
+            className="mb-2"
             onChange={event => setEmail(event.nativeEvent.text)}
           />
-          <AuthInputBox
+          <InputBox
             placeholder="Username"
-            placeholderTextColor={'black'}
+            className="mb-2"
             onChange={event => setUsername(event.nativeEvent.text)}
           />
-          <AuthInputBox
+          <InputBox
             placeholder="Password"
-            placeholderTextColor={'black'}
+            className="mb-2"
             secureTextEntry={true}
             onChange={event => setPassword(event.nativeEvent.text)}
           />
-          <AuthInputBox
+          <InputBox
             placeholder="Repeat Password"
-            placeholderTextColor={'black'}
+            className="mb-10"
             secureTextEntry={true}
             onChange={event => setRepeatedPassword(event.nativeEvent.text)}
           />

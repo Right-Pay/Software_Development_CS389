@@ -30,6 +30,7 @@ export interface AppContext {
   showBottomSheetModal: boolean;
   setBottomSheetModal: (_bottomSheetModal: BottomSheetModalType) => void;
   bottomSheetModal: BottomSheetModalType;
+  getCardTypeFromBin: (_cardBin: number) => string;
 }
 
 export enum BottomSheetTypes {

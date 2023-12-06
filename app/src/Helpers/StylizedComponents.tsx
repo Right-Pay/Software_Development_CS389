@@ -17,9 +17,6 @@ export const KeyboardAvoidingScroll = styled(
   'w-screen h-screen mb-0',
 );
 
-//Text
-export const FinePrint = styled(Text, 'text-sm text-black');
-
 //Auth Components
 export const AuthInputBox = styled(
   TextInput,
@@ -92,10 +89,6 @@ export const AddCardView = styled(
 export const AddCardButton = styled(
   Pressable,
   'w-20 h-20 items-center justify-center',
-);
-export const BanksView = styled(
-  View,
-  'flex flex-col justify-center border-2 border-slate-600 rounded-xl w-2/3 p-0 z-50 sticky',
 );
 export const BankOptionsView = styled(
   View,

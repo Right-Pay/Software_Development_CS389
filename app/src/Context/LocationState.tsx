@@ -6,12 +6,12 @@ import React, {
   useState,
 } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+import Config from 'react-native-config';
 import Geolocation from 'react-native-geolocation-service';
 import { AppContext } from '../types/AppContextType';
 import { Location, Place, PlaceLocation } from '../types/Location';
 import context from './context';
 import LocationContext from './locationContext';
-import Config from 'react-native-config';
 
 const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [location, setLocation] = useState<Location>({} as Location);
@@ -167,6 +167,14 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       car_dealer: 'Car Dealer',
       electric_vehicle_charging_station: 'EV Charging Station',
       rest_stop: 'Rest Stop',
+      drugstore: 'Drugstore',
+      pharmacy: 'Pharmacy',
+      hotel: 'Hotel',
+      subway_station: 'Subway Station',
+      wholesaler: 'Wholesaler',
+      supermarket: 'Supermarket',
+      store: 'Store',
+      grocery_store: 'Grocery Store',
     };
 
     const raw = JSON.stringify({

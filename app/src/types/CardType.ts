@@ -18,6 +18,7 @@ export interface Card {
 export interface CardBrand {
   id: number;
   brand_name: string;
+  brand_abbr: string;
 }
 
 export interface CardBank {

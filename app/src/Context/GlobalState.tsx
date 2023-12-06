@@ -1,5 +1,11 @@
 import type { PropsWithChildren } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { AppState, Keyboard } from 'react-native';
 import Config from 'react-native-config';
 import Consts from '../Helpers/Consts';
@@ -315,6 +321,171 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     return errors;
   }
 
+  const cardTypes = useMemo(
+    () => [
+      {
+        name: 'amex',
+        display_name: 'American Express',
+        short_name: 'Amex',
+        ranges: [
+          { start: 34, end: 34 },
+          { start: 37, end: 37 },
+        ],
+      },
+      {
+        name: 'diners_club_enroute',
+        display_name: 'Diners Club enRoute',
+        short_name: 'Diners',
+        ranges: [
+          { start: 2014, end: 2014 },
+          { start: 2149, end: 2149 },
+        ],
+      },
+      {
+        name: 'diners_club_carte_blanche',
+        display_name: 'Diners Club Carte Blanche',
+        short_name: 'Diners',
+        ranges: [{ start: 300, end: 305 }],
+      },
+      {
+        name: 'diners_club_international',
+        display_name: 'Diners Club International',
+        short_name: 'Diners',
+        ranges: [
+          { start: 3095, end: 3095 },
+          { start: 36, end: 36 },
+          { start: 38, end: 39 },
+        ],
+      },
+      {
+        name: 'jcb',
+        display_name: 'JCB',
+        short_name: 'JCB',
+        ranges: [
+          { start: 3088, end: 3094 },
+          { start: 3096, end: 3102 },
+          { start: 3112, end: 3120 },
+          { start: 3158, end: 3159 },
+          { start: 3337, end: 3349 },
+          { start: 3528, end: 3589 },
+        ],
+      },
+      {
+        name: 'laser',
+        display_name: 'Laser',
+        short_name: 'Laser',
+        ranges: [
+          { start: 6304, end: 6304 },
+          { start: 6706, end: 6706 },
+          { start: 6709, end: 6709 },
+          { start: 6771, end: 6771 },
+        ],
+      },
+      {
+        name: 'visa_electron',
+        display_name: 'Visa Electron',
+        short_name: 'Visa',
+        ranges: [
+          { start: 4026, end: 4026 },
+          { start: 417500, end: 417500 },
+          { start: 4508, end: 4508 },
+          { start: 4844, end: 4844 },
+          { start: 4913, end: 4913 },
+          { start: 4917, end: 4917 },
+        ],
+      },
+      {
+        name: 'mastercard',
+        display_name: 'MasterCard',
+        short_name: 'MasterCard',
+        ranges: [
+          { start: 51, end: 55 },
+          { start: 2221, end: 2720 },
+        ],
+      },
+      {
+        name: 'discover',
+        display_name: 'Discover',
+        short_name: 'Discover',
+        ranges: [
+          { start: 6011, end: 6011 },
+          { start: 622126, end: 622925 },
+          { start: 624, end: 626 },
+          { start: 6282, end: 6288 },
+          { start: 64, end: 65 },
+        ],
+      },
+      {
+        name: 'dankort',
+        display_name: 'Dankort',
+        short_name: 'Dankort',
+        ranges: [
+          { start: 5019, end: 5019 },
+          { start: 4571, end: 4571 },
+        ],
+      },
+      {
+        name: 'maestro',
+        display_name: 'Maestro',
+        short_name: 'Maestro',
+        ranges: [
+          { start: 50, end: 50 },
+          { start: 56, end: 69 },
+        ],
+      },
+      {
+        name: 'uatp',
+        display_name: 'Universal Air Travel Program',
+        short_name: 'UATP',
+        ranges: [{ start: 1, end: 1 }],
+      },
+      {
+        name: 'mir',
+        display_name: 'Mir',
+        short_name: 'Mir',
+        ranges: [{ start: 2200, end: 2204 }],
+      },
+      {
+        name: 'visa',
+        display_name: 'Visa',
+        short_name: 'Visa',
+        ranges: [{ start: 4, end: 4 }],
+      },
+    ],
+    [],
+  );
+
+  const getCardTypeFromBin = useCallback(
+    (bin: number) => {
+      // Iterate through the card_types array to find the matching card type
+      if (bin === 0) {
+        return '';
+      }
+      for (const cardType of cardTypes) {
+        for (const { start, end } of cardType.ranges) {
+          const binString = bin.toString();
+          const rangeLength = end.toString().length;
+          if (binString.length < rangeLength) {
+            continue;
+          }
+          if (
+            binString.substring(0, rangeLength) >= start.toString() &&
+            binString.substring(0, rangeLength) <= end.toString()
+          ) {
+            return cardType.short_name;
+          }
+        }
+      }
+
+      if (bin.toString().length === 6) {
+        return 'Unknown';
+      } else {
+        return '';
+      }
+    },
+    [cardTypes],
+  );
+
   const fetchBanks = useCallback(async () => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -423,6 +594,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         showBottomSheetModal,
         setBottomSheetModal,
         bottomSheetModal,
+        getCardTypeFromBin,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>
