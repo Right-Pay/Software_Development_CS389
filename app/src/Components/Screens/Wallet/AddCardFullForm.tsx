@@ -437,7 +437,7 @@ const AddCardFullForm: React.FC = () => {
 
   const renderExpirationDropdown = useCallback(() => {
     return (
-      <FormDateView className="m-2 z-30">
+      <FormDateView className="m-2">
         <DropdownComponent
           options={monthOptions}
           placeholder={card?.exp_date?.split('-')[1] || '1'}

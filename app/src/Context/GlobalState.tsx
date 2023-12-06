@@ -29,8 +29,13 @@ import Context from './context';
 const baseURL = Config.REACT_APP_API_URL;
 
 const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
-  const { refreshAuth0Token, userToken, userProfile, addAuthError } =
-    React.useContext(AuthContext) as AuthContextType;
+  const {
+    refreshAuth0Token,
+    userToken,
+    userProfile,
+    refreshUserProfile,
+    addAuthError,
+  } = React.useContext(AuthContext) as AuthContextType;
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
@@ -259,6 +264,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       return false;
     }
     setIsLoading(false);
+    refreshUserProfile();
     return true;
   };
 

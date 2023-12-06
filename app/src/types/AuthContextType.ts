@@ -26,6 +26,7 @@ export interface AuthContextType {
   checkValidPhone: (_phone: string) => boolean;
   refreshAuth0Token: (_trace: string) => void;
   updateUserProfile: (_newProfile: Profile) => void;
+  refreshUserProfile: () => void;
   needsUsername: boolean;
   isKeyboardVisible: boolean;
   checkVerfiedEmail: () => void;
