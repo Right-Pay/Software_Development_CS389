@@ -10,7 +10,7 @@ const KeyboardAvoidingViewScroll = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd();
+      // scrollViewRef.current?.scrollToEnd();
     }, 100);
   }, [isKeyboardVisible]);
 
@@ -18,7 +18,8 @@ const KeyboardAvoidingViewScroll = ({ children }: PropsWithChildren) => {
     <KeyboardAvoidingScroll
       keyboardShouldPersistTaps="always"
       ref={scrollViewRef}
-      contentContainerStyle={styles.keyboardAvoidingScroll}>
+      // contentContainerStyle={styles.keyboardAvoidingScroll}>
+    >
       {children}
     </KeyboardAvoidingScroll>
   );

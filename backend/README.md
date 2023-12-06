@@ -125,6 +125,18 @@ Returns User's Profile in format specified in [userTypes.ts](./src/types/userTyp
 
 Returns User's Created Profile in format specified in [userTypes.ts](./src/types/userTypes.ts)
 
+#### Add User Points
+
+```http
+  PUT /api/users/addUserPoints
+```
+
+| Parameter    | Type     | Description                       |
+| :----------- | :------- | :-------------------------------- |
+| `points_key` | `string` | **Required** Amount of points     |
+
+Returns User's Updated Profile in format specified in [userTypes.ts](./src/types/userTypes.ts)
+
 #### Update User
 
 ```http
@@ -153,7 +165,7 @@ Returns User's Updated Profile in format specified in [userTypes.ts](./src/types
 
 Links a card to a user's profile, returns the linked card 
 
-*If you need to create a new card **and** link it to this user, you can use the new_card object instead which would be a json object with the new card, **this is untested***
+*If you need to create a new card **and** link it to this user, you can use the new_card object instead which would be a json object with the new card*
 
 #### Delete User
 
@@ -164,7 +176,6 @@ Links a card to a user's profile, returns the linked card
 Uses auth token to determine which user to delete (only logged in user can delete themself)
 
 Returns whether the user was deleted or not in the data object (could be success true but the user wasn't deleted)
-
 
 #### Unlink Card
 
@@ -213,14 +224,26 @@ Returns Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
 
 Returns Created Card in format specified in [cardTypes.ts](./src/types/cardTypes.ts)
 
-#### Delete Card
+#### Link Reward
 
 ```http
-  DELETE /api/card
+  PUT /api/cards/linkReward
 ```
 
-Used to delete a card. No user has access to do this atm
+| Parameter                 | Type     | Description                                                        |
+| :------------------------ | :------- | :----------------------------------------------------------------- |
+| `reward_id`               | `number` | **This or new_reward Required** Reward ID                          |
+| `new_reward`              | `Reward` | **Optional if Reward ID is used** A new Reward to use when linking |
+| `type `                   | `string` | **Required** Reward type (only support Cashback as of 12/6/2023)   |
+| `card_id`                 | `number` | **Required** Card ID to link reward to                             |
+| `user_to_card_link_id`    | `number` | **Required** ID of user card link in db                            |
 
+Links a reward to a card and a user. It will add new rewards to cards or increment the crowd source score of the card reward link.
+As for the user, it will link the card to the user's cards reward table which is seperate from the general card rewards table.
+This allows for crowd sourcing. 
+
+*If you need to create a new reward **and** link it to this card, you can use the new_reward object instead which would be a json object with the new reward*
+*If you need to create a new category **and** link it to the reward which is being linked to this card, you can use new_category in the new_reward obj*
 
 ### Bank API
 
@@ -245,28 +268,6 @@ Returns Bank in format specified in [bankTypes.ts](./src/types/bankTypes.ts)
 
 Returns all banks in an array of objects, format specified in [bankTypes.ts](./src/types/bankTypes.ts)
 
-#### Create Bank
-
-```http
-  POST /api/banks
-```
-
-| Parameter     | Type     | Description                    |
-| :------------ | :------- | :----------------------------- |
-| `bank_name`   | `string` | **Required** Bank name         |
-| `abbr`        | `string` | **Required** Bank abbreviation |
-
-Returns Created Bank in format specified in [bankTypes.ts](./src/types/bankTypes.ts)
-
-#### Delete Bank
-
-```http
-  DELETE /api/banks
-```
-
-Used to delete a bank. No user has access to do this atm
-
-
 ### Brand API
 
 #### Get Brand
@@ -290,25 +291,28 @@ Returns Brand in format specified in [brandTypes.ts](./src/types/brandTypes.ts)
 
 Returns all brands in an array of objects, format specified in [brandTypes.ts](./src/types/brandTypes.ts)
 
-#### Create Brand
+### Category API
+
+#### Get Category
 
 ```http
-  POST /api/brands
+  GET /api/categories?category_name|category_id
 ```
 
-| Parameter      | Type     | Description             |
-| :------------- | :------- | :---------------------- |
-| `brand_name`   | `string` | **Required** Brand name |
+| Query Parameter    | Type     | Description                                           |
+| :----------------- | :------- | :---------------------------------------------------- |
+| `category_name`    | `string` | **Either this or category_id required** Category name |
+| `category_id`      | `number` | Category ID in DB                                     |
 
-Returns Created Brand in format specified in [brandTypes.ts](./src/types/brandTypes.ts). Really only used on the admin side
+Returns Category in format specified in [categoryTypes.ts](./src/types/categoryTypes.ts)
 
-#### Delete Brand
+#### Get All Categories
 
 ```http
-  DELETE /api/brands
+  GET /api/categories/all
 ```
 
-Used to delete a brand. No user has access to do this atm
+Returns all categoriess in an array of objects, format specified in [categoryTypes.ts](./src/types/categoryTypes.ts)
 
 #### dotenv.config()
 

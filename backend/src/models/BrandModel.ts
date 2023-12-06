@@ -1,7 +1,7 @@
 // generate a brand model that will be used to interact with the database
 import { dbPool } from "../config/config";
-import { Brand } from "../types/brandTypes";
 import i18n from '../config/i18n';
+import { Brand } from "../types/brandTypes";
 
 export class BrandModel {
 
@@ -12,8 +12,8 @@ export class BrandModel {
       if (brandCheck) {
         throw new Error('error.brandFound');
       }
-      const sql = 'INSERT INTO rp_brands (brand_name) VALUES ($1) RETURNING *';
-      const values = [brand.brand_name];
+      const sql = 'INSERT INTO rp_brands (brand_name, brand_abbr) VALUES ($1, $2) RETURNING *';
+      const values = [brand.brand_name, brand.brand_abbr];
       const result = await client.query(sql, values);
       if (!result.rows.length) {
         throw new Error('error.brandNotCreated');
@@ -49,7 +49,7 @@ export class BrandModel {
   async getByName(brand_name: string): Promise<Brand | null> {
     try {
       const client = await dbPool.connect();
-      const sql = 'SELECT * FROM rp_brands WHERE brand_name = $1';
+      const sql = 'SELECT * FROM rp_brands WHERE LOWER(brand_name) = LOWER($1)';
       const values = [brand_name];
       const result = await client.query(sql, values);
       client.release();

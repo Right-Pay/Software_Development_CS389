@@ -3,9 +3,9 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React, { useContext, useState } from 'react';
+import { View } from 'react-native';
 import authContext from '../../../Context/authContext';
 import Consts from '../../../Helpers/Consts';
-import { SettingsInputBox } from '../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type {
   NavigationRoutesType,
@@ -14,6 +14,7 @@ import type {
 import { Profile } from '../../../types/ProfileType';
 import AuthErrorComponent from '../../Common/AuthErrorComponent';
 import InnerWrapperView from '../../Common/InnerWrapperView';
+import InputBox from '../../Common/InputBox';
 import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
 import OutlineButton from '../../Common/OutlineButton';
 import PrimaryText from '../../Common/PrimaryText';
@@ -66,10 +67,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
     const capitalizedField = field.charAt(0).toUpperCase() + field.slice(1);
     //field is the key of the object from userProfile which will be extracted
     return (
-      <SettingsInputBox
-        className="w-2/3 text-left ml-auto mr-auto mt-3 mb-3 h-12"
+      <InputBox
+        className="my-3"
         placeholder={capitalizedField}
-        placeholderTextColor={'grey'}
         value={value}
         onChange={e => onChange(index, e.nativeEvent.text)}
         key={index}
@@ -107,6 +107,13 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
               updateSection[index] = formattedNumber;
             } else {
               addAuthError(ErrorMessages.invalidPhone);
+              setSaved(false);
+              return;
+            }
+          }
+          if (index === sectionEnum.username) {
+            if (updateSection[index].length < 3) {
+              addAuthError(ErrorMessages.invalidUsername);
               setSaved(false);
               return;
             }
@@ -158,7 +165,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
 
   return (
     userProfile && (
-      <WrapperView className="pb-0">
+      <WrapperView>
         <KeyboardAvoidingViewScroll>
           <TitleText className="mt-10 mb-3">Profile Settings</TitleText>
           {saved && (
@@ -169,15 +176,19 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
           <InnerWrapperView className="border-t-2">
             {fieldsToRender.map((key, index) => renderProfileField(key, index))}
           </InnerWrapperView>
-          {editing ? (
-            <OutlineButton className="w-1/3 mb-3" onPress={handleSave}>
-              <PrimaryText className="text-center text-xl">Save</PrimaryText>
-            </OutlineButton>
-          ) : (
-            <PrimaryText className="text-2xl font-bold mb-3">
-              No changes made
-            </PrimaryText>
-          )}
+          <View className="flex-1 items-center">
+            {editing ? (
+              <OutlineButton
+                className="justify-center items-center w-1/3 mb-3"
+                onPress={handleSave}>
+                <PrimaryText className="text-center text-xl">Save</PrimaryText>
+              </OutlineButton>
+            ) : (
+              <PrimaryText className="text-2xl text-center font-bold mb-3">
+                No changes made
+              </PrimaryText>
+            )}
+          </View>
           {AuthErrorComponent && <AuthErrorComponent />}
         </KeyboardAvoidingViewScroll>
       </WrapperView>

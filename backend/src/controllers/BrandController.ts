@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import BrandModel from '../models/BrandModel';
-import { IJsonResponse } from '../types/jsonResponse';
-import { Brand } from '../types/brandTypes';
 import i18n from '../config/i18n';
+import BrandModel from '../models/BrandModel';
+import { Brand } from '../types/brandTypes';
+import { IJsonResponse } from '../types/jsonResponse';
 
 class BrandController {
   async getBrand(req: Request, res: Response) {
@@ -81,16 +81,17 @@ class BrandController {
       data: {}
     };
     const brandData = req.body as Brand;
-    if (!brandData.brand_name) {
+    if (!brandData.brand_name || !brandData.brand_abbr) {
       response.success = false;
       response.message = i18n.t('error.missingFields');
       res.status(400).json(response);
       return;
     }
     try {
-      const newBrand = await BrandModel.create(brandData);
-      response.data = newBrand;
-      res.status(201).json(response);
+      throw new Error(i18n.t('error.notAllowedAtThisTime'));
+      // const newBrand = await BrandModel.create(brandData);
+      // response.data = newBrand;
+      // res.status(201).json(response);
     } catch (error: any) {
       response.success = false;
       response.message = error.message;
@@ -121,11 +122,11 @@ class BrandController {
     }
     try {
       throw new Error(i18n.t('error.notAllowedAtThisTime'));
-      const brandDeleted = await BrandModel.delete(brandId);
-      if (brandDeleted) {
-        response.data = brandDeleted;
-        res.json(response);
-      }
+      // const brandDeleted = await BrandModel.delete(brandId);
+      // if (brandDeleted) {
+      //   response.data = brandDeleted;
+      //   res.json(response);
+      // }
     } catch (error: any) {
       response.success = false;
       response.message = error.message;

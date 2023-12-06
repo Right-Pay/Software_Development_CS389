@@ -1,3 +1,5 @@
+import { Card } from './CardType';
+
 export interface Location {
   accuracy: number;
   altitude: number;
@@ -16,6 +18,7 @@ export interface Place {
   id: string;
   location: PlaceLocation;
   formattedAddress: string;
+  cardRewards: Card[];
 }
 
 export interface DisplayName {

@@ -1,20 +1,56 @@
 import { styled } from 'nativewind';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import useColorsMode from '../../Helpers/Colors';
 import { Dropdown } from '../../Helpers/StylizedComponents';
 
 const StyledView = styled(View);
 
 const DropdownComponent = (props: DropdownProps) => {
+  const { themeMode } = useColorsMode();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(props.placeholder);
   const [items, setItems] = useState<OptionsProps[]>([]);
+  const [styles, setStyles] = useState({});
+  const [containerStyle, setContainerStyle] = useState({});
   const handleSetValue = (val: string) => {
     setValue(val);
     props.onDropdownChange(val);
   };
 
   const listMode: any = props.mode ? props.mode : 'FLATLIST';
+
+  useEffect(() => {
+    const isDarkTheme = themeMode === 'dark';
+    setStyles(
+      isDarkTheme
+        ? {
+            backgroundColor: 'rgb(64 64 64)',
+            color: 'rgb(243 244 246)',
+            border: 'none',
+          }
+        : {
+            backgroundColor: 'rgb(243 244 246)',
+            color: 'black',
+            borderColor: 'rgb(156 163 175)',
+            borderWidth: 1,
+          },
+    );
+    setContainerStyle(
+      isDarkTheme
+        ? {
+            backgroundColor: 'rgb(64 64 64)',
+            color: 'rgb(243 244 246)',
+            border: 'none',
+          }
+        : {
+            backgroundColor: 'rgb(243 244 246)',
+            color: 'black',
+            borderColor: 'rgb(156 163 175)',
+            borderWidth: 1,
+          },
+    );
+  }, [themeMode]);
 
   useEffect(() => {
     if (props.options) {
@@ -48,6 +84,8 @@ const DropdownComponent = (props: DropdownProps) => {
         placeholder={props.placeholder}
         placeholderStyle={styleSheet.placeholderStyle}
         textStyle={styleSheet.textStyle}
+        style={styles}
+        dropDownContainerStyle={containerStyle}
         onChangeValue={event => handleSetValue(event?.toString() as string)}
       />
     </StyledView>
@@ -103,5 +141,5 @@ export interface OptionsPropsType {
 export interface OptionsProps {
   label: string;
   value: string;
-  labelStyle?: {};
+  labelStyle?: any;
 }

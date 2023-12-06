@@ -5,16 +5,9 @@ import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
 import useColorsMode from '../../../Helpers/Colors';
-import {
-  AuthInputBox,
-  FinePrint,
-  FinePrintButton,
-  Logo,
-  LogoContainer,
-} from '../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
-import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
+import InputBox from '../../Common/InputBox';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
@@ -59,57 +52,49 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
 
   return (
     <WrapperView className="pb-0">
-      <KeyboardAvoidingViewScroll>
-        <View className="flex-1 flex-col w-full h-screen justify-center items-center mb-0 pb-0">
-          <TitleText className="mt-20 ml-3 mr-3">
-            Log In to Your RightPay Account
-          </TitleText>
-          <LogoContainer>
-            <Logo
-              source={require('../../../Assets/RightPay-logo-light-transparent.png')}
-            />
-          </LogoContainer>
-          <AuthInputBox
-            placeholder="Email Address"
-            placeholderTextColor={'black'}
-            onChange={event => setEmail(event.nativeEvent.text)}
+      {/* <KeyboardAvoidingViewScroll> */}
+      <View className="flex-1 flex-col w-full h-screen justify-start items-center mb-0 pb-0">
+        <TitleText className="mt-20 mb-4">Log In</TitleText>
+        <InputBox
+          placeholder="Email Address"
+          className="mb-2"
+          onChange={event => setEmail(event.nativeEvent.text)}
+        />
+        <InputBox
+          placeholder="Password"
+          secureTextEntry={true}
+          className="mb-2"
+          onChange={event => setPassword(event.nativeEvent.text)}
+        />
+        {needsUsername && (
+          <InputBox
+            placeholder="Username"
+            className="mb-2"
+            onChange={event => setUsername(event.nativeEvent.text)}
           />
-          <AuthInputBox
-            placeholder="Password"
-            placeholderTextColor={'black'}
-            secureTextEntry={true}
-            onChange={event => setPassword(event.nativeEvent.text)}
-          />
-          {needsUsername && (
-            <AuthInputBox
-              placeholder="Username"
-              placeholderTextColor={'black'}
-              onChange={event => setUsername(event.nativeEvent.text)}
-            />
-          )}
-          <FinePrintButton
-            onPress={() => navigation.navigate('ForgotPassword')}>
-            <FinePrint>Forgot Password?</FinePrint>
-          </FinePrintButton>
-          <PrimaryButton
-            onPress={async () => {
-              needsUsername
-                ? await signIn(email, password, username)
-                : await signIn(email, password);
-              await retrieveVerifiedEmail().then(ret => {
-                if (!ret) {
-                  navigation.navigate('VerifyEmailScreen');
-                }
-              });
-            }}>
-            <PrimaryText type="secondary" className="text-xl">
-              Log In
-            </PrimaryText>
-          </PrimaryButton>
-          {AuthErrorComponent && <AuthErrorComponent />}
-          {backButton()}
-        </View>
-      </KeyboardAvoidingViewScroll>
+        )}
+        <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
+          <PrimaryText className="text-sm">Forgot Password?</PrimaryText>
+        </Pressable>
+        <PrimaryButton
+          onPress={async () => {
+            needsUsername
+              ? await signIn(email, password, username)
+              : await signIn(email, password);
+            await retrieveVerifiedEmail().then(ret => {
+              if (!ret) {
+                navigation.navigate('VerifyEmailScreen');
+              }
+            });
+          }}>
+          <PrimaryText type="secondary" className="text-xl">
+            Log In
+          </PrimaryText>
+        </PrimaryButton>
+        {AuthErrorComponent && <AuthErrorComponent />}
+        {backButton()}
+      </View>
+      {/* </KeyboardAvoidingViewScroll> */}
     </WrapperView>
   );
 };

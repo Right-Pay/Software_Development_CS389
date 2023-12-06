@@ -5,14 +5,9 @@ import { Pressable, View } from 'react-native';
 import Icon from 'react-native-ionicons';
 import AuthContext from '../../../Context/authContext';
 import useColorsMode from '../../../Helpers/Colors';
-import {
-  AuthInputBox,
-  Logo,
-  LogoContainer,
-} from '../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../types/AuthContextType';
 import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoutesType';
-import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll';
+import InputBox from '../../Common/InputBox';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
@@ -52,36 +47,29 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
   return (
     <WrapperView className="pb-0">
-      <KeyboardAvoidingViewScroll>
-        <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
-          <TitleText className="mt-20 ml-3 mr-3">
-            Forgot your Password for RightPay?
-          </TitleText>
-          <LogoContainer>
-            <Logo
-              source={require('../../../Assets/RightPay-logo-light-transparent.png')}
-            />
-          </LogoContainer>
-          <AuthInputBox
-            placeholder="Email Address"
-            placeholderTextColor={'black'}
-            onChange={event => setEmail(event.nativeEvent.text)}
-          />
-          <PrimaryButton
-            onPress={() => {
-              resetPassword(email);
-              setTimeout(() => {
-                navigation.navigate('Login');
-              }, 3000);
-            }}>
-            <PrimaryText type="secondary" className="text-xl">
-              Reset Password
-            </PrimaryText>
-          </PrimaryButton>
-          {AuthErrorComponent && <AuthErrorComponent />}
-          {backButton()}
-        </View>
-      </KeyboardAvoidingViewScroll>
+      <View className="flex-1 flex-col w-full h-screen items-center mb-0">
+        <TitleText className="mt-24 w-10/12 mb-10">
+          Forgot your Password?
+        </TitleText>
+        <InputBox
+          placeholder="Email Address"
+          className="mb-4"
+          onChange={event => setEmail(event.nativeEvent.text)}
+        />
+        <PrimaryButton
+          onPress={() => {
+            resetPassword(email);
+            setTimeout(() => {
+              navigation.navigate('Login');
+            }, 3000);
+          }}>
+          <PrimaryText type="secondary" className="text-xl">
+            Reset Password
+          </PrimaryText>
+        </PrimaryButton>
+        {AuthErrorComponent && <AuthErrorComponent />}
+        {backButton()}
+      </View>
     </WrapperView>
   );
 };

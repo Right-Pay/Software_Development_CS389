@@ -1,7 +1,6 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import checkJwt from '../middleware/authenticationMiddleware';
-import { IJsonResponse } from '../types/jsonResponse';
+import { Request, Response, Router } from 'express';
 import BrandController from '../controllers/BrandController';
+import checkJwt from '../middleware/authenticationMiddleware';
 
 const router = Router();
 
@@ -11,32 +10,32 @@ router.get("/", checkJwt, async (req: Request, res: Response) => await BrandCont
 router.get("/all", checkJwt, async (req: Request, res: Response) => await BrandController.getAllBrands(req, res))
 
 // Register Brand
-router.post("/", checkJwt, async (req: Request, res: Response) => {
-  try {
-    await BrandController.createBrand(req, res);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', sucess: false });
-  }
-});
+// router.post("/", checkJwt, async (req: Request, res: Response) => {
+//   try {
+//     await BrandController.createBrand(req, res);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error', sucess: false });
+//   }
+// });
 
 // Update Brand
-router.put("/", checkJwt, (req: Request, res: Response) => {
-  const auth = req.auth;
-  const response: IJsonResponse = {
-    message: "TLX API - Update Brand",
-    success: true,
-    data: auth
-  };
-  res.json(response);
-});
+// router.put("/", checkJwt, (req: Request, res: Response) => {
+//   const auth = req.auth;
+//   const response: IJsonResponse = {
+//     message: "TLX API - Update Brand",
+//     success: true,
+//     data: auth
+//   };
+//   res.json(response);
+// });
 
 // Delete Brand
-router.delete("/", checkJwt, async (req: Request, res: Response) => {
-  try {
-    await BrandController.deleteBrand(req, res);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', sucess: false });
-  }
-});
+// router.delete("/", checkJwt, async (req: Request, res: Response) => {
+//   try {
+//     await BrandController.deleteBrand(req, res);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error', sucess: false });
+//   }
+// });
 
 export default router;

@@ -11,12 +11,8 @@ import Consts from '../../../Helpers/Consts';
 import {
   AddCardButton,
   AddCardIcon,
-  CardButton,
   CardItemSeperator,
-  CardText,
   CardView,
-  DeleteCardButton,
-  RewardsView,
 } from '../../../Helpers/StylizedComponents';
 import { AppContext } from '../../../types/AppContextType';
 import { AuthContextType } from '../../../types/AuthContextType';
@@ -25,10 +21,12 @@ import type {
   NavigationRoutesType,
   WalletNavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
+import CardComponent from '../../Card';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import AddCardFullForm from './AddCardFullForm';
+import AddRewardForm from './AddRewardForm';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -50,6 +48,11 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
       ? [userProfile.cards[0]]
       : [Consts.addCard],
   );
+  const [currentRewards, setCurrentRewards] = React.useState<Reward[]>([]);
+
+  const [showRewardHeader, setShowRewardHeader] =
+    React.useState<boolean>(false);
+
   const [deleteCard, setDeleteCard] = React.useState<boolean>(false);
 
   //helpers
@@ -72,83 +75,45 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     </CardView>
   );
 
-  const formatBin = (bin: string) => {
-    return (
-      bin
-        .replace(/\s/g, '')
-        .replace(/(\d{4})/g, '$1 ')
-        .trim() + '** **** ****'
-    );
-  };
-
-  const formatExpirationDate = (expDate: string) => {
-    // exp date is in YYYY-MM-DDT00:00:00 format
-    expDate = expDate.split('T')[0].replace(/-/g, '');
-    return expDate.slice(4, 6) + '/' + expDate.slice(2, 4);
-  };
-
   const renderCard = (item: Card) => {
     if (item.card_name === 'Add') {
       return addNewCardComponent();
     }
+
     return (
-      <CardView>
-        <StyledView className="flex-1 flex-col w-11/12 h-full justify-center items-center bg-dark-green rounded-xl">
-          <CardButton
-            onLongPress={() => handleCardPress()}
-            className={deleteCard ? 'opacity-50' : 'opacity-100'}>
-            <StyledView className="relative flex-1 flex-col h-full">
-              <StyledView className="text-center">
-                <CardText
-                  className="text-left font-bold truncate px-2"
-                  numberOfLines={2}>
-                  {item.card_name}
-                </CardText>
-              </StyledView>
-              <StyledView className="absolute bottom-0 left-2 flex-1 flex-col">
-                <Text className="text-lg text-white">
-                  {formatBin(item?.card_bin.toString())}
-                </Text>
-                <Text className="text-xs text-white text-left">
-                  {formatExpirationDate(item?.exp_date || '')}
-                </Text>
-              </StyledView>
-              <StyledView className="absolute bottom-0 right-2 flex-1 flex-col">
-                <Text className="text-lg text-white">
-                  {item.card_brand_name}
-                </Text>
-                <Text className="text-xs text-white text-right">
-                  {item.card_type}
-                </Text>
-              </StyledView>
-            </StyledView>
-          </CardButton>
-          {deleteCard && (
-            <DeleteCardButton
-              onLongPress={handleDelete}
-              onPress={() => setDeleteCard(false)}>
-              <CardText className="opacity-100 text-4xl text-center">
-                Delete Card?
-              </CardText>
-              <CardText className="opacity-100 text-3xl text-center">
-                Long Press Again to Confirm
-              </CardText>
-              <CardText className="opacity-100 text-2xl text-center">
-                Tap to Exit
-              </CardText>
-            </DeleteCardButton>
-          )}
-        </StyledView>
-      </CardView>
+      <CardComponent
+        card={item}
+        handleCardPress={handleCardPress}
+        deleteCard={deleteCard}
+        setDeleteCard={setDeleteCard}
+        handleDelete={handleDelete}
+      />
     );
   };
 
   const renderReward = (item: Reward) => {
     return (
-      <RewardsView>
-        <PrimaryText className="text-left">{item.reward_name}</PrimaryText>
-        <PrimaryText>{item.reward_description}</PrimaryText>
-      </RewardsView>
+      <View className="flex-1 flex-col mb-2 mt-10 w-full">
+        <PrimaryText className="text-left">
+          Category: {item.category?.category_name}
+        </PrimaryText>
+        {item.category?.specific_places && (
+          <PrimaryText className="text-left">
+            Specific Places: {item.category?.specific_places.join(', ')}
+          </PrimaryText>
+        )}
+        <PrimaryText className="text-left">
+          Initial Percentage: {item.initial_percentage}
+        </PrimaryText>
+        <PrimaryText>Initial Limit: {item.initial_limit}</PrimaryText>
+        <PrimaryText>
+          Term Length (time until limit resets): {item.term_length_months} Month
+          {item.term_length_months > 1 ? 's' : ''}
+        </PrimaryText>
+        <PrimaryText>
+          Fallback Percentage: {item.fallback_percentage}
+        </PrimaryText>
+      </View>
     );
   };
 
@@ -179,12 +144,16 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   });
 
   useEffect(() => {
-    setDeleteCard(false);
+    if (currentViewedCard.length === 1 && currentViewedCard[0].id !== -1) {
+      setShowRewardHeader(true);
+      setCurrentRewards(currentViewedCard[0].rewards || []);
+    }
   }, [currentViewedCard]);
 
   return (
     <WrapperView>
-      {AddCardFullForm()}
+      <AddCardFullForm />
+      <AddRewardForm />
       <TitleText className="mt-10">Wallet</TitleText>
       <View className="aspect-video mt-10 w-full">
         <StyledList
@@ -203,21 +172,28 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           snapToInterval={
             Dimensions.get('window').width + Consts.cardItemSeparatorWidth
           } //Change 48 based on width of CardItemSeperator width
+          onScrollBeginDrag={() => {
+            setDeleteCard(false);
+            setCurrentRewards([]);
+            setShowRewardHeader(false);
+          }}
         />
       </View>
       <View className="aspect-video mt-10 w-full justify-center items-center">
         <FlatList
           className="w-full text-center w-3/4 p-2"
-          data={[]} //This will need to be done
+          data={currentRewards} //This will need to be done
           ListHeaderComponent={
-            currentViewedCard.filter(i => i.id === -1).length === 0 ? (
-              <TitleText>Rewards</TitleText>
-            ) : null
+            showRewardHeader ? <TitleText>Rewards</TitleText> : null
           }
           showsVerticalScrollIndicator={true}
-          keyExtractor={item => (item as Reward).reward_name.toString()}
-          renderItem={({ item }) => renderReward(item as Reward)}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => renderReward(item)}
           ItemSeparatorComponent={itemSeparatorComponent}
+          refreshing={!showRewardHeader && currentViewedCard[0].id !== -1}
+          onRefresh={() => {
+            console.log('refreshing');
+          }}
         />
       </View>
     </WrapperView>

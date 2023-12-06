@@ -4,7 +4,6 @@ import {
   Image,
   Pressable,
   ScrollView,
-  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -16,9 +15,6 @@ export const KeyboardAvoidingScroll = styled(
   ScrollView,
   'w-screen h-screen mb-0',
 );
-
-//Text
-export const FinePrint = styled(Text, 'text-sm text-black');
 
 //Auth Components
 export const AuthInputBox = styled(
@@ -59,10 +55,6 @@ export const ProfileView = styled(
 
 //Settings components
 
-export const SettingsInputBox = styled(
-  TextInput,
-  'px-2 py-1 text-xl text-left text-black h-auto w-2/3 rounded-xl border-2 border-dark-green bg-white',
-);
 export const SettingsCardList = styled(View, 'flex-1 flex-col w-full h-full');
 export const SettingsCardView = styled(
   View,
@@ -82,7 +74,6 @@ export const DeleteCardButton = styled(
   Pressable,
   'w-full h-full absolute top-0 left-0 flex bg-red-500 rounded-xl opacity-75 justify-center items-center',
 );
-export const CardText = styled(Text, 'text-2xl text-white text-left mb-2');
 export const CardItemSeperator = styled(View, 'w-12');
 export const AddCardIcon = styled(Image, 'w-full h-full');
 export const AddCardView = styled(
@@ -93,20 +84,13 @@ export const AddCardButton = styled(
   Pressable,
   'w-20 h-20 items-center justify-center',
 );
-export const BanksView = styled(
-  View,
-  'flex flex-col justify-center border-2 border-slate-600 rounded-xl w-2/3 p-0 z-50 sticky',
-);
 export const BankOptionsView = styled(
   View,
   'mb-2 ml-0 w-full fixed max-h-48 border-t flex bg-white z-50',
 );
 
 //Rewards components
-export const RewardsView = styled(
-  View,
-  'flex-1 flex-col ml-20 mr-20 mb-2 mt-10',
-);
+export const RewardsView = styled(View, 'flex-1 flex-col mb-2 mt-10');
 
 //Location components
 export const NearbyLocationScrollView = styled(FlatList, 'w-full h-1/3');

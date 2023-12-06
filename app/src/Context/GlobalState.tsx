@@ -1,5 +1,11 @@
 import type { PropsWithChildren } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { AppState } from 'react-native';
 import Config from 'react-native-config';
 import Consts from '../Helpers/Consts';
@@ -14,21 +20,32 @@ import {
   CardBrand,
   CardFormDetails,
   CardFormsType,
+  Category,
   Reward,
 } from '../types/CardType';
 import LocationState from './LocationState';
 import AuthContext from './authContext';
 import Context from './context';
 const baseURL = Config.REACT_APP_API_URL;
+const points_key = Config.REACT_APP_POINTS_KEY;
 
 const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
-  const { refreshAuth0Token, userToken, userProfile, addAuthError } =
-    React.useContext(AuthContext) as AuthContextType;
+  const {
+    refreshAuth0Token,
+    userToken,
+    userProfile,
+    refreshUserProfile,
+    updateUserProfile,
+    addAuthError,
+  } = React.useContext(AuthContext) as AuthContextType;
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
+
+  const [pointsToAdd, setPointsToAdd] = useState<number>(0);
+  const [showAddPoints, setshowAddPoints] = useState<boolean>(false);
 
   const [showBottomSheetModal, setShowBottomSheetModal] =
     useState<boolean>(false);
@@ -40,7 +57,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
 
   const [CardForms, setCardForms] = useState<CardFormsType>({
     Full: false,
-    Review: false,
     Rewards: false,
     AddBankOption: false,
   });
@@ -49,6 +65,64 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [bankOptions, setBankOptions] = useState<CardBank[]>([]);
 
   const [brandOptions, setBrandOptions] = useState<CardBrand[]>([]);
+
+  const [categoryOptions, setCategoryOptions] = useState<Category[]>([]);
+
+  const [selectedCard, setSelectedCard] = useState<Card>({} as Card);
+
+  const addPoints = async (points: number, tryAgain: boolean) => {
+    if (!showAddPoints) {
+      //Eventually change this to add points to user profile
+      try {
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Access-Control-Allow-Origin', '*');
+        headers.append('Authorization', `bearer ${userToken}`);
+
+        const raw = {
+          points: points,
+          points_key: points_key,
+        };
+
+        const response = await fetch(`${baseURL}/users/addUserPoints`, {
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify(raw),
+        });
+
+        const content = await response.json();
+
+        if (content.data.code === 'invalid_token') {
+          await refreshAuth0Token('addPoint');
+
+          if (tryAgain) {
+            setTimeout(() => {
+              addPoints(points, false);
+            }, 20);
+          }
+          setIsLoading(false);
+          return false;
+        }
+
+        if (!content.success) {
+          addAuthError(content.message);
+          return;
+        }
+
+        await refreshUserProfile();
+      } catch {
+        console.log('error');
+        addAuthError(ErrorMessages.undefined);
+      }
+
+      setPointsToAdd(points);
+      setshowAddPoints(true);
+      setTimeout(() => {
+        setPointsToAdd(0);
+        setshowAddPoints(false);
+      }, 2000);
+    }
+  };
 
   /* Card Add Flow
    * 1. Search for card using 6 digit number
@@ -98,6 +172,57 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
           card_brand_name:
             brandOptions.find(b => b.id === +card.card_brand_id)?.brand_name ??
             '',
+          exp_date: '23-01',
+        } as Card;
+        setIsLoading(false);
+        return modifiedCard;
+      } else {
+        setIsLoading(false);
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+      addAuthError(ErrorMessages.undefined);
+      setIsLoading(false);
+      return false;
+    }
+  };
+
+  const findCardByAPI = async (
+    cardBin: number,
+    tryAgain: boolean,
+  ): Promise<Card | false> => {
+    setIsLoading(true);
+    //Check api for card
+    //found card will need to be set if found
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Authorization', `bearer ${userToken}`);
+
+    const query = `?card_bin=${cardBin}`;
+    try {
+      const response = await fetch(`${baseURL}cards/rapidapi${query}`, {
+        method: 'GET',
+        headers: headers,
+      });
+      const content = await response.json();
+
+      if (content.data.code === 'invalid_token') {
+        await refreshAuth0Token('findCard');
+        if (tryAgain) {
+          setTimeout(() => {
+            findCardByAPI(cardBin, false);
+          }, 20);
+        }
+        setIsLoading(false);
+        return false;
+      }
+
+      if (response.status === 200) {
+        const card = content.data;
+        const modifiedCard = {
+          ...card,
           exp_date: '23-01',
         } as Card;
         setIsLoading(false);
@@ -165,15 +290,18 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
           return false;
         }
         if (!content.success) {
+          addAuthError(content.message);
           return false;
         }
         setNewCardBin(0o0);
         setCardForms({
           ...CardForms,
-          Review: false,
           Full: false,
+          Rewards: true,
         });
+        console.log('Setting to rewards form');
         const retCard = content.data as Card;
+        console.log(retCard);
         const cardWithBankAndBrand = {
           ...retCard,
           card_bank_name:
@@ -183,7 +311,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
             brandOptions.find(b => b.id === +(retCard.card_brand_id as number))
               ?.brand_name ?? '',
         } as Card;
-        userProfile.cards.push(cardWithBankAndBrand);
+        setSelectedCard(cardWithBankAndBrand);
         return true;
       } catch (e) {
         console.log(e);
@@ -196,6 +324,92 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     }
     setIsLoading(false);
     return true;
+  };
+
+  const linkReward = async (
+    reward: Reward,
+    new_reward: boolean,
+    add_to_card: boolean,
+  ): Promise<boolean> => {
+    setIsLoading(true);
+    const linkToReward = async (tryAgain: boolean) => {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Access-Control-Allow-Origin', '*');
+      headers.append('Authorization', `bearer ${userToken}`);
+      if (new_reward) {
+        if (reward.category_id === undefined || !reward.category_id) {
+          reward.new_category = reward.category;
+        }
+        if (reward.category_id) {
+          const matchingCategory = categoryOptions.find(
+            c => c.id === reward.category_id,
+          );
+          if (
+            reward.category?.specific_places !==
+            matchingCategory?.specific_places
+          ) {
+            reward.new_category = reward.category;
+          }
+        }
+      }
+      const raw = new_reward
+        ? {
+            new_reward: reward,
+            card_id: selectedCard?.id,
+            user_to_card_link_id: selectedCard?.user_to_card_link_id,
+            type: 'cashback',
+          }
+        : {
+            reward_id: reward.id,
+            card_id: selectedCard?.id,
+            user_to_card_link_id: selectedCard?.user_to_card_link_id,
+            type: 'cashback',
+          };
+
+      try {
+        const response = await fetch(`${baseURL}cards/linkReward`, {
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify(raw),
+        });
+        const content = await response.json();
+        if (content.data.code === 'invalid_token') {
+          await refreshAuth0Token('linkReward');
+          if (tryAgain) {
+            setTimeout(() => {
+              linkToReward(false);
+            }, 20);
+          }
+          return false;
+        }
+        if (!content.success) {
+          console.log(content);
+          if (content.data.code === 'reward_already_linked') {
+            return true;
+          }
+          addAuthError(content.message);
+          return false;
+        }
+        const retReward = content.data as Reward;
+        if (add_to_card) {
+          await addPoints(10, true);
+          if (selectedCard.rewards) {
+            selectedCard.rewards.push(retReward);
+          } else {
+            selectedCard.rewards = [retReward];
+          }
+        }
+        return true;
+      } catch (e) {
+        console.log(e);
+        addAuthError(ErrorMessages.undefined);
+        return false;
+      }
+    };
+    const success = await linkToReward(false);
+    setIsLoading(false);
+    return success;
   };
 
   const unlinkCard = async (card: Card): Promise<boolean> => {
@@ -315,6 +529,171 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     return errors;
   }
 
+  const cardTypes = useMemo(
+    () => [
+      {
+        name: 'amex',
+        display_name: 'American Express',
+        short_name: 'Amex',
+        ranges: [
+          { start: 34, end: 34 },
+          { start: 37, end: 37 },
+        ],
+      },
+      {
+        name: 'diners_club_enroute',
+        display_name: 'Diners Club enRoute',
+        short_name: 'Diners',
+        ranges: [
+          { start: 2014, end: 2014 },
+          { start: 2149, end: 2149 },
+        ],
+      },
+      {
+        name: 'diners_club_carte_blanche',
+        display_name: 'Diners Club Carte Blanche',
+        short_name: 'Diners',
+        ranges: [{ start: 300, end: 305 }],
+      },
+      {
+        name: 'diners_club_international',
+        display_name: 'Diners Club International',
+        short_name: 'Diners',
+        ranges: [
+          { start: 3095, end: 3095 },
+          { start: 36, end: 36 },
+          { start: 38, end: 39 },
+        ],
+      },
+      {
+        name: 'jcb',
+        display_name: 'JCB',
+        short_name: 'JCB',
+        ranges: [
+          { start: 3088, end: 3094 },
+          { start: 3096, end: 3102 },
+          { start: 3112, end: 3120 },
+          { start: 3158, end: 3159 },
+          { start: 3337, end: 3349 },
+          { start: 3528, end: 3589 },
+        ],
+      },
+      {
+        name: 'laser',
+        display_name: 'Laser',
+        short_name: 'Laser',
+        ranges: [
+          { start: 6304, end: 6304 },
+          { start: 6706, end: 6706 },
+          { start: 6709, end: 6709 },
+          { start: 6771, end: 6771 },
+        ],
+      },
+      {
+        name: 'visa_electron',
+        display_name: 'Visa Electron',
+        short_name: 'Visa',
+        ranges: [
+          { start: 4026, end: 4026 },
+          { start: 417500, end: 417500 },
+          { start: 4508, end: 4508 },
+          { start: 4844, end: 4844 },
+          { start: 4913, end: 4913 },
+          { start: 4917, end: 4917 },
+        ],
+      },
+      {
+        name: 'mastercard',
+        display_name: 'MasterCard',
+        short_name: 'MasterCard',
+        ranges: [
+          { start: 51, end: 55 },
+          { start: 2221, end: 2720 },
+        ],
+      },
+      {
+        name: 'discover',
+        display_name: 'Discover',
+        short_name: 'Discover',
+        ranges: [
+          { start: 6011, end: 6011 },
+          { start: 622126, end: 622925 },
+          { start: 624, end: 626 },
+          { start: 6282, end: 6288 },
+          { start: 64, end: 65 },
+        ],
+      },
+      {
+        name: 'dankort',
+        display_name: 'Dankort',
+        short_name: 'Dankort',
+        ranges: [
+          { start: 5019, end: 5019 },
+          { start: 4571, end: 4571 },
+        ],
+      },
+      {
+        name: 'maestro',
+        display_name: 'Maestro',
+        short_name: 'Maestro',
+        ranges: [
+          { start: 50, end: 50 },
+          { start: 56, end: 69 },
+        ],
+      },
+      {
+        name: 'uatp',
+        display_name: 'Universal Air Travel Program',
+        short_name: 'UATP',
+        ranges: [{ start: 1, end: 1 }],
+      },
+      {
+        name: 'mir',
+        display_name: 'Mir',
+        short_name: 'Mir',
+        ranges: [{ start: 2200, end: 2204 }],
+      },
+      {
+        name: 'visa',
+        display_name: 'Visa',
+        short_name: 'Visa',
+        ranges: [{ start: 4, end: 4 }],
+      },
+    ],
+    [],
+  );
+
+  const getCardTypeFromBin = useCallback(
+    (bin: number) => {
+      // Iterate through the card_types array to find the matching card type
+      if (bin === 0) {
+        return '';
+      }
+      for (const cardType of cardTypes) {
+        for (const { start, end } of cardType.ranges) {
+          const binString = bin.toString();
+          const rangeLength = end.toString().length;
+          if (binString.length < rangeLength) {
+            continue;
+          }
+          if (
+            binString.substring(0, rangeLength) >= start.toString() &&
+            binString.substring(0, rangeLength) <= end.toString()
+          ) {
+            return cardType.short_name;
+          }
+        }
+      }
+
+      if (bin.toString().length === 6) {
+        return 'Unknown';
+      } else {
+        return '';
+      }
+    },
+    [cardTypes],
+  );
+
   const fetchBanks = useCallback(async () => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -355,12 +734,27 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
     setBrandOptions(Array.from(new Set(content.data)));
   }, [userToken]);
 
+  const fetchCategories = useCallback(async () => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Authorization', `bearer ${userToken}`);
+
+    const response = await fetch(`${baseURL}categories/all`, {
+      method: 'GET',
+      headers: headers,
+    });
+    const content = await response.json();
+    setCategoryOptions(content.data);
+  }, [userToken]);
+
   useEffect(() => {
     if (userToken) {
       fetchBanks();
       fetchBrands();
+      fetchCategories();
     }
-  }, [fetchBanks, fetchBrands, userToken]);
+  }, [fetchBanks, fetchBrands, fetchCategories, userToken]);
 
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
@@ -381,7 +775,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       value={{
         rewards,
         findCard,
+        findCardByAPI,
         linkCard,
+        linkReward,
         unlinkCard,
         addNewReward,
         removeReward,
@@ -390,6 +786,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         bankOptions,
         setBankOptions,
         brandOptions,
+        categoryOptions,
         CardForms,
         setCardForms,
         validateCardForm,
@@ -400,6 +797,11 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         showBottomSheetModal,
         setBottomSheetModal,
         bottomSheetModal,
+        getCardTypeFromBin,
+        selectedCard,
+        pointsToAdd,
+        showAddPoints,
+        addPoints,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>

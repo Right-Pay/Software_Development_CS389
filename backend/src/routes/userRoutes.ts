@@ -22,6 +22,8 @@ router.put("/linkCard", checkJwt, async (req: Request, res: Response) => await U
 // Update User
 router.put("/", checkJwt, async (req: Request, res: Response) => await UserController.updateUser(req, res))
 
+router.put("/addUserPoints", checkJwt, async (req: Request, res: Response) => await UserController.addUserPoints(req, res))
+
 // Delete User
 router.delete("/", checkJwt, async (req: Request, res: Response) => {
   try {

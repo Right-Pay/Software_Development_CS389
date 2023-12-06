@@ -4,10 +4,12 @@ import i18n from '../config/i18n';
 import { Bank } from "../types/bankTypes";
 import { Brand } from "../types/brandTypes";
 import { Card } from "../types/cardTypes";
+import { Category } from "../types/categoryTypes";
 import { User } from "../types/userTypes";
 import BankModelInstance from "./BankModel";
 import BrandModelInstance from "./BrandModel";
 import CardModelInstance from "./CardModel";
+import CategoryModelInstance from "./CategoryModel";
 
 export class UserModel {
 
@@ -18,7 +20,7 @@ export class UserModel {
       if (userCheck) {
         throw new Error('error.userFound');
       }
-      const sql = 'INSERT INTO rp_users (username, email, auth_id, auth_token, phone) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+      const sql = 'INSERT INTO rp_users (username, email, auth_id, auth_token, phone, points) VALUES ($1, $2, $3, $4, $5, 10) RETURNING *';
       const values = [user.username, user.email, user.auth_id, user.auth_token, user.phone];
       const result = await client.query(sql, values);
       if (!result.rows.length) {
@@ -44,6 +46,7 @@ export class UserModel {
         const user: User = result.rows[0];
         const banks: Bank[] = await BankModelInstance.getAll();
         const brands: Brand[] = await BrandModelInstance.getAll();
+        const categories: Category[] = await CategoryModelInstance.getAll();
         let userCards: Card[] = await CardModelInstance.getByUser(user.id);
 
         user.cards = userCards;
@@ -59,7 +62,6 @@ export class UserModel {
             if (brand) {
               card.card_brand_name = brand.brand_name;
             }
-            card.rewards = [];
           });
         }
         return user;
@@ -144,7 +146,10 @@ export class UserModel {
         throw new Error('error.userCardNotLinked');
       }
       client.release();
-      return cardCheck;
+      return {...cardCheck,
+        exp_date: exp_date,
+        user_to_card_link_id: result.rows[0].id,
+      };
     } catch (err: any) {
       console.log('DB Error', err);
       const userFriendlyError = i18n.t([err.message, 'error.default']);
@@ -171,8 +176,43 @@ export class UserModel {
       if (!result.rows.length) {
         throw new Error('error.userCardNotUnlinked');
       }
+      
+      const sql2 = 'DELETE FROM rp_linked_user_card_to_reward_link WHERE user_id = $1 AND card_id = $2 RETURNING *';
+      const values2 = [user_id, card_id];
+      const result2 = await client.query(sql2, values2);
+      // if (!result2.rows.length) {
+      //   throw new Error('error.userCardNotUnlinked');
+      // }
       client.release();
       return cardCheck;
+    } catch (err: any) {
+      console.log('DB Error', err);
+      const userFriendlyError = i18n.t([err.message, 'error.default']);
+      throw new Error(userFriendlyError);
+    }
+  }
+
+  async add_user_points(auth_id: string, points: number): Promise<User> {
+    try {
+      const client = await dbPool.connect();
+      const userCheck = await this.get(auth_id);
+      if (userCheck === null) {
+        throw new Error('error.userNotFound');
+      }
+      const user_id = userCheck.id;
+
+      if (Number(points) < 0) {
+        throw new Error('error.invalidPoints');
+      }
+
+      const sql = 'UPDATE rp_users SET points = points + $1 WHERE id = $2 RETURNING *';
+      const values = [points, user_id];
+      const result = await client.query(sql, values);
+      if (!result.rows.length) {
+        throw new Error('error.userPointsNotUpdated');
+      }
+      client.release();
+      return result.rows[0];
     } catch (err: any) {
       console.log('DB Error', err);
       const userFriendlyError = i18n.t([err.message, 'error.default']);

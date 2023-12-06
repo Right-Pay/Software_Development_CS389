@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import BankModel from '../models/BankModel';
-import { IJsonResponse } from '../types/jsonResponse';
-import { Bank } from '../types/bankTypes';
 import i18n from '../config/i18n';
+import BankModel from '../models/BankModel';
+import { Bank } from '../types/bankTypes';
+import { IJsonResponse } from '../types/jsonResponse';
 
 class BankController {
   async getBank(req: Request, res: Response) {
@@ -122,11 +122,11 @@ class BankController {
     }
     try {
       throw new Error(i18n.t('error.notAllowedAtThisTime'));
-      const bankDeleted = await BankModel.delete(bankId);
-      if (bankDeleted) {
-        response.data = bankDeleted;
-        res.json(response);
-      }
+      // const bankDeleted = await BankModel.delete(bankId);
+      // if (bankDeleted) {
+      //   response.data = bankDeleted;
+      //   res.json(response);
+      // }
     } catch (error: any) {
       response.success = false;
       response.message = error.message;
