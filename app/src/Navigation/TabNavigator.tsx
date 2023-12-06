@@ -18,6 +18,8 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-ionicons';
+import PointPopUp from '../Components/PointPopUp';
+import LocationBottomSheet from '../Components/Screens/Location/LocationBottomSheet';
 import SettingsBottomSheet from '../Components/Screens/Settings/SettingsBottomSheet';
 import context from '../Context/context';
 import useColorsMode from '../Helpers/Colors';
@@ -29,7 +31,6 @@ import {
   ProfileStackNavigator,
   WalletStackNavigator,
 } from './StackNavigator';
-import PointPopUp from '../Components/PointPopUp';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
@@ -117,6 +118,12 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         return (
           <View className="w-full h-full">
             <SettingsBottomSheet />
+          </View>
+        );
+      } else if (bottomSheetModal.type === BottomSheetTypes.LOCATION) {
+        return (
+          <View className="w-full h-full">
+            <LocationBottomSheet />
           </View>
         );
       } else {

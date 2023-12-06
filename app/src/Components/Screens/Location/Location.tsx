@@ -3,10 +3,11 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { styled } from 'nativewind';
 import type { PropsWithChildren } from 'react';
-import React, { useRef } from 'react';
-import { Platform, Pressable, Text, View, ViewToken } from 'react-native';
+import React, { useCallback, useRef } from 'react';
+import { Platform, Pressable, View, ViewToken } from 'react-native';
 import Icon from 'react-native-ionicons';
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
+import context from '../../../Context/context';
 import locationContext from '../../../Context/locationContext';
 import useColorsMode from '../../../Helpers/Colors';
 import {
@@ -14,6 +15,7 @@ import {
   GoogleMapsView,
   NearbyLocationScrollView,
 } from '../../../Helpers/StylizedComponents';
+import { AppContext, BottomSheetTypes } from '../../../types/AppContextType';
 import { Place } from '../../../types/Location';
 import { LocationContext } from '../../../types/LocationContextType';
 import type {
@@ -33,8 +35,15 @@ type LocationScreenProps = CompositeScreenProps<
 const StyledView = styled(View);
 
 const LocationScreen: React.FC<LocationScreenProps> = () => {
-  const { location, places, updateLocation, locationLoading } =
-    React.useContext(locationContext) as LocationContext;
+  const {
+    location,
+    places,
+    updateLocation,
+    locationLoading,
+    updateSelectedLocation,
+  } = React.useContext(locationContext) as LocationContext;
+  const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
+    React.useContext(context) as AppContext;
   const { colors, themeMode } = useColorsMode();
   const isDarkTheme = themeMode === 'dark';
 
@@ -43,14 +52,26 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
     [] as Place[],
   );
 
+  const handlePresentModalPress = useCallback(() => {
+    setBottomSheetModal({
+      type: BottomSheetTypes.LOCATION,
+      snapPoints: ['30%', '80%'],
+    });
+    setShowBottomSheetModal(!showBottomSheetModal);
+  }, [setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal]);
+
   const renderPlace = (place: Place) => {
     return (
-      <StyledView
+      <Pressable
         className={
           isDarkTheme
             ? 'py-2 flex-1 flex-col h-20 w-full bg-dark'
             : 'py-2 flex-1 flex-col h-20 w-full bg-white'
-        }>
+        }
+        onPress={() => {
+          updateSelectedLocation(place);
+          handlePresentModalPress();
+        }}>
         <StyledView className="flex-1 flex-row place-content-between w-full">
           <PrimaryText
             numberOfLines={1}
@@ -69,7 +90,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
             See Rewards
           </PrimaryText>
         </StyledView>
-      </StyledView>
+      </Pressable>
     );
   };
 
