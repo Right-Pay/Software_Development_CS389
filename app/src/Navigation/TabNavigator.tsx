@@ -29,6 +29,7 @@ import {
   ProfileStackNavigator,
   WalletStackNavigator,
 } from './StackNavigator';
+import PointPopUp from '../Components/PointPopUp';
 
 const Tab = createBottomTabNavigator<NavigationRoutesType>();
 
@@ -187,6 +188,7 @@ const BottomTabNavigator: React.FC<PropsWithChildren> = () => {
         backgroundStyle={backgroundStyles}>
         {getBottomSheetModal()}
       </BottomSheetModal>
+      <PointPopUp />
     </>
   );
 };

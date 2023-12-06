@@ -29,6 +29,9 @@ export interface AppContext {
   showBottomSheetModal: boolean;
   setBottomSheetModal: (_bottomSheetModal: BottomSheetModalType) => void;
   bottomSheetModal: BottomSheetModalType;
+  pointsToAdd: number;
+  showAddPoints: boolean;
+  addPoints: (_points: number) => void;
 }
 
 export enum BottomSheetTypes {

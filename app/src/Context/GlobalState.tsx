@@ -30,6 +30,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
 
+  const [pointsToAdd, setPointsToAdd] = useState<number>(0);
+  const [showAddPoints, setshowAddPoints] = useState<boolean>(false);
+
   const [showBottomSheetModal, setShowBottomSheetModal] =
     useState<boolean>(false);
   const [bottomSheetModal, setBottomSheetModal] =
@@ -49,6 +52,18 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [bankOptions, setBankOptions] = useState<CardBank[]>([]);
 
   const [brandOptions, setBrandOptions] = useState<CardBrand[]>([]);
+
+  const addPoints = (points: number) => {
+    if (!showAddPoints) {
+      //Eventually change this to add points to user profile
+      setPointsToAdd(points);
+      setshowAddPoints(true);
+      setTimeout(() => {
+        setPointsToAdd(0);
+        setshowAddPoints(false);
+      }, 2000);
+    }
+  };
 
   /* Card Add Flow
    * 1. Search for card using 6 digit number
@@ -400,6 +415,9 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         showBottomSheetModal,
         setBottomSheetModal,
         bottomSheetModal,
+        pointsToAdd,
+        showAddPoints,
+        addPoints,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>
