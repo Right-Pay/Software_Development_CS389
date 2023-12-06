@@ -7,6 +7,7 @@ declare module 'react-native-config' {
     REACT_APP_AUTH0_DOMAIN: string;
     REACT_APP_AUTH0_CLIENT_ID: string;
     REACT_APP_AUTH0_AUDIENCE: string;
+    REACT_APP_POINTS_KEY: string;
   }
 
   export const Config: NativeConfig;
