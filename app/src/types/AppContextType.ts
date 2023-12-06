@@ -42,6 +42,9 @@ export interface AppContext {
   bottomSheetModal: BottomSheetModalType;
   getCardTypeFromBin: (_cardBin: number) => string;
   selectedCard: Card;
+  pointsToAdd: number;
+  showAddPoints: boolean;
+  addPoints: (_points: number) => void;
 }
 
 export enum BottomSheetTypes {
