@@ -46,6 +46,8 @@ const AddRewardForm: React.FC = () => {
     getCardTypeFromBin,
     selectedCard,
     linkReward,
+    addPoints,
+    pointCount,
   } = React.useContext(Context) as AppContext;
   const { themeMode } = useColorsMode();
 
@@ -145,13 +147,23 @@ const AddRewardForm: React.FC = () => {
     setFilteredCategoryOptions([]);
   }, [EditForm.Category, EditStates.Add, clearAuthErrors]);
 
-  const closeModal = useCallback(() => {
+  const closeModal = useCallback(async () => {
     setCardForms({ ...CardForms, Full: false, Rewards: false });
     setNewReward({} as Reward);
     setCategorySearch('');
     clearAuthErrors();
     setEditState(EditStates.Main);
-  }, [CardForms, EditStates, clearAuthErrors, setCardForms]);
+    if (pointCount > 0) {
+      await addPoints(pointCount, true);
+    }
+  }, [
+    CardForms,
+    EditStates.Main,
+    addPoints,
+    clearAuthErrors,
+    pointCount,
+    setCardForms,
+  ]);
 
   const renderCategoryOption = useCallback(
     ({ item }: { item: Category }) => (

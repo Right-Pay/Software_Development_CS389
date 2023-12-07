@@ -14,7 +14,7 @@ const PointPopUp = () => {
   const { colors } = useColorsMode();
 
   return showAddPoints ? (
-    <View className="flex flex-row justify-center absolute bottom-20 right-4 h-auto w-auto ">
+    <View className="flex flex-row justify-center absolute bottom-20 right-4 h-auto w-auto z-50">
       <PrimaryText className="text-2xl font-bold ml-2 mr-2">{`+${pointsToAdd}`}</PrimaryText>
       <Icon
         name="ribbon"

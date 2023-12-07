@@ -44,7 +44,8 @@ export interface AppContext {
   selectedCard: Card;
   pointsToAdd: number;
   showAddPoints: boolean;
-  addPoints: (_points: number) => void;
+  addPoints: (_points: number, _tryAgain: boolean) => Promise<void>;
+  pointCount: number;
 }
 
 export enum BottomSheetTypes {

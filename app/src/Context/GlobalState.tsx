@@ -44,6 +44,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
   const ErrorMessages = Consts.authErrorMessages;
 
+  const [pointCount, setPointCount] = useState<number>(0);
   const [pointsToAdd, setPointsToAdd] = useState<number>(0);
   const [showAddPoints, setshowAddPoints] = useState<boolean>(false);
 
@@ -101,7 +102,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
             }, 20);
           }
           setIsLoading(false);
-          return false;
+          return;
         }
 
         if (!content.success) {
@@ -119,6 +120,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       setshowAddPoints(true);
       setTimeout(() => {
         setPointsToAdd(0);
+        setPointCount(0);
         setshowAddPoints(false);
       }, 2000);
     }
@@ -393,7 +395,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         }
         const retReward = content.data as Reward;
         if (add_to_card) {
-          await addPoints(10, true);
           if (selectedCard.rewards) {
             selectedCard.rewards.push(retReward);
           } else {
@@ -408,6 +409,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
       }
     };
     const success = await linkToReward(false);
+    setPointCount(pointCount + 10);
     setIsLoading(false);
     return success;
   };
@@ -802,6 +804,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         pointsToAdd,
         showAddPoints,
         addPoints,
+        pointCount,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>
