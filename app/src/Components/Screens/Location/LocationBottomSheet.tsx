@@ -9,11 +9,17 @@ import { Card, Reward } from '../../../types/CardType';
 import { LocationContext } from '../../../types/LocationContextType';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import languageContext from '../../../Context/languageContext';
 
 const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
   const { selectedLocation } = React.useContext(
     locationContext,
   ) as LocationContext;
+  const { translate } = React.useContext(
+    languageContext,
+  ) as LanguageContextType;
+
   // use this to dismiss bottom sheet
   const { dismiss } = useBottomSheetModal();
   // use this to access colors and color theme (themeMode)
@@ -26,14 +32,13 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
     return (
       <View>
         <PrimaryText className="ml-2 text-lg">
-          Cashback Percent: {reward.initial_percentage}
+          {`${translate('Locaiton', 'Cashback')}: ${reward.initial_percentage}`}
         </PrimaryText>
       </View>
     );
   };
 
   const renderCard = (card: Card) => {
-    console.log(card.rewards);
     return (
       card.rewards &&
       card.rewards.length > 0 && (

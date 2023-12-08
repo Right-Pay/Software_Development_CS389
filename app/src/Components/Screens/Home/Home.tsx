@@ -17,6 +17,9 @@ import CardComponent from '../../Card';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import { Reward } from '../../../types/CardType';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import languageContext from '../../../Context/languageContext';
 
 type HomeScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeNavigationRoutesType, 'HomeScreen'>,
@@ -27,28 +30,45 @@ type HomeScreenProps = CompositeScreenProps<
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const { userProfile } = React.useContext(AuthContext) as AuthContextType;
   const { address } = React.useContext(locationContext) as LocationContext;
+  const { translate } = React.useContext(
+    languageContext,
+  ) as LanguageContextType;
 
   const renderReward = (item: Reward) => {
     return (
       <View className="flex-1 flex-col mb-2 mt-10 w-full">
         <PrimaryText className="text-left">
-          Category: {item.category?.category_name}
+          {`${translate('Wallet', 'Category')}: ${
+            item.category?.category_name
+          }`}
         </PrimaryText>
         {item.category?.specific_places && (
           <PrimaryText className="text-left">
-            Specific Places: {item.category?.specific_places.join(', ')}
+            {`${translate(
+              'Wallet',
+              'Specific',
+            )}: ${item.category?.specific_places.join(', ')}`}
           </PrimaryText>
         )}
         <PrimaryText className="text-left">
-          Initial Percentage: {item.initial_percentage}
+          {`${translate('Wallet', 'Initial')} ${translate(
+            'Wallet',
+            'Percentage',
+          )}: 
+          ${item.initial_percentage}`}
         </PrimaryText>
-        <PrimaryText>Initial Limit: {item.initial_limit}</PrimaryText>
+        <PrimaryText>{`${translate('Wallet', 'Initial')} ${translate(
+          'Wallet',
+          'Limit',
+        )}: 
+          ${item.initial_limit}`}</PrimaryText>
         <PrimaryText>
-          Term Length (time until limit resets): {item.term_length_months} Month
-          {item.term_length_months > 1 ? 's' : ''}
+          {`${translate('Wallet', 'Term')}: ${item.term_length_months} ${
+            item.term_length_months > 0 ? translate('Wallet', 'Month') : ''
+          }${item.term_length_months > 1 ? translate('Wallet', 'S') : ''}`}
         </PrimaryText>
         <PrimaryText>
-          Fallback Percentage: {item.fallback_percentage}
+          {`${translate('Wallet', 'Fallback')}:${item.fallback_percentage}`}
         </PrimaryText>
       </View>
     );
@@ -62,6 +82,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
    * For now we will just display the first card in the list
    * const cardIndexToUse = getTopCard(userProfile.cards);
    */
+
   const topCard =
     userProfile.cards && userProfile.cards.length > 0
       ? userProfile.cards[0]
@@ -70,12 +91,18 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   return (
     <WrapperView className="justify-start">
       <TitleText className="mt-10 mb-10">
-        Hello {userProfile.username}
+        {`${translate('Common', 'Hello')} ${userProfile.username}`}
       </TitleText>
       {topCard ? (
         <>
           <View className="w-full justify-center items-center h-1/3">
-            <PrimaryText className="text-center text-xl mt-10">{`You're at ${address?.displayName.text}\n We suggest you use the following card`}</PrimaryText>
+            <PrimaryText className="text-center text-xl mt-10">{`${translate(
+              'Home',
+              'At',
+            )} ${address?.displayName.text}\n ${translate(
+              'Home',
+              'Suggest',
+            )}`}</PrimaryText>
             <CardComponent card={topCard} classNameProp="w-auto h-auto mt-5" />
           </View>
           <View className="w-full justify-center mt-20 items-center">
@@ -92,7 +119,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
         </>
       ) : (
         <PrimaryText className="text-center text-xl mt-10">
-          You don't have any cards yet. Please add a card to get started.
+          {translate('Home', 'Nocards')}
         </PrimaryText>
       )}
     </WrapperView>

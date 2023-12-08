@@ -8,7 +8,9 @@
     "Next": "Next",
     "Save":"Save",
     "Cancel": "Cancel",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "Loading": "Loading",
+    "Hello": "Hello"
   },
   "Welcome": {
     "Login": "Log In",
@@ -22,7 +24,8 @@
     "Password": "Password",
     "Username": "Username",
     "Confirm": "Confirm Password",
-    "Logout": "Log Out"
+    "Logout": "Log Out",
+    "Welcome": "Welcome to RightPay"
   },
   "Wallet":{
     "Longpress": "Long Press to Confirm",
@@ -30,6 +33,7 @@
     "Tap": "Tap to Exit",
     "Add": "Add New Card",
     "Category": "Category",
+    "Categoryie": "Category (i.e. Gas, Groceries, etc.)",
     "Specific": "Specific Places",
     "Initial": "Initial",
     "Percentage": "Percentage",
@@ -79,6 +83,27 @@
     "Off": "Off",
     "More": "More Settings",
     "Confirmdelete": "Are You Sure You Want to Delete This Card?",
-    "Editsoon": "Edit Coming Soon",
+    "Editsoon": "Edit Coming Soon"
+  },
+  "Profile":{
+    "Profile": "Profile",
+    "Have": "You have",
+    "Cards": "Cards",
+    "Card": "Card",
+    "Rewards": "Rewards",
+    "Reward": "Reward"
+  },
+  "Location":{
+    "Cashback": "Cashback Percent",
+    "Seerewards": "See Rewards",
+    "Latitude": "Latitude",
+    "Longitude": "Longitude",
+    "Currentlocation": "Current Location",
+    "Nearby": "Nearby Locations"
+  },
+  "Home":{
+    "At":"You are at ",
+    "Suggest": "We suggest you use the following card",
+    "Nocards": "You don not have any cards yet. Please add a card to get started"
   }
 }

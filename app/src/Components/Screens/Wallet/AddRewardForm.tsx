@@ -232,7 +232,7 @@ const AddRewardForm: React.FC = () => {
       <>
         <View className="flex flex-col justify-center w-2/3 p-0 z-50 sticky">
           <InputBox
-            placeholder="Category (i.e. All, Gas)"
+            placeholder={translate('Wallet', 'Categoryie')}
             onChange={event => setCategorySearch(event.nativeEvent.text)}
             value={categorySearch}
             defaultValue={newReward?.category?.category_name || ''}
@@ -253,6 +253,7 @@ const AddRewardForm: React.FC = () => {
     );
   }, [
     themeMode,
+    translate,
     categorySearch,
     newReward?.category?.category_name,
     filteredCategoryOptions,

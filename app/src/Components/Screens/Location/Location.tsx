@@ -25,6 +25,8 @@ import type {
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import languageContext from '../../../Context/languageContext';
+import { LanguageContextType } from '../../../types/LanguageContextType';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -41,9 +43,14 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
     updateLocation,
     locationLoading,
     updateSelectedLocation,
+    address,
   } = React.useContext(locationContext) as LocationContext;
   const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
     React.useContext(context) as AppContext;
+  const { translate } = React.useContext(
+    languageContext,
+  ) as LanguageContextType;
+
   const { colors, themeMode } = useColorsMode();
   const isDarkTheme = themeMode === 'dark';
 
@@ -87,7 +94,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
             {place.primaryTypeDisplayName?.text || place.types[0] || ''}
           </PrimaryText>
           <PrimaryText className="text-gray-400 w-1/4 text-sm self-center text-right pr-4">
-            See Rewards
+            {translate('Location', 'Seerewards')}
           </PrimaryText>
         </StyledView>
       </Pressable>
@@ -123,7 +130,6 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
 
   return (
     <WrapperView>
-      <TitleText className="mt-20">This is the location screen</TitleText>
       <GoogleMapsView
         initialRegion={{
           latitude: location.latitude,
@@ -139,7 +145,10 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         }}
         customMapStyle={isDarkTheme ? mapStyle : []}
         provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
-        {markerFactory('test marker', 'test description')}
+        {markerFactory(
+          translate('Location', 'Currentlocation'),
+          address?.displayName.text ?? 'Unknown',
+        )}
       </GoogleMapsView>
       <StyledView
         className={
@@ -149,7 +158,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         }>
         <StyledView className="flex-1 flex-row shrink justify-center rounded-t-xl border-b-2 h-4 min-h-0 max-h-10 border-gray-200 items-center">
           <PrimaryText className="text-lg text-center grow pl-6">
-            Nearby Locations
+            {translate('Location', 'Nearby')}
           </PrimaryText>
           <Pressable
             className="ml-auto pr-2"
