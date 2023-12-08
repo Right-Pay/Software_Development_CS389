@@ -23,6 +23,8 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import languageContext from '../../../Context/languageContext';
 
 type CardSettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsNavigationRoutesType, 'CardSettings'>,
@@ -34,6 +36,9 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
   const { cards } = (React.useContext(authContext) as AuthContextType)
     .userProfile;
   const { unlinkCard } = React.useContext(context) as AppContext;
+  const { translate } = React.useContext(
+    languageContext,
+  ) as LanguageContextType;
 
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
@@ -47,7 +52,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
             setConfirmDelete(false);
           }}>
           <PrimaryText className="text-center text-md text-white">
-            Are you sure?
+            {translate('Settings', 'Confirmdelete')}
           </PrimaryText>
         </PrimaryButton>
         <PrimaryButton
@@ -56,7 +61,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
             setConfirmDelete(false);
           }}>
           <PrimaryText className="text-center text-xl text-white">
-            Cancel
+            {translate('Settings', 'Cancel')}
           </PrimaryText>
         </PrimaryButton>
       </>
@@ -69,11 +74,13 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
         <PrimaryButton
           className="bg-red-500"
           onPress={() => setConfirmDelete(true)}>
-          <PrimaryText className="text-xl text-white">Delete</PrimaryText>
+          <PrimaryText className="text-xl text-white">
+            {translate('Settings', 'Delete')}
+          </PrimaryText>
         </PrimaryButton>
         <PrimaryButton className="opacity-50">
           <PrimaryText className="text-md text-white">
-            Edit Coming Soon
+            {translate('Settings', 'Editsoon')}
           </PrimaryText>
         </PrimaryButton>
       </>
@@ -101,7 +108,10 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <TitleText className="mt-10 mb-4">Card Settings</TitleText>
+        <TitleText className="mt-10 mb-4">{`${translate(
+          'Settings',
+          'Card',
+        )} ${translate('Settings', 'Settings')}`}</TitleText>
         <InnerWrapperView className="border-t-2">
           <SettingsCardList>
             {cards.map((card, index) => renderCard(card, index))}

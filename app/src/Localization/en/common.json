@@ -5,7 +5,10 @@
     "Submit": "Submit",
     "Close" : "Close",
     "Or":"or",
-    "Next": "Next"
+    "Next": "Next",
+    "Save":"Save",
+    "Cancel": "Cancel",
+    "Delete": "Delete"
   },
   "Welcome": {
     "Login": "Log In",
@@ -18,7 +21,8 @@
     "Email": "Email",
     "Password": "Password",
     "Username": "Username",
-    "Confirm": "Confirm Password"
+    "Confirm": "Confirm Password",
+    "Logout": "Log Out"
   },
   "Wallet":{
     "Longpress": "Long Press to Confirm",
@@ -58,5 +62,23 @@
     "Enterbank": "Enter Bank",
     "Enterlevel": "Enter Level",
     "Nosupport": "Looks like we don't support this card yet. Please try again later!"
+  },
+  "Settings":{
+    "Account": "Account Information",
+    "Settings": "Settings",
+    "Cards": "Cards",
+    "Profile": "Profile",
+    "Profileupdated": "Profile Updated",
+    "Nochanges": "No Changes Made",
+    "Username": "Username",
+    "Phone": "Phone",
+    "Locationdescription": "Your location is used to determine nearby companies and which card to suggest you use",
+    "General": "General",
+    "Locationservices": "Location Services",
+    "On": "On",
+    "Off": "Off",
+    "More": "More Settings",
+    "Confirmdelete": "Are You Sure You Want to Delete This Card?",
+    "Editsoon": "Edit Coming Soon",
   }
 }

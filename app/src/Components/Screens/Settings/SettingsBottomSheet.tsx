@@ -9,9 +9,15 @@ import useColorsMode from '../../../Helpers/Colors';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { navSettingType } from '../../../types/SettingsType';
 import PrimaryText from '../../Common/PrimaryText';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import languageContext from '../../../Context/languageContext';
 
 const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
   const { signOut } = React.useContext(authContext) as AuthContextType;
+  const { translate } = React.useContext(
+    languageContext,
+  ) as LanguageContextType;
+
   const { dismiss } = useBottomSheetModal();
   const { colors } = useColorsMode();
   const navigation =
@@ -19,20 +25,24 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
 
   const settingsPages: navSettingType[] = [
     {
-      name: 'Settings',
+      name: translate('Settings', 'Settings'),
       route: 'GeneralSettings',
+      iconName: 'settings',
     },
     {
-      name: 'Account Information',
+      name: translate('Settings', 'Account'),
       route: 'ProfileSettings',
+      iconName: 'person',
     },
     {
-      name: 'Cards',
+      name: translate('Settings', 'Cards'),
       route: 'CardSettings',
+      iconName: 'card',
     },
     {
-      name: 'Sign Out',
+      name: translate('Welcome', 'Signout'),
       route: 'SignOut',
+      iconName: 'log-out',
     },
   ];
 
@@ -60,21 +70,6 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
     }
   };
 
-  const getIcon = (settingName: string) => {
-    switch (settingName) {
-      case 'Account Information':
-        return 'person';
-      case 'Settings':
-        return 'settings';
-      case 'Cards':
-        return 'card';
-      case 'Sign Out':
-        return 'log-out';
-      default:
-        return 'menu';
-    }
-  };
-
   const renderSettingsNav = (setting: navSettingType, key: number) => {
     return (
       <Pressable
@@ -82,10 +77,7 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
         key={key}
         className={'flex-1 flex-row w-screen pl-4 items-center h-auto'}>
         <View className="w-8 text-center">
-          <Icon
-            name={getIcon(setting.name).toString()}
-            color={colors.primary}
-          />
+          <Icon name={setting.iconName.toString()} color={colors.primary} />
         </View>
         <PrimaryText className="text-left text-lg">{setting.name}</PrimaryText>
       </Pressable>

@@ -20,6 +20,8 @@ import OutlineButton from '../../Common/OutlineButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import languageContext from '../../../Context/languageContext';
+import { LanguageContextType } from '../../../types/LanguageContextType';
 
 type GeneralSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsNavigationRoutesType, 'GeneralSettings'>,
@@ -32,6 +34,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   const { requestLocationPermission, locationGrantType } = useContext(
     locationContext,
   ) as LocationContext;
+  const { translate } = React.useContext(
+    languageContext,
+  ) as LanguageContextType;
+
   const { colors } = useColorsMode();
 
   const [locationServicesOn, setLocationServicesOn] =
@@ -52,11 +58,13 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <TitleText className="mt-10 mb-4">General Settings</TitleText>
+        <TitleText className="mt-10 mb-4">{`${translate(
+          'Settings',
+          'General',
+        )} ${translate('Settings', 'Settings')}`}</TitleText>
         <InnerWrapperView className="border-t-2">
           <PrimaryText className="mb-3">
-            Your location is used to determine nearby companies and which card
-            to suggest you use
+            {translate('Settings', 'Locationdescription')}
           </PrimaryText>
           <Switch
             value={locationServicesOn}
@@ -86,13 +94,15 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
             switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
           />
           <PrimaryText className="mb-3">
-            {locationServicesOn
-              ? 'Location Services On'
-              : 'Location Services Off'}
+            {`${translate('Settings', 'Locationservices')} ${
+              locationServicesOn
+                ? translate('Settings', 'On')
+                : translate('Settings', 'Off')
+            }`}
           </PrimaryText>
           <OutlineButton type="primary" onPress={() => navigateToSettings()}>
             <PrimaryText className="text-center text-xl">
-              More Settings
+              {translate('Settings', 'More')}
             </PrimaryText>
           </OutlineButton>
         </InnerWrapperView>
