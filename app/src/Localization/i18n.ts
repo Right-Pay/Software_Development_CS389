@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from './en/common.json';
 import es from './es/common.json';
+import fr from './fr/common.json';
 
 const resources = {
   en: {
@@ -9,6 +10,9 @@ const resources = {
   },
   es: {
     translation: es,
+  },
+  fr: {
+    translation: fr,
   },
 };
 

@@ -40,7 +40,7 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
       iconName: 'card',
     },
     {
-      name: translate('Welcome', 'Signout'),
+      name: translate('Welcome', 'Logout'),
       route: 'SignOut',
       iconName: 'log-out',
     },

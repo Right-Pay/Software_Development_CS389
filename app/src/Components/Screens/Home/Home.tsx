@@ -109,7 +109,9 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
             <FlatList
               className="w-full text-center w-3/4 p-2"
               data={topCard.rewards} //This will need to be done
-              ListHeaderComponent={<TitleText>Rewards</TitleText>}
+              ListHeaderComponent={
+                <TitleText>{translate('Wallet', 'Rewards')}</TitleText>
+              }
               showsVerticalScrollIndicator={true}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => renderReward(item)}

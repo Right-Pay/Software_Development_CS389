@@ -5,9 +5,10 @@ export interface LanguageContextType {
   retrieveLang: () => Promise<void>;
 }
 
-export const supportedLanguages = ['en', 'es'];
+export const supportedLanguages = ['en', 'es', 'fr'];
 
 export enum supportedLanguagesEnum {
   english = 'en',
   spanish = 'es',
+  french = 'fr',
 }

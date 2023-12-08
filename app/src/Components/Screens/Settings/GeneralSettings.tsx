@@ -129,6 +129,19 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
                 {translate('Settings', 'Spanish')}
               </PrimaryText>
             </View>
+            <View className="flex flex-col justify-center items-center">
+              <CheckBox
+                disabled={supportedLanguagesEnum.french === lang}
+                value={supportedLanguagesEnum.french === lang}
+                boxType="square"
+                onValueChange={newValue =>
+                  newValue && changeLanguage(supportedLanguagesEnum.french)
+                }
+              />
+              <PrimaryText className="text-center text-xl">
+                {translate('Settings', 'French')}
+              </PrimaryText>
+            </View>
           </View>
           <OutlineButton type="primary" onPress={() => navigateToSettings()}>
             <PrimaryText className="text-center text-xl">

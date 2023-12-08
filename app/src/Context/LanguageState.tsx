@@ -30,7 +30,6 @@ const LanguageState: React.FC<PropsWithChildren> = ({ children }) => {
   const retrieveLang = useCallback(async () => {
     try {
       const value = await EncryptedStorage.getItem('rp_lang');
-      console.log(value);
       if (value !== null) {
         setLang(value);
       } else {

@@ -58,7 +58,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
           {`${translate('Welcome', 'Email')}: ${userProfile.email}`}
         </PrimaryText>
         {userProfile.phone && userProfile.phone.length > 0 ? (
-          <PrimaryText className="text-2xl font-bold mb-2">{`Phone: ${userProfile.phone}`}</PrimaryText>
+          <PrimaryText className="text-2xl font-bold mb-2">{`${translate(
+            'Settings',
+            'Phone',
+          )}: ${userProfile.phone}`}</PrimaryText>
         ) : null}
         <PrimaryText className="text-2xl font-bold mt-20">
           {`${translate('Profile', 'Have')} ${cardCount} ${
