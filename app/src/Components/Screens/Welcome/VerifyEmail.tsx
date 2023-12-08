@@ -19,6 +19,8 @@ import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll'
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import LanguageContext from '../../../Context/languageContext';
 
 type VerifyEmailScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WelcomeNavigationRoutesType, 'VerifyEmailScreen'>,
@@ -37,6 +39,10 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
     retrieveVerifiedEmail,
     backendSignIn,
   } = React.useContext(AuthContext) as AuthContextType;
+  const { translate } = React.useContext(
+    LanguageContext,
+  ) as LanguageContextType;
+
   const AuthErrors = Consts.authErrorMessages;
   const { colors } = useColorsMode();
 
@@ -53,18 +59,18 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
         }}>
         <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          Back
+          {translate('Common', 'Back')}
         </PrimaryText>
       </Pressable>
     );
-  }, [colors.primary, navigation]);
+  }, [colors.primary, navigation, translate]);
 
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
           <TitleText className="mt-20 ml-3 mr-3">
-            Please check your email for a verification link
+            {translate('Welcome', 'Checkemail')}
           </TitleText>
           <LogoContainer>
             <Logo
@@ -84,7 +90,7 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
               });
             }}>
             <PrimaryText type="secondary" className="text-xl">
-              Continue
+              {translate('Welcome', 'Continue')}
             </PrimaryText>
           </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}

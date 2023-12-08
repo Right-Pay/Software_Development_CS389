@@ -7,8 +7,14 @@ import {
   DeleteCardButton,
 } from '../Helpers/StylizedComponents';
 import { CardProps } from '../types/CardType';
+import { LanguageContextType } from '../types/LanguageContextType';
+import LanguageContext from '../Context/languageContext';
 
 const CardComponent: React.FC<CardProps> = props => {
+  const { translate } = React.useContext(
+    LanguageContext,
+  ) as LanguageContextType;
+
   const formatBin = (bin: string) => {
     return (
       bin
@@ -69,13 +75,13 @@ const CardComponent: React.FC<CardProps> = props => {
           props.setDeleteCard !== undefined && props.setDeleteCard(false)
         }>
         <Text className="text-2xl text-white text-left opacity-100 text-4xl text-center">
-          Delete Card?
+          {translate('Wallet', 'Delete')}
         </Text>
         <Text className="text-2xl text-white text-left opacity-100 text-3xl text-center">
-          Long Press Again to Confirm
+          {translate('Wallet', 'Longpress')}
         </Text>
         <Text className="text-2xl text-white text-left opacity-100 text-2xl text-center">
-          Tap to Exit
+          {translate('Wallet', 'Tap')}
         </Text>
       </DeleteCardButton>
     );

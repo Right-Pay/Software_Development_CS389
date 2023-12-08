@@ -12,6 +12,8 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import LanguageContext from '../../../Context/languageContext';
 
 type LogInScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -27,6 +29,10 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
     needsUsername,
     retrieveVerifiedEmail,
   } = React.useContext(AuthContext) as AuthContextType;
+  const { translate } = React.useContext(
+    LanguageContext,
+  ) as LanguageContextType;
+
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
@@ -44,37 +50,41 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
         }}>
         <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          Back
+          {translate('Common', 'Back')}
         </PrimaryText>
       </Pressable>
     );
-  }, [colors.primary, navigation]);
+  }, [colors.primary, navigation, translate]);
 
   return (
     <WrapperView className="pb-0">
       {/* <KeyboardAvoidingViewScroll> */}
       <View className="flex-1 flex-col w-full h-screen justify-start items-center mb-0 pb-0">
-        <TitleText className="mt-20 mb-4">Log In</TitleText>
+        <TitleText className="mt-20 mb-4">
+          {translate('Welcome', 'Login')}
+        </TitleText>
         <InputBox
-          placeholder="Email Address"
+          placeholder={translate('Welcome', 'Email')}
           className="mb-2"
           onChange={event => setEmail(event.nativeEvent.text)}
         />
         <InputBox
-          placeholder="Password"
+          placeholder={translate('Welcome', 'Password')}
           secureTextEntry={true}
           className="mb-2"
           onChange={event => setPassword(event.nativeEvent.text)}
         />
         {needsUsername && (
           <InputBox
-            placeholder="Username"
+            placeholder={translate('Welcome', 'Username')}
             className="mb-2"
             onChange={event => setUsername(event.nativeEvent.text)}
           />
         )}
         <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
-          <PrimaryText className="text-sm">Forgot Password?</PrimaryText>
+          <PrimaryText className="text-sm">
+            {translate('Welcome', 'Forgot')}
+          </PrimaryText>
         </Pressable>
         <PrimaryButton
           onPress={async () => {
@@ -88,7 +98,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
             });
           }}>
           <PrimaryText type="secondary" className="text-xl">
-            Log In
+            {translate('Welcome', 'Login')}
           </PrimaryText>
         </PrimaryButton>
         {AuthErrorComponent && <AuthErrorComponent />}

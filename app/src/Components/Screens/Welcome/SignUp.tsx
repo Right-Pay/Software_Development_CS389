@@ -13,6 +13,8 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import LanguageContext from '../../../Context/languageContext';
 
 type SignUpScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -29,6 +31,9 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
   const { signUp, clearAuthErrors, AuthErrorComponent, userToken } =
     React.useContext(AuthContext) as AuthContextType;
+  const { translate } = React.useContext(
+    LanguageContext,
+  ) as LanguageContextType;
 
   useEffect(() => {
     clearAuthErrors();
@@ -43,35 +48,37 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
         }}>
         <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          Back
+          {translate('Common', 'Back')}
         </PrimaryText>
       </Pressable>
     );
-  }, [colors.primary, navigation]);
+  }, [colors.primary, navigation, translate]);
 
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full h-screen items-center mb-0">
-          <TitleText className="mt-24 mb-10">Sign Up</TitleText>
+          <TitleText className="mt-24 mb-10">
+            {translate('Welcome', 'Signup')}
+          </TitleText>
           <InputBox
-            placeholder="Email"
+            placeholder={translate('Welcome', 'Email')}
             className="mb-2"
             onChange={event => setEmail(event.nativeEvent.text)}
           />
           <InputBox
-            placeholder="Username"
+            placeholder={translate('Welcome', 'Username')}
             className="mb-2"
             onChange={event => setUsername(event.nativeEvent.text)}
           />
           <InputBox
-            placeholder="Password"
+            placeholder={translate('Welcome', 'Password')}
             className="mb-2"
             secureTextEntry={true}
             onChange={event => setPassword(event.nativeEvent.text)}
           />
           <InputBox
-            placeholder="Repeat Password"
+            placeholder={translate('Welcome', 'Confirm')}
             className="mb-10"
             secureTextEntry={true}
             onChange={event => setRepeatedPassword(event.nativeEvent.text)}
@@ -82,11 +89,11 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               navigation.navigate('VerifyEmailScreen');
             }}>
             <PrimaryText type="secondary" className="text-xl">
-              Sign Up
+              {translate('Welcome', 'Signup')}
             </PrimaryText>
           </PrimaryButton>
           {userToken && (
-            <TitleText>'You have successfully signed up'</TitleText>
+            <TitleText>{translate('Welcome', 'Success')}</TitleText>
           )}
           {AuthErrorComponent && <AuthErrorComponent />}
           {backButton()}

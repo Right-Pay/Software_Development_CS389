@@ -12,6 +12,8 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import LanguageContext from '../../../Context/languageContext';
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -24,6 +26,10 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 }) => {
   const { clearAuthErrors, resetPassword, AuthErrorComponent } =
     React.useContext(AuthContext) as AuthContextType;
+  const { translate } = React.useContext(
+    LanguageContext,
+  ) as LanguageContextType;
+
   const { colors } = useColorsMode();
   const [email, setEmail] = React.useState<string>('');
   useEffect(() => {
@@ -39,20 +45,20 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         }}>
         <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          Back
+          {translate('Common', 'Back')}
         </PrimaryText>
       </Pressable>
     );
-  }, [colors.primary, navigation]);
+  }, [colors.primary, navigation, translate]);
 
   return (
     <WrapperView className="pb-0">
       <View className="flex-1 flex-col w-full h-screen items-center mb-0">
         <TitleText className="mt-24 w-10/12 mb-10">
-          Forgot your Password?
+          {translate('Welcome', 'Forgot')}
         </TitleText>
         <InputBox
-          placeholder="Email Address"
+          placeholder={translate('Welcome', 'Email')}
           className="mb-4"
           onChange={event => setEmail(event.nativeEvent.text)}
         />
@@ -64,7 +70,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
             }, 3000);
           }}>
           <PrimaryText type="secondary" className="text-xl">
-            Reset Password
+            {translate('Welcome', 'Reset')}
           </PrimaryText>
         </PrimaryButton>
         {AuthErrorComponent && <AuthErrorComponent />}

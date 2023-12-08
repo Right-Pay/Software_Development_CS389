@@ -1,0 +1,18 @@
+{
+  "Common": {
+    "Back": "Atrás"
+  },
+  "Welcome": {
+    "Login": "Iniciar sesión",
+    "Signup": "Registrarse",
+    "Checkemail": "Por favor, verifica tu correo electrónico para obtener el enlace de verificación",
+    "Continue": "Continuar",
+    "Success": "Te has registrado exitosamente",
+    "Forgot": "¿Olvidaste tu contraseña?",
+    "Reset": "Restablecer contraseña",
+    "Email": "Correo electrónico",
+    "Password": "Contraseña",
+    "Username": "Nombre de usuario",
+    "Confirm": "Confirmar contraseña"
+  }
+}

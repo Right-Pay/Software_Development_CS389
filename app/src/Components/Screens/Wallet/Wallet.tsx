@@ -27,6 +27,9 @@ import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import AddCardFullForm from './AddCardFullForm';
 import AddRewardForm from './AddRewardForm';
+import { LanguageContextType } from '../../../types/LanguageContextType';
+import LanguageContext from '../../../Context/languageContext';
+import { it } from 'node:test';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -41,6 +44,10 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   const { unlinkCard, setCardForms, CardForms } = React.useContext(
     Context,
   ) as AppContext;
+  const { translate } = React.useContext(
+    LanguageContext,
+  ) as LanguageContextType;
+
   const { userProfile } = React.useContext(authContext) as AuthContextType;
 
   const [currentViewedCard, setCurrentViewedCard] = React.useState<Card[]>(
@@ -64,7 +71,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     <CardView>
       <StyledView className="flex-1 flex-col w-11/12 h-full items-center justify-center bg-dark-green rounded-xl">
         <Text className="text-3xl text-white text-center font-bold pb-8">
-          Add New Card
+          {translate('Wallet', 'Add')}
         </Text>
         <StyledView>
           <AddCardButton onPress={handleAddPress}>
@@ -95,23 +102,35 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     return (
       <View className="flex-1 flex-col mb-2 mt-10 w-full">
         <PrimaryText className="text-left">
-          Category: {item.category?.category_name}
+          {`${translate('Wallet', 'Category')}: ${
+            item.category?.category_name
+          }`}
         </PrimaryText>
         {item.category?.specific_places && (
           <PrimaryText className="text-left">
-            Specific Places: {item.category?.specific_places.join(', ')}
+            {`${translate(
+              'Wallet',
+              'Specific Places',
+            )}: ${item.category?.specific_places.join(', ')}`}
           </PrimaryText>
         )}
         <PrimaryText className="text-left">
-          Initial Percentage: {item.initial_percentage}
+          {`${translate('Wallet', 'Initial')} ${translate(
+            'Wallet',
+            'Percentage',
+          )}: ${item.initial_percentage}`}
         </PrimaryText>
-        <PrimaryText>Initial Limit: {item.initial_limit}</PrimaryText>
+        <PrimaryText>{`${translate('Wallet', 'Initial')} ${translate(
+          'Wallet',
+          'Limit',
+        )}: ${item.initial_limit}`}</PrimaryText>
         <PrimaryText>
-          Term Length (time until limit resets): {item.term_length_months} Month
-          {item.term_length_months > 1 ? 's' : ''}
+          {`${translate('Wallet', 'Term')}: ${item.term_length_months} ${
+            item.term_length_months > 0 ? translate('Wallet', 'Month') : ''
+          }${item.term_length_months > 1 ? translate('Wallet', 'S') : ''}`}
         </PrimaryText>
         <PrimaryText>
-          Fallback Percentage: {item.fallback_percentage}
+          {`${translate('Wallet', 'Fallback')} ${item.fallback_percentage}`}
         </PrimaryText>
       </View>
     );
@@ -154,7 +173,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     <WrapperView>
       <AddCardFullForm />
       <AddRewardForm />
-      <TitleText className="mt-10">Wallet</TitleText>
+      <TitleText className="mt-10">{translate('Wallet', 'Wallet')}</TitleText>
       <View className="aspect-video mt-10 w-full">
         <StyledList
           className="w-full"
@@ -184,7 +203,9 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           className="w-full text-center w-3/4 p-2"
           data={currentRewards} //This will need to be done
           ListHeaderComponent={
-            showRewardHeader ? <TitleText>Rewards</TitleText> : null
+            showRewardHeader ? (
+              <TitleText>{translate('Wallet', 'Rewards')}</TitleText>
+            ) : null
           }
           showsVerticalScrollIndicator={true}
           keyExtractor={(item, index) => index.toString()}
