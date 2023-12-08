@@ -1,6 +1,6 @@
 {
-  "name": "rightpaynow",
-  "version": "0.1.0",
+  "name": "@rightpaynow/webapp",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -25,5 +25,10 @@
     "tailwindcss": "^3.3.0",
     "typescript": "^5",
     "url-loader": "^4.1.1"
+  },
+  "author": "alexanderjhughes",
+  "license": "ISC",
+  "engines": {
+    "node": ">=16.0.0 <17.0.0"
   }
 }

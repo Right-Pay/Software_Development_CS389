@@ -1,6 +1,6 @@
 {
-  "name": "RightPay",
-  "version": "0.0.1",
+  "name": "@rightpaynow/mobileapp",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "postinstall": "patch-package",
@@ -73,7 +73,9 @@
     "tailwindcss": "3.3.2",
     "typescript": "4.8.4"
   },
+  "author": "RightPayNow",
+  "license": "ISC",
   "engines": {
-    "node": ">=16"
+    "node": ">=16.0.0 <17.0.0"
   }
 }
