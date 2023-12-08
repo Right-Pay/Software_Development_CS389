@@ -1,42 +1,42 @@
+import React from 'react';
+import languageContext from '../Context/languageContext';
 import { Card, Reward } from '../types/CardType';
+import { LanguageContextType } from '../types/LanguageContextType';
 
-const AuthErrorMessages = {
-  invalidEmail: 'Invalid Email',
-  invalidPassword:
-    'Invalid Password\n*Must be at least 12 characters\n*Must contain an uppercase and lowercase letter\n*Must contain a number\n*Must contain a special character',
-  passwordsDoNotMatch: 'Passwords Do Not Match',
-  userAlreadyExists: 'User Already Exists',
-  userNotFound: 'User Not Found\nEither Email or Password is Incorrect',
-  errorCreatingUser: 'Error Creating User',
-  tooManyAttepts:
-    'Too Many Attempts\nCheck Your Email for Further Instructions',
-  invalidCode:
-    'The code is not correct\nEither your email is not correct or you entered an invalid code',
-  errorChangingPassword: 'Error Changing Password',
-  sentRestEmail: 'Check Your Email for Further Instructions',
-  invalidToken: 'Invalid Token\nPlease Contact Support',
-  invalidCardName:
-    'Invalid  Card Name\nName must be more then 10 characters\nName must only contain letters',
-  invalidCardBin: 'Invalid Card Number\nMust be 6 digits',
-  invalidBankName:
-    'Invalid Bank Name\nWe do not support that bank at this time!',
-  invalidDropdownOption: 'Invalid Dropdown Option',
-  invalidCardLevel: 'Invalid Card Level\nName must be more then 3 characters',
-  invalidCardType: 'Invalid Card Type\nThe type must be either Credit or Debit',
-  undefined: 'Request failed, please try again later or contact support!',
-  invalidUsername:
-    'Invalid Username\nUsername must be more then 3 characters\nUsername must only contain letters',
-  invalidPhone:
-    'Invalid Phone Number\nMust be 10 digits in any acceptable phone number format',
-  errorUpdatingUser: 'Error Updating User',
-  notVerified: 'Email Not Verified\nPlease Verify Your Email',
-  verifyEmail:
-    'Successfully Signed Up\nPlease Check Your Email to Verify Your Account',
-  addUsername:
-    'Your Username was Not Saved\nPlease Add a Username and Try Again',
-  errorGettingUser: 'Error Getting User',
-  invalidCategory: 'Invalid Category',
-  invalidInitialPercentage: 'Invalid Initial Percentage',
+const AuthErrorMessages = () => {
+  const { translate } = React.useContext(
+    languageContext,
+  ) as LanguageContextType;
+
+  return {
+    invalidEmail: translate('Errors', 'invalidEmail'),
+    invalidPassword: translate('Errors', 'invalidPassword'),
+    passwordsDoNotMatch: translate('Errors', 'passwordsDoNotMatch'),
+    userAlreadyExists: translate('Errors', 'userAlreadyExists'),
+    userNotFound: translate('Errors', 'userNotFound'),
+    errorCreatingUser: translate('Errors', 'errorCreatingUser'),
+    tooManyAttepts: translate('Errors', 'tooManyAttepts'),
+    invalidCode: translate('Errors', 'invalidCode'),
+    errorChangingPassword: translate('Errors', 'errorChangingPassword'),
+    sentRestEmail: translate('Errors', 'sentRestEmail'),
+    invalidToken: translate('Errors', 'invalidToken'),
+    invalidCardName: translate('Errors', 'invalidCardName'),
+    invalidCardBin: translate('Errors', 'invalidCardBin'),
+    invalidBankName: translate('Errors', 'invalidBankName'),
+    invalidDropdownOption: translate('Errors', 'invalidDropdownOption'),
+    invalidCardLevel: translate('Errors', 'invalidCardLevel'),
+    invalidCardType: translate('Errors', 'invalidCardType'),
+    undefined: translate('Errors', 'undefined'),
+    invalidUsername: translate('Errors', 'invalidUsername'),
+    invalidPhone: translate('Errors', 'invalidPhone'),
+    errorUpdatingUser: translate('Errors', 'errorUpdatingUser'),
+    notVerified: translate('Errors', 'notVerified'),
+    verifyEmail: translate('Errors', 'verifyEmail'),
+    addUsername: translate('Errors', 'addUsername'),
+    errorGettingUser: translate('Errors', 'errorGettingUser'),
+    invalidCategory: translate('Errors', 'invalidCategory'),
+    invalidInitialPercentage: translate('Errors', 'invalidInitialPercentage'),
+  };
 };
 
 enum CardFormEnum {

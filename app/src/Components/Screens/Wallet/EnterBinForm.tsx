@@ -164,11 +164,11 @@ const AddCardFullForm = () => {
       }
 
       if (isNaN(bin)) {
-        addAuthError(Consts.authErrorMessages.invalidCardBin);
+        addAuthError(Consts.authErrorMessages().invalidCardBin);
         return;
       }
 
-      removeAuthError(Consts.authErrorMessages.invalidCardBin);
+      removeAuthError(Consts.authErrorMessages().invalidCardBin);
       setCard({ ...card, card_bin: bin });
     };
     return (

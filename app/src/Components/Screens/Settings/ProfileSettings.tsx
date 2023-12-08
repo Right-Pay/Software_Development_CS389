@@ -41,7 +41,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
   } = useContext(authContext) as AuthContextType;
   const { translate } = useContext(languageContext) as LanguageContextType;
 
-  const ErrorMessages = Consts.authErrorMessages;
+  const ErrorMessages = Consts.authErrorMessages();
 
   const fieldsToRender = ['username', /*'email',*/ 'phone'];
 

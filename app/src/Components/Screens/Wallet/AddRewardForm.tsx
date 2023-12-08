@@ -98,13 +98,13 @@ const AddRewardForm: React.FC = () => {
     if (EditStates.Add === editState) {
       if (editForm === EditForm.CategoryForm) {
         if (newReward.category?.category_name === '') {
-          addAuthError(Consts.authErrorMessages.invalidCategory);
+          addAuthError(Consts.authErrorMessages().invalidCategory);
           return;
         }
         setEditForm(EditForm.Percentages);
       } else if (editForm === EditForm.Percentages) {
         if (!newReward.initial_percentage) {
-          addAuthError(Consts.authErrorMessages.invalidInitialPercentage);
+          addAuthError(Consts.authErrorMessages().invalidInitialPercentage);
           return;
         }
         // if add state, pass true to new reward bool

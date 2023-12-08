@@ -43,7 +43,7 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
     LanguageContext,
   ) as LanguageContextType;
 
-  const AuthErrors = Consts.authErrorMessages;
+  const AuthErrors = Consts.authErrorMessages();
   const { colors } = useColorsMode();
 
   useEffect(() => {

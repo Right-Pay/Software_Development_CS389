@@ -61,16 +61,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
           <PrimaryText className="text-2xl font-bold mb-2">{`Phone: ${userProfile.phone}`}</PrimaryText>
         ) : null}
         <PrimaryText className="text-2xl font-bold mt-20">
-          {`${translate('Profile', 'Have')} ${cardCount}
-          ${
+          {`${translate('Profile', 'Have')} ${cardCount} ${
             cardCount > 1
               ? translate('Profile', 'Cards')
               : translate('Profile', 'Card')
           }`}
         </PrimaryText>
         <PrimaryText className="text-2xl font-bold">
-          {`${translate('Profile', 'Have')} ${rewardCount}
-          ${
+          {`${translate('Profile', 'Have')} ${rewardCount} ${
             rewardCount > 1
               ? translate('Profile', 'Rewards')
               : translate('Profile', 'Reward')

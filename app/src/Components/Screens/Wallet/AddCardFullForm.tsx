@@ -206,20 +206,20 @@ const AddCardFullForm: React.FC = () => {
           (card.card_type !== 'Credit' && card.card_type !== 'Debit')
         ) {
           console.log('invalid card type');
-          console.log(Consts.authErrorMessages.invalidCardType);
-          addAuthError(Consts.authErrorMessages.invalidCardType);
+          console.log(Consts.authErrorMessages().invalidCardType);
+          addAuthError(Consts.authErrorMessages().invalidCardType);
           return;
         }
         setEditForm(EditForm.Bank);
       } else if (editForm === EditForm.Bank) {
         if (card.card_bank_id === 0) {
-          addAuthError(Consts.authErrorMessages.invalidBankName);
+          addAuthError(Consts.authErrorMessages().invalidBankName);
           return;
         }
         setEditForm(EditForm.Level);
       } else if (editForm === EditForm.Level) {
         if (card.card_level === '') {
-          addAuthError(Consts.authErrorMessages.invalidCardLevel);
+          addAuthError(Consts.authErrorMessages().invalidCardLevel);
           return;
         }
         // if add state, pass true to new card bool
@@ -292,11 +292,11 @@ const AddCardFullForm: React.FC = () => {
       card.card_brand_name = cardType;
 
       if (isNaN(bin)) {
-        addAuthError(Consts.authErrorMessages.invalidCardBin);
+        addAuthError(Consts.authErrorMessages().invalidCardBin);
         return;
       }
 
-      removeAuthError(Consts.authErrorMessages.invalidCardBin);
+      removeAuthError(Consts.authErrorMessages().invalidCardBin);
       setCard({ ...card, card_bin: bin });
     };
     const classes =

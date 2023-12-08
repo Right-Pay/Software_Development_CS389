@@ -3,7 +3,7 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React, { useContext, useEffect } from 'react';
-import { Linking } from 'react-native';
+import { Linking, View } from 'react-native';
 import { Switch } from 'react-native-switch';
 import context from '../../../Context/context';
 import locationContext from '../../../Context/locationContext';
@@ -22,6 +22,8 @@ import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import languageContext from '../../../Context/languageContext';
 import { LanguageContextType } from '../../../types/LanguageContextType';
+import CheckBox from '@react-native-community/checkbox';
+import { supportedLanguagesEnum } from '../../../types/LanguageContextType';
 
 type GeneralSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsNavigationRoutesType, 'GeneralSettings'>,
@@ -34,7 +36,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   const { requestLocationPermission, locationGrantType } = useContext(
     locationContext,
   ) as LocationContext;
-  const { translate } = React.useContext(
+  const { translate, lang, changeLanguage } = React.useContext(
     languageContext,
   ) as LanguageContextType;
 
@@ -100,6 +102,34 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
                 : translate('Settings', 'Off')
             }`}
           </PrimaryText>
+          <View className="flex flex-row justify-center space-x-4 h-1/4 m-4 w-auto">
+            <View className="flex flex-col justify-center items-center">
+              <CheckBox
+                disabled={supportedLanguagesEnum.english === lang}
+                value={supportedLanguagesEnum.english === lang}
+                boxType="square"
+                onValueChange={newValue =>
+                  newValue && changeLanguage(supportedLanguagesEnum.english)
+                }
+              />
+              <PrimaryText className="text-center text-xl">
+                {translate('Settings', 'English')}
+              </PrimaryText>
+            </View>
+            <View className="flex flex-col justify-center items-center">
+              <CheckBox
+                disabled={supportedLanguagesEnum.spanish === lang}
+                value={supportedLanguagesEnum.spanish === lang}
+                boxType="square"
+                onValueChange={newValue =>
+                  newValue && changeLanguage(supportedLanguagesEnum.spanish)
+                }
+              />
+              <PrimaryText className="text-center text-xl">
+                {translate('Settings', 'Spanish')}
+              </PrimaryText>
+            </View>
+          </View>
           <OutlineButton type="primary" onPress={() => navigateToSettings()}>
             <PrimaryText className="text-center text-xl">
               {translate('Settings', 'More')}
