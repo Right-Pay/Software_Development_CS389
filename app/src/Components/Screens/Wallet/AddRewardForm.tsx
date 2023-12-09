@@ -32,6 +32,7 @@ const AddRewardForm: React.FC = () => {
     removeAuthError,
     isKeyboardVisible,
     userProfile,
+    refreshUserProfile,
   } = React.useContext(authContext) as AuthContextType;
   const {
     linkCard,
@@ -131,7 +132,7 @@ const AddRewardForm: React.FC = () => {
         }
       }
       if (!errors) {
-        userProfile.cards.push(selectedCard);
+        await refreshUserProfile();
         closeModal();
       }
     }
