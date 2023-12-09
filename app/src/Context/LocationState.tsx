@@ -14,18 +14,23 @@ import { Location, Place, PlaceLocation } from '../types/Location';
 import authContext from './authContext';
 import context from './context';
 import LocationContext from './locationContext';
+import Consts from '../Helpers/Consts';
 
 const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [location, setLocation] = useState<Location>({} as Location);
   const [places, setPlaces] = useState<Place[]>([]);
   const [address, setAddress] = useState<Place | undefined>(undefined);
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
-  const { appStateVisible } = useContext(context) as AppContext;
+  const { appStateVisible, setTopFiveCards } = useContext(
+    context,
+  ) as AppContext;
   const { userProfile } = useContext(authContext) as AuthContextType;
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<Place | null>(null);
 
   const apiURL = Config.REACT_APP_GOOGLE_API;
+
+  const supportedLocation = Consts.SupportedLocationsEnum;
 
   const requestLocationPermission = useCallback(async () => {
     try {
@@ -63,6 +68,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         types: ['Restaurant'],
         readableType: 'Restaurant',
         id: '0',
+        formattedAddress: 'Unavailable',
+        cardRewards: [],
       });
       return;
     }
@@ -70,7 +77,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append(
       'X-Goog-FieldMask',
-      'places.displayName,places.businessStatus,places.primaryType',
+      'places.displayName,places.businessStatus,places.primaryType,places.types',
     );
     myHeaders.append('X-Goog-Api-Key', apiURL);
 
@@ -150,6 +157,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
           readableType: 'Restaurant',
           id: '0',
           formattedAddress: 'Unavailable',
+          cardRewards: [],
         },
       ]);
       return;
@@ -216,7 +224,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       .map((place: Place, index: number) => {
         let primaryTypeDisplayName = {};
         if (
-          !place.hasOwnProperty('primaryType') &&
+          placesTypes.hasOwnProperty.call(place, 'primaryType') &&
           place.types.length > 0 &&
           placesTypes.hasOwnProperty(place.types[0].toString())
         ) {
@@ -329,24 +337,18 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       const cards = userProfile.cards?.filter(card => {
         const filteredCardRewards = card?.rewards?.filter(reward => {
           const rewardType = reward.category?.category_name.toLowerCase();
+          const rewardSlug = reward.category?.category_slug;
           const rewardSecondaryTypes = reward.category?.specific_places;
-          rewardSecondaryTypes?.forEach(type => {
-            type.toLowerCase();
-          });
-          if (
-            rewardType === placeType ||
-            (rewardType &&
-              (rewardType?.includes(placeType) ||
-                placeType?.includes(rewardType))) ||
-            reward.category?.category_name === 'All'
-          ) {
-            return true;
-          } else if (rewardSecondaryTypes) {
-            return rewardSecondaryTypes.some(type => {
+
+          const placeMap =
+            supportedLocation[rewardSlug as keyof typeof supportedLocation];
+          if (placeMap) {
+            return placeMap.includes(placeType);
+          } else if (placeType === rewardType) return true;
+          else {
+            rewardSecondaryTypes?.filter(type => {
               return placeSecondaryTypes.includes(type.toLowerCase());
             });
-          } else {
-            return false;
           }
         });
         if (filteredCardRewards && filteredCardRewards.length > 0) {
@@ -357,11 +359,55 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       });
       place.cardRewards = cards;
     });
-  }, [places, userProfile.cards]);
+  }, [places, supportedLocation, userProfile.cards]);
 
   useEffect(() => {
     fetchRewards();
   }, [places, fetchRewards, userProfile.cards]);
+
+  const topFiveCards = useCallback(async () => {
+    const addressPlaces = address?.types;
+    const rewardPercents: object[] = [];
+    const topCards = userProfile.cards?.filter(card => {
+      const hasMatchingReward = card.rewards?.some(reward => {
+        const rewardType = reward.category?.category_name.toLowerCase();
+        if (rewardType?.toLowerCase() === 'all') return true;
+
+        const rewardSlug = reward.category?.category_slug;
+        const rewardSecondaryTypes = reward.category?.specific_places;
+
+        const placeMap =
+          supportedLocation[rewardSlug as keyof typeof supportedLocation];
+
+        if (placeMap.length > 0) {
+          rewardPercents.push({
+            Percent: reward.initial_percentage,
+            Id: card.id,
+          });
+          return placeMap.some(place => addressPlaces?.includes(place));
+        }
+
+        return false;
+      });
+      return hasMatchingReward;
+    });
+
+    const topSortedIds = rewardPercents
+      ?.sort((a: any, b: any) => (a.Percent >= b.Percent ? 1 : -1))
+      .map((item: any) => item.Id);
+
+    const sorted = topCards
+      ?.sort((a, b) =>
+        topSortedIds?.indexOf(a.id) < topSortedIds?.indexOf(b.id) ? 1 : -1,
+      )
+      .slice(0, 5);
+
+    setTopFiveCards(sorted);
+  }, [address?.types, setTopFiveCards, supportedLocation, userProfile.cards]);
+
+  useEffect(() => {
+    topFiveCards();
+  }, [topFiveCards, address]);
 
   const updateSelectedLocation = useCallback(
     (newSelectedLocation: Place | null) => {

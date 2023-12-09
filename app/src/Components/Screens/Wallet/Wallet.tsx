@@ -177,6 +177,15 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
             setCurrentRewards([]);
             setShowRewardHeader(false);
           }}
+          onScrollEndDrag={() => {
+            if (
+              currentViewedCard.length === 1 &&
+              currentViewedCard[0].id !== -1
+            ) {
+              setShowRewardHeader(true);
+              setCurrentRewards(currentViewedCard[0].rewards || []);
+            }
+          }}
         />
       </View>
       <View className="aspect-video mt-10 w-full justify-center items-center">
