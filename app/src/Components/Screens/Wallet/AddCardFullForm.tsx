@@ -4,6 +4,7 @@ import {
   Keyboard,
   Modal,
   NativeSyntheticEvent,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -433,25 +434,25 @@ const AddCardFullForm: React.FC = () => {
         ]}
         placeholder={card?.card_type || 'Credit or Debit'}
         onDropdownChange={updateType}
-        dropdownStyle="m-2 w-2/3 h-auto z-40"
+        dropdownStyle="m-2 w-2/3 h-auto z-50"
       />
     );
   };
 
   const renderExpirationDropdown = useCallback(() => {
     return (
-      <FormDateView className="m-2">
+      <FormDateView className={`m-2 ${Platform.OS === 'ios' ? 'z-40' : ''}`}>
         <DropdownComponent
           options={monthOptions}
           placeholder={card?.exp_date?.split('-')[1] || '1'}
           onDropdownChange={handleExpirationMonthChange}
-          dropdownStyle="w-1/3 mr-4"
+          dropdownStyle="w-1/3 mr-4 z-50"
         />
         <DropdownComponent
           options={years}
           placeholder={currentYear}
           onDropdownChange={handleExpirationYearChange}
-          dropdownStyle="w-1/3 ml-4"
+          dropdownStyle="w-1/3 ml-4 z-50"
         />
       </FormDateView>
     );
