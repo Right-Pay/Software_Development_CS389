@@ -58,10 +58,22 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   }, [locationGrantType]);
 
   const sortRewards = useCallback((link: rewardToCardLink[]) => {
-    return link.sort((a, b) => (a.percent <= b.percent ? 1 : -1));
+    const unFilteredRewards: rewardToCardLink[] = [];
+    link.forEach(reward => {
+      const index = unFilteredRewards.find(i => i.cardId === reward.cardId);
+      if (index === undefined) {
+        unFilteredRewards.push(reward);
+      } else {
+        if (index.percent < reward.percent) {
+          index.percent = reward.percent;
+        }
+      }
+    });
+
+    return unFilteredRewards.sort((a, b) => (a.percent <= b.percent ? 1 : -1));
   }, []);
 
-  const getValueByKey = useCallback(
+  const getAcceptedLocationsByKey = useCallback(
     (key: string) => {
       return SupportedLocationsEnum[key as keyof typeof SupportedLocationsEnum];
     },
@@ -76,7 +88,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       userProfile.cards?.forEach(async card => {
         await card.rewards?.forEach(reward => {
           const rewardSlug = reward.category?.category_slug;
-          const acceptedPlaces = getValueByKey(rewardSlug ?? '') ?? [];
+          const acceptedPlaces =
+            getAcceptedLocationsByKey(rewardSlug ?? '') ?? [];
           const link = {
             cardId: card.id ?? 0,
             rewardId: reward.id ?? 0,
@@ -104,7 +117,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       });
       place.cardRewards = sortRewards(cardRewards);
     },
-    [userProfile.cards, sortRewards, getValueByKey],
+    [userProfile.cards, sortRewards, getAcceptedLocationsByKey],
   );
 
   const fetchTopFiveCards = useCallback(
@@ -460,6 +473,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         updateSelectedLocation,
         topFiveCards,
         fetchCardById,
+        getAcceptedLocationsByKey,
       }}>
       {children}
     </LocationContext.Provider>

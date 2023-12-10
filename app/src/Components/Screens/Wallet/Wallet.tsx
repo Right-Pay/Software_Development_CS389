@@ -93,7 +93,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   const renderReward = (item: Reward) => {
     return (
-      <View className="flex-1 flex-col mb-2 mt-10 w-full">
+      <View className="flex-1 flex-col mb-2 mt-5 w-full">
         <PrimaryText className="text-left">
           Category: {item.category?.category_name}
         </PrimaryText>
@@ -198,6 +198,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           showsVerticalScrollIndicator={true}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => renderReward(item)}
+          showsHorizontalScrollIndicator={true}
           ItemSeparatorComponent={itemSeparatorComponent}
           refreshing={!showRewardHeader && currentViewedCard[0].id !== -1}
           onRefresh={() => {

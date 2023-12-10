@@ -35,7 +35,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   const renderReward = (item: Reward) => {
     return (
-      <View className="flex-1 flex-col mb-2 mt-10 w-full">
+      <View className="flex-1 flex-col mb-2 mt-5 w-full">
         <PrimaryText className="text-left">
           Category: {item.category?.category_name}
         </PrimaryText>
@@ -71,11 +71,11 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const renderTopCard = () => {
     return topCard ? (
       <>
-        <View className="w-full justify-center items-center h-1/3">
+        <View className="w-full justify-center items-center h-1/3 mb-5">
           <PrimaryText className="text-center text-xl mt-10">{`You're at ${address?.displayName.text}\n We suggest you use the following card`}</PrimaryText>
           <CardComponent card={topCard} classNameProp="w-auto h-auto mt-5" />
         </View>
-        <View className="w-full justify-center mt-20 items-center">
+        <View className="aspect-video mt-12 w-full justify-center items-center">
           <FlatList
             className="w-full text-center w-3/4 p-2"
             data={topCard.rewards} //This will need to be done
@@ -83,6 +83,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
             showsVerticalScrollIndicator={true}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => renderReward(item)}
+            showsHorizontalScrollIndicator={true}
             ItemSeparatorComponent={itemSeparatorComponent}
           />
         </View>

@@ -74,7 +74,7 @@ export const DeleteCardButton = styled(
   Pressable,
   'w-full h-full absolute top-0 left-0 flex bg-red-500 rounded-xl opacity-75 justify-center items-center',
 );
-export const CardItemSeperator = styled(View, 'w-12');
+export const CardItemSeperator = styled(View, 'w-12 h-2');
 export const AddCardIcon = styled(Image, 'w-full h-full');
 export const AddCardView = styled(
   View,

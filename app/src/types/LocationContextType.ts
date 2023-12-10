@@ -15,6 +15,7 @@ export interface LocationContext {
   updateSelectedLocation: (place: Place) => void;
   topFiveCards: rewardToCardLink[];
   fetchCardById: (cardId: number) => Card;
+  getAcceptedLocationsByKey: (key: string) => string[];
 }
 
 export interface rewardToCardLink {

@@ -11,9 +11,8 @@ import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 
 const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
-  const { selectedLocation, fetchCardById } = React.useContext(
-    locationContext,
-  ) as LocationContext;
+  const { selectedLocation, fetchCardById, getAcceptedLocationsByKey } =
+    React.useContext(locationContext) as LocationContext;
 
   // use this to dismiss bottom sheet
   const { dismiss } = useBottomSheetModal();
@@ -39,7 +38,33 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
       card.rewards.length > 0 && (
         <View key={card.id}>
           <PrimaryText className="ml-2 text-lg">{card.card_bin}</PrimaryText>
-          {card.rewards && card.rewards.map(reward => renderReward(reward))}
+          {card.rewards &&
+            card.rewards.map(reward => {
+              const location_slug = selectedLocation?.types[0];
+              const location_name = selectedLocation?.displayName.text;
+              const reward_slug = reward.category?.category_slug;
+              const acceptedPlaces = getAcceptedLocationsByKey(
+                reward_slug ?? '',
+              );
+              if (location_slug === reward_slug) {
+                return renderReward(reward);
+              } else if (reward_slug === 'all') {
+                return renderReward(reward);
+              } else if (
+                reward.category?.specific_places?.includes(location_name ?? '')
+              ) {
+                //This would be for a specific location
+                return renderReward(reward);
+              } else if (
+                acceptedPlaces &&
+                acceptedPlaces.length > 0 &&
+                acceptedPlaces.includes(location_slug ?? '')
+              ) {
+                return renderReward(reward);
+              } else {
+                return null;
+              }
+            })}
         </View>
       )
     );
