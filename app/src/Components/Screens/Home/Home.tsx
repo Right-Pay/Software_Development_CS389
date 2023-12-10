@@ -18,8 +18,6 @@ import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import { Reward } from '../../../types/CardType';
-import context from '../../../Context/context';
-import { AppContext } from '../../../types/AppContextType';
 
 type HomeScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeNavigationRoutesType, 'HomeScreen'>,
@@ -29,8 +27,9 @@ type HomeScreenProps = CompositeScreenProps<
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const { userProfile } = React.useContext(AuthContext) as AuthContextType;
-  const { topFiveCards } = React.useContext(context) as AppContext;
-  const { address } = React.useContext(locationContext) as LocationContext;
+  const { address, topFiveCards, fetchCardById } = React.useContext(
+    locationContext,
+  ) as LocationContext;
 
   const renderReward = (item: Reward) => {
     return (
@@ -67,7 +66,9 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
    * const cardIndexToUse = getTopCard(userProfile.cards);
    */
   const topCard =
-    topFiveCards && topFiveCards.length > 0 ? topFiveCards[0] : undefined;
+    topFiveCards && topFiveCards.length > 0
+      ? fetchCardById(topFiveCards[0].cardId)
+      : undefined;
 
   return (
     <WrapperView className="justify-start">

@@ -1,3 +1,4 @@
+import { Card } from './CardType';
 import { Location, Place } from './Location';
 
 export interface LocationContext {
@@ -12,4 +13,12 @@ export interface LocationContext {
   locationGrantType: boolean;
   selectedLocation: Place | null;
   updateSelectedLocation: (place: Place) => void;
+  topFiveCards: rewardToCardLink[];
+  fetchCardById: (cardId: number) => Card;
+}
+
+export interface rewardToCardLink {
+  cardId: number;
+  rewardId: number;
+  percent: number;
 }

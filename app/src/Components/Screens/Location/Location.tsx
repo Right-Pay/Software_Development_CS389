@@ -3,7 +3,7 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { styled } from 'nativewind';
 import type { PropsWithChildren } from 'react';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Platform, Pressable, View, ViewToken } from 'react-native';
 import Icon from 'react-native-ionicons';
 import { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -44,6 +44,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
   } = React.useContext(locationContext) as LocationContext;
   const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
     React.useContext(context) as AppContext;
+
   const { colors, themeMode } = useColorsMode();
   const isDarkTheme = themeMode === 'dark';
 
@@ -60,9 +61,10 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
     setShowBottomSheetModal(!showBottomSheetModal);
   }, [setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal]);
 
-  const renderPlace = (place: Place) => {
+  const renderPlace = (place: Place, index: number) => {
     return (
       <Pressable
+        key={index}
         className={
           isDarkTheme
             ? 'py-2 flex-1 flex-col h-20 w-full bg-dark'
@@ -163,7 +165,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         <NearbyLocationScrollView
           className="text-black z-50"
           data={places}
-          renderItem={({ item }) => renderPlace(item as Place)}
+          renderItem={({ item, index }) => renderPlace(item as Place, index)}
           ItemSeparatorComponent={seperatorComponent}
           showsHorizontalScrollIndicator={false}
           horizontal={false}

@@ -11,9 +11,10 @@ import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 
 const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
-  const { selectedLocation } = React.useContext(
+  const { selectedLocation, fetchCardById } = React.useContext(
     locationContext,
   ) as LocationContext;
+
   // use this to dismiss bottom sheet
   const { dismiss } = useBottomSheetModal();
   // use this to access colors and color theme (themeMode)
@@ -24,7 +25,7 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
 
   const renderReward = (reward: Reward) => {
     return (
-      <View>
+      <View key={reward.id}>
         <PrimaryText className="ml-2 text-lg">
           Cashback Percent: {reward.initial_percentage}
         </PrimaryText>
@@ -33,11 +34,10 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
   };
 
   const renderCard = (card: Card) => {
-    console.log(card.rewards);
     return (
       card.rewards &&
       card.rewards.length > 0 && (
-        <View>
+        <View key={card.id}>
           <PrimaryText className="ml-2 text-lg">{card.card_bin}</PrimaryText>
           {card.rewards && card.rewards.map(reward => renderReward(reward))}
         </View>
@@ -54,7 +54,9 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
         {selectedLocation?.formattedAddress}
       </PrimaryText>
       {selectedLocation?.cardRewards &&
-        selectedLocation?.cardRewards.map(card => renderCard(card))}
+        selectedLocation?.cardRewards.map(card =>
+          renderCard(fetchCardById(card.cardId)),
+        )}
     </View>
   );
 };

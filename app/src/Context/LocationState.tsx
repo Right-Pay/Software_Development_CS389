@@ -15,22 +15,23 @@ import authContext from './authContext';
 import context from './context';
 import LocationContext from './locationContext';
 import Consts from '../Helpers/Consts';
+import { Card } from '../types/CardType';
+import { rewardToCardLink } from '../types/LocationContextType';
 
 const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [location, setLocation] = useState<Location>({} as Location);
   const [places, setPlaces] = useState<Place[]>([]);
   const [address, setAddress] = useState<Place | undefined>(undefined);
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
-  const { appStateVisible, setTopFiveCards } = useContext(
-    context,
-  ) as AppContext;
-  const { userProfile } = useContext(authContext) as AuthContextType;
+  const { appStateVisible } = useContext(context) as AppContext;
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<Place | null>(null);
-
-  const apiURL = Config.REACT_APP_GOOGLE_API;
+  const { userProfile } = useContext(authContext) as AuthContextType;
+  const [topFiveCards, setTopFiveCards] = useState<rewardToCardLink[]>([]);
 
   const supportedLocation = Consts.SupportedLocationsEnum;
+
+  const apiURL = Config.REACT_APP_GOOGLE_API;
 
   const requestLocationPermission = useCallback(async () => {
     try {
@@ -55,6 +56,41 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       return false;
     }
   }, [locationGrantType]);
+
+  const sortRewards = useCallback((link: rewardToCardLink[]) => {
+    return link.sort((a, b) => (a.percent <= b.percent ? 1 : -1));
+  }, []);
+
+  const linkRewardToLocation = useCallback(
+    (place: Place) => {
+      const placeSlug = place.primaryType.toLowerCase();
+      const placeName = place.displayName.text;
+      const cardRewards: rewardToCardLink[] = [];
+      userProfile.cards?.forEach(card => {
+        card.rewards?.forEach(reward => {
+          const rewardSlug = reward.category?.category_slug;
+          const link = {
+            cardId: card.id ?? 0,
+            rewardId: reward.id ?? 0,
+            percent: reward.initial_percentage,
+          };
+          if (rewardSlug === 'all') {
+            cardRewards.push(link);
+            return;
+          } else if (placeSlug === rewardSlug) {
+            cardRewards.push(link);
+            return;
+          } else if (reward.category?.specific_places?.includes(placeName)) {
+            //This would be for a specific location
+            cardRewards.push(link);
+            return;
+          }
+        });
+      });
+      place.cardRewards = sortRewards(cardRewards);
+    },
+    [sortRewards, userProfile.cards],
+  );
 
   const fetchAddress = useCallback(async () => {
     await requestLocationPermission();
@@ -113,9 +149,17 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         id: index.toString(),
       } as Place;
     });
+    await linkRewardToLocation(resultAddress[0]);
 
     setAddress(resultAddress[0]);
-  }, [location, locationGrantType, requestLocationPermission, apiURL]);
+  }, [
+    requestLocationPermission,
+    locationGrantType,
+    apiURL,
+    location.latitude,
+    location.longitude,
+    linkRewardToLocation,
+  ]);
 
   const calculateDistanceLatLong = (
     location1: PlaceLocation,
@@ -256,7 +300,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     setPlaces(resultPlaces);
     // setPlaces(Consts.devLocations as unknown as Place[]);
     setLocationLoading(false);
-  }, [location, requestLocationPermission, locationGrantType, apiURL]);
+  }, [requestLocationPermission, locationGrantType, apiURL, location]);
 
   const getLocation = useCallback(async () => {
     await requestLocationPermission();
@@ -330,90 +374,27 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     });
   }, [requestLocationPermission]);
 
-  const fetchRewards = useCallback(async () => {
-    places?.forEach(place => {
-      const placeType = place.primaryType.toLowerCase();
-      const placeSecondaryTypes = place.types;
-      const cards = userProfile.cards?.filter(card => {
-        const filteredCardRewards = card?.rewards?.filter(reward => {
-          const rewardType = reward.category?.category_name.toLowerCase();
-          const rewardSlug = reward.category?.category_slug;
-          const rewardSecondaryTypes = reward.category?.specific_places;
-
-          const placeMap =
-            supportedLocation[rewardSlug as keyof typeof supportedLocation];
-          if (placeMap) {
-            return placeMap.includes(placeType);
-          } else if (placeType === rewardType) return true;
-          else {
-            rewardSecondaryTypes?.filter(type => {
-              return placeSecondaryTypes.includes(type.toLowerCase());
-            });
-          }
-        });
-        if (filteredCardRewards && filteredCardRewards.length > 0) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      place.cardRewards = cards;
-    });
-  }, [places, supportedLocation, userProfile.cards]);
-
-  useEffect(() => {
-    fetchRewards();
-  }, [places, fetchRewards, userProfile.cards]);
-
-  const topFiveCards = useCallback(async () => {
-    const addressPlaces = address?.types || [];
-    const topSortedIds: any[] = [];
-    const topFiveCards = userProfile.cards?.filter(card => {
-      let hasMatchingReward = false;
-      card.rewards?.forEach(reward => {
-        const rewardType = reward.category?.category_name?.toLowerCase();
-        const rewardSlug = reward.category?.category_slug;
-        const placeMap =
-          supportedLocation[rewardSlug as keyof typeof supportedLocation];
-
-        if (
-          rewardType === 'all' ||
-          (placeMap && placeMap.some(place => addressPlaces.includes(place)))
-        ) {
-          topSortedIds.push({
-            Percent: reward.initial_percentage || 0,
-            Id: card.id,
-          });
-          hasMatchingReward = true;
-        }
-      });
-      return hasMatchingReward;
-    });
-
-    topSortedIds.sort((a, b) => b.Percent - a.Percent);
-
-    const sortedIds = topSortedIds.map(item => item.Id);
-    const sorted = topFiveCards
-      ?.sort((a, b) => {
-        const indexA = sortedIds.indexOf(a.id);
-        const indexB = sortedIds.indexOf(b.id);
-        return indexA - indexB;
-      })
-      .slice(0, 5);
-
-    setTopFiveCards(sorted);
-  }, [address?.types, setTopFiveCards, supportedLocation, userProfile.cards]);
-
-  useEffect(() => {
-    topFiveCards();
-  }, [topFiveCards, address]);
-
   const updateSelectedLocation = useCallback(
     (newSelectedLocation: Place | null) => {
       setSelectedLocation(newSelectedLocation);
     },
     [setSelectedLocation],
   );
+
+  const fetchCardById = useCallback(
+    (cardId: number) => {
+      return (
+        userProfile.cards?.find(card => card.id === cardId) ?? ({} as Card)
+      );
+    },
+    [userProfile.cards],
+  );
+
+  const fetchTopFiveCards = useCallback(async () => {
+    if (address && address.cardRewards && address.cardRewards.length > 0) {
+      setTopFiveCards(sortRewards(address.cardRewards).slice(0, 5));
+    }
+  }, [address, sortRewards]);
 
   useEffect(() => {
     getLocation();
@@ -422,7 +403,18 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     fetchPlaces();
     fetchAddress();
-  }, [fetchAddress, fetchPlaces, location]);
+    fetchTopFiveCards();
+  }, [fetchAddress, fetchPlaces, fetchTopFiveCards, location]);
+
+  useEffect(() => {
+    places?.forEach(place => {
+      linkRewardToLocation(place);
+    });
+  }, [linkRewardToLocation, places]);
+
+  useEffect(() => {
+    address && linkRewardToLocation(address as Place);
+  }, [address, linkRewardToLocation]);
 
   useEffect(() => {
     if (appStateVisible === 'active') {
@@ -444,6 +436,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         locationLoading,
         selectedLocation,
         updateSelectedLocation,
+        topFiveCards,
+        fetchCardById,
       }}>
       {children}
     </LocationContext.Provider>

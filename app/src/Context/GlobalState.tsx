@@ -71,8 +71,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
 
   const [selectedCard, setSelectedCard] = useState<Card>({} as Card);
 
-  const [topFiveCards, setTopFiveCards] = useState<Card[]>([]);
-
   const addPoints = async (points: number, tryAgain: boolean) => {
     if (!showAddPoints) {
       //Eventually change this to add points to user profile
@@ -807,8 +805,6 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
         showAddPoints,
         addPoints,
         pointCount,
-        setTopFiveCards,
-        topFiveCards,
       }}>
       <LocationState>{children}</LocationState>
     </Context.Provider>
