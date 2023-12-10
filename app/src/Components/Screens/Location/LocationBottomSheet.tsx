@@ -9,16 +9,12 @@ import { Card, Reward } from '../../../types/CardType';
 import { LocationContext } from '../../../types/LocationContextType';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import languageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
   const { selectedLocation } = React.useContext(
     locationContext,
   ) as LocationContext;
-  const { translate } = React.useContext(
-    languageContext,
-  ) as LanguageContextType;
 
   // use this to dismiss bottom sheet
   const { dismiss } = useBottomSheetModal();
@@ -32,7 +28,7 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
     return (
       <View>
         <PrimaryText className="ml-2 text-lg">
-          {`${translate('Locaiton', 'Cashback')}: ${reward.initial_percentage}`}
+          {`${i18n.t('Locaiton.Cashback')}: ${reward.initial_percentage}`}
         </PrimaryText>
       </View>
     );

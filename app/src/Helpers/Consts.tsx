@@ -1,41 +1,36 @@
 import React from 'react';
-import languageContext from '../Context/languageContext';
 import { Card, Reward } from '../types/CardType';
-import { LanguageContextType } from '../types/LanguageContextType';
+import i18n from '../Localization/i18n';
 
 const AuthErrorMessages = () => {
-  const { translate } = React.useContext(
-    languageContext,
-  ) as LanguageContextType;
-
   return {
-    invalidEmail: translate('Errors', 'invalidEmail'),
-    invalidPassword: translate('Errors', 'invalidPassword'),
-    passwordsDoNotMatch: translate('Errors', 'passwordsDoNotMatch'),
-    userAlreadyExists: translate('Errors', 'userAlreadyExists'),
-    userNotFound: translate('Errors', 'userNotFound'),
-    errorCreatingUser: translate('Errors', 'errorCreatingUser'),
-    tooManyAttepts: translate('Errors', 'tooManyAttepts'),
-    invalidCode: translate('Errors', 'invalidCode'),
-    errorChangingPassword: translate('Errors', 'errorChangingPassword'),
-    sentRestEmail: translate('Errors', 'sentRestEmail'),
-    invalidToken: translate('Errors', 'invalidToken'),
-    invalidCardName: translate('Errors', 'invalidCardName'),
-    invalidCardBin: translate('Errors', 'invalidCardBin'),
-    invalidBankName: translate('Errors', 'invalidBankName'),
-    invalidDropdownOption: translate('Errors', 'invalidDropdownOption'),
-    invalidCardLevel: translate('Errors', 'invalidCardLevel'),
-    invalidCardType: translate('Errors', 'invalidCardType'),
-    undefined: translate('Errors', 'undefined'),
-    invalidUsername: translate('Errors', 'invalidUsername'),
-    invalidPhone: translate('Errors', 'invalidPhone'),
-    errorUpdatingUser: translate('Errors', 'errorUpdatingUser'),
-    notVerified: translate('Errors', 'notVerified'),
-    verifyEmail: translate('Errors', 'verifyEmail'),
-    addUsername: translate('Errors', 'addUsername'),
-    errorGettingUser: translate('Errors', 'errorGettingUser'),
-    invalidCategory: translate('Errors', 'invalidCategory'),
-    invalidInitialPercentage: translate('Errors', 'invalidInitialPercentage'),
+    invalidEmail: i18n.t('Errors.invalidEmail'),
+    invalidPassword: i18n.t('Errors.invalidPassword'),
+    passwordsDoNotMatch: i18n.t('Errors.passwordsDoNotMatch'),
+    userAlreadyExists: i18n.t('Errors.userAlreadyExists'),
+    userNotFound: i18n.t('Errors.userNotFound'),
+    errorCreatingUser: i18n.t('Errors.errorCreatingUser'),
+    tooManyAttepts: i18n.t('Errors.tooManyAttepts'),
+    invalidCode: i18n.t('Errors.invalidCode'),
+    errorChangingPassword: i18n.t('Errors.errorChangingPassword'),
+    sentRestEmail: i18n.t('Errors.sentRestEmail'),
+    invalidToken: i18n.t('Errors.invalidToken'),
+    invalidCardName: i18n.t('Errors.invalidCardName'),
+    invalidCardBin: i18n.t('Errors.invalidCardBin'),
+    invalidBankName: i18n.t('Errors.invalidBankName'),
+    invalidDropdownOption: i18n.t('Errors.invalidDropdownOption'),
+    invalidCardLevel: i18n.t('Errors.invalidCardLevel'),
+    invalidCardType: i18n.t('Errors.invalidCardType'),
+    undefined: i18n.t('Errors.undefined'),
+    invalidUsername: i18n.t('Errors.invalidUsername'),
+    invalidPhone: i18n.t('Errors.invalidPhone'),
+    errorUpdatingUser: i18n.t('Errors.errorUpdatingUser'),
+    notVerified: i18n.t('Errors.notVerified'),
+    verifyEmail: i18n.t('Errors.verifyEmail'),
+    addUsername: i18n.t('Errors.addUsername'),
+    errorGettingUser: i18n.t('Errors.errorGettingUser'),
+    invalidCategory: i18n.t('Errors.invalidCategory'),
+    invalidInitialPercentage: i18n.t('Errors.invalidInitialPercentage'),
   };
 };
 

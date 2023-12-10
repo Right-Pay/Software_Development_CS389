@@ -10,7 +10,7 @@
     "Cancel": "Annuler",
     "Delete": "Supprimer",
     "Loading": "Chargement",
-    "Hello": "Bonjour"
+    "Hello": "Bonjour {{username}}"
   },
   "Welcome": {
     "Login": "Se connecter",

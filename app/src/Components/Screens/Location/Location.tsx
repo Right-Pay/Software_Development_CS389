@@ -23,10 +23,8 @@ import type {
   NavigationRoutesType,
 } from '../../../types/NavigationRoutesType';
 import PrimaryText from '../../Common/PrimaryText';
-import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
-import languageContext from '../../../Context/languageContext';
-import { LanguageContextType } from '../../../types/LanguageContextType';
+import i18n from '../../../Localization/i18n';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -47,9 +45,6 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
   } = React.useContext(locationContext) as LocationContext;
   const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
     React.useContext(context) as AppContext;
-  const { translate } = React.useContext(
-    languageContext,
-  ) as LanguageContextType;
 
   const { colors, themeMode } = useColorsMode();
   const isDarkTheme = themeMode === 'dark';
@@ -94,7 +89,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
             {place.primaryTypeDisplayName?.text || place.types[0] || ''}
           </PrimaryText>
           <PrimaryText className="text-gray-400 w-1/4 text-sm self-center text-right pr-4">
-            {translate('Location', 'Seerewards')}
+            {i18n.t('Location.Seerewards')}
           </PrimaryText>
         </StyledView>
       </Pressable>
@@ -146,7 +141,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         customMapStyle={isDarkTheme ? mapStyle : []}
         provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}>
         {markerFactory(
-          translate('Location', 'Currentlocation'),
+          i18n.t('Location.Currentlocation'),
           address?.displayName.text ?? 'Unknown',
         )}
       </GoogleMapsView>
@@ -158,7 +153,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
         }>
         <StyledView className="flex-1 flex-row shrink justify-center rounded-t-xl border-b-2 h-4 min-h-0 max-h-10 border-gray-200 items-center">
           <PrimaryText className="text-lg text-center grow pl-6">
-            {translate('Location', 'Nearby')}
+            {i18n.t('Location.Nearby')}
           </PrimaryText>
           <Pressable
             className="ml-auto pr-2"

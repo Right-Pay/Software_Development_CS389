@@ -15,8 +15,7 @@ import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import LanguageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
@@ -29,9 +28,6 @@ const AddNewBankOption = (props: OptionsPropsType) => {
   const { validateCardForm, setCardForms, CardForms } = React.useContext(
     Context,
   ) as AppContext;
-  const { translate } = React.useContext(
-    LanguageContext,
-  ) as LanguageContextType;
 
   //options state
   const [newOption, setNewOption] = useState<string>('');
@@ -70,20 +66,20 @@ const AddNewBankOption = (props: OptionsPropsType) => {
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         <ModalOverlayView className="flex-auto ">
-          <TitleText>{translate('Wallet', 'Enternewbank')}</TitleText>
+          <TitleText>{i18n.t('Wallet.Enternewbank')}</TitleText>
           <FormInputBox
-            placeholder={translate('Wallet', 'Optionname')}
+            placeholder={i18n.t('Wallet.Optionname')}
             placeholderTextColor="#AFAEAE"
             onChange={event => setNewOption(event.nativeEvent.text)}
           />
           <PrimaryButton onPress={handleSubmit} className="mt-1 z-0">
             <PrimaryText type="secondary" className="text-center text-xl">
-              {translate('Common', 'Submit')}
+              {i18n.t('Common.Submit')}
             </PrimaryText>
           </PrimaryButton>
           <PrimaryButton onPress={closeModal} className="z-0">
             <PrimaryText type="secondary" className="text-center text-xl">
-              {translate('Common', 'Close')}
+              {i18n.t('Common.Close')}
             </PrimaryText>
           </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}

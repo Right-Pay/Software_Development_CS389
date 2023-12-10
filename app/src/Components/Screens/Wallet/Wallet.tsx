@@ -27,9 +27,7 @@ import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import AddCardFullForm from './AddCardFullForm';
 import AddRewardForm from './AddRewardForm';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import LanguageContext from '../../../Context/languageContext';
-import { it } from 'node:test';
+import i18n from '../../../Localization/i18n';
 
 type WalletScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WalletNavigationRoutesType, 'WalletScreen'>,
@@ -44,9 +42,6 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
   const { unlinkCard, setCardForms, CardForms } = React.useContext(
     Context,
   ) as AppContext;
-  const { translate } = React.useContext(
-    LanguageContext,
-  ) as LanguageContextType;
 
   const { userProfile } = React.useContext(authContext) as AuthContextType;
 
@@ -71,7 +66,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     <CardView>
       <StyledView className="flex-1 flex-col w-11/12 h-full items-center justify-center bg-dark-green rounded-xl">
         <Text className="text-3xl text-white text-center font-bold pb-8">
-          {translate('Wallet', 'Add')}
+          {i18n.t('Wallet.Add')}
         </Text>
         <StyledView>
           <AddCardButton onPress={handleAddPress}>
@@ -102,35 +97,32 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     return (
       <View className="flex-1 flex-col mb-2 mt-10 w-full">
         <PrimaryText className="text-left">
-          {`${translate('Wallet', 'Category')}: ${
-            item.category?.category_name
-          }`}
+          {`${i18n.t('Wallet.Category')}: ${item.category?.category_name}`}
         </PrimaryText>
         {item.category?.specific_places && (
           <PrimaryText className="text-left">
-            {`${translate(
+            {`${i18n.t(
               'Wallet',
               'Specific Places',
             )}: ${item.category?.specific_places.join(', ')}`}
           </PrimaryText>
         )}
         <PrimaryText className="text-left">
-          {`${translate('Wallet', 'Initial')} ${translate(
-            'Wallet',
-            'Percentage',
-          )}: ${item.initial_percentage}`}
+          {`${i18n.t('Wallet.Initial')} ${i18n.t('Wallet.Percentage')}: ${
+            item.initial_percentage
+          }`}
         </PrimaryText>
-        <PrimaryText>{`${translate('Wallet', 'Initial')} ${translate(
+        <PrimaryText>{`${i18n.t('Wallet.Initial')} ${i18n.t(
           'Wallet',
           'Limit',
         )}: ${item.initial_limit}`}</PrimaryText>
         <PrimaryText>
-          {`${translate('Wallet', 'Term')}: ${item.term_length_months} ${
-            item.term_length_months > 0 ? translate('Wallet', 'Month') : ''
-          }${item.term_length_months > 1 ? translate('Wallet', 'S') : ''}`}
+          {`${i18n.t('Wallet.Term')}: ${item.term_length_months} ${
+            item.term_length_months > 0 ? i18n.t('Wallet.Month') : ''
+          }${item.term_length_months > 1 ? i18n.t('Wallet.S') : ''}`}
         </PrimaryText>
         <PrimaryText>
-          {`${translate('Wallet', 'Fallback')} ${item.fallback_percentage}`}
+          {`${i18n.t('Wallet.Fallback')} ${item.fallback_percentage}`}
         </PrimaryText>
       </View>
     );
@@ -173,7 +165,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
     <WrapperView>
       <AddCardFullForm />
       <AddRewardForm />
-      <TitleText className="mt-10">{translate('Wallet', 'Wallet')}</TitleText>
+      <TitleText className="mt-10">{i18n.t('Wallet.Wallet')}</TitleText>
       <View className="aspect-video mt-10 w-full">
         <StyledList
           className="w-full"
@@ -204,7 +196,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           data={currentRewards} //This will need to be done
           ListHeaderComponent={
             showRewardHeader ? (
-              <TitleText>{translate('Wallet', 'Rewards')}</TitleText>
+              <TitleText>{i18n.t('Wallet.Rewards')}</TitleText>
             ) : null
           }
           showsVerticalScrollIndicator={true}

@@ -21,8 +21,7 @@ import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import LanguageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 const AddRewardForm: React.FC = () => {
   //Context
@@ -43,9 +42,6 @@ const AddRewardForm: React.FC = () => {
     addPoints,
     pointCount,
   } = React.useContext(Context) as AppContext;
-  const { translate } = React.useContext(
-    LanguageContext,
-  ) as LanguageContextType;
 
   const { themeMode } = useColorsMode();
 
@@ -215,7 +211,7 @@ const AddRewardForm: React.FC = () => {
     return (
       <InputBox
         className="mt-2"
-        placeholder={translate('Wallet', 'SpecificPlaces')}
+        placeholder={i18n.t('Wallet.SpecificPlaces')}
         onChangeText={updateSpecificPlaces}
         value={newReward?.category?.specific_places.join(', ') || ''}
       />
@@ -232,7 +228,7 @@ const AddRewardForm: React.FC = () => {
       <>
         <View className="flex flex-col justify-center w-2/3 p-0 z-50 sticky">
           <InputBox
-            placeholder={translate('Wallet', 'Categoryie')}
+            placeholder={i18n.t('Wallet.Categoryie')}
             onChange={event => setCategorySearch(event.nativeEvent.text)}
             value={categorySearch}
             defaultValue={newReward?.category?.category_name || ''}
@@ -253,7 +249,7 @@ const AddRewardForm: React.FC = () => {
     );
   }, [
     themeMode,
-    translate,
+    i18n.t,
     categorySearch,
     newReward?.category?.category_name,
     filteredCategoryOptions,
@@ -268,7 +264,7 @@ const AddRewardForm: React.FC = () => {
     return (
       <InputBox
         className="mb-2 mr-2"
-        placeholder={`${translate('Wallet', 'Initial')} ${translate(
+        placeholder={`${i18n.t('Wallet.Initial')} ${i18n.t(
           'Wallet',
           'Percentage',
         )}`}
@@ -290,10 +286,7 @@ const AddRewardForm: React.FC = () => {
     return (
       <InputBox
         className="mb-2 mr-2"
-        placeholder={`${translate('Wallet', 'Initial')} ${translate(
-          'Wallet',
-          'Limit',
-        )}`}
+        placeholder={`${i18n.t('Wallet.Initial')} ${i18n.t('Wallet', 'Limit')}`}
         inputMode="decimal"
         onChangeText={updateInitialLimit}
         value={newReward?.initial_limit ? String(newReward?.initial_limit) : ''}
@@ -308,7 +301,7 @@ const AddRewardForm: React.FC = () => {
     return (
       <InputBox
         className="mb-2 mr-2"
-        placeholder={`${translate('Wallet', 'FallbackPercentage')}`}
+        placeholder={`${i18n.t('Wallet.FallbackPercentage')}`}
         inputMode="decimal"
         onChangeText={updateFallbackPercentage}
         value={
@@ -327,7 +320,7 @@ const AddRewardForm: React.FC = () => {
     return (
       <InputBox
         className="mr-2"
-        placeholder={translate('Wallet', 'Term')}
+        placeholder={i18n.t('Wallet.Term')}
         onChangeText={updateTermLengthMonths}
         inputMode="numeric"
         value={
@@ -350,7 +343,7 @@ const AddRewardForm: React.FC = () => {
       return (
         <View className="flex flex-row space-between">
           <PrimaryText className="text-left w-3/12 text-md">
-            {item.category?.category_name || translate('Wallet', 'All')}
+            {item.category?.category_name || i18n.t('Wallet.All')}
           </PrimaryText>
           <PrimaryText className="text-left w-3/12 text-md">
             {formatPercentage(Number(item?.initial_percentage || 0))}
@@ -364,7 +357,7 @@ const AddRewardForm: React.FC = () => {
         </View>
       );
     },
-    [translate],
+    [i18n.t],
   );
 
   const itemSeparatorComponent = useCallback(
@@ -377,22 +370,16 @@ const AddRewardForm: React.FC = () => {
       <>
         <View className="flex flex-row space-between w-3/4">
           <PrimaryText className="text-left w-3/12 text-md">
-            {translate('Wallet', 'Category')}
+            {i18n.t('Wallet.Category')}
           </PrimaryText>
           <PrimaryText className="text-left w-3/12 text-md">
-            {`${translate('Wallet', 'Initial')}${translate(
-              'Wallet',
-              'Percentage',
-            )}`}
+            {`${i18n.t('Wallet.Initial')}${i18n.t('Wallet.Percentage')}`}
           </PrimaryText>
           <PrimaryText className="text-left w-3/12 text-md">
-            {`${translate('Wallet', 'Initial')} ${translate(
-              'Wallet',
-              'Limit',
-            )}`}
+            {`${i18n.t('Wallet.Initial')} ${i18n.t('Wallet.Limit')}`}
           </PrimaryText>
           <PrimaryText className="text-left w-3/12 text-md">
-            {`${translate('Wallet', 'Fallback')}`}
+            {`${i18n.t('Wallet.Fallback')}`}
           </PrimaryText>
         </View>
         <FlatList
@@ -405,7 +392,7 @@ const AddRewardForm: React.FC = () => {
         />
       </>
     );
-  }, [itemSeparatorComponent, renderReward, selectedCard.rewards, translate]);
+  }, [itemSeparatorComponent, renderReward, selectedCard.rewards, i18n.t]);
 
   const backButton = useCallback(() => {
     return (
@@ -414,11 +401,11 @@ const AddRewardForm: React.FC = () => {
         onPress={closeModal}>
         <Icon name="close-outline" color="#4d654e" />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          {translate('Common', 'Close')}
+          {i18n.t('Common.Close')}
         </PrimaryText>
       </Pressable>
     );
-  }, [closeModal, translate]);
+  }, [closeModal, i18n.t]);
 
   const backForm = useCallback(() => {
     if (editForm === EditForm.CategoryForm) {
@@ -436,19 +423,19 @@ const AddRewardForm: React.FC = () => {
   const renderTitle = useCallback(() => {
     if (editState === EditStates.Edit) {
       if (editForm === EditForm.CategoryForm) {
-        return translate('Wallet', 'Verifyreward');
+        return i18n.t('Wallet.Verifyreward');
       }
       if (editForm === EditForm.Percentages) {
-        return translate('Wallet', 'Verifypercent');
+        return i18n.t('Wallet.Verifypercent');
       }
     } else if (editState === EditStates.Main) {
-      return translate('Wallet', 'Rewards');
+      return i18n.t('Wallet.Rewards');
     } else {
       if (editForm === EditForm.CategoryForm) {
-        return translate('Wallet', 'Addrewardcat');
+        return i18n.t('Wallet.Addrewardcat');
       }
       if (editForm === EditForm.Percentages) {
-        return translate('Wallet', 'Addpercent');
+        return i18n.t('Wallet.Addpercent');
       }
     }
   }, [
@@ -458,7 +445,7 @@ const AddRewardForm: React.FC = () => {
     EditStates.Main,
     editForm,
     editState,
-    translate,
+    i18n.t,
   ]);
 
   return (
@@ -481,7 +468,7 @@ const AddRewardForm: React.FC = () => {
                 </TitleText>
                 <View className="mb-4 w-11/12">
                   <PrimaryText className="text-center w-full text-md mb-2">
-                    {translate('Wallet', 'longdescription')}
+                    {i18n.t('Wallet.longdescription')}
                   </PrimaryText>
                 </View>
               </>
@@ -494,7 +481,7 @@ const AddRewardForm: React.FC = () => {
             )}
           {editState === EditStates.Main && (
             <TitleText className="mb-10 mt-4 w-9/12">
-              {translate('Wallet', 'Rewards')}
+              {i18n.t('Wallet.Rewards')}
             </TitleText>
           )}
           {editState === EditStates.Main && renderRewards()}
@@ -519,7 +506,7 @@ const AddRewardForm: React.FC = () => {
                   onPress={backForm()}
                   className="z-0">
                   <PrimaryText type="secondary" className="text-center text-xl">
-                    {translate('Common', 'Back')}
+                    {i18n.t('Common.Back')}
                   </PrimaryText>
                 </PrimaryButton>
                 <PrimaryButton
@@ -539,7 +526,7 @@ const AddRewardForm: React.FC = () => {
                   onPress={addReward}
                   className="z-0">
                   <PrimaryText type="secondary" className="text-center text-xl">
-                    {translate('Wallet', 'Addreward')}
+                    {i18n.t('Wallet.Addreward')}
                   </PrimaryText>
                 </PrimaryButton>
                 <PrimaryButton
@@ -547,7 +534,7 @@ const AddRewardForm: React.FC = () => {
                   onPress={handleSubmit}
                   className="z-0">
                   <PrimaryText type="secondary" className="text-center text-xl">
-                    {translate('Common', 'Submit')}
+                    {i18n.t('Common.Submit')}
                   </PrimaryText>
                 </PrimaryButton>
               </>

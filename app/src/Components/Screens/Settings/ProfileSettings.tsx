@@ -20,8 +20,7 @@ import OutlineButton from '../../Common/OutlineButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import languageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 type ProfileSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsNavigationRoutesType, 'ProfileSettings'>,
@@ -39,7 +38,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
     addAuthError,
     updateUserProfile,
   } = useContext(authContext) as AuthContextType;
-  const { translate } = useContext(languageContext) as LanguageContextType;
 
   const ErrorMessages = Consts.authErrorMessages();
 
@@ -72,7 +70,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
     return (
       <InputBox
         className="my-3"
-        placeholder={translate('Settings', capitalizedField)}
+        placeholder={i18n.t('Settings', capitalizedField)}
         value={value}
         onChange={e => onChange(index, e.nativeEvent.text)}
         key={index}
@@ -170,13 +168,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
     userProfile && (
       <WrapperView>
         <KeyboardAvoidingViewScroll>
-          <TitleText className="mt-10 mb-3">{`${translate(
-            'Settings',
-            'Profile',
-          )} ${translate('Settings', 'Settings')}`}</TitleText>
+          <TitleText className="mt-10 mb-3">{`${i18n.t(
+            'Settings.Profile',
+          )} ${i18n.t('Settings.Settings')}`}</TitleText>
           {saved && (
             <PrimaryText className="text-2xl font-bold">
-              {translate('Settings', 'Profileupdated')}
+              {i18n.t('Settings.Profileupdated')}
             </PrimaryText>
           )}
           <InnerWrapperView className="border-t-2">
@@ -188,12 +185,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = () => {
                 className="justify-center items-center w-1/3 mb-3"
                 onPress={handleSave}>
                 <PrimaryText className="text-center text-xl">
-                  {translate('Common', 'Save')}
+                  {i18n.t('Common.Save')}
                 </PrimaryText>
               </OutlineButton>
             ) : (
               <PrimaryText className="text-2xl text-center font-bold mb-3">
-                {translate('Settings', 'Nochanges')}
+                {i18n.t('Settings.Nochanges')}
               </PrimaryText>
             )}
           </View>

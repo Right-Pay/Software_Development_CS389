@@ -7,8 +7,7 @@ import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoute
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import WrapperView from '../../Common/WrapperView';
-import LanguageContext from '../../../Context/languageContext';
-import { LanguageContextType } from '../../../types/LanguageContextType';
+import i18n from '../../../Localization/i18n';
 
 type WelcomeScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -18,9 +17,6 @@ type WelcomeScreenProps = NativeStackScreenProps<
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
   const { themeMode } = useColorsMode();
-  const { translate } = React.useContext(
-    LanguageContext,
-  ) as LanguageContextType;
 
   return (
     <WrapperView>
@@ -35,12 +31,12 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
       </LogoContainer>
       <PrimaryButton onPress={() => navigation.navigate('Login')}>
         <PrimaryText type="secondary" className="text-xl">
-          {translate('Welcome', 'Login')}
+          {i18n.t('Welcome.Login')}
         </PrimaryText>
       </PrimaryButton>
       <PrimaryButton onPress={() => navigation.navigate('Register')}>
         <PrimaryText type="secondary" className="text-xl">
-          {translate('Welcome', 'Signup')}
+          {i18n.t('Welcome.Signup')}
         </PrimaryText>
       </PrimaryButton>
     </WrapperView>

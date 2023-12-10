@@ -75,17 +75,12 @@ const LanguageState: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, [changeLanguage, deviceLanguage]);
 
-  const translate = (section: string, key: string) => {
-    return i18n.t(`${section}.${key}`);
-  };
-
   useEffect(() => {
     setLanguage();
   }, [setLanguage]);
 
   return (
-    <LanguageContext.Provider
-      value={{ lang, changeLanguage, translate, retrieveLang }}>
+    <LanguageContext.Provider value={{ lang, changeLanguage, retrieveLang }}>
       <AuthState>{children}</AuthState>
     </LanguageContext.Provider>
   );

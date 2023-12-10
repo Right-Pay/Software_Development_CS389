@@ -25,8 +25,7 @@ import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import LanguageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 const AddCardFullForm: React.FC = () => {
   //Context
@@ -47,9 +46,6 @@ const AddCardFullForm: React.FC = () => {
     findCardByAPI,
     getCardTypeFromBin,
   } = React.useContext(Context) as AppContext;
-  const { translate } = React.useContext(
-    LanguageContext,
-  ) as LanguageContextType;
 
   const { themeMode } = useColorsMode();
 
@@ -307,7 +303,7 @@ const AddCardFullForm: React.FC = () => {
       <>
         <View className="relative w-2/3 flex justify-center items-center">
           <InputBox
-            placeholder={translate('Wallet', 'Bin')}
+            placeholder={i18n.t('Wallet.Bin')}
             className="w-full"
             value={card.card_bin ? card.card_bin.toString() : ''}
             maxLength={6}
@@ -335,7 +331,7 @@ const AddCardFullForm: React.FC = () => {
     };
     return (
       <InputBox
-        placeholder={translate('Wallet', 'Level')}
+        placeholder={i18n.t('Wallet.Level')}
         onChangeText={updateLevel}
         value={card?.card_level || ''}
       />
@@ -352,7 +348,7 @@ const AddCardFullForm: React.FC = () => {
       <>
         <View className="flex flex-col justify-center w-2/3 p-0 z-50 sticky">
           <InputBox
-            placeholder={translate('Wallet', 'BankName')}
+            placeholder={i18n.t('Wallet.BankName')}
             onChange={event => setBankSearch(event.nativeEvent.text)}
             value={bankSearch}
             defaultValue={card?.card_bank_name}
@@ -378,7 +374,6 @@ const AddCardFullForm: React.FC = () => {
     isKeyboardVisible,
     renderBankOption,
     themeMode,
-    translate,
   ]);
 
   const renderTypeDropdown = () => {
@@ -392,20 +387,19 @@ const AddCardFullForm: React.FC = () => {
       <DropdownComponent
         options={[
           {
-            label: `${translate('Wallet', 'Credit')}`,
+            label: `${i18n.t('Wallet.Credit')}`,
             value: 'Credit',
           },
           {
-            label: `${translate('Wallet', 'Debit')}`,
+            label: `${i18n.t('Wallet.Debit')}`,
             value: 'Debit',
           },
         ]}
         placeholder={
           card?.card_type ||
-          `${translate('Wallet', 'Credit')} ${translate(
-            'Wallet',
-            'Or',
-          )} ${translate('Wallet', 'Debit')}`
+          `${i18n.t('Wallet.Credit')} ${i18n.t('Wallet.Or')} ${i18n.t(
+            'Wallet.Debit',
+          )}`
         }
         onDropdownChange={updateType}
         dropdownStyle="m-2 w-2/3 h-auto z-40"
@@ -446,11 +440,11 @@ const AddCardFullForm: React.FC = () => {
         onPress={() => closeModal(false)}>
         <Icon name="close-outline" color="#4d654e" />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          {translate('Common', 'Close')}
+          {i18n.t('Common.Close')}
         </PrimaryText>
       </Pressable>
     );
-  }, [closeModal, translate]);
+  }, [closeModal]);
 
   const backForm = useCallback(() => {
     if (editForm === EditForm.Type) {
@@ -473,25 +467,25 @@ const AddCardFullForm: React.FC = () => {
   const renderTitle = useCallback(() => {
     if (editState === EditStates.Review) {
       if (editForm === EditForm.Type) {
-        return translate('Wallet', 'Verifycard');
+        return i18n.t('Wallet.Verifycard');
       }
       if (editForm === EditForm.Bank) {
-        return translate('Wallet', 'Verifybank');
+        return i18n.t('Wallet.Verifybank');
       }
       if (editForm === EditForm.Level) {
-        return translate('Wallet', 'Verifylevel');
+        return i18n.t('Wallet.Verifylevel');
       }
     } else if (editState === EditStates.Bin) {
-      return translate('Wallet', 'Enterdigits');
+      return i18n.t('Wallet.Enterdigits');
     } else {
       if (editForm === EditForm.Type) {
-        return translate('Wallet', 'cardtypeexp');
+        return i18n.t('Wallet.cardtypeexp');
       }
       if (editForm === EditForm.Bank) {
-        return translate('Wallet', 'Enterbank');
+        return i18n.t('Wallet.Enterbank');
       }
       if (editForm === EditForm.Level) {
-        return translate('Wallet', 'Enterlevel');
+        return i18n.t('Wallet.Enterlevel');
       }
     }
   }, [
@@ -502,7 +496,6 @@ const AddCardFullForm: React.FC = () => {
     EditStates.Review,
     editForm,
     editState,
-    translate,
   ]);
 
   return (
@@ -544,7 +537,7 @@ const AddCardFullForm: React.FC = () => {
                     <PrimaryText
                       type="secondary"
                       className="text-center text-xl">
-                      {translate('Common', 'Back')}
+                      {i18n.t('Common.Back')}
                     </PrimaryText>
                   </PrimaryButton>
                 )}
@@ -553,7 +546,7 @@ const AddCardFullForm: React.FC = () => {
                   onPress={handleSubmit}
                   className="z-0">
                   <PrimaryText type="secondary" className="text-center text-xl">
-                    {translate('Common', 'Next')}
+                    {i18n.t('Common.Next')}
                   </PrimaryText>
                 </PrimaryButton>
               </View>
@@ -564,7 +557,7 @@ const AddCardFullForm: React.FC = () => {
             <>
               <TitleText className="mb-10 mt-4 w-9/12">Oh No!</TitleText>
               <PrimaryText className="text-center text-lg w-9/12">
-                {translate('Wallet', 'Nosupport')}
+                {i18n.t('Wallet.Nosupport')}
               </PrimaryText>
               {backButton()}
             </>

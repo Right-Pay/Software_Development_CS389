@@ -10,7 +10,7 @@
     "Cancel": "Cancelar",
     "Delete": "Borrar",
     "Loading": "Cargando",
-    "Hello": "Hola"
+    "Hello": "Hola {{username}}"
   },
   "Welcome": {
     "Login": "Iniciar Sesión",
@@ -105,7 +105,7 @@
     "Nearby": "Lugares cercanos"
   },
   "Home":{
-    "At":"Está en",
+    "At":"Está en {{address}}",
     "Suggest": "Sugerimos que use la siguiente tarjeta",
     "Nocards": "Usted no tiene tarjetas. Por favor agregue una tarjeta para empezar"
   },

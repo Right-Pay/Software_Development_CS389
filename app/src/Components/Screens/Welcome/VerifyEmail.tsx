@@ -19,8 +19,7 @@ import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll'
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import LanguageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 type VerifyEmailScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WelcomeNavigationRoutesType, 'VerifyEmailScreen'>,
@@ -39,9 +38,6 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
     retrieveVerifiedEmail,
     backendSignIn,
   } = React.useContext(AuthContext) as AuthContextType;
-  const { translate } = React.useContext(
-    LanguageContext,
-  ) as LanguageContextType;
 
   const AuthErrors = Consts.authErrorMessages();
   const { colors } = useColorsMode();
@@ -59,18 +55,18 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
         }}>
         <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          {translate('Common', 'Back')}
+          {i18n.t('Common.Back')}
         </PrimaryText>
       </Pressable>
     );
-  }, [colors.primary, navigation, translate]);
+  }, [colors.primary, navigation]);
 
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
           <TitleText className="mt-20 ml-3 mr-3">
-            {translate('Welcome', 'Checkemail')}
+            {i18n.t('Welcome.Checkemail')}
           </TitleText>
           <LogoContainer>
             <Logo
@@ -90,7 +86,7 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
               });
             }}>
             <PrimaryText type="secondary" className="text-xl">
-              {translate('Welcome', 'Continue')}
+              {i18n.t('Welcome.Continue')}
             </PrimaryText>
           </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}

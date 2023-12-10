@@ -20,8 +20,7 @@ import OutlineButton from '../../Common/OutlineButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
-import languageContext from '../../../Context/languageContext';
-import { LanguageContextType } from '../../../types/LanguageContextType';
+import i18n from '../../../Localization/i18n';
 import CheckBox from '@react-native-community/checkbox';
 import { supportedLanguagesEnum } from '../../../types/LanguageContextType';
 
@@ -36,7 +35,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   const { requestLocationPermission, locationGrantType } = useContext(
     locationContext,
   ) as LocationContext;
-  const { translate, lang, changeLanguage } = React.useContext(
+  const { lang, changeLanguage } = React.useContext(
     languageContext,
   ) as LanguageContextType;
 
@@ -60,13 +59,13 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <TitleText className="mt-10 mb-4">{`${translate(
+        <TitleText className="mt-10 mb-4">{`${i18n.t(
           'Settings',
           'General',
-        )} ${translate('Settings', 'Settings')}`}</TitleText>
+        )} ${i18n.t('Settings.Settings')}`}</TitleText>
         <InnerWrapperView className="border-t-2">
           <PrimaryText className="mb-3">
-            {translate('Settings', 'Locationdescription')}
+            {i18n.t('Settings.Locationdescription')}
           </PrimaryText>
           <Switch
             value={locationServicesOn}
@@ -96,10 +95,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
             switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
           />
           <PrimaryText className="mb-3">
-            {`${translate('Settings', 'Locationservices')} ${
+            {`${i18n.t('Settings.Locationservices')} ${
               locationServicesOn
-                ? translate('Settings', 'On')
-                : translate('Settings', 'Off')
+                ? i18n.t('Settings.On')
+                : i18n.t('Settings.Off')
             }`}
           </PrimaryText>
           <View className="flex flex-row justify-center space-x-4 h-1/4 m-4 w-auto">
@@ -113,7 +112,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
                 }
               />
               <PrimaryText className="text-center text-xl">
-                {translate('Settings', 'English')}
+                {i18n.t('Settings.English')}
               </PrimaryText>
             </View>
             <View className="flex flex-col justify-center items-center">
@@ -126,7 +125,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
                 }
               />
               <PrimaryText className="text-center text-xl">
-                {translate('Settings', 'Spanish')}
+                {i18n.t('Settings.Spanish')}
               </PrimaryText>
             </View>
             <View className="flex flex-col justify-center items-center">
@@ -139,13 +138,13 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
                 }
               />
               <PrimaryText className="text-center text-xl">
-                {translate('Settings', 'French')}
+                {i18n.t('Settings.French')}
               </PrimaryText>
             </View>
           </View>
           <OutlineButton type="primary" onPress={() => navigateToSettings()}>
             <PrimaryText className="text-center text-xl">
-              {translate('Settings', 'More')}
+              {i18n.t('Settings.More')}
             </PrimaryText>
           </OutlineButton>
         </InnerWrapperView>

@@ -8,3 +8,13 @@
 * Import this file into i18n.ts and add it to the resources const.
 * In the types folder open up the LanguageContextType.ts file and add the new language to the SupportedLanguages and SupportedLanguagesEnum.
 * If you would like to be able to switch to this language, create a new checkbox in the GeneralSettings file.
+
+
+## Using the translations
+* Anywhere that you would be typing normal text, instead use the following.
+* import { LanguageContextType } from '../types/LanguageContextType';
+* import LanguageContext from '../Context/languageContext';
+* Const { translate } = React.useContext(LanguageContext) as LanguageContextType;
+* translate(namespace, key);
+  * namespace is a value like "common" or "wallet"
+  * If the key does not exist you will have to add that translation in all the common.json files

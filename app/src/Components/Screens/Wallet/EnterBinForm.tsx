@@ -20,8 +20,7 @@ import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import LanguageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 const AddCardFullForm = () => {
   //Context
@@ -35,9 +34,6 @@ const AddCardFullForm = () => {
     validateCardForm,
     findCard,
   } = React.useContext(Context) as AppContext;
-  const { translate } = React.useContext(
-    LanguageContext,
-  ) as LanguageContextType;
 
   //card stuff
   const [bankSearch, setBankSearch] = React.useState<string>('');
@@ -199,19 +195,19 @@ const AddCardFullForm = () => {
           enabled={isKeyboardVisible}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
           <ModalOverlayView className="flex-auto text-left z-0">
-            <TitleText>{translate('Wallet', 'Enterdigits')}</TitleText>
+            <TitleText>{i18n.t('Wallet.Enterdigits')}</TitleText>
             {renderBinInput()}
             <PrimaryButton
               type="primary"
               onPress={handleSubmit}
               className="mt-1 z-0">
               <PrimaryText type="secondary" className="text-center text-xl">
-                {translate('Common', 'Submit')}
+                {i18n.t('Common.Submit')}
               </PrimaryText>
             </PrimaryButton>
             <PrimaryButton onPress={closeModal} className="z-0">
               <PrimaryText type="secondary" className="text-center text-xl">
-                {translate('Common', 'Close')}
+                {i18n.t('Common.Close')}
               </PrimaryText>
             </PrimaryButton>
             {AuthErrorComponent && <AuthErrorComponent />}

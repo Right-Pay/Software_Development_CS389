@@ -10,7 +10,7 @@
     "Cancel": "Cancel",
     "Delete": "Delete",
     "Loading": "Loading",
-    "Hello": "Hello"
+    "Hello": "Hello {{username}}"
   },
   "Welcome": {
     "Login": "Log In",
@@ -105,7 +105,7 @@
     "Nearby": "Nearby Locations"
   },
   "Home":{
-    "At":"You are at",
+    "At":"You are at {{address}}",
     "Suggest": "We suggest you use the following card",
     "Nocards": "You don not have any cards yet. Please add a card to get started"
   },

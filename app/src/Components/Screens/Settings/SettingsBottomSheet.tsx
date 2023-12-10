@@ -9,14 +9,10 @@ import useColorsMode from '../../../Helpers/Colors';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { navSettingType } from '../../../types/SettingsType';
 import PrimaryText from '../../Common/PrimaryText';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import languageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
   const { signOut } = React.useContext(authContext) as AuthContextType;
-  const { translate } = React.useContext(
-    languageContext,
-  ) as LanguageContextType;
 
   const { dismiss } = useBottomSheetModal();
   const { colors } = useColorsMode();
@@ -25,22 +21,22 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
 
   const settingsPages: navSettingType[] = [
     {
-      name: translate('Settings', 'Settings'),
+      name: i18n.t('Settings.Settings'),
       route: 'GeneralSettings',
       iconName: 'settings',
     },
     {
-      name: translate('Settings', 'Account'),
+      name: i18n.t('Settings.Account'),
       route: 'ProfileSettings',
       iconName: 'person',
     },
     {
-      name: translate('Settings', 'Cards'),
+      name: i18n.t('Settings.Cards'),
       route: 'CardSettings',
       iconName: 'card',
     },
     {
-      name: translate('Welcome', 'Logout'),
+      name: i18n.t('Welcome.Logout'),
       route: 'SignOut',
       iconName: 'log-out',
     },

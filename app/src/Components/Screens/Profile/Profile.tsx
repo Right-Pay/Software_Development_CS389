@@ -16,8 +16,7 @@ import WrapperView from '../../Common/WrapperView';
 import Icon from 'react-native-ionicons';
 import useColorsMode from '../../../Helpers/Colors';
 import { View } from 'react-native';
-import { LanguageContextType } from '../../../types/LanguageContextType';
-import languageContext from '../../../Context/languageContext';
+import i18n from '../../../Localization/i18n';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,
@@ -27,9 +26,6 @@ type ProfileScreenProps = CompositeScreenProps<
 
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   const { userProfile } = React.useContext(authContext) as AuthContextType;
-  const { translate } = React.useContext(
-    languageContext,
-  ) as LanguageContextType;
 
   const { colors } = useColorsMode();
 
@@ -41,11 +37,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
   return (
     <WrapperView>
-      <TitleText className="top-10 mb-2">
-        {translate('Profile', 'Profile')}
-      </TitleText>
+      <TitleText className="top-10 mb-2">{i18n.t('Profile.Profile')}</TitleText>
       <PrimaryText className="text-2xl font-bold mb-2 mt-10" numberOfLines={1}>
-        {`${translate('Common', 'Hello')} ${userProfile.username}`}
+        {i18n.t('Common.Hello', { username: userProfile.username })}
       </PrimaryText>
       <View className="flex flex-row h-auto w-auto justify-center">
         <Icon name="ribbon" color={colors.primary} className="h-fit w-fit" />
@@ -55,26 +49,23 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
       </View>
       <ProfileView className="justify-start">
         <PrimaryText className="text-2xl font-bold mb-2" numberOfLines={1}>
-          {`${translate('Welcome', 'Email')}: ${userProfile.email}`}
+          {`${i18n.t('Welcome.Email')}: ${userProfile.email}`}
         </PrimaryText>
         {userProfile.phone && userProfile.phone.length > 0 ? (
-          <PrimaryText className="text-2xl font-bold mb-2">{`${translate(
-            'Settings',
-            'Phone',
+          <PrimaryText className="text-2xl font-bold mb-2">{`${i18n.t(
+            'Settings.Phone',
           )}: ${userProfile.phone}`}</PrimaryText>
         ) : null}
         <PrimaryText className="text-2xl font-bold mt-20">
-          {`${translate('Profile', 'Have')} ${cardCount} ${
-            cardCount > 1
-              ? translate('Profile', 'Cards')
-              : translate('Profile', 'Card')
+          {`${i18n.t('Profile.Have')} ${cardCount} ${
+            cardCount > 1 ? i18n.t('Profile.Cards') : i18n.t('Profile.Card')
           }`}
         </PrimaryText>
         <PrimaryText className="text-2xl font-bold">
-          {`${translate('Profile', 'Have')} ${rewardCount} ${
+          {`${i18n.t('Profile.Have')} ${rewardCount} ${
             rewardCount > 1
-              ? translate('Profile', 'Rewards')
-              : translate('Profile', 'Reward')
+              ? i18n.t('Profile.Rewards')
+              : i18n.t('Profile.Reward')
           }`}{' '}
         </PrimaryText>
       </ProfileView>
