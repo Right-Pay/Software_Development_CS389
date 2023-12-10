@@ -13,6 +13,7 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import i18n from '../../../Localization/i18n';
 
 type SignUpScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -43,35 +44,37 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
         }}>
         <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          Back
+          {i18n.t('Common.Back')}
         </PrimaryText>
       </Pressable>
     );
-  }, [colors.primary, navigation]);
+  }, [colors.primary, navigation, i18n.t]);
 
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full h-screen items-center mb-0">
-          <TitleText className="mt-24 mb-10">Sign Up</TitleText>
+          <TitleText className="mt-24 mb-10">
+            {i18n.t('Welcome.Signup')}
+          </TitleText>
           <InputBox
-            placeholder="Email"
+            placeholder={i18n.t('Welcome.Email')}
             className="mb-2"
             onChange={event => setEmail(event.nativeEvent.text)}
           />
           <InputBox
-            placeholder="Username"
+            placeholder={i18n.t('Welcome.Username')}
             className="mb-2"
             onChange={event => setUsername(event.nativeEvent.text)}
           />
           <InputBox
-            placeholder="Password"
+            placeholder={i18n.t('Welcome.Password')}
             className="mb-2"
             secureTextEntry={true}
             onChange={event => setPassword(event.nativeEvent.text)}
           />
           <InputBox
-            placeholder="Repeat Password"
+            placeholder={i18n.t('Welcome.Confirm')}
             className="mb-10"
             secureTextEntry={true}
             onChange={event => setRepeatedPassword(event.nativeEvent.text)}
@@ -82,12 +85,10 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               navigation.navigate('VerifyEmailScreen');
             }}>
             <PrimaryText type="secondary" className="text-xl">
-              Sign Up
+              {i18n.t('Welcome.Signup')}
             </PrimaryText>
           </PrimaryButton>
-          {userToken && (
-            <TitleText>'You have successfully signed up'</TitleText>
-          )}
+          {userToken && <TitleText>{i18n.t('Welcome.Success')}</TitleText>}
           {AuthErrorComponent && <AuthErrorComponent />}
           {backButton()}
         </View>

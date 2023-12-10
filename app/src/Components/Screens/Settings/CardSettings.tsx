@@ -23,6 +23,7 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import i18n from '../../../Localization/i18n';
 
 type CardSettingsScreenProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsNavigationRoutesType, 'CardSettings'>,
@@ -47,7 +48,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
             setConfirmDelete(false);
           }}>
           <PrimaryText className="text-center text-md text-white">
-            Are you sure?
+            {i18n.t('Settings.Confirmdelete')}
           </PrimaryText>
         </PrimaryButton>
         <PrimaryButton
@@ -56,7 +57,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
             setConfirmDelete(false);
           }}>
           <PrimaryText className="text-center text-xl text-white">
-            Cancel
+            {i18n.t('Settings.Cancel')}
           </PrimaryText>
         </PrimaryButton>
       </>
@@ -69,11 +70,13 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
         <PrimaryButton
           className="bg-red-500"
           onPress={() => setConfirmDelete(true)}>
-          <PrimaryText className="text-xl text-white">Delete</PrimaryText>
+          <PrimaryText className="text-xl text-white">
+            {i18n.t('Settings.Delete')}
+          </PrimaryText>
         </PrimaryButton>
         <PrimaryButton className="opacity-50">
           <PrimaryText className="text-md text-white">
-            Edit Coming Soon
+            {i18n.t('Settings.Editsoon')}
           </PrimaryText>
         </PrimaryButton>
       </>
@@ -101,7 +104,10 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <TitleText className="mt-10 mb-4">Card Settings</TitleText>
+        <TitleText className="mt-10 mb-4">{`${i18n.t(
+          'Settings',
+          'Card',
+        )} ${i18n.t('Settings.Settings')}`}</TitleText>
         <InnerWrapperView className="border-t-2">
           <SettingsCardList>
             {cards.map((card, index) => renderCard(card, index))}

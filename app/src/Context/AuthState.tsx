@@ -10,7 +10,6 @@ import { HttpResponse } from '../types/HttpResponse';
 import { Profile } from '../types/ProfileType';
 import GlobalState from './GlobalState';
 import AuthContext from './authContext';
-import { verify } from 'crypto';
 
 const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const [authError, setAuthError] = React.useState<string[]>([]);
@@ -27,7 +26,7 @@ const AuthState: React.FC<PropsWithChildren> = ({ children }) => {
   const auth0URL = Config.REACT_APP_AUTH0_DOMAIN;
   const auth0ClientId = Config.REACT_APP_AUTH0_CLIENT_ID;
   const auth0Audience = Config.REACT_APP_AUTH0_AUDIENCE;
-  const ErrorMessages = Consts.authErrorMessages;
+  const ErrorMessages = Consts.authErrorMessages();
 
   const resetVariables = async () => {
     setUserToken(null);

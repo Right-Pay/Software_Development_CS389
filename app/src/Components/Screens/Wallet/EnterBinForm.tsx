@@ -5,9 +5,7 @@ import {
   Modal,
   NativeSyntheticEvent,
   Platform,
-  Pressable,
   StyleSheet,
-  Text,
   TextInputChangeEventData,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -22,7 +20,7 @@ import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-// import AddNewDropdownOption from './AddNewBankOption';
+import i18n from '../../../Localization/i18n';
 
 const AddCardFullForm = () => {
   //Context
@@ -31,21 +29,11 @@ const AddCardFullForm = () => {
   const {
     linkCard,
     bankOptions,
-    // setBankOptions,
-    brandOptions,
     CardForms,
     setCardForms,
     validateCardForm,
     findCard,
   } = React.useContext(Context) as AppContext;
-
-  const currentYear = new Date().getFullYear().toString().split('20')[1];
-  const years = Array.from(Array(6).keys()).map(i => {
-    return {
-      label: (i + parseInt(currentYear, 10)).toString(),
-      value: (i + parseInt(currentYear, 10)).toString(),
-    };
-  });
 
   //card stuff
   const [bankSearch, setBankSearch] = React.useState<string>('');
@@ -59,9 +47,6 @@ const AddCardFullForm = () => {
     Edit = 'Edit',
   }
   const [editState, setEditState] = useState<EditStates>(EditStates.Bin);
-
-  //consts
-  const ModalMode = Consts.DropdownListModes.MODAL;
 
   //Add New Options
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -89,23 +74,6 @@ const AddCardFullForm = () => {
     },
     [bankOptions],
   );
-
-  //handlers
-  const handleExpirationMonthChange = (month: string) => {
-    const currentExpirationDate = card?.exp_date;
-    const year = currentExpirationDate?.split('-')[0];
-    if (currentExpirationDate) {
-      setCard({ ...card, exp_date: `${year}-${month}` });
-    }
-  };
-
-  const handleExpirationYearChange = (year: string) => {
-    const currentExpirationDate = card?.exp_date;
-    const month = currentExpirationDate?.split('-')[1];
-    if (currentExpirationDate) {
-      setCard({ ...card, exp_date: `${year}-${month}` });
-    }
-  };
 
   const handleSubmit = async () => {
     clearAuthErrors();
@@ -151,30 +119,6 @@ const AddCardFullForm = () => {
     setEditState(EditStates.Bin);
   };
 
-  const renderBankOption = ({ item }: { item: CardBank }) => (
-    <Pressable
-      onPress={() => {
-        const bank_id = Number(item.id);
-        const bank_name = item.bank_name;
-        if (
-          editState === EditStates.Edit &&
-          Number(card?.card_bank_id) !== bank_id
-        ) {
-          setEditState(EditStates.Add);
-        }
-        if (card) {
-          card.card_bank_id = bank_id;
-          card.card_bank_name = bank_name;
-        }
-        setBankSearch(item.bank_name);
-        setFilteredBankOptions([]);
-        Keyboard.dismiss();
-      }}
-      className="p-2 cursor-pointer hover:bg-gray-200">
-      <Text className="text-black text-xl text-left">{item.bank_name}</Text>
-    </Pressable>
-  );
-
   //Keyboard
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -198,28 +142,6 @@ const AddCardFullForm = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (newBankOption !== '') {
-  //     const newBank = {
-  //       id: bankOptions.length + 1,
-  //       bank_name: newBankOption,
-  //       abbr: newBankOption.substring(0, 3),
-  //     };
-
-  //     setCard({
-  //       ...card,
-  //       card_bank_name: newBankOption,
-  //       card_bank_id: newBank.id,
-  //     });
-
-  //     setBankOptions([
-  //       ...bankOptions.slice(0, -1),
-  //       newBank,
-  //       bankOptions.slice(-1)[0],
-  //     ]);
-  //   }
-  // }, []);
-
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors, CardForms.Full]);
@@ -238,11 +160,11 @@ const AddCardFullForm = () => {
       }
 
       if (isNaN(bin)) {
-        addAuthError(Consts.authErrorMessages.invalidCardBin);
+        addAuthError(Consts.authErrorMessages().invalidCardBin);
         return;
       }
 
-      removeAuthError(Consts.authErrorMessages.invalidCardBin);
+      removeAuthError(Consts.authErrorMessages().invalidCardBin);
       setCard({ ...card, card_bin: bin });
     };
     return (
@@ -273,19 +195,19 @@ const AddCardFullForm = () => {
           enabled={isKeyboardVisible}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
           <ModalOverlayView className="flex-auto text-left z-0">
-            <TitleText>Enter The First 6 Digits</TitleText>
+            <TitleText>{i18n.t('Wallet.Enterdigits')}</TitleText>
             {renderBinInput()}
             <PrimaryButton
               type="primary"
               onPress={handleSubmit}
               className="mt-1 z-0">
               <PrimaryText type="secondary" className="text-center text-xl">
-                Submit
+                {i18n.t('Common.Submit')}
               </PrimaryText>
             </PrimaryButton>
             <PrimaryButton onPress={closeModal} className="z-0">
               <PrimaryText type="secondary" className="text-center text-xl">
-                Close
+                {i18n.t('Common.Close')}
               </PrimaryText>
             </PrimaryButton>
             {AuthErrorComponent && <AuthErrorComponent />}

@@ -19,8 +19,8 @@ import {
   SafeAreaProvider,
   initialWindowMetrics,
 } from 'react-native-safe-area-context';
-import AuthState from './src/Context/AuthState';
 import MainNavigator from './src/Navigation/MainNavigator';
+import LanguageState from './src/Context/LanguageState';
 
 const RightPayApp = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -56,23 +56,17 @@ const RightPayApp = () => {
   }, []);
 
   return (
-    <AuthState>
+    <LanguageState>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={styles.gestureHandlerRootView}>
           <NavigationContainer>
-            <KeyboardAvoidingView
-              style={styles.keyboardAvoidingView}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              enabled={isKeyboardVisible}
-              keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
-              <BottomSheetModalProvider>
-                <MainNavigator />
-              </BottomSheetModalProvider>
-            </KeyboardAvoidingView>
+            <BottomSheetModalProvider>
+              <MainNavigator />
+            </BottomSheetModalProvider>
           </NavigationContainer>
         </GestureHandlerRootView>
       </SafeAreaProvider>
-    </AuthState>
+    </LanguageState>
   );
 };
 

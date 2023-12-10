@@ -7,6 +7,7 @@ import {
   DeleteCardButton,
 } from '../Helpers/StylizedComponents';
 import { CardProps } from '../types/CardType';
+import i18n from '../Localization/i18n';
 
 const CardComponent: React.FC<CardProps> = props => {
   const formatBin = (bin: string) => {
@@ -69,13 +70,13 @@ const CardComponent: React.FC<CardProps> = props => {
           props.setDeleteCard !== undefined && props.setDeleteCard(false)
         }>
         <Text className="text-2xl text-white text-left opacity-100 text-4xl text-center">
-          Delete Card?
+          {i18n.t('Wallet.Delete')}
         </Text>
         <Text className="text-2xl text-white text-left opacity-100 text-3xl text-center">
-          Long Press Again to Confirm
+          {i18n.t('Wallet.Longpress')}
         </Text>
         <Text className="text-2xl text-white text-left opacity-100 text-2xl text-center">
-          Tap to Exit
+          {i18n.t('Wallet.Tap')}
         </Text>
       </DeleteCardButton>
     );

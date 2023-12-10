@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -16,6 +15,7 @@ import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
+import i18n from '../../../Localization/i18n';
 
 const AddNewBankOption = (props: OptionsPropsType) => {
   //Context
@@ -66,20 +66,20 @@ const AddNewBankOption = (props: OptionsPropsType) => {
         enabled={isKeyboardVisible}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}>
         <ModalOverlayView className="flex-auto ">
-          <TitleText>{'Enter a New Option for bank'}</TitleText>
+          <TitleText>{i18n.t('Wallet.Enternewbank')}</TitleText>
           <FormInputBox
-            placeholder="Name of Option"
+            placeholder={i18n.t('Wallet.Optionname')}
             placeholderTextColor="#AFAEAE"
             onChange={event => setNewOption(event.nativeEvent.text)}
           />
           <PrimaryButton onPress={handleSubmit} className="mt-1 z-0">
             <PrimaryText type="secondary" className="text-center text-xl">
-              Submit
+              {i18n.t('Common.Submit')}
             </PrimaryText>
           </PrimaryButton>
           <PrimaryButton onPress={closeModal} className="z-0">
             <PrimaryText type="secondary" className="text-center text-xl">
-              Close
+              {i18n.t('Common.Close')}
             </PrimaryText>
           </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}

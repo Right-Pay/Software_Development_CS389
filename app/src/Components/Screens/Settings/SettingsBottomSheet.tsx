@@ -9,9 +9,11 @@ import useColorsMode from '../../../Helpers/Colors';
 import { AuthContextType } from '../../../types/AuthContextType';
 import { navSettingType } from '../../../types/SettingsType';
 import PrimaryText from '../../Common/PrimaryText';
+import i18n from '../../../Localization/i18n';
 
 const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
   const { signOut } = React.useContext(authContext) as AuthContextType;
+
   const { dismiss } = useBottomSheetModal();
   const { colors } = useColorsMode();
   const navigation =
@@ -19,20 +21,24 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
 
   const settingsPages: navSettingType[] = [
     {
-      name: 'Settings',
+      name: i18n.t('Settings.Settings'),
       route: 'GeneralSettings',
+      iconName: 'settings',
     },
     {
-      name: 'Account Information',
+      name: i18n.t('Settings.Account'),
       route: 'ProfileSettings',
+      iconName: 'person',
     },
     {
-      name: 'Cards',
+      name: i18n.t('Settings.Cards'),
       route: 'CardSettings',
+      iconName: 'card',
     },
     {
-      name: 'Sign Out',
+      name: i18n.t('Welcome.Logout'),
       route: 'SignOut',
+      iconName: 'log-out',
     },
   ];
 
@@ -60,21 +66,6 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
     }
   };
 
-  const getIcon = (settingName: string) => {
-    switch (settingName) {
-      case 'Account Information':
-        return 'person';
-      case 'Settings':
-        return 'settings';
-      case 'Cards':
-        return 'card';
-      case 'Sign Out':
-        return 'log-out';
-      default:
-        return 'menu';
-    }
-  };
-
   const renderSettingsNav = (setting: navSettingType, key: number) => {
     return (
       <Pressable
@@ -82,10 +73,7 @@ const SettingsBottomSheet: React.FC<PropsWithChildren> = () => {
         key={key}
         className={'flex-1 flex-row w-screen pl-4 items-center h-auto'}>
         <View className="w-8 text-center">
-          <Icon
-            name={getIcon(setting.name).toString()}
-            color={colors.primary}
-          />
+          <Icon name={setting.iconName.toString()} color={colors.primary} />
         </View>
         <PrimaryText className="text-left text-lg">{setting.name}</PrimaryText>
       </Pressable>

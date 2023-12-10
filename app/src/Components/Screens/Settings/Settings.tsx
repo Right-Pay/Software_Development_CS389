@@ -17,6 +17,7 @@ type SettingsScreenProps = CompositeScreenProps<
 > &
   PropsWithChildren;
 
+//This file is deprecated
 const SettingsScreen: React.FC<SettingsScreenProps> = () => {
   return (
     <WrapperView>

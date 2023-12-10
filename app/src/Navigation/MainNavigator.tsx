@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 import TopBar from '../Components/Header';
 import CardSettings from '../Components/Screens/Settings/CardSettings';
 import GeneralSettings from '../Components/Screens/Settings/GeneralSettings';
@@ -20,6 +20,9 @@ import {
 } from '../types/NavigationRoutesType';
 import BottomTabNavigator from './TabNavigator';
 import VerifyEmailScreen from '../Components/Screens/Welcome/VerifyEmail';
+import LanguageState from '../Context/LanguageState';
+import languageContext from '../Context/languageContext';
+import { LanguageContextType } from '../types/LanguageContextType';
 
 const WelcomeStack = createNativeStackNavigator<WelcomeNavigationRoutesType>();
 const MainNavigatorStack =
@@ -83,6 +86,7 @@ const MainNavigator: React.FC<PropsWithChildren> = () => {
   const { isLoading, userToken } = React.useContext(
     AuthContext,
   ) as AuthContextType;
+
   if (isLoading) {
     return <SplashScreen />;
   }

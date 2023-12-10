@@ -3,7 +3,7 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React, { useContext, useEffect } from 'react';
-import { Linking } from 'react-native';
+import { Linking, View } from 'react-native';
 import { Switch } from 'react-native-switch';
 import context from '../../../Context/context';
 import locationContext from '../../../Context/locationContext';
@@ -20,6 +20,9 @@ import OutlineButton from '../../Common/OutlineButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import i18n from '../../../Localization/i18n';
+import CheckBox from '@react-native-community/checkbox';
+import { supportedLanguagesEnum } from '../../../types/LanguageContextType';
 
 type GeneralSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsNavigationRoutesType, 'GeneralSettings'>,
@@ -32,6 +35,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   const { requestLocationPermission, locationGrantType } = useContext(
     locationContext,
   ) as LocationContext;
+  const { lang, changeLanguage } = React.useContext(
+    languageContext,
+  ) as LanguageContextType;
+
   const { colors } = useColorsMode();
 
   const [locationServicesOn, setLocationServicesOn] =
@@ -52,11 +59,13 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <TitleText className="mt-10 mb-4">General Settings</TitleText>
+        <TitleText className="mt-10 mb-4">{`${i18n.t(
+          'Settings',
+          'General',
+        )} ${i18n.t('Settings.Settings')}`}</TitleText>
         <InnerWrapperView className="border-t-2">
           <PrimaryText className="mb-3">
-            Your location is used to determine nearby companies and which card
-            to suggest you use
+            {i18n.t('Settings.Locationdescription')}
           </PrimaryText>
           <Switch
             value={locationServicesOn}
@@ -86,13 +95,56 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
             switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
           />
           <PrimaryText className="mb-3">
-            {locationServicesOn
-              ? 'Location Services On'
-              : 'Location Services Off'}
+            {`${i18n.t('Settings.Locationservices')} ${
+              locationServicesOn
+                ? i18n.t('Settings.On')
+                : i18n.t('Settings.Off')
+            }`}
           </PrimaryText>
+          <View className="flex flex-row justify-center space-x-4 h-1/4 m-4 w-auto">
+            <View className="flex flex-col justify-center items-center">
+              <CheckBox
+                disabled={supportedLanguagesEnum.english === lang}
+                value={supportedLanguagesEnum.english === lang}
+                boxType="square"
+                onValueChange={newValue =>
+                  newValue && changeLanguage(supportedLanguagesEnum.english)
+                }
+              />
+              <PrimaryText className="text-center text-xl">
+                {i18n.t('Settings.English')}
+              </PrimaryText>
+            </View>
+            <View className="flex flex-col justify-center items-center">
+              <CheckBox
+                disabled={supportedLanguagesEnum.spanish === lang}
+                value={supportedLanguagesEnum.spanish === lang}
+                boxType="square"
+                onValueChange={newValue =>
+                  newValue && changeLanguage(supportedLanguagesEnum.spanish)
+                }
+              />
+              <PrimaryText className="text-center text-xl">
+                {i18n.t('Settings.Spanish')}
+              </PrimaryText>
+            </View>
+            <View className="flex flex-col justify-center items-center">
+              <CheckBox
+                disabled={supportedLanguagesEnum.french === lang}
+                value={supportedLanguagesEnum.french === lang}
+                boxType="square"
+                onValueChange={newValue =>
+                  newValue && changeLanguage(supportedLanguagesEnum.french)
+                }
+              />
+              <PrimaryText className="text-center text-xl">
+                {i18n.t('Settings.French')}
+              </PrimaryText>
+            </View>
+          </View>
           <OutlineButton type="primary" onPress={() => navigateToSettings()}>
             <PrimaryText className="text-center text-xl">
-              More Settings
+              {i18n.t('Settings.More')}
             </PrimaryText>
           </OutlineButton>
         </InnerWrapperView>

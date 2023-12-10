@@ -56,15 +56,6 @@ const TopBar: React.FC<NativeStackHeaderProps> = ({ navigation, route }) => {
       <Pressable
         className="flex-1 flex-row pl-6 justify-start items-center text-center"
         onPress={() => {
-          // if (route.name === 'ProfileSettings') {
-          //   navigation.navigate('ProfileStack', { screen: 'ProfileScreen' });
-          // } else if (route.name === 'GeneralSettings') {
-          //   navigation.navigate('HomeStack', { screen: 'HomeScreen' });
-          // } else if (route.name === 'CardSettings') {
-          //   navigation.navigate('WalletStack', { screen: 'WalletScreen' });
-          // } else {
-          //   navigation.navigate('HomeStack', { screen: 'HomeScreen' });
-          // }
           navigation.goBack();
         }}>
         <Icon name="arrow-back" color="#Ffffff" />
