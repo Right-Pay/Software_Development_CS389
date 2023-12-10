@@ -12,9 +12,7 @@
 
 ## Using the translations
 * Anywhere that you would be typing normal text, instead use the following.
-* import { LanguageContextType } from '../types/LanguageContextType';
-* import LanguageContext from '../Context/languageContext';
-* Const { translate } = React.useContext(LanguageContext) as LanguageContextType;
-* translate(namespace, key);
+* import i18n from Localization/i18n
+* i18n.t("namespace.key");
   * namespace is a value like "common" or "wallet"
   * If the key does not exist you will have to add that translation in all the common.json files
