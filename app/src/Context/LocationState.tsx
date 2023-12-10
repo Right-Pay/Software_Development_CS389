@@ -74,6 +74,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
             rewardId: reward.id ?? 0,
             percent: reward.initial_percentage,
           };
+
           if (rewardSlug === 'all') {
             cardRewards.push(link);
             return;
@@ -90,6 +91,17 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       place.cardRewards = sortRewards(cardRewards);
     },
     [sortRewards, userProfile.cards],
+  );
+
+  const fetchTopFiveCards = useCallback(
+    async (place: Place) => {
+      console.log(place, 'place');
+      if (place && place.cardRewards && place.cardRewards.length > 0) {
+        console.log(place.cardRewards, 'address');
+        setTopFiveCards(sortRewards(place.cardRewards).slice(0, 5));
+      }
+    },
+    [sortRewards],
   );
 
   const fetchAddress = useCallback(async () => {
@@ -113,7 +125,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append(
       'X-Goog-FieldMask',
-      'places.displayName,places.businessStatus,places.primaryType,places.types',
+      'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types,places.formattedAddress',
     );
     myHeaders.append('X-Goog-Api-Key', apiURL);
 
@@ -147,9 +159,14 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       return {
         ...place,
         id: index.toString(),
+        primaryType: place.types[0],
       } as Place;
     });
-    await linkRewardToLocation(resultAddress[0]);
+
+    if (resultAddress[0].primaryType !== undefined) {
+      await linkRewardToLocation(resultAddress[0]);
+      await fetchTopFiveCards(resultAddress[0]);
+    }
 
     setAddress(resultAddress[0]);
   }, [
@@ -159,6 +176,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     location.latitude,
     location.longitude,
     linkRewardToLocation,
+    fetchTopFiveCards,
   ]);
 
   const calculateDistanceLatLong = (
@@ -261,46 +279,55 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
 
     // Manipulate result to return
     const result = await response.json();
+    if (!result.places) return;
+
     const resultPlaces = result.places
-      .filter((place: Place) => {
-        return place.businessStatus === 'OPERATIONAL';
-      })
+      .filter((place: Place) => place.businessStatus === 'OPERATIONAL')
       .map((place: Place, index: number) => {
-        let primaryTypeDisplayName = {};
-        if (
-          placesTypes.hasOwnProperty.call(place, 'primaryType') &&
-          place.types.length > 0 &&
-          placesTypes.hasOwnProperty(place.types[0].toString())
-        ) {
+        let primaryTypeDisplayName: { lang: string; text: string };
+
+        if (place.primaryType && placesTypes.hasOwnProperty(place.types[0])) {
           primaryTypeDisplayName = {
             lang: 'en-US',
             text: placesTypes[place.types[0] as keyof typeof placesTypes],
           };
-        } else if (!place.hasOwnProperty('primaryType')) {
-          const type = place.types[0];
-          let displayName = '';
-          type.split('_').forEach(name => {
-            displayName +=
-              name.charAt(0).toUpperCase() + name.substring(1) + ' ';
-          });
+        } else if (!place.primaryType) {
+          const displayName = place.types[0]
+            .split('_')
+            .map(name => name.charAt(0).toUpperCase() + name.substring(1))
+            .join(' ');
           primaryTypeDisplayName = {
             lang: 'en-US',
             text: displayName,
           };
         } else {
-          primaryTypeDisplayName = place.primaryTypeDisplayName;
+          primaryTypeDisplayName = {
+            lang: 'en-US',
+            text: place.primaryTypeDisplayName.text,
+          };
         }
+
         return {
           ...place,
-          primaryTypeDisplayName: primaryTypeDisplayName,
+          primaryTypeDisplayName,
           distance: calculateDistanceLatLong(location, place.location),
           id: index.toString(),
-        } as Place;
+        };
       });
+
+    resultPlaces.forEach((place: Place) => {
+      linkRewardToLocation(place);
+    });
+
     setPlaces(resultPlaces);
-    // setPlaces(Consts.devLocations as unknown as Place[]);
     setLocationLoading(false);
-  }, [requestLocationPermission, locationGrantType, apiURL, location]);
+  }, [
+    requestLocationPermission,
+    locationGrantType,
+    apiURL,
+    location,
+    linkRewardToLocation,
+  ]);
 
   const getLocation = useCallback(async () => {
     await requestLocationPermission();
@@ -390,12 +417,6 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     [userProfile.cards],
   );
 
-  const fetchTopFiveCards = useCallback(async () => {
-    if (address && address.cardRewards && address.cardRewards.length > 0) {
-      setTopFiveCards(sortRewards(address.cardRewards).slice(0, 5));
-    }
-  }, [address, sortRewards]);
-
   useEffect(() => {
     getLocation();
   }, [getLocation]);
@@ -403,18 +424,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     fetchPlaces();
     fetchAddress();
-    fetchTopFiveCards();
-  }, [fetchAddress, fetchPlaces, fetchTopFiveCards, location]);
-
-  useEffect(() => {
-    places?.forEach(place => {
-      linkRewardToLocation(place);
-    });
-  }, [linkRewardToLocation, places]);
-
-  useEffect(() => {
-    address && linkRewardToLocation(address as Place);
-  }, [address, linkRewardToLocation]);
+  }, [fetchAddress, fetchPlaces, location]);
 
   useEffect(() => {
     if (appStateVisible === 'active') {

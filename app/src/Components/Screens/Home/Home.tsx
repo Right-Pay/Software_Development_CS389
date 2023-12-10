@@ -2,7 +2,7 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, View } from 'react-native';
 import AuthContext from '../../../Context/authContext';
 import locationContext from '../../../Context/locationContext';
@@ -17,7 +17,7 @@ import CardComponent from '../../Card';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
-import { Reward } from '../../../types/CardType';
+import { Card, Reward } from '../../../types/CardType';
 
 type HomeScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeNavigationRoutesType, 'HomeScreen'>,
@@ -30,6 +30,8 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const { address, topFiveCards, fetchCardById } = React.useContext(
     locationContext,
   ) as LocationContext;
+
+  const [topCard, setTopCard] = React.useState<Card | undefined>(undefined);
 
   const renderReward = (item: Reward) => {
     return (
@@ -65,39 +67,47 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
    * For now we will just display the first card in the list
    * const cardIndexToUse = getTopCard(userProfile.cards);
    */
-  const topCard =
-    topFiveCards && topFiveCards.length > 0
-      ? fetchCardById(topFiveCards[0].cardId)
-      : undefined;
+
+  const renderTopCard = () => {
+    return topCard ? (
+      <>
+        <View className="w-full justify-center items-center h-1/3">
+          <PrimaryText className="text-center text-xl mt-10">{`You're at ${address?.displayName.text}\n We suggest you use the following card`}</PrimaryText>
+          <CardComponent card={topCard} classNameProp="w-auto h-auto mt-5" />
+        </View>
+        <View className="w-full justify-center mt-20 items-center">
+          <FlatList
+            className="w-full text-center w-3/4 p-2"
+            data={topCard.rewards} //This will need to be done
+            ListHeaderComponent={<TitleText>Rewards</TitleText>}
+            showsVerticalScrollIndicator={true}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => renderReward(item)}
+            ItemSeparatorComponent={itemSeparatorComponent}
+          />
+        </View>
+      </>
+    ) : (
+      <PrimaryText className="text-center text-xl mt-10">
+        You don't have any cards yet. Please add a card to get started.
+      </PrimaryText>
+    );
+  };
+
+  useEffect(() => {
+    setTopCard(
+      topFiveCards && topFiveCards.length > 0
+        ? fetchCardById(topFiveCards[0].cardId)
+        : undefined,
+    );
+  }, [fetchCardById, topFiveCards]);
 
   return (
     <WrapperView className="justify-start">
       <TitleText className="mt-10 mb-10">
         Hello {userProfile.username}
       </TitleText>
-      {topCard ? (
-        <>
-          <View className="w-full justify-center items-center h-1/3">
-            <PrimaryText className="text-center text-xl mt-10">{`You're at ${address?.displayName.text}\n We suggest you use the following card`}</PrimaryText>
-            <CardComponent card={topCard} classNameProp="w-auto h-auto mt-5" />
-          </View>
-          <View className="w-full justify-center mt-20 items-center">
-            <FlatList
-              className="w-full text-center w-3/4 p-2"
-              data={topCard.rewards} //This will need to be done
-              ListHeaderComponent={<TitleText>Rewards</TitleText>}
-              showsVerticalScrollIndicator={true}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => renderReward(item)}
-              ItemSeparatorComponent={itemSeparatorComponent}
-            />
-          </View>
-        </>
-      ) : (
-        <PrimaryText className="text-center text-xl mt-10">
-          You don't have any cards yet. Please add a card to get started.
-        </PrimaryText>
-      )}
+      {renderTopCard()}
     </WrapperView>
   );
 };
