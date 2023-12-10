@@ -71,7 +71,6 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const linkRewardToLocation = useCallback(
     (place: Place) => {
       const placeSlug = place.primaryType.toLowerCase();
-      console.log(placeSlug);
       const placeName = place.displayName.text;
       const cardRewards: rewardToCardLink[] = [];
       userProfile.cards?.forEach(async card => {

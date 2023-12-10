@@ -65,11 +65,11 @@ const AddRewardForm: React.FC = () => {
     Add = 'Add',
   }
   enum EditForm {
-    Category = 'Category',
+    CategoryForm = 'Category',
     Percentages = 'Percentages',
   }
   const [editState, setEditState] = useState<EditStates>(EditStates.Main);
-  const [editForm, setEditForm] = useState<EditForm>(EditForm.Category);
+  const [editForm, setEditForm] = useState<EditForm>(EditForm.CategoryForm);
   // const [bankSetFromList, setBankSetFromList] = useState<boolean>(false);
 
   //onChange Methods
@@ -99,7 +99,7 @@ const AddRewardForm: React.FC = () => {
     clearAuthErrors();
     Keyboard.dismiss();
     if (EditStates.Add === editState) {
-      if (editForm === EditForm.Category) {
+      if (editForm === EditForm.CategoryForm) {
         if (newReward.category?.category_name === '') {
           addAuthError(Consts.authErrorMessages.invalidCategory);
           return;
@@ -114,7 +114,7 @@ const AddRewardForm: React.FC = () => {
         // for now always creating a new reward as we don't allow editing rewards
         const newLink = await linkReward(newReward, true, true);
         if (newLink) {
-          setEditForm(EditForm.Category);
+          setEditForm(EditForm.CategoryForm);
           setEditState(EditStates.Main);
         }
       }
@@ -141,12 +141,12 @@ const AddRewardForm: React.FC = () => {
   const addReward = useCallback(async () => {
     clearAuthErrors();
     Keyboard.dismiss();
-    setEditForm(EditForm.Category);
+    setEditForm(EditForm.CategoryForm);
     setEditState(EditStates.Add);
     setNewReward({} as Reward);
     setCategorySearch('');
     setFilteredCategoryOptions([]);
-  }, [EditForm.Category, EditStates.Add, clearAuthErrors]);
+  }, [EditForm.CategoryForm, EditStates.Add, clearAuthErrors]);
 
   const closeModal = useCallback(async () => {
     setCardForms({ ...CardForms, Full: false, Rewards: false });
@@ -181,6 +181,7 @@ const AddRewardForm: React.FC = () => {
               id: category_id,
               category_name,
               specific_places: newReward.category?.specific_places || [],
+              category_slug: '',
             };
           }
           setCategorySearch(item.category_name);
@@ -234,6 +235,7 @@ const AddRewardForm: React.FC = () => {
           id: newReward.category?.id || 0,
           category_name: newReward.category?.category_name || '',
           specific_places: text.replace(/\s/g, '').split(','),
+          category_slug: newReward.category?.category_slug || '',
         },
       });
     };
@@ -441,21 +443,21 @@ const AddRewardForm: React.FC = () => {
   }, [closeModal]);
 
   const backForm = useCallback(() => {
-    if (editForm === EditForm.Category) {
+    if (editForm === EditForm.CategoryForm) {
       return () => {
         setEditState(EditStates.Main);
       };
     }
     if (editForm === EditForm.Percentages) {
       return () => {
-        setEditForm(EditForm.Category);
+        setEditForm(EditForm.CategoryForm);
       };
     }
   }, [EditForm, EditStates, editForm]);
 
   const renderTitle = useCallback(() => {
     if (editState === EditStates.Edit) {
-      if (editForm === EditForm.Category) {
+      if (editForm === EditForm.CategoryForm) {
         return 'Verify Reward Category';
       }
       if (editForm === EditForm.Percentages) {
@@ -464,7 +466,7 @@ const AddRewardForm: React.FC = () => {
     } else if (editState === EditStates.Main) {
       return 'Rewards';
     } else {
-      if (editForm === EditForm.Category) {
+      if (editForm === EditForm.CategoryForm) {
         return 'Add Reward Category';
       }
       if (editForm === EditForm.Percentages) {
@@ -490,21 +492,22 @@ const AddRewardForm: React.FC = () => {
           enabled={isKeyboardVisible}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}> */}
         <ModalOverlayView className="flex-auto text-left z-0 pt-20">
-          {editState !== EditStates.Main && editForm === EditForm.Category && (
-            <>
-              <TitleText className="mt-4 mb-2 w-9/12">
-                {renderTitle()}
-              </TitleText>
-              <View className="mb-4 w-11/12">
-                <PrimaryText className="text-center w-full text-md mb-2">
-                  At this time, we only support 1 category per reward. If you
-                  have a reward that has multiple categories, please add them as
-                  separate rewards. To select a category, start typing below and
-                  select the category from the dropdown.
-                </PrimaryText>
-              </View>
-            </>
-          )}
+          {editState !== EditStates.Main &&
+            editForm === EditForm.CategoryForm && (
+              <>
+                <TitleText className="mt-4 mb-2 w-9/12">
+                  {renderTitle()}
+                </TitleText>
+                <View className="mb-4 w-11/12">
+                  <PrimaryText className="text-center w-full text-md mb-2">
+                    At this time, we only support 1 category per reward. If you
+                    have a reward that has multiple categories, please add them
+                    as separate rewards. To select a category, start typing
+                    below and select the category from the dropdown.
+                  </PrimaryText>
+                </View>
+              </>
+            )}
           {editState !== EditStates.Main &&
             editForm === EditForm.Percentages && (
               <TitleText className="mt-4 mb-10 w-9/12">
@@ -517,8 +520,8 @@ const AddRewardForm: React.FC = () => {
           {editState === EditStates.Main && renderRewards()}
           {editState !== EditStates.Main && (
             <>
-              {editForm === EditForm.Category && renderCategoryDropdown()}
-              {editForm === EditForm.Category && renderSpecificPlaces()}
+              {editForm === EditForm.CategoryForm && renderCategoryDropdown()}
+              {editForm === EditForm.CategoryForm && renderSpecificPlaces()}
               {editForm === EditForm.Percentages && renderInitialPercentage()}
               {editForm === EditForm.Percentages && renderInitialLimit()}
               {editForm === EditForm.Percentages && renderFallbackPercentage()}
@@ -544,7 +547,7 @@ const AddRewardForm: React.FC = () => {
                   onPress={handleSubmit}
                   className="z-0">
                   <PrimaryText type="secondary" className="text-center text-xl">
-                    {editForm === EditForm.Category ? 'Next' : 'Submit'}
+                    {editForm === EditForm.CategoryForm ? 'Next' : 'Submit'}
                   </PrimaryText>
                 </PrimaryButton>
               </>
