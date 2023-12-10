@@ -432,6 +432,7 @@ const SupportedLocationsEnum = {
     'coffee_shop',
     'breakfast_restaurant',
     'indian_restaurant',
+    'ice_cream_shop',
   ],
   store: [
     'store',
@@ -446,7 +447,7 @@ const SupportedLocationsEnum = {
     'shopping_mall',
   ],
   pharmacy: ['pharmacy'],
-  convience_store: ['convenience_store'],
+  convenience_store: ['convenience_store'],
   car: [
     'car_repair',
     'car_dealer',

@@ -29,7 +29,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const { userProfile } = useContext(authContext) as AuthContextType;
   const [topFiveCards, setTopFiveCards] = useState<rewardToCardLink[]>([]);
 
-  const supportedLocation = Consts.SupportedLocationsEnum;
+  const SupportedLocationsEnum = Consts.SupportedLocationsEnum;
 
   const apiURL = Config.REACT_APP_GOOGLE_API;
 
@@ -61,14 +61,23 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     return link.sort((a, b) => (a.percent <= b.percent ? 1 : -1));
   }, []);
 
+  const getValueByKey = useCallback(
+    (key: string) => {
+      return SupportedLocationsEnum[key as keyof typeof SupportedLocationsEnum];
+    },
+    [SupportedLocationsEnum],
+  );
+
   const linkRewardToLocation = useCallback(
     (place: Place) => {
       const placeSlug = place.primaryType.toLowerCase();
+      console.log(placeSlug);
       const placeName = place.displayName.text;
       const cardRewards: rewardToCardLink[] = [];
-      userProfile.cards?.forEach(card => {
-        card.rewards?.forEach(reward => {
+      userProfile.cards?.forEach(async card => {
+        await card.rewards?.forEach(reward => {
           const rewardSlug = reward.category?.category_slug;
+          const acceptedPlaces = getValueByKey(rewardSlug ?? '') ?? [];
           const link = {
             cardId: card.id ?? 0,
             rewardId: reward.id ?? 0,
@@ -85,19 +94,23 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
             //This would be for a specific location
             cardRewards.push(link);
             return;
+          } else if (
+            acceptedPlaces.length > 0 &&
+            acceptedPlaces.includes(placeSlug)
+          ) {
+            cardRewards.push(link);
+            return;
           }
         });
       });
       place.cardRewards = sortRewards(cardRewards);
     },
-    [sortRewards, userProfile.cards],
+    [userProfile.cards, sortRewards, getValueByKey],
   );
 
   const fetchTopFiveCards = useCallback(
     async (place: Place) => {
-      console.log(place, 'place');
       if (place && place.cardRewards && place.cardRewards.length > 0) {
-        console.log(place.cardRewards, 'address');
         setTopFiveCards(sortRewards(place.cardRewards).slice(0, 5));
       }
     },
