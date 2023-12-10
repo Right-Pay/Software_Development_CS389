@@ -366,40 +366,39 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   }, [places, fetchRewards, userProfile.cards]);
 
   const topFiveCards = useCallback(async () => {
-    const addressPlaces = address?.types;
-    const rewardPercents: object[] = [];
-    const topCards = userProfile.cards?.filter(card => {
-      const hasMatchingReward = card.rewards?.some(reward => {
-        const rewardType = reward.category?.category_name.toLowerCase();
-        if (rewardType?.toLowerCase() === 'all') return true;
-
+    const addressPlaces = address?.types || [];
+    const topSortedIds: any[] = [];
+    const topFiveCards = userProfile.cards?.filter(card => {
+      let hasMatchingReward = false;
+      card.rewards?.forEach(reward => {
+        const rewardType = reward.category?.category_name?.toLowerCase();
         const rewardSlug = reward.category?.category_slug;
-        const rewardSecondaryTypes = reward.category?.specific_places;
-
         const placeMap =
           supportedLocation[rewardSlug as keyof typeof supportedLocation];
 
-        if (placeMap.length > 0) {
-          rewardPercents.push({
-            Percent: reward.initial_percentage,
+        if (
+          rewardType === 'all' ||
+          (placeMap && placeMap.some(place => addressPlaces.includes(place)))
+        ) {
+          topSortedIds.push({
+            Percent: reward.initial_percentage || 0,
             Id: card.id,
           });
-          return placeMap.some(place => addressPlaces?.includes(place));
+          hasMatchingReward = true;
         }
-
-        return false;
       });
       return hasMatchingReward;
     });
 
-    const topSortedIds = rewardPercents
-      ?.sort((a: any, b: any) => (a.Percent >= b.Percent ? 1 : -1))
-      .map((item: any) => item.Id);
+    topSortedIds.sort((a, b) => b.Percent - a.Percent);
 
-    const sorted = topCards
-      ?.sort((a, b) =>
-        topSortedIds?.indexOf(a.id) < topSortedIds?.indexOf(b.id) ? 1 : -1,
-      )
+    const sortedIds = topSortedIds.map(item => item.Id);
+    const sorted = topFiveCards
+      ?.sort((a, b) => {
+        const indexA = sortedIds.indexOf(a.id);
+        const indexB = sortedIds.indexOf(b.id);
+        return indexA - indexB;
+      })
       .slice(0, 5);
 
     setTopFiveCards(sorted);
