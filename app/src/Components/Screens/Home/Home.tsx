@@ -43,24 +43,32 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
         {item.category?.specific_places && (
           <PrimaryText className="text-left">
             {`${i18n.t(
-              'Wallet.Specific',
+              'Wallet.Specificplaces',
             )}: ${item.category?.specific_places.join(', ')}`}
           </PrimaryText>
         )}
         <PrimaryText className="text-left">
-          {`${i18n.t('Wallet.Initial')} ${i18n.t('Wallet.Percentage')}: 
-          ${item.initial_percentage}`}
+          {`${i18n.t('Wallet.Initial')} ${i18n.t('Wallet.Percentage')}: ${
+            item.initial_percentage
+          }`}
         </PrimaryText>
-        <PrimaryText>{`${i18n.t('Wallet.Initial')} ${i18n.t('Wallet.Limit')}: 
-          ${item.initial_limit}`}</PrimaryText>
-        <PrimaryText>
-          {`${i18n.t('Wallet.Term')}: ${item.term_length_months} ${
-            item.term_length_months > 0 ? i18n.t('Wallet.Month') : ''
-          }${item.term_length_months > 1 ? i18n.t('Wallet.S') : ''}`}
-        </PrimaryText>
-        <PrimaryText>
-          {`${i18n.t('Wallet.Fallback')}:${item.fallback_percentage}`}
-        </PrimaryText>
+        {item.initial_limit && (
+          <PrimaryText>{`${i18n.t('Wallet.Initial')} ${i18n.t(
+            'Wallet.Limit',
+          )}: ${item.initial_limit}`}</PrimaryText>
+        )}
+        {item.term_length_months && (
+          <PrimaryText>
+            {`${i18n.t('Wallet.Term')}: ${item.term_length_months} ${
+              item.term_length_months > 0 ? i18n.t('Wallet.Month') : ''
+            }${item.term_length_months > 1 ? i18n.t('Wallet.S') : ''}`}
+          </PrimaryText>
+        )}
+        {item.fallback_percentage && (
+          <PrimaryText>
+            {`${i18n.t('Wallet.Fallback')} ${item.fallback_percentage}`}
+          </PrimaryText>
+        )}
       </View>
     );
   };
