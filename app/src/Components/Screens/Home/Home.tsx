@@ -92,7 +92,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           )}\n ${i18n.t('Home.Suggest')}`}</PrimaryText>
           <CardComponent card={topCard} classNameProp="w-auto h-auto mt-5" />
         </View>
-        <View className="aspect-video mt-12 w-full justify-center items-center">
+        <View className="aspect-video mt-20 w-full justify-center items-center">
           <FlatList
             className="w-full text-center w-3/4 p-2"
             data={topCard.rewards} //This will need to be done
