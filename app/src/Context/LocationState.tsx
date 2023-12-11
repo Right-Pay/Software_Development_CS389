@@ -14,6 +14,9 @@ import { Location, Place, PlaceLocation } from '../types/Location';
 import authContext from './authContext';
 import context from './context';
 import LocationContext from './locationContext';
+import Consts from '../Helpers/Consts';
+import { Card } from '../types/CardType';
+import { rewardToCardLink } from '../types/LocationContextType';
 
 const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [location, setLocation] = useState<Location>({} as Location);
@@ -21,9 +24,12 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   const [address, setAddress] = useState<Place | undefined>(undefined);
   const [locationGrantType, setLocationGrantType] = useState<boolean>(false);
   const { appStateVisible } = useContext(context) as AppContext;
-  const { userProfile } = useContext(authContext) as AuthContextType;
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<Place | null>(null);
+  const { userProfile } = useContext(authContext) as AuthContextType;
+  const [topFiveCards, setTopFiveCards] = useState<rewardToCardLink[]>([]);
+
+  const SupportedLocationsEnum = Consts.SupportedLocationsEnum;
 
   const apiURL = Config.REACT_APP_GOOGLE_API;
 
@@ -51,6 +57,78 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, [locationGrantType]);
 
+  const sortRewards = useCallback((link: rewardToCardLink[]) => {
+    const unFilteredRewards: rewardToCardLink[] = [];
+    link.forEach(reward => {
+      const index = unFilteredRewards.find(i => i.cardId === reward.cardId);
+      if (index === undefined) {
+        unFilteredRewards.push(reward);
+      } else {
+        if (index.percent < reward.percent) {
+          index.percent = reward.percent;
+        }
+      }
+    });
+
+    return unFilteredRewards.sort((a, b) => (a.percent <= b.percent ? 1 : -1));
+  }, []);
+
+  const getAcceptedLocationsByKey = useCallback(
+    (key: string) => {
+      return SupportedLocationsEnum[key as keyof typeof SupportedLocationsEnum];
+    },
+    [SupportedLocationsEnum],
+  );
+
+  const linkRewardToLocation = useCallback(
+    (place: Place) => {
+      const placeSlug = place.primaryType.toLowerCase();
+      const placeName = place.displayName.text;
+      const cardRewards: rewardToCardLink[] = [];
+      userProfile.cards?.forEach(async card => {
+        await card.rewards?.forEach(reward => {
+          const rewardSlug = reward.category?.category_slug;
+          const acceptedPlaces =
+            getAcceptedLocationsByKey(rewardSlug ?? '') ?? [];
+          const link = {
+            cardId: card.id ?? 0,
+            rewardId: reward.id ?? 0,
+            percent: reward.initial_percentage,
+          };
+
+          if (rewardSlug === 'all') {
+            cardRewards.push(link);
+            return;
+          } else if (placeSlug === rewardSlug) {
+            cardRewards.push(link);
+            return;
+          } else if (reward.category?.specific_places?.includes(placeName)) {
+            //This would be for a specific location
+            cardRewards.push(link);
+            return;
+          } else if (
+            acceptedPlaces.length > 0 &&
+            acceptedPlaces.includes(placeSlug)
+          ) {
+            cardRewards.push(link);
+            return;
+          }
+        });
+      });
+      place.cardRewards = sortRewards(cardRewards);
+    },
+    [userProfile.cards, sortRewards, getAcceptedLocationsByKey],
+  );
+
+  const fetchTopFiveCards = useCallback(
+    async (place: Place) => {
+      if (place && place.cardRewards && place.cardRewards.length > 0) {
+        setTopFiveCards(sortRewards(place.cardRewards).slice(0, 5));
+      }
+    },
+    [sortRewards],
+  );
+
   const fetchAddress = useCallback(async () => {
     await requestLocationPermission();
     if (locationGrantType === false) {
@@ -63,6 +141,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         types: ['Restaurant'],
         readableType: 'Restaurant',
         id: '0',
+        formattedAddress: 'Unavailable',
+        cardRewards: [],
       });
       return;
     }
@@ -70,7 +150,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append(
       'X-Goog-FieldMask',
-      'places.displayName,places.businessStatus,places.primaryType',
+      'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types,places.formattedAddress',
     );
     myHeaders.append('X-Goog-Api-Key', apiURL);
 
@@ -104,11 +184,25 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
       return {
         ...place,
         id: index.toString(),
+        primaryType: place.types[0],
       } as Place;
     });
 
+    if (resultAddress[0].primaryType !== undefined) {
+      await linkRewardToLocation(resultAddress[0]);
+      await fetchTopFiveCards(resultAddress[0]);
+    }
+
     setAddress(resultAddress[0]);
-  }, [location, locationGrantType, requestLocationPermission, apiURL]);
+  }, [
+    requestLocationPermission,
+    locationGrantType,
+    apiURL,
+    location.latitude,
+    location.longitude,
+    linkRewardToLocation,
+    fetchTopFiveCards,
+  ]);
 
   const calculateDistanceLatLong = (
     location1: PlaceLocation,
@@ -150,6 +244,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
           readableType: 'Restaurant',
           id: '0',
           formattedAddress: 'Unavailable',
+          cardRewards: [],
         },
       ]);
       return;
@@ -209,46 +304,55 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
 
     // Manipulate result to return
     const result = await response.json();
+    if (!result.places) return;
+
     const resultPlaces = result.places
-      .filter((place: Place) => {
-        return place.businessStatus === 'OPERATIONAL';
-      })
+      .filter((place: Place) => place.businessStatus === 'OPERATIONAL')
       .map((place: Place, index: number) => {
-        let primaryTypeDisplayName = {};
-        if (
-          !place.hasOwnProperty('primaryType') &&
-          place.types.length > 0 &&
-          placesTypes.hasOwnProperty(place.types[0].toString())
-        ) {
+        let primaryTypeDisplayName: { lang: string; text: string };
+
+        if (place.primaryType && placesTypes.hasOwnProperty(place.types[0])) {
           primaryTypeDisplayName = {
             lang: 'en-US',
             text: placesTypes[place.types[0] as keyof typeof placesTypes],
           };
-        } else if (!place.hasOwnProperty('primaryType')) {
-          const type = place.types[0];
-          let displayName = '';
-          type.split('_').forEach(name => {
-            displayName +=
-              name.charAt(0).toUpperCase() + name.substring(1) + ' ';
-          });
+        } else if (!place.primaryType) {
+          const displayName = place.types[0]
+            .split('_')
+            .map(name => name.charAt(0).toUpperCase() + name.substring(1))
+            .join(' ');
           primaryTypeDisplayName = {
             lang: 'en-US',
             text: displayName,
           };
         } else {
-          primaryTypeDisplayName = place.primaryTypeDisplayName;
+          primaryTypeDisplayName = {
+            lang: 'en-US',
+            text: place.primaryTypeDisplayName.text,
+          };
         }
+
         return {
           ...place,
-          primaryTypeDisplayName: primaryTypeDisplayName,
+          primaryTypeDisplayName,
           distance: calculateDistanceLatLong(location, place.location),
           id: index.toString(),
-        } as Place;
+        };
       });
+
+    resultPlaces.forEach((place: Place) => {
+      linkRewardToLocation(place);
+    });
+
     setPlaces(resultPlaces);
-    // setPlaces(Consts.devLocations as unknown as Place[]);
     setLocationLoading(false);
-  }, [location, requestLocationPermission, locationGrantType, apiURL]);
+  }, [
+    requestLocationPermission,
+    locationGrantType,
+    apiURL,
+    location,
+    linkRewardToLocation,
+  ]);
 
   const getLocation = useCallback(async () => {
     await requestLocationPermission();
@@ -322,52 +426,20 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     });
   }, [requestLocationPermission]);
 
-  const fetchRewards = useCallback(async () => {
-    places?.forEach(place => {
-      const placeType = place.primaryType.toLowerCase();
-      const placeSecondaryTypes = place.types;
-      const cards = userProfile.cards?.filter(card => {
-        const filteredCardRewards = card?.rewards?.filter(reward => {
-          const rewardType = reward.category?.category_name.toLowerCase();
-          const rewardSecondaryTypes = reward.category?.specific_places;
-          rewardSecondaryTypes?.forEach(type => {
-            type.toLowerCase();
-          });
-          if (
-            rewardType === placeType ||
-            (rewardType &&
-              (rewardType?.includes(placeType) ||
-                placeType?.includes(rewardType))) ||
-            reward.category?.category_name === 'All'
-          ) {
-            return true;
-          } else if (rewardSecondaryTypes) {
-            return rewardSecondaryTypes.some(type => {
-              return placeSecondaryTypes.includes(type.toLowerCase());
-            });
-          } else {
-            return false;
-          }
-        });
-        if (filteredCardRewards && filteredCardRewards.length > 0) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      place.cardRewards = cards;
-    });
-  }, [places, userProfile.cards]);
-
-  useEffect(() => {
-    fetchRewards();
-  }, [places, fetchRewards, userProfile.cards]);
-
   const updateSelectedLocation = useCallback(
     (newSelectedLocation: Place | null) => {
       setSelectedLocation(newSelectedLocation);
     },
     [setSelectedLocation],
+  );
+
+  const fetchCardById = useCallback(
+    (cardId: number) => {
+      return (
+        userProfile.cards?.find(card => card.id === cardId) ?? ({} as Card)
+      );
+    },
+    [userProfile.cards],
   );
 
   useEffect(() => {
@@ -399,6 +471,9 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         locationLoading,
         selectedLocation,
         updateSelectedLocation,
+        topFiveCards,
+        fetchCardById,
+        getAcceptedLocationsByKey,
       }}>
       {children}
     </LocationContext.Provider>

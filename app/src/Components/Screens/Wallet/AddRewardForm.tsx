@@ -175,6 +175,7 @@ const AddRewardForm: React.FC = () => {
               id: category_id,
               category_name,
               specific_places: newReward.category?.specific_places || [],
+              category_slug: '',
             };
           }
           setCategorySearch(item.category_name);
@@ -206,6 +207,7 @@ const AddRewardForm: React.FC = () => {
           id: newReward.category?.id || 0,
           category_name: newReward.category?.category_name || '',
           specific_places: text.replace(/\s/g, '').split(','),
+          category_slug: newReward.category?.category_slug || '',
         },
       });
     };
@@ -250,7 +252,6 @@ const AddRewardForm: React.FC = () => {
     );
   }, [
     themeMode,
-    i18n.t,
     categorySearch,
     newReward?.category?.category_name,
     filteredCategoryOptions,
@@ -333,33 +334,30 @@ const AddRewardForm: React.FC = () => {
     );
   };
 
-  const renderReward = useCallback(
-    (item: Reward) => {
-      const formatPercentage = (percentage: number) => {
-        return percentage.toFixed(2) + '%';
-      };
-      const formatMoney = (money: number) => {
-        return '$' + money.toFixed(2);
-      };
-      return (
-        <View className="flex flex-row space-between">
-          <PrimaryText className="text-left w-3/12 text-md">
-            {item.category?.category_name || i18n.t('Wallet.All')}
-          </PrimaryText>
-          <PrimaryText className="text-left w-3/12 text-md">
-            {formatPercentage(Number(item?.initial_percentage || 0))}
-          </PrimaryText>
-          <PrimaryText className="text-left w-3/12 text-md">
-            {formatMoney(Number(item?.initial_limit || 0))}
-          </PrimaryText>
-          <PrimaryText className="text-left w-3/12 text-md">
-            {formatPercentage(Number(item?.fallback_percentage || 0))}
-          </PrimaryText>
-        </View>
-      );
-    },
-    [i18n.t],
-  );
+  const renderReward = useCallback((item: Reward) => {
+    const formatPercentage = (percentage: number) => {
+      return percentage.toFixed(2) + '%';
+    };
+    const formatMoney = (money: number) => {
+      return '$' + money.toFixed(2);
+    };
+    return (
+      <View className="flex flex-row space-between">
+        <PrimaryText className="text-left w-3/12 text-md">
+          {item.category?.category_name || i18n.t('Wallet.All')}
+        </PrimaryText>
+        <PrimaryText className="text-left w-3/12 text-md">
+          {formatPercentage(Number(item?.initial_percentage || 0))}
+        </PrimaryText>
+        <PrimaryText className="text-left w-3/12 text-md">
+          {formatMoney(Number(item?.initial_limit || 0))}
+        </PrimaryText>
+        <PrimaryText className="text-left w-3/12 text-md">
+          {formatPercentage(Number(item?.fallback_percentage || 0))}
+        </PrimaryText>
+      </View>
+    );
+  }, []);
 
   const itemSeparatorComponent = useCallback(
     () => <View className="border-b border-gray-400 w-full my-2" />,
@@ -393,7 +391,7 @@ const AddRewardForm: React.FC = () => {
         />
       </>
     );
-  }, [itemSeparatorComponent, renderReward, selectedCard.rewards, i18n.t]);
+  }, [itemSeparatorComponent, renderReward, selectedCard.rewards]);
 
   const backButton = useCallback(() => {
     return (
@@ -406,7 +404,7 @@ const AddRewardForm: React.FC = () => {
         </PrimaryText>
       </Pressable>
     );
-  }, [closeModal, i18n.t]);
+  }, [closeModal]);
 
   const backForm = useCallback(() => {
     if (editForm === EditForm.CategoryForm) {
@@ -446,7 +444,6 @@ const AddRewardForm: React.FC = () => {
     EditStates.Main,
     editForm,
     editState,
-    i18n.t,
   ]);
 
   return (

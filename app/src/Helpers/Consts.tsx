@@ -406,6 +406,53 @@ const devLocations = [
   },
 ];
 
+const SupportedLocationsEnum = {
+  grocery_store: ['grocery_store', 'supermarket'],
+  gas_station: ['gas_station'],
+  restaurant: [
+    'restaurant',
+    'food',
+    'meal_delivery',
+    'meal_takeaway',
+    'bakery',
+    'bar',
+    'cafe',
+    'night_club',
+    'japanese_restaurant',
+    'sushi_restaurant',
+    'american_restaurant',
+    'hamburger_restaurant',
+    'fast_food_restaurant',
+    'sandwich_shop',
+    'coffee_shop',
+    'breakfast_restaurant',
+    'indian_restaurant',
+    'ice_cream_shop',
+  ],
+  store: [
+    'store',
+    'clothing_store',
+    'department_store',
+    'electronics_store',
+    'furniture_store',
+    'hardware_store',
+    'home_goods_store',
+    'jewelry_store',
+    'shoe_store',
+    'shopping_mall',
+  ],
+  pharmacy: ['pharmacy'],
+  convenience_store: ['convenience_store'],
+  car: [
+    'car_repair',
+    'car_dealer',
+    'car_rental',
+    'car_wash',
+    'auto_parts_store',
+  ],
+  bank: ['bank', 'atm'],
+};
+
 const Consts = {
   CardFormEnum: CardFormEnum,
   DropdownListModes: DropdownListModes,
@@ -416,6 +463,7 @@ const Consts = {
   cardItemSeparatorWidth,
   addCard,
   devLocations,
+  SupportedLocationsEnum,
 };
 
 export default Consts;

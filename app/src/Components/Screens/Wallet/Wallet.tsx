@@ -95,15 +95,14 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
 
   const renderReward = (item: Reward) => {
     return (
-      <View className="flex-1 flex-col mb-2 mt-10 w-full">
+      <View className="flex-1 flex-col mb-2 mt-5 w-full">
         <PrimaryText className="text-left">
           {`${i18n.t('Wallet.Category')}: ${item.category?.category_name}`}
         </PrimaryText>
         {item.category?.specific_places && (
           <PrimaryText className="text-left">
             {`${i18n.t(
-              'Wallet',
-              'Specific Places',
+              'Wallet.Specificplaces',
             )}: ${item.category?.specific_places.join(', ')}`}
           </PrimaryText>
         )}
@@ -112,18 +111,23 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
             item.initial_percentage
           }`}
         </PrimaryText>
-        <PrimaryText>{`${i18n.t('Wallet.Initial')} ${i18n.t(
-          'Wallet',
-          'Limit',
-        )}: ${item.initial_limit}`}</PrimaryText>
-        <PrimaryText>
-          {`${i18n.t('Wallet.Term')}: ${item.term_length_months} ${
-            item.term_length_months > 0 ? i18n.t('Wallet.Month') : ''
-          }${item.term_length_months > 1 ? i18n.t('Wallet.S') : ''}`}
-        </PrimaryText>
-        <PrimaryText>
-          {`${i18n.t('Wallet.Fallback')} ${item.fallback_percentage}`}
-        </PrimaryText>
+        {item.initial_limit && (
+          <PrimaryText>{`${i18n.t('Wallet.Initial')} ${i18n.t(
+            'Wallet.Limit',
+          )}: ${item.initial_limit}`}</PrimaryText>
+        )}
+        {item.term_length_months && (
+          <PrimaryText>
+            {`${i18n.t('Wallet.Term')}: ${item.term_length_months} ${
+              item.term_length_months > 0 ? i18n.t('Wallet.Month') : ''
+            }${item.term_length_months > 1 ? i18n.t('Wallet.S') : ''}`}
+          </PrimaryText>
+        )}
+        {item.fallback_percentage && (
+          <PrimaryText>
+            {`${i18n.t('Wallet.Fallback')} ${item.fallback_percentage}`}
+          </PrimaryText>
+        )}
       </View>
     );
   };
@@ -188,6 +192,15 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
             setCurrentRewards([]);
             setShowRewardHeader(false);
           }}
+          onScrollEndDrag={() => {
+            if (
+              currentViewedCard.length === 1 &&
+              currentViewedCard[0].id !== -1
+            ) {
+              setShowRewardHeader(true);
+              setCurrentRewards(currentViewedCard[0].rewards || []);
+            }
+          }}
         />
       </View>
       <View className="aspect-video mt-10 w-full justify-center items-center">
@@ -202,6 +215,7 @@ const WalletScreen: React.FC<WalletScreenProps> = () => {
           showsVerticalScrollIndicator={true}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => renderReward(item)}
+          showsHorizontalScrollIndicator={true}
           ItemSeparatorComponent={itemSeparatorComponent}
           refreshing={!showRewardHeader && currentViewedCard[0].id !== -1}
           onRefresh={() => {

@@ -1,4 +1,5 @@
 import { Card } from './CardType';
+import { rewardToCardLink } from './RewardContextType';
 
 export interface Location {
   accuracy: number;
@@ -18,7 +19,7 @@ export interface Place {
   id: string;
   location: PlaceLocation;
   formattedAddress: string;
-  cardRewards: Card[];
+  cardRewards: rewardToCardLink[];
 }
 
 export interface DisplayName {

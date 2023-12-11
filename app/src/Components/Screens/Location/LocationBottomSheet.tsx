@@ -12,9 +12,8 @@ import TitleText from '../../Common/TitleText';
 import i18n from '../../../Localization/i18n';
 
 const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
-  const { selectedLocation } = React.useContext(
-    locationContext,
-  ) as LocationContext;
+  const { selectedLocation, fetchCardById, getAcceptedLocationsByKey } =
+    React.useContext(locationContext) as LocationContext;
 
   // use this to dismiss bottom sheet
   const { dismiss } = useBottomSheetModal();
@@ -26,7 +25,7 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
 
   const renderReward = (reward: Reward) => {
     return (
-      <View>
+      <View key={reward.id}>
         <PrimaryText className="ml-2 text-lg">
           {`${i18n.t('Locaiton.Cashback')}: ${reward.initial_percentage}`}
         </PrimaryText>
@@ -38,9 +37,35 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
     return (
       card.rewards &&
       card.rewards.length > 0 && (
-        <View>
+        <View key={card.id}>
           <PrimaryText className="ml-2 text-lg">{card.card_bin}</PrimaryText>
-          {card.rewards && card.rewards.map(reward => renderReward(reward))}
+          {card.rewards &&
+            card.rewards.map(reward => {
+              const location_slug = selectedLocation?.types[0];
+              const location_name = selectedLocation?.displayName.text;
+              const reward_slug = reward.category?.category_slug;
+              const acceptedPlaces = getAcceptedLocationsByKey(
+                reward_slug ?? '',
+              );
+              if (location_slug === reward_slug) {
+                return renderReward(reward);
+              } else if (reward_slug === 'all') {
+                return renderReward(reward);
+              } else if (
+                reward.category?.specific_places?.includes(location_name ?? '')
+              ) {
+                //This would be for a specific location
+                return renderReward(reward);
+              } else if (
+                acceptedPlaces &&
+                acceptedPlaces.length > 0 &&
+                acceptedPlaces.includes(location_slug ?? '')
+              ) {
+                return renderReward(reward);
+              } else {
+                return null;
+              }
+            })}
         </View>
       )
     );
@@ -55,7 +80,9 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
         {selectedLocation?.formattedAddress}
       </PrimaryText>
       {selectedLocation?.cardRewards &&
-        selectedLocation?.cardRewards.map(card => renderCard(card))}
+        selectedLocation?.cardRewards.map(card =>
+          renderCard(fetchCardById(card.cardId)),
+        )}
     </View>
   );
 };

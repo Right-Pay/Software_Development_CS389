@@ -43,7 +43,7 @@ const CardComponent: React.FC<CardProps> = props => {
   const CardMiddle = (
     <View className="absolute bottom-0 left-2 flex-1 flex-col">
       <Text className="text-lg text-white font-bold">
-        {formatBin(props.card?.card_bin.toString())}
+        {formatBin(props.card?.card_bin?.toString() ?? '000000')}
       </Text>
       <Text className="text-xs text-white text-left">
         {formatExpirationDate(props.card?.exp_date || '')}
