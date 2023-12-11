@@ -71,7 +71,7 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
           className="bg-red-500"
           onPress={() => setConfirmDelete(true)}>
           <PrimaryText className="text-xl text-white">
-            {i18n.t('Settings.Delete')}
+            {i18n.t('Common.Delete')}
           </PrimaryText>
         </PrimaryButton>
         <PrimaryButton className="opacity-50">
@@ -104,10 +104,9 @@ const CardSettings: React.FC<CardSettingsScreenProps> = () => {
   return (
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
-        <TitleText className="mt-10 mb-4">{`${i18n.t(
-          'Settings',
-          'Card',
-        )} ${i18n.t('Settings.Settings')}`}</TitleText>
+        <TitleText className="mt-10 mb-4">{`${i18n.t('Settings.Card')} ${i18n.t(
+          'Settings.Settings',
+        )}`}</TitleText>
         <InnerWrapperView className="border-t-2">
           <SettingsCardList>
             {cards.map((card, index) => renderCard(card, index))}
