@@ -40,7 +40,7 @@ const InputBox: React.FC<InputBoxProps> = ({ children, ...props }) => {
     <TextInput
       className={
         inputColors +
-        ' text-lg text-left content-center justify-center h-auto w-2/3 rounded pl-4'
+        ' text-lg text-left content-center justify-center h-auto w-2/3 rounded pl-4 pb-2'
       }
       placeholderTextColor={'gray'}
       {...props}>

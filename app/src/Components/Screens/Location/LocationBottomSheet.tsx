@@ -9,6 +9,7 @@ import { Card, Reward } from '../../../types/CardType';
 import { LocationContext } from '../../../types/LocationContextType';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
+import i18n from '../../../Localization/i18n';
 
 const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
   const { selectedLocation, fetchCardById, getAcceptedLocationsByKey } =
@@ -26,7 +27,7 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
     return (
       <View key={reward.id}>
         <PrimaryText className="ml-2 text-lg">
-          Cashback Percent: {reward.initial_percentage}
+          {`${i18n.t('Locaiton.Cashback')}: ${reward.initial_percentage}`}
         </PrimaryText>
       </View>
     );

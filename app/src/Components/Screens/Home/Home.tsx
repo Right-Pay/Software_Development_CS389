@@ -18,6 +18,7 @@ import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import { Card, Reward } from '../../../types/CardType';
+import i18n from '../../../Localization/i18n';
 
 type HomeScreenProps = CompositeScreenProps<
   NativeStackScreenProps<HomeNavigationRoutesType, 'HomeScreen'>,
@@ -37,23 +38,28 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     return (
       <View className="flex-1 flex-col mb-2 mt-5 w-full">
         <PrimaryText className="text-left">
-          Category: {item.category?.category_name}
+          {`${i18n.t('Wallet.Category')}: ${item.category?.category_name}`}
         </PrimaryText>
         {item.category?.specific_places && (
           <PrimaryText className="text-left">
-            Specific Places: {item.category?.specific_places.join(', ')}
+            {`${i18n.t(
+              'Wallet.Specific',
+            )}: ${item.category?.specific_places.join(', ')}`}
           </PrimaryText>
         )}
         <PrimaryText className="text-left">
-          Initial Percentage: {item.initial_percentage}
+          {`${i18n.t('Wallet.Initial')} ${i18n.t('Wallet.Percentage')}: 
+          ${item.initial_percentage}`}
         </PrimaryText>
-        <PrimaryText>Initial Limit: {item.initial_limit}</PrimaryText>
+        <PrimaryText>{`${i18n.t('Wallet.Initial')} ${i18n.t('Wallet.Limit')}: 
+          ${item.initial_limit}`}</PrimaryText>
         <PrimaryText>
-          Term Length (time until limit resets): {item.term_length_months} Month
-          {item.term_length_months > 1 ? 's' : ''}
+          {`${i18n.t('Wallet.Term')}: ${item.term_length_months} ${
+            item.term_length_months > 0 ? i18n.t('Wallet.Month') : ''
+          }${item.term_length_months > 1 ? i18n.t('Wallet.S') : ''}`}
         </PrimaryText>
         <PrimaryText>
-          Fallback Percentage: {item.fallback_percentage}
+          {`${i18n.t('Wallet.Fallback')}:${item.fallback_percentage}`}
         </PrimaryText>
       </View>
     );
@@ -72,7 +78,10 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     return topCard ? (
       <>
         <View className="w-full justify-center items-center h-1/3 mb-5">
-          <PrimaryText className="text-center text-xl mt-10">{`You're at ${address?.displayName.text}\n We suggest you use the following card`}</PrimaryText>
+          <PrimaryText className="text-center text-xl mt-10">{`${i18n.t(
+            'Home.At',
+            { address: address?.displayName.text },
+          )}\n ${i18n.t('Home.Suggest')}`}</PrimaryText>
           <CardComponent card={topCard} classNameProp="w-auto h-auto mt-5" />
         </View>
         <View className="aspect-video mt-12 w-full justify-center items-center">
@@ -90,7 +99,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       </>
     ) : (
       <PrimaryText className="text-center text-xl mt-10">
-        You don't have any cards yet. Please add a card to get started.
+        {i18n.t('Home.Nocards')}
       </PrimaryText>
     );
   };
@@ -106,7 +115,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   return (
     <WrapperView className="justify-start">
       <TitleText className="mt-10 mb-10">
-        Hello {userProfile.username}
+        {i18n.t('Common.Hello', { username: userProfile.username })}
       </TitleText>
       {renderTopCard()}
     </WrapperView>

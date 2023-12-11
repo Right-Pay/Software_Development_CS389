@@ -7,6 +7,7 @@ import type { WelcomeNavigationRoutesType } from '../../../types/NavigationRoute
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import WrapperView from '../../Common/WrapperView';
+import i18n from '../../../Localization/i18n';
 
 type WelcomeScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -30,12 +31,12 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
       </LogoContainer>
       <PrimaryButton onPress={() => navigation.navigate('Login')}>
         <PrimaryText type="secondary" className="text-xl">
-          Log In
+          {i18n.t('Welcome.Login')}
         </PrimaryText>
       </PrimaryButton>
       <PrimaryButton onPress={() => navigation.navigate('Register')}>
         <PrimaryText type="secondary" className="text-xl">
-          Sign Up
+          {i18n.t('Welcome.Signup')}
         </PrimaryText>
       </PrimaryButton>
     </WrapperView>

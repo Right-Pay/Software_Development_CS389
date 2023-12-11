@@ -12,6 +12,7 @@ import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
+import i18n from '../../../Localization/i18n';
 
 type LogInScreenProps = NativeStackScreenProps<
   WelcomeNavigationRoutesType,
@@ -27,6 +28,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
     needsUsername,
     retrieveVerifiedEmail,
   } = React.useContext(AuthContext) as AuthContextType;
+
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors]);
@@ -44,7 +46,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
         }}>
         <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          Back
+          {i18n.t('Common.Back')}
         </PrimaryText>
       </Pressable>
     );
@@ -54,27 +56,29 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
     <WrapperView className="pb-0">
       {/* <KeyboardAvoidingViewScroll> */}
       <View className="flex-1 flex-col w-full h-screen justify-start items-center mb-0 pb-0">
-        <TitleText className="mt-20 mb-4">Log In</TitleText>
+        <TitleText className="mt-20 mb-4">{i18n.t('Welcome.Login')}</TitleText>
         <InputBox
-          placeholder="Email Address"
+          placeholder={i18n.t('Welcome.Email')}
           className="mb-2"
           onChange={event => setEmail(event.nativeEvent.text)}
         />
         <InputBox
-          placeholder="Password"
+          placeholder={i18n.t('Welcome.Password')}
           secureTextEntry={true}
           className="mb-2"
           onChange={event => setPassword(event.nativeEvent.text)}
         />
         {needsUsername && (
           <InputBox
-            placeholder="Username"
+            placeholder={i18n.t('Welcome.Username')}
             className="mb-2"
             onChange={event => setUsername(event.nativeEvent.text)}
           />
         )}
         <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
-          <PrimaryText className="text-sm">Forgot Password?</PrimaryText>
+          <PrimaryText className="text-sm">
+            {i18n.t('Welcome.Forgot')}
+          </PrimaryText>
         </Pressable>
         <PrimaryButton
           onPress={async () => {
@@ -88,7 +92,7 @@ const LogInScreen: React.FC<LogInScreenProps> = ({ navigation }) => {
             });
           }}>
           <PrimaryText type="secondary" className="text-xl">
-            Log In
+            {i18n.t('Welcome.Login')}
           </PrimaryText>
         </PrimaryButton>
         {AuthErrorComponent && <AuthErrorComponent />}

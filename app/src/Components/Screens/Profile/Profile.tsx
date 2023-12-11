@@ -3,11 +3,6 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
-// import {
-//   Title,
-//   ProfileView,
-//   ProfileSubtitle,
-// } from '../../../Helpers/StylizedComponents';
 import authContext from '../../../Context/authContext';
 import { ProfileView } from '../../../Helpers/StylizedComponents';
 import { AuthContextType } from '../../../types/AuthContextType';
@@ -20,9 +15,8 @@ import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import Icon from 'react-native-ionicons';
 import useColorsMode from '../../../Helpers/Colors';
-import { View, Pressable } from 'react-native';
-import context from '../../../Context/context';
-import { AppContext } from '../../../types/AppContextType';
+import { View } from 'react-native';
+import i18n from '../../../Localization/i18n';
 
 type ProfileScreenProps = CompositeScreenProps<
   NativeStackScreenProps<ProfileNavigationRoutesType, 'ProfileScreen'>,
@@ -32,7 +26,6 @@ type ProfileScreenProps = CompositeScreenProps<
 
 const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   const { userProfile } = React.useContext(authContext) as AuthContextType;
-  const { addPoints } = React.useContext(context) as AppContext;
 
   const { colors } = useColorsMode();
 
@@ -44,9 +37,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
   return (
     <WrapperView>
-      <TitleText className="top-10 mb-2">Profile</TitleText>
+      <TitleText className="top-10 mb-2">{i18n.t('Profile.Profile')}</TitleText>
       <PrimaryText className="text-2xl font-bold mb-2 mt-10" numberOfLines={1}>
-        Hello {userProfile.username}
+        {i18n.t('Common.Hello', { username: userProfile.username })}
       </PrimaryText>
       <View className="flex flex-row h-auto w-auto justify-center">
         <Icon name="ribbon" color={colors.primary} className="h-fit w-fit" />
@@ -56,17 +49,24 @@ const ProfileScreen: React.FC<ProfileScreenProps> = () => {
       </View>
       <ProfileView className="justify-start">
         <PrimaryText className="text-2xl font-bold mb-2" numberOfLines={1}>
-          Email: {userProfile.email}
+          {`${i18n.t('Welcome.Email')}: ${userProfile.email}`}
         </PrimaryText>
         {userProfile.phone && userProfile.phone.length > 0 ? (
-          <PrimaryText className="text-2xl font-bold mb-2">{`Phone: ${userProfile.phone}`}</PrimaryText>
+          <PrimaryText className="text-2xl font-bold mb-2">{`${i18n.t(
+            'Settings.Phone',
+          )}: ${userProfile.phone}`}</PrimaryText>
         ) : null}
         <PrimaryText className="text-2xl font-bold mt-20">
-          You have {cardCount} card
-          {cardCount > 1 ? 's' : ''}
+          {`${i18n.t('Profile.Have')} ${cardCount} ${
+            cardCount > 1 ? i18n.t('Profile.Cards') : i18n.t('Profile.Card')
+          }`}
         </PrimaryText>
         <PrimaryText className="text-2xl font-bold">
-          {`You have ${rewardCount} reward${rewardCount !== 1 ? 's' : ''}`}
+          {`${i18n.t('Profile.Have')} ${rewardCount} ${
+            rewardCount > 1
+              ? i18n.t('Profile.Rewards')
+              : i18n.t('Profile.Reward')
+          }`}{' '}
         </PrimaryText>
       </ProfileView>
     </WrapperView>

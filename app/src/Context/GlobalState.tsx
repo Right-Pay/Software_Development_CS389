@@ -42,7 +42,7 @@ const GlobalState: React.FC<PropsWithChildren> = ({ children }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const [rewards] = React.useState<Reward[]>(Consts.dummyCardRewards);
-  const ErrorMessages = Consts.authErrorMessages;
+  const ErrorMessages = Consts.authErrorMessages();
 
   const [pointCount, setPointCount] = useState<number>(0);
   const [pointsToAdd, setPointsToAdd] = useState<number>(0);

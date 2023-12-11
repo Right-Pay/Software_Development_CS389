@@ -19,6 +19,7 @@ import KeyboardAvoidingViewScroll from '../../Common/KeyboardAvoidingViewScroll'
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
+import i18n from '../../../Localization/i18n';
 
 type VerifyEmailScreenProps = CompositeScreenProps<
   NativeStackScreenProps<WelcomeNavigationRoutesType, 'VerifyEmailScreen'>,
@@ -37,7 +38,8 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
     retrieveVerifiedEmail,
     backendSignIn,
   } = React.useContext(AuthContext) as AuthContextType;
-  const AuthErrors = Consts.authErrorMessages;
+
+  const AuthErrors = Consts.authErrorMessages();
   const { colors } = useColorsMode();
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
         }}>
         <Icon name="arrow-back" color={colors.primary} />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          Back
+          {i18n.t('Common.Back')}
         </PrimaryText>
       </Pressable>
     );
@@ -64,7 +66,7 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
       <KeyboardAvoidingViewScroll>
         <View className="flex-1 flex-col w-full justify-center h-screen items-center mb-0">
           <TitleText className="mt-20 ml-3 mr-3">
-            Please check your email for a verification link
+            {i18n.t('Welcome.Checkemail')}
           </TitleText>
           <LogoContainer>
             <Logo
@@ -84,7 +86,7 @@ const VerifyEmailScreen: React.FC<VerifyEmailScreenProps> = ({
               });
             }}>
             <PrimaryText type="secondary" className="text-xl">
-              Continue
+              {i18n.t('Welcome.Continue')}
             </PrimaryText>
           </PrimaryButton>
           {AuthErrorComponent && <AuthErrorComponent />}

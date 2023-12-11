@@ -6,7 +6,6 @@ import {
   NativeSyntheticEvent,
   Platform,
   Pressable,
-  StyleSheet,
   Text,
   TextInputChangeEventData,
   TouchableWithoutFeedback,
@@ -27,7 +26,7 @@ import ModalOverlayView from '../../Common/ModalOverlayView';
 import PrimaryButton from '../../Common/PrimaryButton';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
-// import AddNewDropdownOption from './AddNewBankOption';
+import i18n from '../../../Localization/i18n';
 
 const AddCardFullForm: React.FC = () => {
   //Context
@@ -41,8 +40,6 @@ const AddCardFullForm: React.FC = () => {
   const {
     linkCard,
     bankOptions,
-    // setBankOptions,
-    brandOptions,
     CardForms,
     setCardForms,
     validateCardForm,
@@ -50,6 +47,7 @@ const AddCardFullForm: React.FC = () => {
     findCardByAPI,
     getCardTypeFromBin,
   } = React.useContext(Context) as AppContext;
+
   const { themeMode } = useColorsMode();
 
   const currentYear = new Date().getFullYear().toString().split('20')[1];
@@ -90,7 +88,6 @@ const AddCardFullForm: React.FC = () => {
   const [editForm, setEditForm] = useState<EditForm>(EditForm.Type);
 
   //consts
-  const ModalMode = Consts.DropdownListModes.MODAL;
   const [bankSetFromList, setBankSetFromList] = useState<boolean>(false);
 
   //Add New Options
@@ -206,20 +203,20 @@ const AddCardFullForm: React.FC = () => {
           (card.card_type !== 'Credit' && card.card_type !== 'Debit')
         ) {
           console.log('invalid card type');
-          console.log(Consts.authErrorMessages.invalidCardType);
-          addAuthError(Consts.authErrorMessages.invalidCardType);
+          console.log(Consts.authErrorMessages().invalidCardType);
+          addAuthError(Consts.authErrorMessages().invalidCardType);
           return;
         }
         setEditForm(EditForm.Bank);
       } else if (editForm === EditForm.Bank) {
         if (card.card_bank_id === 0) {
-          addAuthError(Consts.authErrorMessages.invalidBankName);
+          addAuthError(Consts.authErrorMessages().invalidBankName);
           return;
         }
         setEditForm(EditForm.Level);
       } else if (editForm === EditForm.Level) {
         if (card.card_level === '') {
-          addAuthError(Consts.authErrorMessages.invalidCardLevel);
+          addAuthError(Consts.authErrorMessages().invalidCardLevel);
           return;
         }
         // if add state, pass true to new card bool
@@ -272,28 +269,6 @@ const AddCardFullForm: React.FC = () => {
     [EditStates.Add, EditStates.Review, card, editState],
   );
 
-  // useEffect(() => {
-  //   if (newBankOption !== '') {
-  //     const newBank = {
-  //       id: bankOptions.length + 1,
-  //       bank_name: newBankOption,
-  //       abbr: newBankOption.substring(0, 3),
-  //     };
-
-  //     setCard({
-  //       ...card,
-  //       card_bank_name: newBankOption,
-  //       card_bank_id: newBank.id,
-  //     });
-
-  //     setBankOptions([
-  //       ...bankOptions.slice(0, -1),
-  //       newBank,
-  //       bankOptions.slice(-1)[0],
-  //     ]);
-  //   }
-  // }, []);
-
   useEffect(() => {
     clearAuthErrors();
   }, [clearAuthErrors, CardForms.Full]);
@@ -314,11 +289,11 @@ const AddCardFullForm: React.FC = () => {
       card.card_brand_name = cardType;
 
       if (isNaN(bin)) {
-        addAuthError(Consts.authErrorMessages.invalidCardBin);
+        addAuthError(Consts.authErrorMessages().invalidCardBin);
         return;
       }
 
-      removeAuthError(Consts.authErrorMessages.invalidCardBin);
+      removeAuthError(Consts.authErrorMessages().invalidCardBin);
       setCard({ ...card, card_bin: bin });
     };
     const classes =
@@ -329,7 +304,7 @@ const AddCardFullForm: React.FC = () => {
       <>
         <View className="relative w-2/3 flex justify-center items-center">
           <InputBox
-            placeholder="BIN # (Ex: 4400 66)"
+            placeholder={i18n.t('Wallet.Bin')}
             className="w-full"
             value={card.card_bin ? card.card_bin.toString() : ''}
             maxLength={6}
@@ -357,7 +332,7 @@ const AddCardFullForm: React.FC = () => {
     };
     return (
       <InputBox
-        placeholder="Level (i.e. Freedom)"
+        placeholder={i18n.t('Wallet.Level')}
         onChangeText={updateLevel}
         value={card?.card_level || ''}
       />
@@ -374,7 +349,7 @@ const AddCardFullForm: React.FC = () => {
       <>
         <View className="flex flex-col justify-center w-2/3 p-0 z-50 sticky">
           <InputBox
-            placeholder="Bank Name"
+            placeholder={i18n.t('Wallet.BankName')}
             onChange={event => setBankSearch(event.nativeEvent.text)}
             value={bankSearch}
             defaultValue={card?.card_bank_name}
@@ -391,17 +366,6 @@ const AddCardFullForm: React.FC = () => {
             </View>
           )}
         </View>
-        {/* <FinePrint
-          onPress={() => {
-            setCardForms({...CardForms, AddBankOption: true});
-          }}
-          className="text-left">
-          Don't see your Bank? Click Here!
-        </FinePrint>
-        <AddNewDropdownOption
-          setOption={setNewBankOption}
-          show={CardForms.AddBankOption}
-        />*/}
       </>
     );
   }, [
@@ -424,15 +388,20 @@ const AddCardFullForm: React.FC = () => {
       <DropdownComponent
         options={[
           {
-            label: 'Credit',
+            label: `${i18n.t('Wallet.Credit')}`,
             value: 'Credit',
           },
           {
-            label: 'Debit',
+            label: `${i18n.t('Wallet.Debit')}`,
             value: 'Debit',
           },
         ]}
-        placeholder={card?.card_type || 'Credit or Debit'}
+        placeholder={
+          card?.card_type ||
+          `${i18n.t('Wallet.Credit')} ${i18n.t('Wallet.Or')} ${i18n.t(
+            'Wallet.Debit',
+          )}`
+        }
         onDropdownChange={updateType}
         dropdownStyle="m-2 w-2/3 h-auto z-50"
       />
@@ -472,7 +441,7 @@ const AddCardFullForm: React.FC = () => {
         onPress={() => closeModal(false)}>
         <Icon name="close-outline" color="#4d654e" />
         <PrimaryText className="ml-2 text-xl text-center font-bold">
-          Close
+          {i18n.t('Common.Close')}
         </PrimaryText>
       </Pressable>
     );
@@ -499,28 +468,36 @@ const AddCardFullForm: React.FC = () => {
   const renderTitle = useCallback(() => {
     if (editState === EditStates.Review) {
       if (editForm === EditForm.Type) {
-        return 'Verify Card Type and Enter Expiration Date';
+        return i18n.t('Wallet.Verifycard');
       }
       if (editForm === EditForm.Bank) {
-        return 'Verify Bank';
+        return i18n.t('Wallet.Verifybank');
       }
       if (editForm === EditForm.Level) {
-        return 'Verify Level';
+        return i18n.t('Wallet.Verifylevel');
       }
     } else if (editState === EditStates.Bin) {
-      return 'First 6 Digits';
+      return i18n.t('Wallet.Enterdigits');
     } else {
       if (editForm === EditForm.Type) {
-        return 'Enter Card Type and Expiration Date';
+        return i18n.t('Wallet.cardtypeexp');
       }
       if (editForm === EditForm.Bank) {
-        return 'Enter Bank';
+        return i18n.t('Wallet.Enterbank');
       }
       if (editForm === EditForm.Level) {
-        return 'Enter Level';
+        return i18n.t('Wallet.Enterlevel');
       }
     }
-  }, [EditForm, EditStates, editForm, editState]);
+  }, [
+    EditForm.Bank,
+    EditForm.Level,
+    EditForm.Type,
+    EditStates.Bin,
+    EditStates.Review,
+    editForm,
+    editState,
+  ]);
 
   return (
     <Modal
@@ -533,11 +510,6 @@ const AddCardFullForm: React.FC = () => {
           Keyboard.dismiss();
           setFilteredBankOptions([]);
         }}>
-        {/* <KeyboardAvoidingView
-          style={styles.container}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          enabled={isKeyboardVisible}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 10}> */}
         <ModalOverlayView className="flex-auto text-left z-0 pt-20">
           {editState !== EditStates.Invalid && (
             <>
@@ -566,7 +538,7 @@ const AddCardFullForm: React.FC = () => {
                     <PrimaryText
                       type="secondary"
                       className="text-center text-xl">
-                      Back
+                      {i18n.t('Common.Back')}
                     </PrimaryText>
                   </PrimaryButton>
                 )}
@@ -575,7 +547,7 @@ const AddCardFullForm: React.FC = () => {
                   onPress={handleSubmit}
                   className="z-0">
                   <PrimaryText type="secondary" className="text-center text-xl">
-                    Next
+                    {i18n.t('Common.Next')}
                   </PrimaryText>
                 </PrimaryButton>
               </View>
@@ -586,25 +558,15 @@ const AddCardFullForm: React.FC = () => {
             <>
               <TitleText className="mb-10 mt-4 w-9/12">Oh No!</TitleText>
               <PrimaryText className="text-center text-lg w-9/12">
-                Looks like we don't support this card yet. Please try again
-                later!
+                {i18n.t('Wallet.Nosupport')}
               </PrimaryText>
               {backButton()}
             </>
           )}
         </ModalOverlayView>
-        {/* </KeyboardAvoidingView> */}
       </TouchableWithoutFeedback>
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
-});
 
 export default AddCardFullForm;
