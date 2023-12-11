@@ -64,8 +64,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = () => {
     <WrapperView className="pb-0">
       <KeyboardAvoidingViewScroll>
         <TitleText className="mt-10 mb-4">{`${i18n.t(
-          'Settings',
-          'General',
+          'Settings.General',
         )} ${i18n.t('Settings.Settings')}`}</TitleText>
         <InnerWrapperView className="border-t-2">
           <PrimaryText className="mb-3">
