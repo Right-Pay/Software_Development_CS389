@@ -453,6 +453,17 @@ const SupportedLocationsEnum = {
   bank: ['bank', 'atm'],
 };
 
+const SupportedLocationsColors = {
+  grocery_store: 'bg-slate-200',
+  gas_station: 'bg-red-500',
+  restaurant: 'bg-fuchsia-700',
+  store: 'bg-blue-700',
+  pharmacy: 'bg-amber-400',
+  convenience_store: 'bg-lime-500',
+  car: 'bg-emerald-400',
+  bank: 'bg-sky-400',
+};
+
 const Consts = {
   CardFormEnum: CardFormEnum,
   DropdownListModes: DropdownListModes,
@@ -464,6 +475,7 @@ const Consts = {
   addCard,
   devLocations,
   SupportedLocationsEnum,
+  SupportedLocationsColors,
 };
 
 export default Consts;

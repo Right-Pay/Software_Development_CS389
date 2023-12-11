@@ -22,7 +22,11 @@ import TitleText from '../../Common/TitleText';
 import WrapperView from '../../Common/WrapperView';
 import i18n from '../../../Localization/i18n';
 import CheckBox from '@react-native-community/checkbox';
-import { supportedLanguagesEnum } from '../../../types/LanguageContextType';
+import {
+  LanguageContextType,
+  supportedLanguagesEnum,
+} from '../../../types/LanguageContextType';
+import languageContext from '../../../Context/languageContext';
 
 type GeneralSettingsProps = CompositeScreenProps<
   NativeStackScreenProps<SettingsNavigationRoutesType, 'GeneralSettings'>,

@@ -107,7 +107,7 @@
   "Home":{
     "At":"You are at {{address}}",
     "Suggest": "We suggest you use the following card",
-    "Nocards": "You don not have any cards yet. Please add a card to get started"
+    "Nocards": "You have no rewards for this location"
   },
   "Errors": {
     "invalidEmail": "Invalid Email",

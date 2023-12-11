@@ -81,6 +81,22 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     [SupportedLocationsEnum],
   );
 
+  const getAcceptedLocationKeyByValue = useCallback(
+    (value: string) => {
+      for (const key in SupportedLocationsEnum) {
+        if (
+          SupportedLocationsEnum[
+            key as keyof typeof SupportedLocationsEnum
+          ].includes(value)
+        ) {
+          return key;
+        }
+      }
+      return null; // Return null if the value is not found in any array
+    },
+    [SupportedLocationsEnum],
+  );
+
   const linkRewardToLocation = useCallback(
     (place: Place) => {
       const placeSlug = place.primaryType.toLowerCase();
@@ -474,10 +490,8 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     if (!fetchedLocationVarsHasRun.current) {
       fetchedLocationVarsHasRun.current = true;
-
       fetchPlaces(true);
       fetchAddress(true);
-      console.log('fetching location vars');
     }
   }, [fetchAddress, fetchPlaces, location]);
 
@@ -504,6 +518,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
         topFiveCards,
         fetchCardById,
         getAcceptedLocationsByKey,
+        getAcceptedLocationKeyByValue,
       }}>
       {children}
     </LocationContext.Provider>

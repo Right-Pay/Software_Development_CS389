@@ -101,13 +101,13 @@
     "Seerewards": "Voir les récompenses",
     "Latitude": "Latitude",
     "Longitude": "Longitude",
-    "Currentlocation": "Emplacement actuel",
+    "Currentlocation": "Courante actuel",
     "Nearby": "Lieux à proximité"
   },
   "Home": {
     "At": "Vous êtes à",
     "Suggest": "Nous vous suggérons d'utiliser la carte suivante",
-    "Nocards": "Vous n'avez pas encore de cartes. Veuillez ajouter une carte pour commencer"
+    "Nocards": "Vous n'avez pas encore de récompenses por la courante actual."
   },
   "Errors": {
     "invalidEmail": "E-mail invalide",

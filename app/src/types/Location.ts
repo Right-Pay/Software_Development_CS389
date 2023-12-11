@@ -1,5 +1,5 @@
 import { Card } from './CardType';
-import { rewardToCardLink } from './RewardContextType';
+import { rewardToCardLink } from './LocationContextType';
 
 export interface Location {
   accuracy: number;

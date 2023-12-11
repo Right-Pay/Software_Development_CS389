@@ -16,6 +16,7 @@ export interface LocationContext {
   topFiveCards: rewardToCardLink[];
   fetchCardById: (cardId: number) => Card;
   getAcceptedLocationsByKey: (key: string) => string[];
+  getAcceptedLocationKeyByValue: (value: string) => string | null;
 }
 
 export interface rewardToCardLink {

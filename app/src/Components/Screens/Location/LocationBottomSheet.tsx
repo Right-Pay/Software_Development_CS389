@@ -10,10 +10,17 @@ import { LocationContext } from '../../../types/LocationContextType';
 import PrimaryText from '../../Common/PrimaryText';
 import TitleText from '../../Common/TitleText';
 import i18n from '../../../Localization/i18n';
+import Consts from '../../../Helpers/Consts';
 
 const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
-  const { selectedLocation, fetchCardById, getAcceptedLocationsByKey } =
-    React.useContext(locationContext) as LocationContext;
+  const {
+    selectedLocation,
+    fetchCardById,
+    getAcceptedLocationsByKey,
+    getAcceptedLocationKeyByValue,
+  } = React.useContext(locationContext) as LocationContext;
+
+  const SupportedLocationsColors = Consts.SupportedLocationsColors;
 
   // use this to dismiss bottom sheet
   const { dismiss } = useBottomSheetModal();
@@ -22,6 +29,19 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
   // use this to navigate off the screen if needed (maybe in the future we need to navigate to the card screen)
   const navigation =
     useNavigation<NavigationTabProp<ReactNavigation.RootParamList>>();
+
+  const key =
+    getAcceptedLocationKeyByValue(selectedLocation?.primaryType ?? '') ??
+    'store';
+  const placeDisplay = key.split('_')[0].replace(/\b\w/g, function (char) {
+    return char.toUpperCase();
+  });
+  const primaryTypetoColor =
+    SupportedLocationsColors[key as keyof typeof SupportedLocationsColors];
+
+  const classes =
+    'text-xl rounded-full h-full w-1/4 h-6 text-center items-center justify-center ml-3 mt-2 mb-2 ' +
+    primaryTypetoColor;
 
   const renderReward = (reward: Reward) => {
     return (
@@ -72,10 +92,17 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
   };
 
   return (
-    <View className="flex-1 w-full h-full pb-6">
+    <View className="flex-1 w-full h-full pb-6 p-4">
       <TitleText className="text-center text-3xl">
         {selectedLocation?.displayName.text || ''}
       </TitleText>
+      <View className={classes}>
+        <PrimaryText
+          type="secondary"
+          className="text-center font-bold text-black">
+          {placeDisplay}
+        </PrimaryText>
+      </View>
       <PrimaryText className="text-center text-xl">
         {selectedLocation?.formattedAddress}
       </PrimaryText>

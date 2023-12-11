@@ -25,6 +25,7 @@ import type {
 import PrimaryText from '../../Common/PrimaryText';
 import WrapperView from '../../Common/WrapperView';
 import i18n from '../../../Localization/i18n';
+import Consts from '../../../Helpers/Consts';
 
 type LocationScreenProps = CompositeScreenProps<
   NativeStackScreenProps<LocationNavigationRoutesType, 'LocationScreen'>,
@@ -34,6 +35,8 @@ type LocationScreenProps = CompositeScreenProps<
 
 const StyledView = styled(View);
 
+const SupportedLocationsColors = Consts.SupportedLocationsColors;
+
 const LocationScreen: React.FC<LocationScreenProps> = () => {
   const {
     location,
@@ -42,6 +45,7 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
     locationLoading,
     updateSelectedLocation,
     address,
+    getAcceptedLocationKeyByValue,
   } = React.useContext(locationContext) as LocationContext;
   const { setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal } =
     React.useContext(context) as AppContext;
@@ -63,6 +67,17 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
   }, [setBottomSheetModal, setShowBottomSheetModal, showBottomSheetModal]);
 
   const renderPlace = (place: Place, index: number) => {
+    const key = getAcceptedLocationKeyByValue(place.primaryType) ?? 'store';
+    const placeDisplay = key.split('_')[0].replace(/\b\w/g, function (char) {
+      return char.toUpperCase();
+    });
+    const primaryTypetoColor =
+      SupportedLocationsColors[key as keyof typeof SupportedLocationsColors];
+
+    const classes =
+      'text-xl rounded-full h-full w-1/4 text-center items-center justify-center ml-3 ' +
+      primaryTypetoColor;
+
     return (
       <Pressable
         key={index}
@@ -86,10 +101,14 @@ const LocationScreen: React.FC<LocationScreenProps> = () => {
           </PrimaryText>
         </StyledView>
         <StyledView className="flex-1 flex-row place-content-between w-full">
-          <PrimaryText className="pl-4 text-lg w-3/4 text-left">
-            {place.primaryTypeDisplayName?.text || place.types[0] || ''}
-          </PrimaryText>
-          <PrimaryText className="text-gray-400 w-1/4 text-sm self-center text-right pr-4">
+          <View className={classes}>
+            <PrimaryText
+              type="secondary"
+              className="text-center font-bold text-black">
+              {placeDisplay}
+            </PrimaryText>
+          </View>
+          <PrimaryText className="text-gray-400 w-1/4 text-sm self-center text-right pr-4 ml-auto">
             {i18n.t('Location.Seerewards')}
           </PrimaryText>
         </StyledView>
