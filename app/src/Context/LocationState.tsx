@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
@@ -129,80 +130,90 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     [sortRewards],
   );
 
-  const fetchAddress = useCallback(async () => {
-    await requestLocationPermission();
-    if (locationGrantType === false) {
-      setAddress({
-        businessStatus: 'OPERATIONAL',
-        displayName: { text: 'Location Permission Denied', languageCode: '' },
-        location: { longitude: 0, latitude: 0 },
-        primaryType: 'restaurant',
-        primaryTypeDisplayName: { text: 'Restaurant', languageCode: '' },
-        types: ['Restaurant'],
-        readableType: 'Restaurant',
-        id: '0',
-        formattedAddress: 'Unavailable',
-        cardRewards: [],
-      });
-      return;
-    }
-    const myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append(
-      'X-Goog-FieldMask',
-      'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types,places.formattedAddress',
-    );
-    myHeaders.append('X-Goog-Api-Key', apiURL);
+  const fetchAddress = useCallback(
+    async (override = false) => {
+      if (override) {
+        await requestLocationPermission();
+        if (locationGrantType === false) {
+          setAddress({
+            businessStatus: 'OPERATIONAL',
+            displayName: {
+              text: 'Location Permission Denied',
+              languageCode: '',
+            },
+            location: { longitude: 0, latitude: 0 },
+            primaryType: 'restaurant',
+            primaryTypeDisplayName: { text: 'Restaurant', languageCode: '' },
+            types: ['Restaurant'],
+            readableType: 'Restaurant',
+            id: '0',
+            formattedAddress: 'Unavailable',
+            cardRewards: [],
+          });
+          return;
+        }
+        const myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        myHeaders.append(
+          'X-Goog-FieldMask',
+          'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types,places.formattedAddress',
+        );
+        myHeaders.append('X-Goog-Api-Key', apiURL);
 
-    const raw = JSON.stringify({
-      excludedTypes: ['parking'],
-      maxResultCount: 1,
-      rankPreference: 'DISTANCE',
-      locationRestriction: {
-        circle: {
-          center: {
-            latitude: location.latitude,
-            longitude: location.longitude,
+        const raw = JSON.stringify({
+          excludedTypes: ['parking'],
+          maxResultCount: 1,
+          rankPreference: 'DISTANCE',
+          locationRestriction: {
+            circle: {
+              center: {
+                latitude: location.latitude,
+                longitude: location.longitude,
+              },
+              radius: 50000,
+            },
           },
-          radius: 50000,
-        },
-      },
-    });
+        });
 
-    const response = await fetch(
-      'https://places.googleapis.com/v1/places:searchNearby',
-      {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-      },
-    );
+        const response = await fetch(
+          'https://places.googleapis.com/v1/places:searchNearby',
+          {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+          },
+        );
 
-    // Manipulate result to return
-    const result = await response.json();
-    const resultAddress = result.places.map((place: Place, index: number) => {
-      return {
-        ...place,
-        id: index.toString(),
-        primaryType: place.types[0],
-      } as Place;
-    });
+        // Manipulate result to return
+        const result = await response.json();
+        const resultAddress = result.places.map(
+          (place: Place, index: number) => {
+            return {
+              ...place,
+              id: index.toString(),
+              primaryType: place.types[0],
+            } as Place;
+          },
+        );
 
-    if (resultAddress[0].primaryType !== undefined) {
-      await linkRewardToLocation(resultAddress[0]);
-      await fetchTopFiveCards(resultAddress[0]);
-    }
+        if (resultAddress[0].primaryType !== undefined) {
+          await linkRewardToLocation(resultAddress[0]);
+          await fetchTopFiveCards(resultAddress[0]);
+        }
 
-    setAddress(resultAddress[0]);
-  }, [
-    requestLocationPermission,
-    locationGrantType,
-    apiURL,
-    location.latitude,
-    location.longitude,
-    linkRewardToLocation,
-    fetchTopFiveCards,
-  ]);
+        setAddress(resultAddress[0]);
+      }
+    },
+    [
+      requestLocationPermission,
+      locationGrantType,
+      apiURL,
+      location.latitude,
+      location.longitude,
+      linkRewardToLocation,
+      fetchTopFiveCards,
+    ],
+  );
 
   const calculateDistanceLatLong = (
     location1: PlaceLocation,
@@ -229,130 +240,141 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     return Math.round(distance * 100) / 100;
   };
 
-  const fetchPlaces = useCallback(async () => {
-    setLocationLoading(true);
-    await requestLocationPermission();
-    if (locationGrantType === false) {
-      setPlaces([
-        {
-          businessStatus: 'OPERATIONAL',
-          displayName: { text: 'Location Permission Denied', languageCode: '' },
-          location: { longitude: 0, latitude: 0 },
-          primaryType: 'restaurant',
-          primaryTypeDisplayName: { text: 'Restaurant', languageCode: '' },
-          types: ['Restaurant'],
-          readableType: 'Restaurant',
-          id: '0',
-          formattedAddress: 'Unavailable',
-          cardRewards: [],
-        },
-      ]);
-      return;
-    }
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append(
-      'X-Goog-FieldMask',
-      'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types,places.formattedAddress',
-    );
-    headers.append('X-Goog-Api-Key', apiURL);
-
-    const placesTypes = {
-      restaurant: 'Restaurant',
-      museum: 'Museum',
-      movie_theater: 'Movie Theater',
-      gas_station: 'Gas Station',
-      car_wash: 'Car Wash',
-      car_repair: 'Car Repair',
-      car_rental: 'Car Rental',
-      car_dealer: 'Car Dealer',
-      electric_vehicle_charging_station: 'EV Charging Station',
-      rest_stop: 'Rest Stop',
-      drugstore: 'Drugstore',
-      pharmacy: 'Pharmacy',
-      hotel: 'Hotel',
-      subway_station: 'Subway Station',
-      wholesaler: 'Wholesaler',
-      supermarket: 'Supermarket',
-      store: 'Store',
-      grocery_store: 'Grocery Store',
-    };
-
-    const raw = JSON.stringify({
-      includedTypes: Object.keys(placesTypes),
-      maxResultCount: 20,
-      rankPreference: 'DISTANCE',
-      locationRestriction: {
-        circle: {
-          center: {
-            latitude: location.latitude,
-            longitude: location.longitude,
-          },
-          radius: 50000,
-        },
-      },
-    });
-
-    const response = await fetch(
-      'https://places.googleapis.com/v1/places:searchNearby',
-      {
-        method: 'POST',
-        headers: headers,
-        body: raw,
-      },
-    );
-
-    // Manipulate result to return
-    const result = await response.json();
-    if (!result.places) return;
-
-    const resultPlaces = result.places
-      .filter((place: Place) => place.businessStatus === 'OPERATIONAL')
-      .map((place: Place, index: number) => {
-        let primaryTypeDisplayName: { lang: string; text: string };
-
-        if (place.primaryType && placesTypes.hasOwnProperty(place.types[0])) {
-          primaryTypeDisplayName = {
-            lang: 'en-US',
-            text: placesTypes[place.types[0] as keyof typeof placesTypes],
-          };
-        } else if (!place.primaryType) {
-          const displayName = place.types[0]
-            .split('_')
-            .map(name => name.charAt(0).toUpperCase() + name.substring(1))
-            .join(' ');
-          primaryTypeDisplayName = {
-            lang: 'en-US',
-            text: displayName,
-          };
-        } else {
-          primaryTypeDisplayName = {
-            lang: 'en-US',
-            text: place.primaryTypeDisplayName.text,
-          };
+  const fetchPlaces = useCallback(
+    async (override = false) => {
+      if (override) {
+        setLocationLoading(true);
+        await requestLocationPermission();
+        if (locationGrantType === false) {
+          setPlaces([
+            {
+              businessStatus: 'OPERATIONAL',
+              displayName: {
+                text: 'Location Permission Denied',
+                languageCode: '',
+              },
+              location: { longitude: 0, latitude: 0 },
+              primaryType: 'restaurant',
+              primaryTypeDisplayName: { text: 'Restaurant', languageCode: '' },
+              types: ['Restaurant'],
+              readableType: 'Restaurant',
+              id: '0',
+              formattedAddress: 'Unavailable',
+              cardRewards: [],
+            },
+          ]);
+          return;
         }
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append(
+          'X-Goog-FieldMask',
+          'places.displayName,places.businessStatus,places.primaryType,places.location,places.primaryTypeDisplayName,places.types,places.formattedAddress',
+        );
+        headers.append('X-Goog-Api-Key', apiURL);
 
-        return {
-          ...place,
-          primaryTypeDisplayName,
-          distance: calculateDistanceLatLong(location, place.location),
-          id: index.toString(),
+        const placesTypes = {
+          restaurant: 'Restaurant',
+          museum: 'Museum',
+          movie_theater: 'Movie Theater',
+          gas_station: 'Gas Station',
+          car_wash: 'Car Wash',
+          car_repair: 'Car Repair',
+          car_rental: 'Car Rental',
+          car_dealer: 'Car Dealer',
+          electric_vehicle_charging_station: 'EV Charging Station',
+          rest_stop: 'Rest Stop',
+          drugstore: 'Drugstore',
+          pharmacy: 'Pharmacy',
+          hotel: 'Hotel',
+          subway_station: 'Subway Station',
+          wholesaler: 'Wholesaler',
+          supermarket: 'Supermarket',
+          store: 'Store',
+          grocery_store: 'Grocery Store',
         };
-      });
 
-    resultPlaces.forEach((place: Place) => {
-      linkRewardToLocation(place);
-    });
+        const raw = JSON.stringify({
+          includedTypes: Object.keys(placesTypes),
+          maxResultCount: 20,
+          rankPreference: 'DISTANCE',
+          locationRestriction: {
+            circle: {
+              center: {
+                latitude: location.latitude,
+                longitude: location.longitude,
+              },
+              radius: 50000,
+            },
+          },
+        });
 
-    setPlaces(resultPlaces);
-    setLocationLoading(false);
-  }, [
-    requestLocationPermission,
-    locationGrantType,
-    apiURL,
-    location,
-    linkRewardToLocation,
-  ]);
+        const response = await fetch(
+          'https://places.googleapis.com/v1/places:searchNearby',
+          {
+            method: 'POST',
+            headers: headers,
+            body: raw,
+          },
+        );
+
+        // Manipulate result to return
+        const result = await response.json();
+        if (!result.places) return;
+
+        const resultPlaces = result.places
+          .filter((place: Place) => place.businessStatus === 'OPERATIONAL')
+          .map((place: Place, index: number) => {
+            let primaryTypeDisplayName: { lang: string; text: string };
+
+            if (
+              place.primaryType &&
+              placesTypes.hasOwnProperty(place.types[0])
+            ) {
+              primaryTypeDisplayName = {
+                lang: 'en-US',
+                text: placesTypes[place.types[0] as keyof typeof placesTypes],
+              };
+            } else if (!place.primaryType) {
+              const displayName = place.types[0]
+                .split('_')
+                .map(name => name.charAt(0).toUpperCase() + name.substring(1))
+                .join(' ');
+              primaryTypeDisplayName = {
+                lang: 'en-US',
+                text: displayName,
+              };
+            } else {
+              primaryTypeDisplayName = {
+                lang: 'en-US',
+                text: place.primaryTypeDisplayName.text,
+              };
+            }
+
+            return {
+              ...place,
+              primaryTypeDisplayName,
+              distance: calculateDistanceLatLong(location, place.location),
+              id: index.toString(),
+            };
+          });
+
+        resultPlaces.forEach((place: Place) => {
+          linkRewardToLocation(place);
+        });
+
+        setPlaces(resultPlaces);
+      }
+      setLocationLoading(false);
+    },
+    [
+      requestLocationPermission,
+      locationGrantType,
+      apiURL,
+      location,
+      linkRewardToLocation,
+    ],
+  );
 
   const getLocation = useCallback(async () => {
     await requestLocationPermission();
@@ -386,6 +408,7 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
   }, [requestLocationPermission, locationGrantType]);
 
   const updateLocation = useCallback(() => {
+    fetchedLocationVarsHasRun.current = false;
     setPlaces([]);
     setLocationLoading(true);
     const result = requestLocationPermission();
@@ -446,9 +469,16 @@ const LocationState: React.FC<PropsWithChildren> = ({ children }) => {
     getLocation();
   }, [getLocation]);
 
+  const fetchedLocationVarsHasRun = useRef(false);
+
   useEffect(() => {
-    fetchPlaces();
-    fetchAddress();
+    if (!fetchedLocationVarsHasRun.current) {
+      fetchedLocationVarsHasRun.current = true;
+
+      fetchPlaces(true);
+      fetchAddress(true);
+      console.log('fetching location vars');
+    }
   }, [fetchAddress, fetchPlaces, location]);
 
   useEffect(() => {

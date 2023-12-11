@@ -27,7 +27,7 @@ const LocationBottomSheet: React.FC<PropsWithChildren> = () => {
     return (
       <View key={reward.id}>
         <PrimaryText className="ml-2 text-lg">
-          {`${i18n.t('Locaiton.Cashback')}: ${reward.initial_percentage}`}
+          {`${i18n.t('Location.Cashback')}: ${reward.initial_percentage}`}
         </PrimaryText>
       </View>
     );
